@@ -2,7 +2,7 @@ name: App Tests
 
 on:
     push:
-        branches: [main]
+        branches: [add-frontend-framework]
     pull_request:
         branches: [main]
 
