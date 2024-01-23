@@ -6,9 +6,6 @@ import Work from '@mui/icons-material/Work';
 
 export default function Subheader(props) {
     const { currentPage } = props;
-    let navigate = useNavigate();
-    const [ actionsList, setActionsList ] = React.useState(false)
-    const [ anchorEl, setAnchorEl ] = React.useState(null);
 
     const styles = {
         iconButton: {
@@ -31,7 +28,7 @@ export default function Subheader(props) {
         directoryDispaly: {
             display: "flex",
             justifyContent: "flex-start",
-            marginLeft: 50,
+            marginLeft: 40,
         },
         pageName: {
             display: "flex",
