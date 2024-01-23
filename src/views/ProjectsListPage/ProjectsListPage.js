@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Grid, Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
+import { Box } from '@mui/material';
 import ProjectsListTable from '../../components/ProjectsListTable/ProjectsListTable';
 import { getProjects } from '../../services/app.service';
 
-export default function Home(props) {
+export default function ProjectsListPage(props) {
     const [ projects, setProjects ] = useState([])
+    const [ unableToConnect, setUnableToConnect ]  = useState(false)
 
     useEffect(()=> {
         console.log('getting projects')
@@ -12,6 +13,9 @@ export default function Home(props) {
             console.log('projects data: ')
             console.log(data)
             setProjects(data)
+        }).catch((e) => {
+            console.error(e)
+            setUnableToConnect(true)
         })
     },[])
 
@@ -29,7 +33,12 @@ export default function Home(props) {
     return (
         <Box sx={styles.outerBox}>
             <Box sx={styles.innerBox}>
-                <ProjectsListTable/>
+                {!unableToConnect ? 
+                    <ProjectsListTable projects={projects}/>
+                :
+                    <h1>Unable to connect to backend. Please make sure that backend server is up and running.</h1>
+                }
+                
             </Box>
             
         </Box>
