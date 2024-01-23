@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
+import Subheader from '../../components/Subheader/Subheader';
 import ProjectsListTable from '../../components/ProjectsListTable/ProjectsListTable';
 import { getProjects } from '../../services/app.service';
 
@@ -26,12 +27,15 @@ export default function ProjectsListPage(props) {
         },
         innerBox: {
             paddingY:5,
-            paddingX:15,
+            paddingX:5,
         },
     }
 
     return (
         <Box sx={styles.outerBox}>
+            <Subheader
+                currentPage="Projects"
+            />
             <Box sx={styles.innerBox}>
                 {!unableToConnect ? 
                     <ProjectsListTable projects={projects}/>
