@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Grid, IconButton, Box } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import Work from '@mui/icons-material/Work';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 export default function Subheader(props) {
     const { currentPage } = props;
@@ -50,9 +51,12 @@ export default function Subheader(props) {
                 <Grid item xs={6} >
                     <div style={styles.directoryDispaly}>
                         <IconButton sx={styles.iconButton}><HomeIcon sx={styles.icon}/></IconButton> 
-                        / ... / 
-                        <IconButton sx={styles.iconButton}><Work sx={styles.icon}/></IconButton> 
-                        {currentPage}
+                        /
+                        <IconButton sx={styles.iconButton}><MoreHorizIcon sx={styles.icon}/></IconButton> 
+                        / 
+                        <Button sx={styles.iconButton} size="small" startIcon={<Work/>}>{currentPage}</Button>
+                        {/* <IconButton sx={styles.iconButton}><Work sx={styles.icon}/></IconButton> 
+                        {currentPage} */}
                     </div>
                     <div style={styles.pageName}>
                         {currentPage}
