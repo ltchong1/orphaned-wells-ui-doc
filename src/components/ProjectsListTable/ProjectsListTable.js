@@ -17,8 +17,16 @@ export default function ProjectsListTable(props) {
   }
 
   const handleClickProject = (project_id) => {
-    console.log('clicked '+project_id)
     navigate("/project/" + project_id)
+  }
+
+  const formatAttributes = (attributes) => {
+    let output = ""
+    for (let attribute of attributes) {
+      output += attribute+", "
+    }
+    output = output.substring(0, output.length-2)
+    return output
   }
 
   return (
@@ -46,7 +54,7 @@ export default function ProjectsListTable(props) {
               <TableCell>{row.description}</TableCell>
               <TableCell>{row.documentType}</TableCell>
               <TableCell>{row.state}</TableCell>
-              <TableCell>{row.attributes}</TableCell>
+              <TableCell>{formatAttributes(row.attributes)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
