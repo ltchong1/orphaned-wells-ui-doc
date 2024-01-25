@@ -32,11 +32,24 @@ export default function Project(props) {
         },
     }
 
+    const formatAttributes = (attributes) => {
+        let output = "Attributes: "
+        if (attributes.length > 0) {
+            
+            for (let attribute of attributes) {
+                output+=attribute+", "
+            }
+            output = output.substring(0,output.length-2)
+        }
+        return output
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={projectData.name}
                 buttonName="Upload new record(s)"
+                subtext={formatAttributes(projectData.attributes)}
             />
             <Box sx={styles.innerBox}>
                 <RecordsTable

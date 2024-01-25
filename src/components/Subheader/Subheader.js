@@ -5,7 +5,7 @@ import Work from '@mui/icons-material/Work';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 export default function Subheader(props) {
-    const { currentPage, buttonName, handleClickButton } = props;
+    const { currentPage, buttonName, subtext, handleClickButton } = props;
 
     const styles = {
         iconButton: {
@@ -41,6 +41,13 @@ export default function Subheader(props) {
             justifyContent: "flex-end",
             marginRight: 5,
             marginTop: 3
+        },
+        subtext: {
+            marginTop: 2,
+            display: "flex",
+            justifyContent: "flex-start",
+            marginLeft: 50,
+            fontSize: "15px"
         }
     }
 
@@ -57,6 +64,9 @@ export default function Subheader(props) {
                     </div>
                     <div style={styles.pageName}>
                         {currentPage}
+                    </div>
+                    <div style={styles.subtext}>
+                        {subtext}
                     </div>
                 </Grid>
                 <Grid item xs={6}>
