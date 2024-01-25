@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from "react-router-dom";
 import ProjectsListPage from './views/ProjectsListPage/ProjectsListPage';
+import Project from './views/ProjectPage/ProjectPage';
 import Header from './components/Header/Header'; 
 import './App.css';
 
@@ -9,10 +10,10 @@ function App() {
     <div className="App">
       <Header/>
       <Routes> 
-        {/* <Route 
+        <Route 
             path="project/:id" 
             element={<Project />}
-        /> */}
+        />
         <Route 
             path="projects" 
             element={<ProjectsListPage/>} 

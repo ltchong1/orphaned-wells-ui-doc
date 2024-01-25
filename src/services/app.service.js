@@ -3,3 +3,9 @@ export const getProjects = () => {
         mode: 'cors',
     });
 }; 
+
+export const getProjectData = (project_id) => {
+    return fetch('http://localhost:8001/get_project/'+project_id, {
+        mode: 'cors',
+    });
+}; 

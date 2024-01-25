@@ -1,20 +1,24 @@
 import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import { useNavigate } from "react-router-dom";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material'
 import Paper from '@mui/material/Paper';
 
 export default function ProjectsListTable(props) {
+  let navigate = useNavigate()
   const { projects } = props;
 
   const styles = {
     projectRow: {
       cursor: "pointer",
-      
+      "&:hover": {
+        background: "#efefef"
+      },
     }
+  }
+
+  const handleClickProject = (project_id) => {
+    console.log('clicked '+project_id)
+    navigate("/project/" + project_id)
   }
 
   return (
@@ -24,7 +28,7 @@ export default function ProjectsListTable(props) {
           <TableRow>
             <TableCell>Project Name</TableCell>
             <TableCell>Description</TableCell>
-            <TableCell>Records Categories</TableCell>
+            <TableCell>Document Type</TableCell>
             <TableCell>Locations</TableCell>
             <TableCell>Attributes</TableCell>
           </TableRow>
@@ -34,12 +38,13 @@ export default function ProjectsListTable(props) {
             <TableRow
               key={row.name}
               sx={styles.projectRow}
+              onClick={() => handleClickProject(row.id_)}
             >
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>
               <TableCell>{row.description}</TableCell>
-              <TableCell>{row.categories}</TableCell>
+              <TableCell>{row.documentType}</TableCell>
               <TableCell>{row.state}</TableCell>
               <TableCell>{row.attributes}</TableCell>
             </TableRow>
