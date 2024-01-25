@@ -3,6 +3,7 @@ import { Box, TextField, IconButton, Grid } from '@mui/material';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { processors } from '../../assets/processors';
+import { addProject } from '../../services/app.service';
 
 
 export default function NewProjectDialog(props) {
@@ -12,7 +13,8 @@ export default function NewProjectDialog(props) {
     const [ dialogWidth, setDialogWidth ] = useState('60vw')
     const [ projectName, setProjectName ] = useState("")
     const [ projectDescription, setProjectDescription ] = useState("")
-    const [ selectedProcessor, setSelectedProcessor ] = useState(null)
+    const [ selectedProcessor, setSelectedProcessor ] = useState({processorId: null})
+    const [ disableCreateButton, setDisableCreateButton ] = useState(true)
 
     const descriptionElementRef = useRef(null);
     useEffect(() => {
@@ -24,20 +26,16 @@ export default function NewProjectDialog(props) {
       }
     }, [open]);
 
+    useEffect(() => {
+        if (projectName !== "" && selectedProcessor.processorId !== null && disableCreateButton) {
+            setDisableCreateButton(false)
+        } else if ((projectName === "" || selectedProcessor.processorId === null) && !disableCreateButton){
+            setDisableCreateButton(true)
+        }
+      }, [projectName, selectedProcessor]);
+
 
     const styles = {
-        dialogTitle: {
-
-        },
-        dialogContent: {
-
-        },
-        dialogContentText: {
-
-        },
-        dialog: {
-
-        },
         dialogPaper: {
             minHeight: dialogHeight,
             maxHeight: dialogHeight,
@@ -46,9 +44,6 @@ export default function NewProjectDialog(props) {
         },
         projectName: {
             marginBottom: 2
-        },
-        projectDescription: {
-            
         },
         processorGridItem: {
             paddingX: 1
@@ -59,7 +54,6 @@ export default function NewProjectDialog(props) {
             cursor: "pointer",
         },
         processorImage: {
-            // width: '80%',
             maxHeight: "20vh"
         }
     }
@@ -68,19 +62,42 @@ export default function NewProjectDialog(props) {
         onClose()
     };
 
-    const handleSelectProcessor = (processorId) => {
-        if (selectedProcessor === processorId) setSelectedProcessor(null)
+    const handleSelectProcessor = (processorId, idx) => {
+        if (selectedProcessor.processorId === processorId) setSelectedProcessor({processorId: null})
         else {
-            setSelectedProcessor(processorId)
+            setSelectedProcessor({processorId: processorId, idx: idx})
         }
     }
 
     const getImageStyle = (processorId) => {
         let styling = {...styles.processorImage}
-        if (selectedProcessor === processorId) {
+        if (selectedProcessor.processorId === processorId) {
             styling["border"] = "1px solid #2196F3"
         }
         return styling
+    }
+
+    const handleCreateProject = () => {
+        // check that project has name
+
+        // check that there is a processor selected
+        let body = {
+            name: projectName,
+            description: projectDescription,
+            state: processors[selectedProcessor.idx].state,
+            history: [],
+            attributes: processors[selectedProcessor.idx].attributes,
+            documentType: processors[selectedProcessor.idx].documentType,
+        }
+        addProject(body)
+        .then(response => response.json())
+        .then((data) => {
+            console.log('added project, response: ')
+            console.log(data)
+            window.location.reload()
+        }).catch((e) => {
+            console.error('error on project add ',e)
+        })
     }
 
     return (
@@ -94,7 +111,7 @@ export default function NewProjectDialog(props) {
                 sx: styles.dialogPaper
               }}
         >
-            <DialogTitle id="new-project-dialog-title" style={styles.dialogTitle}>New Project</DialogTitle>
+            <DialogTitle id="new-project-dialog-title">New Project</DialogTitle>
             <IconButton
                 aria-label="close"
                 onClick={handleClose}
@@ -106,12 +123,11 @@ export default function NewProjectDialog(props) {
                 >
                 <CloseIcon />
             </IconButton>
-            <DialogContent style={styles.dialogContent} dividers={true}>
+            <DialogContent dividers={true}>
             <DialogContentText
                 id="scroll-dialog-description"
                 ref={descriptionElementRef}
                 tabIndex={-1}
-                style={styles.dialogContentText}
                 aria-labelledby="new-project-dialog-content-text"
                 component={'span'}
             >   
@@ -133,7 +149,6 @@ export default function NewProjectDialog(props) {
                             // size="small"
                             value={projectDescription}
                             onChange={(event) => setProjectDescription(event.target.value)}
-                            sx={styles.projectDescription}
                             multiline
                             rows={4}
                         />
@@ -158,7 +173,7 @@ export default function NewProjectDialog(props) {
                                     <p>
                                         {idx+1}. {processorData.displayName}
                                     </p>
-                                    <Box sx={styles.processorImageBox} onClick={() => handleSelectProcessor(processorData.id)}>
+                                    <Box sx={styles.processorImageBox} onClick={() => handleSelectProcessor(processorData.id, idx)}>
                                         <img src={processorData.img} style={getImageStyle(processorData.id)}/>
                                     </Box>
                                     
@@ -176,8 +191,10 @@ export default function NewProjectDialog(props) {
                     right: 10,
                     bottom: 10,
                 }}
+                disabled={disableCreateButton}
+                onClick={handleCreateProject}
             >
-                Next
+                Create Project
             </Button>
             </DialogContent>
         </Dialog>

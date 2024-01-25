@@ -9,3 +9,11 @@ export const getProjectData = (project_id) => {
         mode: 'cors',
     });
 }; 
+
+export const addProject = (data) => {
+    return fetch('http://localhost:8001/add_project', {
+        method: 'POST', 
+        mode: 'cors',
+        body: JSON.stringify(data)
+    });
+}; 

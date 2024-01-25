@@ -5,6 +5,8 @@ export const processors = [
         displayName: "Colorado Well Completion Report",
         state: "CO",
         img: "./img/CO-well-completion-report.png",
+        attributes: ['API_Number', 'County', 'Operator', 'Spud_Date', 'State', 'Total_Depth'],
+        documentType: "Well Completion Report",
     },
     // {
     //     id: "ad6735f26e9f71fa_fake",
