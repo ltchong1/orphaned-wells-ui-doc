@@ -8,6 +8,9 @@ export default function ProjectsListTable(props) {
   const { projects } = props;
 
   const styles = {
+    headerRow: {
+      fontWeight: "bold"
+    },
     projectRow: {
       cursor: "pointer",
       "&:hover": {
@@ -34,11 +37,9 @@ export default function ProjectsListTable(props) {
       <Table sx={{ minWidth: 650 }} aria-label="projects table">
         <TableHead>
           <TableRow>
-            <TableCell>Project Name</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Document Type</TableCell>
-            <TableCell>Locations</TableCell>
-            <TableCell>Attributes</TableCell>
+            {["Project Name", "Description", "Document Type", "Locations", "Attributes"].map((value)=>(
+              <TableCell sx={styles.headerRow} key={value}>{value}</TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>

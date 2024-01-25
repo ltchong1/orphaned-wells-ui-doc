@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import NewProjectDialog from '../NewProjectDialog/NewProjectDialog';
+// import NewProjectDialog from '../NewProjectDialog/NewProjectDialog';
 import { Button, Grid, IconButton, Box } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import Work from '@mui/icons-material/Work';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 export default function Subheader(props) {
-    const { currentPage, buttonName } = props;
-    const [ showNewProjectDialog, setShowNewProjectDialog ] = useState(false)
+    const { currentPage, buttonName, handleClickButton } = props;
+    // const [ showNewProjectDialog, setShowNewProjectDialog ] = useState(false)
 
     const styles = {
         iconButton: {
@@ -47,9 +47,9 @@ export default function Subheader(props) {
         }
     }
 
-    const handleClickNewProject = () => {
-        setShowNewProjectDialog(true)
-    }
+    // const handleClickNewProject = () => {
+    //     setShowNewProjectDialog(true)
+    // }
 
     return (
         <Box sx={styles.box}>
@@ -70,13 +70,13 @@ export default function Subheader(props) {
                 </Grid>
                 <Grid item xs={6}>
                     <Box sx={styles.newProjectColumn}>
-                        <Button variant="contained" onClick={handleClickNewProject}>
+                        <Button variant="contained" onClick={handleClickButton}>
                             {buttonName}
                         </Button>
                     </Box>
                 </Grid>
             </Grid>
-            <NewProjectDialog open={showNewProjectDialog} onClose={() => setShowNewProjectDialog(false)}/>
+            {/* <NewProjectDialog open={showNewProjectDialog} onClose={() => setShowNewProjectDialog(false)}/> */}
         </Box>
     );
 }
