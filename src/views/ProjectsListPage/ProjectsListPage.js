@@ -35,6 +35,7 @@ export default function ProjectsListPage(props) {
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage="Projects"
+                buttonName="New Project"
             />
             <Box sx={styles.innerBox}>
                 {!unableToConnect ? 

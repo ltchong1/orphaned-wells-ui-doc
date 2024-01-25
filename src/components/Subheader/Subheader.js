@@ -7,7 +7,7 @@ import Work from '@mui/icons-material/Work';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 export default function Subheader(props) {
-    const { currentPage } = props;
+    const { currentPage, buttonName } = props;
     const [ showNewProjectDialog, setShowNewProjectDialog ] = useState(false)
 
     const styles = {
@@ -71,7 +71,7 @@ export default function Subheader(props) {
                 <Grid item xs={6}>
                     <Box sx={styles.newProjectColumn}>
                         <Button variant="contained" onClick={handleClickNewProject}>
-                            New Project
+                            {buttonName}
                         </Button>
                     </Box>
                 </Grid>
