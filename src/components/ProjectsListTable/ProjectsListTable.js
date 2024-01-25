@@ -32,12 +32,23 @@ export default function ProjectsListTable(props) {
     return output
   }
 
+  const formatDate = (timestamp) => {
+    if (timestamp !== null) {
+      let date = new Date(timestamp*1000)
+      let day = date.getDate()
+      let month = date.getMonth()
+      let year = date.getFullYear()
+      let formattedDate = `${month+1}/${day}/${year}`
+      return formattedDate
+    } else return timestamp
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="projects table">
         <TableHead>
           <TableRow>
-            {["Project Name", "Description", "Document Type", "Locations", "Attributes"].map((value)=>(
+            {["Project Name", "Description", "Document Type", "Locations", "Date"].map((value)=>(
               <TableCell sx={styles.headerRow} key={value}>{value}</TableCell>
             ))}
           </TableRow>
@@ -55,7 +66,7 @@ export default function ProjectsListTable(props) {
               <TableCell>{row.description}</TableCell>
               <TableCell>{row.documentType}</TableCell>
               <TableCell>{row.state}</TableCell>
-              <TableCell>{formatAttributes(row.attributes)}</TableCell>
+              <TableCell>{formatDate(row.dateCreated)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
