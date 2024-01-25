@@ -17,3 +17,11 @@ export const addProject = (data) => {
         body: JSON.stringify(data)
     });
 }; 
+
+export const uploadDocument = (data) => {
+    return fetch('http://localhost:8001/upload_document', {
+        method: 'POST', 
+        mode: 'cors',
+        body: data
+    });
+}

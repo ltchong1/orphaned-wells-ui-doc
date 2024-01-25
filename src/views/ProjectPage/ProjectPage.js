@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useParams } from "react-router-dom";
-import { getProjectData } from '../../services/app.service';
+import { getProjectData, uploadDocument } from '../../services/app.service';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
 import Subheader from '../../components/Subheader/Subheader';
+import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 
 export default function Project(props) {
     const [ records, setRecords ] = useState([])
     const [ projectData, setProjectData ] = useState({attributes: []})
+    const [ showDocumentModal, setShowDocumentModal ] = useState(false)
     let params = useParams(); 
     useEffect(() => {
         getProjectData(params.id)
@@ -44,12 +46,47 @@ export default function Project(props) {
         return output
     }
 
+    const handleUploadDocument = (file) => {
+        const formData = new FormData();
+        formData.append('file', file, file.name);
+
+        uploadDocument(formData)
+        .then(response => {
+        if (response.status === 200) {
+            response.json()
+            .then((data)=>{
+                console.log('fileupload successful: ',data)
+            }).catch((err)=>{
+                console.error("error on file upload: ",err)
+                // setErrorMessage(String(err))
+                // setShowError(true)
+            })
+        }
+        /*
+            in the case of bad file type
+        */
+        else if (response.status === 400) {
+            response.json()
+            .then((data)=>{
+                console.error("error on file upload: ",data.detail)
+                // setErrorMessage(data.detail)
+                // setShowError(true)
+            }).catch((err)=>{
+                console.error("error on file upload: ",err)
+                // setErrorMessage(response.statusText)
+                // setShowError(true)
+            })
+        }
+        })
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={projectData.name}
                 buttonName="Upload new record(s)"
                 subtext={formatAttributes(projectData.attributes)}
+                handleClickButton={() => setShowDocumentModal(true)}
             />
             <Box sx={styles.innerBox}>
                 <RecordsTable
@@ -57,6 +94,13 @@ export default function Project(props) {
                     attributes={projectData.attributes}
                 />
             </Box>
+            { showDocumentModal && 
+                <UploadDocumentsModal 
+                    setShowModal={setShowDocumentModal}
+                    handleUploadDocument={handleUploadDocument}
+                />
+            }
+            
         </Box>
     );
 }
