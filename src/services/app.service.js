@@ -18,8 +18,8 @@ export const addProject = (data) => {
     });
 }; 
 
-export const uploadDocument = (data) => {
-    return fetch('http://localhost:8001/upload_document', {
+export const uploadDocument = (data, project_id) => {
+    return fetch('http://localhost:8001/upload_document/'+project_id, {
         method: 'POST', 
         mode: 'cors',
         body: data

@@ -50,7 +50,7 @@ export default function Project(props) {
         const formData = new FormData();
         formData.append('file', file, file.name);
 
-        uploadDocument(formData)
+        uploadDocument(formData, projectData.id_)
         .then(response => {
         if (response.status === 200) {
             response.json()
