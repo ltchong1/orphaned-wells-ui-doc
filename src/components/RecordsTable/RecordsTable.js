@@ -41,7 +41,7 @@ export default function RecordsTable(props) {
             <TableRow
               key={idx}
               sx={styles.projectRow}
-              // onClick={() => handleClickRecord(row._id)}
+              onClick={() => handleClickRecord(row._id)}
             >
                 {attributes.map((attribute, attribute_idx) => {
                   try {

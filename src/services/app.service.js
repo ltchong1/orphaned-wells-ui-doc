@@ -25,3 +25,9 @@ export const uploadDocument = (data, project_id) => {
         body: data
     });
 }
+
+export const getRecordData = (record_id) => {
+    return fetch('http://localhost:8001/get_record/'+record_id, {
+        mode: 'cors',
+    });
+}
