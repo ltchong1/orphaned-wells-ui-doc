@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import { useParams } from "react-router-dom";
 import { getRecordData } from '../../services/app.service';
 import Subheader from '../../components/Subheader/Subheader';
+import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 
 export default function Record(props) {
-    const [ recordData, setRecordData ] = useState(null)
+    const [ recordData, setRecordData ] = useState({})
     let params = useParams(); 
     useEffect(() => {
         getRecordData(params.id)
         .then(response => response.json())
         .then((data)=>{
-            console.log("Record Data:", data);
+            // console.log("Record Data:", data);
             setRecordData(data)
         }).catch((e) => {
             console.error('error getting record data: ',e)
@@ -36,12 +37,18 @@ export default function Record(props) {
     return (
         <Box sx={styles.outerBox}>
             <Subheader
-                currentPage={"Record"}
+                currentPage={recordData.filename}
                 buttonName="Reprocess image"
                 // subtext={formatAttributes(projectData.attributes)}
                 handleClickButton={() => handleReprocessImage(true)}
+                disableButton={true}
             />
             <Box sx={styles.innerBox}>
+                <DocumentContainer
+                    image={recordData.img_url}
+                    attributes={recordData.attributes}
+                />
+            
                 
             </Box>
             

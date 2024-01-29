@@ -15,7 +15,7 @@ export default function Project(props) {
         getProjectData(params.id)
         .then(response => response.json())
         .then((data)=>{
-            console.log("Project Data:", data);
+            // console.log("Project Data:", data);
             setRecords(data.records)
             setProjectData(data.project_data)
         }).catch((e) => {
