@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import ProjectsListTable from "../components/ProjectsListTable/ProjectsListTable"
+import { HashRouter } from "react-router-dom";
 
 const mockProjects = [
     {
@@ -24,12 +25,12 @@ const mockProjects = [
 
 test('test project list table', () => {
 
-    render( <ProjectsListTable projects={mockProjects}/> )
+    render( <HashRouter> <ProjectsListTable projects={mockProjects}/> </HashRouter> )
 
     //test for component elements
     screen.getByRole('table', {  name: /projects table/i});
     screen.getByRole('columnheader', {  name: /project name/i});
     screen.getByRole('columnheader', {  name: /description/i});
     screen.getByRole('columnheader', {  name: /locations/i});
-    screen.getByRole('columnheader', {  name: /attributes/i});
+    screen.getByRole('columnheader', {  name: /date/i});
 })
