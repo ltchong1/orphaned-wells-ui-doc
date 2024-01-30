@@ -38,18 +38,14 @@ export default function LassoSelector(props: { image: string, handleUpdatePoints
   }, [props.displayPoints])
 
   const handleSetPoints = (path: Point[]) => {
-    console.log('handleSetPoints: ')
-    console.log(path)
     props.setShowCompletedPoints(true)
     setPoints(path);
   }
 
   const handleCompletedPoints = (path: Point[]) => {
-    console.log('handleCompletedPoints: ')
     let temp_points = []
     for (let point of path) {
       temp_points.push([point.x,point.y])
-      // console.log(point.x,point.y)
     }
     props.handleUpdatePoints(temp_points)
     setPoints(path);
@@ -57,15 +53,6 @@ export default function LassoSelector(props: { image: string, handleUpdatePoints
 
   return (
     <div className="container">
-      {/* Image width:{" "}
-      <input
-        type="range"
-        min="0"
-        max="50"
-        value={width}
-        onChange={(e) => setWidth(+e.target.value)}
-      />
-      <br /> */}
       <ReactLassoSelect
         disabled={props.disabled}
         value={points}
