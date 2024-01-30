@@ -42,7 +42,11 @@ export default function RecordsTable(props) {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-    });
+    })
+    .catch((e) => {
+      console.error("unable to download csv: ")
+      console.error(e)
+    })
   }
 
   return (
