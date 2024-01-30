@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import NewProjectDialog from '../NewProjectDialog/NewProjectDialog';
 import { Button, Grid, IconButton, Box } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import Work from '@mui/icons-material/Work';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 export default function Subheader(props) {
-    const { currentPage } = props;
-    const [ showNewProjectDialog, setShowNewProjectDialog ] = useState(false)
+    const { currentPage, buttonName, subtext, handleClickButton, disableButton } = props;
 
     const styles = {
         iconButton: {
@@ -44,11 +41,14 @@ export default function Subheader(props) {
             justifyContent: "flex-end",
             marginRight: 5,
             marginTop: 3
+        },
+        subtext: {
+            marginTop: 2,
+            display: "flex",
+            justifyContent: "flex-start",
+            marginLeft: 50,
+            fontSize: "15px"
         }
-    }
-
-    const handleClickNewProject = () => {
-        setShowNewProjectDialog(true)
     }
 
     return (
@@ -61,22 +61,22 @@ export default function Subheader(props) {
                         <IconButton sx={styles.iconButton}><MoreHorizIcon sx={styles.icon}/></IconButton> 
                         / 
                         <Button sx={styles.iconButton} size="small" startIcon={<Work/>}>{currentPage}</Button>
-                        {/* <IconButton sx={styles.iconButton}><Work sx={styles.icon}/></IconButton> 
-                        {currentPage} */}
                     </div>
                     <div style={styles.pageName}>
                         {currentPage}
                     </div>
+                    <div style={styles.subtext}>
+                        {subtext}
+                    </div>
                 </Grid>
                 <Grid item xs={6}>
                     <Box sx={styles.newProjectColumn}>
-                        <Button variant="contained" onClick={handleClickNewProject}>
-                            New Project
+                        <Button variant="contained" onClick={handleClickButton} disabled={disableButton}>
+                            {buttonName}
                         </Button>
                     </Box>
                 </Grid>
             </Grid>
-            <NewProjectDialog open={showNewProjectDialog} onClose={() => setShowNewProjectDialog(false)}/>
         </Box>
     );
 }
