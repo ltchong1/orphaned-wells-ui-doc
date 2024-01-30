@@ -35,3 +35,9 @@ export const getRecordData = (record_id) => {
         mode: 'cors',
     });
 }
+
+export const downloadRecordsCSV = (project_id) => {
+    return fetch(BACKEND_URL+'/download_records/'+project_id, {
+        mode: 'cors',
+    });
+}

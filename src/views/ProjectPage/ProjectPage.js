@@ -90,8 +90,8 @@ export default function Project(props) {
             />
             <Box sx={styles.innerBox}>
                 <RecordsTable
+                    projectData={projectData}
                     records={records}
-                    attributes={projectData.attributes}
                 />
             </Box>
             { showDocumentModal && 
