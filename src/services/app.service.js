@@ -41,3 +41,19 @@ export const downloadRecordsCSV = (project_id) => {
         mode: 'cors',
     });
 }
+
+export const updateProject = (project_id, data) => {
+    return fetch(BACKEND_URL+'/update_project/'+project_id, {
+        method: 'POST', 
+        mode: 'cors',
+        body: JSON.stringify(data)
+    });
+}
+
+export const updateRecord = (record_id, data) => {
+    return fetch(BACKEND_URL+'/update_record/'+record_id, {
+        method: 'POST', 
+        mode: 'cors',
+        body: JSON.stringify(data)
+    });
+}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Grid } from '@mui/material';
 import { useParams } from "react-router-dom";
-import { getRecordData } from '../../services/app.service';
+import { getRecordData, updateRecord } from '../../services/app.service';
 import Subheader from '../../components/Subheader/Subheader';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 
@@ -31,12 +31,16 @@ export default function Record(props) {
         },
     }
 
-    const handleReprocessImage = () => {
-        console.log('this functionality might not work for a bit hehe')
-    }
-
     const handleUpdateRecord = () => {
-
+        updateRecord(params.id, recordData)
+        .then(response => response.json())
+        .then((data)=> {
+            // console.log("successfully updated record: "+data)
+            setWasEdited(true)
+        }).catch((e) => {
+            console.error("error updating record: ")
+            console.error(e)
+        })
     }
 
     const handleChangeValue = (event) => {
@@ -58,7 +62,7 @@ export default function Record(props) {
                 currentPage={recordData.filename}
                 buttonName="Update Record"
                 // subtext={formatAttributes(projectData.attributes)}
-                handleClickButton={() => handleReprocessImage(true)}
+                handleClickButton={handleUpdateRecord}
                 disableButton={!wasEdited}
                 // previousPages={[{name: "project", path: "/project/"+recordData.project_id}]}
             />
