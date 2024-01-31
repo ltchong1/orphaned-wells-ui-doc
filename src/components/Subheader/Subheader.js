@@ -7,9 +7,9 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 export default function Subheader(props) {
     let navigate = useNavigate();
-    const { currentPage, buttonName, subtext, handleClickButton, disableButton, previousPages } = props;
+    const { currentPage, buttonName, subtext, handleClickButton, disableButton, previousPages, actions } = props;
     const [ actionOptions, setActionOptions ] = useState(null)
-    const [ actionsList, setActionsList ] = useState(false)
+    const [ showActions, setShowActions ] = useState(false)
     const [ anchorEl, setAnchorEl ] = useState(null);
     const styles = {
         iconButton: {
@@ -66,8 +66,13 @@ export default function Subheader(props) {
     }
 
     const handleShowActions = (event) => {
-        setActionsList(!actionsList)
+        setShowActions(!showActions)
         setAnchorEl(event.currentTarget);
+    }
+
+    const handleSelectAction = (action_func) => {
+        setShowActions(false)
+        action_func()
     }
 
     return (
@@ -77,7 +82,7 @@ export default function Subheader(props) {
                     <div style={styles.directoryDispaly}>
                         <IconButton sx={styles.iconButton} onClick={() => handleNavigate("/")}><HomeIcon sx={styles.icon}/></IconButton> 
                         /
-                        <IconButton sx={styles.iconButton} onClick={handleShowActions}><MoreHorizIcon sx={styles.icon}/></IconButton> 
+                        <IconButton sx={styles.iconButton}><MoreHorizIcon sx={styles.icon}/></IconButton> 
                         {/* {
                             previousPages !== undefined &&
                             previousPages.map((page, idx) => (
@@ -91,7 +96,23 @@ export default function Subheader(props) {
                         <Button sx={styles.iconButton} size="small" startIcon={<Work/>}>{currentPage}</Button>
                     </div>
                     <div style={styles.pageName}>
-                        {currentPage}
+                        {currentPage}&nbsp;
+                        {actions !== undefined && 
+                            <>
+                            <IconButton onClick={handleShowActions}><MoreHorizIcon sx={styles.icon}/></IconButton>
+                            <Menu
+                                id="actions"
+                                anchorEl={anchorEl}
+                                open={showActions}
+                                onClose={() => setShowActions(false)}
+                            >
+                                {Object.entries(actions).map(([action_text, action_func]) => (
+                                    <MenuItem onClick={() => handleSelectAction(action_func)}>{action_text}</MenuItem>
+                                ))}
+                            </Menu>
+                            </>
+                        }
+                        
                     </div>
                     <div style={styles.subtext}>
                         {subtext}
