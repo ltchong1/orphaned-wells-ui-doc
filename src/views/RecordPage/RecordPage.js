@@ -42,14 +42,13 @@ export default function Record(props) {
                 // subtext={formatAttributes(projectData.attributes)}
                 handleClickButton={() => handleReprocessImage(true)}
                 disableButton={true}
+                previousPages={[{name: "project", path: "/project/"+recordData.project_id}]}
             />
             <Box sx={styles.innerBox}>
                 <DocumentContainer
                     image={recordData.img_url}
                     attributes={recordData.attributes}
                 />
-            
-                
             </Box>
             
         </Box>
