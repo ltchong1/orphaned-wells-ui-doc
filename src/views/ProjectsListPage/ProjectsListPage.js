@@ -11,10 +11,10 @@ export default function ProjectsListPage(props) {
     const [ showNewProjectDialog, setShowNewProjectDialog ] = useState(false)
 
     useEffect(()=> {
-        console.log('getting projects')
+        // console.log('getting projects')
         getProjects().then((response) => response.json()).then((data)=> {
-            console.log('projects data: ')
-            console.log(data)
+            // console.log('projects data: ')
+            // console.log(data)
             setProjects(data)
         }).catch((e) => {
             console.error(e)
