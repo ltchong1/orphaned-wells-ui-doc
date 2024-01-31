@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, Box, Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
+import { Grid, Box, Table, TableBody, TableCell, TableHead, TableRow, TableContainer, TextField } from '@mui/material';
 import LassoSelector from '../../components/LassoSelector/LassoSelector';
 
 export default function DocumentContainer(props) {
-    const { image, attributes } = props;
+    const { image, attributes, handleChangeValue } = props;
     const [ points, setPoints ] = useState(null)
     const [ displayPoints, setDisplayPoints ] = useState(null)
     const [ displayKey, setDisplayKey ] = useState(null)
     const [ showCompletedPoints, setShowCompletedPoints ] = useState(true)
     const [ imageDimensions, setImageDimensions ] = useState([])
     const [ checkAgain, setCheckAgain ] = useState(0)
+    const [ editingFields, setEditingFields ] = useState([])
 
     useEffect(() => {
         // console.log(props)
@@ -71,8 +72,30 @@ export default function DocumentContainer(props) {
             setDisplayPoints(actual_vertices)
             setDisplayKey(key)
         }
-        
     }
+
+    const handleDoubleClick = (key) => {
+        console.log("double clicked "+key)
+        let tempEditingFields = [...editingFields]
+        if (!tempEditingFields.includes(key)) {
+            tempEditingFields.push(key)
+            setEditingFields(tempEditingFields)
+        }
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            console.log("hit enter")
+            e.preventDefault();
+            const index = editingFields.indexOf(e.target.name);
+            if (index > -1) {
+                let tempEditingFields = [...editingFields]
+                tempEditingFields.splice(index, 1);
+                setEditingFields(tempEditingFields)
+            }
+        } 
+        
+      }
 
     return (
         <Box>
@@ -103,7 +126,21 @@ export default function DocumentContainer(props) {
                                 {Object.entries(attributes).map(([k, v]) => (
                                     <TableRow key={k}>
                                         <TableCell sx={styles.fieldKey} onClick={() => handleClickField(k, v.normalized_vertices)}>{k}</TableCell>
-                                        <TableCell>{v.value}</TableCell>
+                                        <TableCell onDoubleClick={() => handleDoubleClick(k)} onKeyDown={handleKeyDown}>
+                                            {editingFields.includes(k) ? 
+                                                <TextField 
+                                                    autoFocus
+                                                    name={k}
+                                                    size="small" 
+                                                    // label={""} 
+                                                    defaultValue={v.value} 
+                                                    onChange={handleChangeValue} 
+                                                    onFocus={(event) => event.target.select()}
+                                                />
+                                                :
+                                                v.value
+                                            }
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

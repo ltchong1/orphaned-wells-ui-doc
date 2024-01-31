@@ -7,12 +7,13 @@ import DocumentContainer from '../../components/DocumentContainer/DocumentContai
 
 export default function Record(props) {
     const [ recordData, setRecordData ] = useState({})
+    const [ wasEdited, setWasEdited ] = useState(false)
     let params = useParams(); 
     useEffect(() => {
         getRecordData(params.id)
         .then(response => response.json())
         .then((data)=>{
-            // console.log("Record Data:", data);
+            console.log("Record Data:", data);
             setRecordData(data)
         }).catch((e) => {
             console.error('error getting record data: ',e)
@@ -34,20 +35,38 @@ export default function Record(props) {
         console.log('this functionality might not work for a bit hehe')
     }
 
+    const handleUpdateRecord = () => {
+
+    }
+
+    const handleChangeValue = (event) => {
+        let attribute = event.target.name
+        let value = event.target.value
+        let tempRecordData = {...recordData}
+        let tempAttributes = {...tempRecordData.attributes}
+        let tempAttribute = {...tempAttributes[attribute]}
+        tempAttribute.value = value
+        tempAttributes[attribute] = tempAttribute
+        tempRecordData.attributes = tempAttributes
+        setRecordData(tempRecordData)
+        setWasEdited(true)
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={recordData.filename}
-                buttonName="Reprocess image"
+                buttonName="Update Record"
                 // subtext={formatAttributes(projectData.attributes)}
                 handleClickButton={() => handleReprocessImage(true)}
-                disableButton={true}
-                previousPages={[{name: "project", path: "/project/"+recordData.project_id}]}
+                disableButton={!wasEdited}
+                // previousPages={[{name: "project", path: "/project/"+recordData.project_id}]}
             />
             <Box sx={styles.innerBox}>
                 <DocumentContainer
                     image={recordData.img_url}
                     attributes={recordData.attributes}
+                    handleChangeValue={handleChangeValue}
                 />
             </Box>
             
