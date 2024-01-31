@@ -56,6 +56,7 @@ export default function Project(props) {
             response.json()
             .then((data)=>{
                 console.log('fileupload successful: ',data)
+                window.location.reload()
             }).catch((err)=>{
                 console.error("error on file upload: ",err)
                 // setErrorMessage(String(err))

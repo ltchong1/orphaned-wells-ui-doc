@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material'
 import Paper from '@mui/material/Paper';
+import { formatDate } from '../../assets/helperFunctions';
 
 export default function ProjectsListTable(props) {
   let navigate = useNavigate()
@@ -30,17 +31,6 @@ export default function ProjectsListTable(props) {
     }
     output = output.substring(0, output.length-2)
     return output
-  }
-
-  const formatDate = (timestamp) => {
-    if (timestamp !== null) {
-      let date = new Date(timestamp*1000)
-      let day = date.getDate()
-      let month = date.getMonth()
-      let year = date.getFullYear()
-      let formattedDate = `${month+1}/${day}/${year}`
-      return formattedDate
-    } else return timestamp
   }
 
   return (

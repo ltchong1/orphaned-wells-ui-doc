@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box, Paper } from '@mui/material'
+import { DNA } from 'react-loader-spinner'
 import DownloadIcon from '@mui/icons-material/Download';
 import { downloadRecordsCSV } from '../../services/app.service';
+import { formatDate } from '../../assets/helperFunctions';
+
 
 export default function RecordsTable(props) {
   let navigate = useNavigate()
@@ -49,6 +52,44 @@ export default function RecordsTable(props) {
     })
   }
 
+  const tableRow = (row, idx) => {
+    console.log(row.attributes)
+    if (row.attributes === undefined) {
+      return (
+        <TableRow sx={styles.projectRow}>
+          <TableCell align="center" colSpan={projectData.attributes.length} sx={{padding:0, position: "relative"}}>
+            {/* <span style={{position: "absolute", top:"25%", right: "54%"}}>processing</span> */}
+            <DNA
+              style={{margin: 0, padding: 0}}
+              visible={true}
+              height="50"
+              width="80"
+              ariaLabel="dna-loading"
+            />
+          </TableCell>
+        </TableRow>
+      )
+    } else {
+      return (
+        <TableRow
+          sx={styles.projectRow}
+          onClick={() => handleClickRecord(row._id)}
+        >
+            {projectData.attributes.map((attribute, attribute_idx) => {
+              try {
+                if (Object.keys(row.attributes).includes(attribute)) {
+                  return <TableCell key={attribute_idx}>{row.attributes[attribute].value}</TableCell>
+                } else return <TableCell key={attribute_idx}>N/A</TableCell>
+              } catch (e) {
+                return <TableCell key={attribute_idx}>error</TableCell>
+              }                  
+            })}
+            <TableCell>{formatDate(row.dateCreated)}</TableCell>
+        </TableRow>
+      )
+    }
+  }
+
   return (
     <TableContainer component={Paper}>
       <Box sx={styles.topSection}>
@@ -64,28 +105,15 @@ export default function RecordsTable(props) {
                     <TableCell key={idx}>{attribute}</TableCell>
                 ))
             }
+            <TableCell>Date Uploaded</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {records.map((row, idx) => (
-            <TableRow
-              key={idx}
-              sx={styles.projectRow}
-              onClick={() => handleClickRecord(row._id)}
-            >
-                {projectData.attributes.map((attribute, attribute_idx) => {
-                  try {
-                    if (Object.keys(row.attributes).includes(attribute)) {
-                      return <TableCell key={attribute_idx}>{row.attributes[attribute].value}</TableCell>
-                    } else return <TableCell key={attribute_idx}>N/A</TableCell>
-                  } catch (e) {
-                    return <TableCell key={attribute_idx}>error</TableCell>
-                  }                  
-                })}
-                {/* {Object.entries(row.attributes).map(([key, attribute]) => (
-                  <TableCell key={key}>{attribute.raw_text}</TableCell>
-                ))} */}
-            </TableRow>
+            <Fragment key={idx}>
+              {tableRow(row, idx)}
+            </Fragment>
+            
           ))}
         </TableBody>
       </Table>
