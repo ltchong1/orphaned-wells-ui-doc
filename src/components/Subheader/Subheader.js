@@ -107,7 +107,7 @@ export default function Subheader(props) {
                                 onClose={() => setShowActions(false)}
                             >
                                 {Object.entries(actions).map(([action_text, action_func]) => (
-                                    <MenuItem onClick={() => handleSelectAction(action_func)}>{action_text}</MenuItem>
+                                    <MenuItem key={action_text} onClick={() => handleSelectAction(action_func)}>{action_text}</MenuItem>
                                 ))}
                             </Menu>
                             </>

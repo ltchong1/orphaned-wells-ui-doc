@@ -4,10 +4,12 @@ import { useParams } from "react-router-dom";
 import { getRecordData, updateRecord } from '../../services/app.service';
 import Subheader from '../../components/Subheader/Subheader';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
+import PopupModal from '../../components/PopupModal/PopupModal';
 
 export default function Record(props) {
     const [ recordData, setRecordData ] = useState({})
     const [ wasEdited, setWasEdited ] = useState(false)
+    const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
     let params = useParams(); 
     useEffect(() => {
         getRecordData(params.id)
@@ -56,6 +58,12 @@ export default function Record(props) {
         setWasEdited(true)
     }
 
+
+    const handleDeleteRecord = () => {
+        console.log("handle delete record")
+        setOpenDeleteModal(false)
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
@@ -64,6 +72,7 @@ export default function Record(props) {
                 // subtext={formatAttributes(projectData.attributes)}
                 handleClickButton={handleUpdateRecord}
                 disableButton={!wasEdited}
+                actions={{"Delete record": () => setOpenDeleteModal(true)}}
                 // previousPages={[{name: "project", path: "/project/"+recordData.project_id}]}
             />
             <Box sx={styles.innerBox}>
@@ -73,7 +82,16 @@ export default function Record(props) {
                     handleChangeValue={handleChangeValue}
                 />
             </Box>
-            
+            <PopupModal
+                open={openDeleteModal}
+                handleClose={() => setOpenDeleteModal(false)}
+                text="Are you sure you want to delete this record?"
+                handleSave={handleDeleteRecord}
+                buttonText='Delete'
+                buttonColor='error'
+                buttonVariant='contained'
+                width={400}
+            />
         </Box>
     );
 }

@@ -34,7 +34,6 @@ export default function ProjectsListPage(props) {
     }
 
     const handleClickNewProject = () => {
-        console.log('inside handle click new project')
         setShowNewProjectDialog(true)
     }
 
