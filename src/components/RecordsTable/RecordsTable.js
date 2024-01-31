@@ -53,7 +53,6 @@ export default function RecordsTable(props) {
   }
 
   const tableRow = (row, idx) => {
-    console.log(row.attributes)
     if (row.attributes === undefined) {
       return (
         <TableRow sx={styles.projectRow}>

@@ -13,7 +13,7 @@ export default function Record(props) {
         getRecordData(params.id)
         .then(response => response.json())
         .then((data)=>{
-            console.log("Record Data:", data);
+            // console.log("Record Data:", data);
             setRecordData(data)
         }).catch((e) => {
             console.error('error getting record data: ',e)
