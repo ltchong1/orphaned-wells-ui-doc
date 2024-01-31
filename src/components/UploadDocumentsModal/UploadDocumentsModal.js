@@ -142,7 +142,7 @@ export default function UploadDocumentsModal(props) {
         </Grid>
 
         <Grid item xs={12}>
-            <p style={{color:"#666666"}}>Input file</p>
+            <p style={{color:"#666666"}}>Document file</p>
         </Grid>
         <Grid item xs={12}>
             {DragDrop()}
