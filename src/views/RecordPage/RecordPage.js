@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Grid } from '@mui/material';
-import { useParams } from "react-router-dom";
-import { getRecordData, updateRecord } from '../../services/app.service';
+import { useParams, useNavigate } from "react-router-dom";
+import { getRecordData, updateRecord, deleteRecord } from '../../services/app.service';
 import Subheader from '../../components/Subheader/Subheader';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
@@ -11,6 +11,7 @@ export default function Record(props) {
     const [ wasEdited, setWasEdited ] = useState(false)
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
     let params = useParams(); 
+    let navigate = useNavigate();
     useEffect(() => {
         getRecordData(params.id)
         .then(response => response.json())
@@ -60,8 +61,14 @@ export default function Record(props) {
 
 
     const handleDeleteRecord = () => {
-        console.log("handle delete record")
         setOpenDeleteModal(false)
+        deleteRecord(params.id)
+        .then(response => response.json())
+        .then((data) => {
+            navigate("/project/"+recordData.project_id, {replace: true})
+        }).catch((e) => {
+            console.error("error on deleting record: "+e)
+        })
     }
 
     return (
