@@ -57,3 +57,17 @@ export const updateRecord = (record_id, data) => {
         body: JSON.stringify(data)
     });
 }
+
+export const deleteProject = (project_id) => {
+    return fetch(BACKEND_URL+'/delete_project/'+project_id, {
+        method: 'POST', 
+        mode: 'cors',
+    });
+}
+
+export const deleteRecord = (record_id) => {
+    return fetch(BACKEND_URL+'/delete_record/'+record_id, {
+        method: 'POST', 
+        mode: 'cors',
+    });
+}
