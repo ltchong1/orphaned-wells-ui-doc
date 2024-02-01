@@ -71,3 +71,11 @@ export const deleteRecord = (record_id) => {
         mode: 'cors',
     });
 }
+
+export const authLogin = (code) => {
+    return fetch(BACKEND_URL+'/auth_login', {
+        method: 'POST', 
+        mode: 'cors',
+        body: JSON.stringify(code)
+    });
+}
