@@ -75,7 +75,7 @@ export default function DocumentContainer(props) {
     }
 
     const handleDoubleClick = (key) => {
-        console.log("double clicked "+key)
+        // console.log("double clicked "+key)
         let tempEditingFields = [...editingFields]
         if (!tempEditingFields.includes(key)) {
             tempEditingFields.push(key)
@@ -85,7 +85,6 @@ export default function DocumentContainer(props) {
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            console.log("hit enter")
             e.preventDefault();
             const index = editingFields.indexOf(e.target.name);
             if (index > -1) {
