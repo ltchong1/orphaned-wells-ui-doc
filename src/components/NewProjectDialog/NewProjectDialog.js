@@ -88,6 +88,7 @@ export default function NewProjectDialog(props) {
             history: [],
             attributes: processors[selectedProcessor.idx].attributes,
             documentType: processors[selectedProcessor.idx].documentType,
+            processorId: processors[selectedProcessor.idx].id,
         }
         addProject(body)
         .then(response => response.json())

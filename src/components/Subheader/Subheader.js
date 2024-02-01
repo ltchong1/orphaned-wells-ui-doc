@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import { Button, Grid, IconButton, Box } from '@mui/material';
+import React, { useState, useEffect, Fragment } from 'react';
+import { useNavigate } from "react-router-dom";
+import { Button, Grid, IconButton, Box, Menu, MenuItem } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import Work from '@mui/icons-material/Work';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 export default function Subheader(props) {
-    const { currentPage, buttonName, subtext, handleClickButton, disableButton } = props;
-
+    let navigate = useNavigate();
+    const { currentPage, buttonName, subtext, handleClickButton, disableButton, previousPages, actions } = props;
+    const [ actionOptions, setActionOptions ] = useState(null)
+    const [ showActions, setShowActions ] = useState(false)
+    const [ anchorEl, setAnchorEl ] = useState(null);
     const styles = {
         iconButton: {
             top: -5,
@@ -51,19 +55,64 @@ export default function Subheader(props) {
         }
     }
 
+    useEffect(() => {
+        if (previousPages !== undefined) {
+
+        } 
+    },[props])
+
+    const handleNavigate = (path) => {
+        navigate(path, {replace: true})
+    }
+
+    const handleShowActions = (event) => {
+        setShowActions(!showActions)
+        setAnchorEl(event.currentTarget);
+    }
+
+    const handleSelectAction = (action_func) => {
+        setShowActions(false)
+        action_func()
+    }
+
     return (
         <Box sx={styles.box}>
             <Grid container sx={styles.gridContainer}>
                 <Grid item xs={6} >
                     <div style={styles.directoryDispaly}>
-                        <IconButton sx={styles.iconButton}><HomeIcon sx={styles.icon}/></IconButton> 
+                        <IconButton sx={styles.iconButton} onClick={() => handleNavigate("/")}><HomeIcon sx={styles.icon}/></IconButton> 
                         /
                         <IconButton sx={styles.iconButton}><MoreHorizIcon sx={styles.icon}/></IconButton> 
-                        / 
+                        {/* {
+                            previousPages !== undefined &&
+                            previousPages.map((page, idx) => (
+                                <Fragment key={idx}>
+                                    /
+                                    <Button onClick={() => handleNavigate(page.path)} sx={styles.iconButton} size="small">{page.name}</Button>
+                                </Fragment>
+                            ))
+                        } */}
+                        /
                         <Button sx={styles.iconButton} size="small" startIcon={<Work/>}>{currentPage}</Button>
                     </div>
                     <div style={styles.pageName}>
-                        {currentPage}
+                        {currentPage}&nbsp;
+                        {actions !== undefined && 
+                            <>
+                            <IconButton onClick={handleShowActions}><MoreHorizIcon sx={styles.icon}/></IconButton>
+                            <Menu
+                                id="actions"
+                                anchorEl={anchorEl}
+                                open={showActions}
+                                onClose={() => setShowActions(false)}
+                            >
+                                {Object.entries(actions).map(([action_text, action_func]) => (
+                                    <MenuItem key={action_text} onClick={() => handleSelectAction(action_func)}>{action_text}</MenuItem>
+                                ))}
+                            </Menu>
+                            </>
+                        }
+                        
                     </div>
                     <div style={styles.subtext}>
                         {subtext}

@@ -35,3 +35,39 @@ export const getRecordData = (record_id) => {
         mode: 'cors',
     });
 }
+
+export const downloadRecordsCSV = (project_id) => {
+    return fetch(BACKEND_URL+'/download_records/'+project_id, {
+        mode: 'cors',
+    });
+}
+
+export const updateProject = (project_id, data) => {
+    return fetch(BACKEND_URL+'/update_project/'+project_id, {
+        method: 'POST', 
+        mode: 'cors',
+        body: JSON.stringify(data)
+    });
+}
+
+export const updateRecord = (record_id, data) => {
+    return fetch(BACKEND_URL+'/update_record/'+record_id, {
+        method: 'POST', 
+        mode: 'cors',
+        body: JSON.stringify(data)
+    });
+}
+
+export const deleteProject = (project_id) => {
+    return fetch(BACKEND_URL+'/delete_project/'+project_id, {
+        method: 'POST', 
+        mode: 'cors',
+    });
+}
+
+export const deleteRecord = (record_id) => {
+    return fetch(BACKEND_URL+'/delete_record/'+record_id, {
+        method: 'POST', 
+        mode: 'cors',
+    });
+}
