@@ -56,7 +56,7 @@ export default function RecordsTable(props) {
     if (row.attributes === undefined) {
       return (
         <TableRow sx={styles.projectRow}>
-          <TableCell align="center" colSpan={projectData.attributes.length} sx={{padding:0, position: "relative"}}>
+          <TableCell align="center" colSpan={projectData.attributes.length+1} sx={{padding:0, position: "relative"}}>
             {/* <span style={{position: "absolute", top:"25%", right: "54%"}}>processing</span> */}
             <DNA
               style={{margin: 0, padding: 0}}
