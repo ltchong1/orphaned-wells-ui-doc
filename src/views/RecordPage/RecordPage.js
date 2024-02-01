@@ -39,7 +39,7 @@ export default function Record(props) {
         .then(response => response.json())
         .then((data)=> {
             // console.log("successfully updated record: "+data)
-            setWasEdited(true)
+            setWasEdited(false)
         }).catch((e) => {
             console.error("error updating record: ")
             console.error(e)
