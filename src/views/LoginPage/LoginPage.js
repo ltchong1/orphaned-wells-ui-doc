@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Button, Typography, Modal } from '@mui/material';
 import { useNavigate } from "react-router-dom";
+import { Box, Grid, Button, Typography, Modal } from '@mui/material';
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import { authLogin } from '../../services/app.service';
 
 
 export default function LoginPage(props) {
-    const { handleSuccessfulAuthentication } = props;
-    let navigate = useNavigate();
+    const { handleSuccessfulAuthentication, authenticated } = props;
+    let navigate = useNavigate()
+
+    useEffect(() => {
+        if (authenticated) {
+            navigate("/")
+        }
+    },[authenticated])
 
     const googleLogin = useGoogleLogin({
         onSuccess: async ({ code }) => {

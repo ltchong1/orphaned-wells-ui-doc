@@ -15,6 +15,7 @@ function App() {
   React.useEffect(() => {
     // let access_token = localStorage.getItem("access_token")
     // let refresh_token = localStorage.getItem("refresh_token")
+    // localStorage.removeItem("id_token")
     let id_token = localStorage.getItem("id_token")
     if (id_token !== null) {
       setUserCredentials({id_token: id_token})
@@ -26,12 +27,12 @@ function App() {
 
   const handleSuccessfulAuthentication = (access_token: string, refresh_token: string, id_token: string) => {
     // gotta store credentials so they stay logged in
-    localStorage.setItem("access_token", access_token)
-    localStorage.setItem("refresh_token", refresh_token)
+    // localStorage.setItem("access_token", access_token)
+    // localStorage.setItem("refresh_token", refresh_token)
     localStorage.setItem("id_token", id_token)
     setUserCredentials({
-      access_token: access_token, 
-      refresh_token: refresh_token, 
+      // access_token: access_token, 
+      // refresh_token: refresh_token, 
       id_token: id_token
     })
     setAuthenticated(true)
@@ -43,7 +44,7 @@ function App() {
           <Routes> 
           <Route
               path="login"
-              element={<LoginPage handleSuccessfulAuthentication={handleSuccessfulAuthentication}/>}
+              element={<LoginPage handleSuccessfulAuthentication={handleSuccessfulAuthentication} authenticated={authenticated}/>}
           />
           <Route 
               path="record/:id" 

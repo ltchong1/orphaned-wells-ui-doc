@@ -11,14 +11,28 @@ export default function ProjectsListPage(props) {
     const [ showNewProjectDialog, setShowNewProjectDialog ] = useState(false)
 
     useEffect(()=> {
-        // console.log('getting projects')
-        getProjects().then((response) => response.json()).then((data)=> {
-            // console.log('projects data: ')
-            // console.log(data)
-            setProjects(data)
-        }).catch((e) => {
-            console.error(e)
-            setUnableToConnect(true)
+        getProjects()
+        .then(response => {
+            response.json()
+            .then((data)=> {
+                if (response.status === 200) {
+                    console.log('projects data: ')
+                    console.log(data)
+                    setProjects(data)
+                } else if (response.status === 401) {
+                    console.log('unauthorized: ')
+                    console.log(data)
+                    localStorage.removeItem("id_token")
+                    window.location.replace("/");
+                } else {
+                    console.log('error: ')
+                    console.log(data)
+                    setUnableToConnect(true)
+                }
+            }).catch((e) => {
+                console.error(e)
+                setUnableToConnect(true)
+            })
         })
     },[])
 
