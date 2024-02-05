@@ -1,6 +1,8 @@
 runtime: python27
 api_version: 1
 threadsafe: true
+runtime_config:
+  python_version: 3.12
 handlers:
 - url: /
   static_files: build/index.html

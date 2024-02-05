@@ -39,6 +39,8 @@ export const callAPI = (apiFunc, apiParams, onSuccess, onError) => {
       }).catch((e) => {
         onError(e)
       })
+  }).catch((e) =>{
+    onError(e)
   })
 }
 
@@ -57,5 +59,7 @@ export const callAPIWithBlobResponse = (apiFunc, apiParams, onSuccess, onError) 
       }).catch((e) => {
         onError(e)
       })
+  }).catch((e) =>{
+    onError(e)
   })
 } 

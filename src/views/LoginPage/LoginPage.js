@@ -81,7 +81,6 @@ export default function LoginPage(props) {
             <Box sx={styles.innerBox}>
             <Modal
                 open={true}
-                paperProps={{outline: "none"}}
                 // onClose={handleClose}
             >
             <Box sx={styles.modalBox}>
