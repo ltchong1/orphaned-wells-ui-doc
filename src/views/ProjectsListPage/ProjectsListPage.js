@@ -4,7 +4,7 @@ import Subheader from '../../components/Subheader/Subheader';
 import ProjectsListTable from '../../components/ProjectsListTable/ProjectsListTable';
 import NewProjectDialog from '../../components/NewProjectDialog/NewProjectDialog';
 import { getProjects } from '../../services/app.service';
-import { logout } from '../../assets/helperFunctions';
+import { callAPI } from '../../assets/helperFunctions';
 
 export default function ProjectsListPage(props) {
     const [ projects, setProjects ] = useState([])
@@ -12,27 +12,19 @@ export default function ProjectsListPage(props) {
     const [ showNewProjectDialog, setShowNewProjectDialog ] = useState(false)
 
     useEffect(()=> {
-        getProjects()
-        .then(response => {
-            response.json()
-            .then((data)=> {
-                if (response.status === 200) {
-                    console.log('projects data: ')
-                    console.log(data)
-                    setProjects(data)
-                } else if (response.status === 401) {
-                    logout()
-                } else {
-                    console.log('error: ')
-                    console.log(data)
-                    setUnableToConnect(true)
-                }
-            }).catch((e) => {
-                console.error(e)
-                setUnableToConnect(true)
-            })
-        })
+        callAPI(getProjects, [], handleSuccess, handleError)
     },[])
+
+    const handleSuccess = (data) => {
+        console.log('projects data: ')
+        console.log(data)
+        setProjects(data)
+    }
+
+    const handleError = (e) => {
+        console.error(e)
+        setUnableToConnect(true)
+    }
 
     const styles = {
         outerBox: {

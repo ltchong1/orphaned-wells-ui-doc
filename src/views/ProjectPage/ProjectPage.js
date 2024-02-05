@@ -6,6 +6,7 @@ import RecordsTable from '../../components/RecordsTable/RecordsTable';
 import Subheader from '../../components/Subheader/Subheader';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 import PopupModal from '../../components/PopupModal/PopupModal';
+import { callAPI } from '../../assets/helperFunctions';
 
 export default function Project(props) {
     const [ records, setRecords ] = useState([])
@@ -14,17 +15,20 @@ export default function Project(props) {
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
     let params = useParams(); 
     let navigate = useNavigate();
+    
     useEffect(() => {
-        getProjectData(params.id)
-        .then(response => response.json())
-        .then((data)=>{
-            // console.log("Project Data:", data);
-            setRecords(data.records)
-            setProjectData(data.project_data)
-        }).catch((e) => {
-            console.error('error getting project data: ',e)
-        });
+        callAPI(
+            getProjectData,
+            [params.id],
+            handleSuccess,
+            (e) => {console.error('error getting project data: ',e)}
+        )
     }, [params.id])
+
+    const handleSuccess = (data) => {
+        setRecords(data.records)
+        setProjectData(data.project_data)
+    }
 
     const styles = {
         outerBox: {
@@ -52,36 +56,12 @@ export default function Project(props) {
     const handleUploadDocument = (file) => {
         const formData = new FormData();
         formData.append('file', file, file.name);
-
-        uploadDocument(formData, projectData.id_)
-        .then(response => {
-        if (response.status === 200) {
-            response.json()
-            .then((data)=>{
-                console.log('fileupload successful: ',data)
-                window.location.reload()
-            }).catch((err)=>{
-                console.error("error on file upload: ",err)
-                // setErrorMessage(String(err))
-                // setShowError(true)
-            })
-        }
-        /*
-            in the case of bad file type
-        */
-        else if (response.status === 400) {
-            response.json()
-            .then((data)=>{
-                console.error("error on file upload: ",data.detail)
-                // setErrorMessage(data.detail)
-                // setShowError(true)
-            }).catch((err)=>{
-                console.error("error on file upload: ",err)
-                // setErrorMessage(response.statusText)
-                // setShowError(true)
-            })
-        }
-        })
+        callAPI(
+            uploadDocument,
+            [formData, projectData.id_],
+            window.location.reload(),
+            (e) => {console.error('error on file upload: ',e)}
+        )
     }
 
     const handleUpdateProject = () => {
@@ -90,13 +70,12 @@ export default function Project(props) {
 
     const handleDeleteProject = () => {
         setOpenDeleteModal(false)
-        deleteProject(projectData.id_)
-        .then(response => response.json())
-        .then((data) => {
-            navigate("/projects", {replace: true})
-        }).catch((e) => {
-            console.error("error on deleting project: "+e)
-        })
+        callAPI(
+            deleteProject,
+            [projectData.id_],
+            (data) => navigate("/projects", {replace: true}),
+            (e) => {console.error('error on deleting project: ',e)}
+        )
     }
 
     return (

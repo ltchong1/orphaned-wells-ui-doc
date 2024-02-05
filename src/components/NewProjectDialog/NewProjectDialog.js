@@ -4,6 +4,7 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, Button } from '@
 import CloseIcon from '@mui/icons-material/Close';
 import { processors } from '../../assets/processors';
 import { addProject } from '../../services/app.service';
+import { callAPI } from '../../assets/helperFunctions';
 
 
 export default function NewProjectDialog(props) {
@@ -90,15 +91,12 @@ export default function NewProjectDialog(props) {
             documentType: processors[selectedProcessor.idx].documentType,
             processorId: processors[selectedProcessor.idx].id,
         }
-        addProject(body)
-        .then(response => response.json())
-        .then((data) => {
-            console.log('added project, response: ')
-            console.log(data)
-            window.location.reload()
-        }).catch((e) => {
-            console.error('error on project add ',e)
-        })
+        callAPI(
+            addProject,
+            [body],
+            window.location.reload(),
+            (e) => console.error('error on project add ',e)
+        )
     }
 
     return (

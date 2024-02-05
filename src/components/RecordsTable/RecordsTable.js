@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Butto
 import { DNA } from 'react-loader-spinner'
 import DownloadIcon from '@mui/icons-material/Download';
 import { downloadRecordsCSV } from '../../services/app.service';
-import { formatDate } from '../../assets/helperFunctions';
+import { formatDate, callAPIWithBlobResponse } from '../../assets/helperFunctions';
 
 
 export default function RecordsTable(props) {
@@ -35,21 +35,22 @@ export default function RecordsTable(props) {
   }
 
   const handleDownloadCSV = () => {
-    downloadRecordsCSV(projectData.id_)
-    .then(response => response.blob())
-    .then((data)=>{
-        const href = window.URL.createObjectURL(data);
-        const link = document.createElement('a');
-        link.href = href;
-        link.setAttribute('download', `${projectData.name}_records.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    })
-    .catch((e) => {
-      console.error("unable to download csv: ")
-      console.error(e)
-    })
+    callAPIWithBlobResponse(
+      downloadRecordsCSV,
+      [projectData.id_],
+      handleSuccess,
+      (e) => console.error("unable to download csv: "+e)
+    )
+  }
+
+  const handleSuccess = (data) => {
+    const href = window.URL.createObjectURL(data);
+    const link = document.createElement('a');
+    link.href = href;
+    link.setAttribute('download', `${projectData.name}_records.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   const tableRow = (row, idx) => {
