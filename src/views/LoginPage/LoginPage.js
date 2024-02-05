@@ -89,18 +89,3 @@ export default function LoginPage(props) {
         </Box>
     );
 }
-
-const google = () => {
-
-    return (
-        <GoogleLogin
-            onSuccess={credentialResponse => {
-              console.log(credentialResponse);
-            }}
-            onError={() => {
-              console.log('Login Failed');
-            }}
-          />
-    )
-}
-  
