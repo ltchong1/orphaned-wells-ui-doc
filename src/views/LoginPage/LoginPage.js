@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Grid, Button, Typography, Modal } from '@mui/material';
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 import { authLogin } from '../../services/app.service';
+import GoogleIcon from '@mui/icons-material/Google';
 
 
 export default function LoginPage(props) {
@@ -49,11 +50,17 @@ export default function LoginPage(props) {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: 400,
-            bgcolor: 'background.paper',
-            border: '2px solid #000',
+            // bgcolor: 'background.paper',
+            backgroundColor: "#FAFAFA",
+            // border: '2px solid #000',
             boxShadow: 24,
-            p: 4,
-            // minHeight: "40vh"
+            px: 4,
+            py: 8,
+            borderRadius: 4,
+            "&:focus":{
+                outline: "none"
+            },
+            // minHeight: "20vh"
         },
         modalTitle: {
             display: "flex", 
@@ -63,6 +70,9 @@ export default function LoginPage(props) {
             display: "flex",
             justifyContent: "center",
             mt: 2
+        },
+        button: {
+            backgroundColor: "#4285F4",
         }
     }
 
@@ -71,6 +81,7 @@ export default function LoginPage(props) {
             <Box sx={styles.innerBox}>
             <Modal
                 open={true}
+                paperProps={{outline: "none"}}
                 // onClose={handleClose}
             >
             <Box sx={styles.modalBox}>
@@ -78,7 +89,7 @@ export default function LoginPage(props) {
                     Undocumented Orphan Wells UI
                 </Typography>
                 <Typography sx={styles.modalBody} component="span">
-                    <Button onClick={googleLogin} variant="contained">
+                    <Button sx={styles.button} onClick={googleLogin} variant="contained" startIcon={<GoogleIcon/>}>
                         Login with Google
                     </Button>
                     {/* {() => googleLogin()} */}

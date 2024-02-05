@@ -9,7 +9,7 @@ import './App.css';
 
 function App() {
   const [ authenticated, setAuthenticated ] = React.useState(false)
-  const [ userCredentials, setUserCredentials ] = React.useState({})
+  // const [ userCredentials, setUserCredentials ] = React.useState({})
   let navigate = useNavigate()
 
   React.useEffect(() => {
@@ -18,7 +18,7 @@ function App() {
     // localStorage.removeItem("id_token")
     let id_token = localStorage.getItem("id_token")
     if (id_token !== null) {
-      setUserCredentials({id_token: id_token})
+      // setUserCredentials({id_token: id_token})
       setAuthenticated(true)
     } else {
       navigate("/login")
@@ -30,11 +30,11 @@ function App() {
     // localStorage.setItem("access_token", access_token)
     // localStorage.setItem("refresh_token", refresh_token)
     localStorage.setItem("id_token", id_token)
-    setUserCredentials({
-      // access_token: access_token, 
-      // refresh_token: refresh_token, 
-      id_token: id_token
-    })
+    // setUserCredentials({
+    //   // access_token: access_token, 
+    //   // refresh_token: refresh_token, 
+    //   id_token: id_token
+    // })
     setAuthenticated(true)
   }
 
