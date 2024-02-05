@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import Subheader from '../../components/Subheader/Subheader';
 import ProjectsListTable from '../../components/ProjectsListTable/ProjectsListTable';
-import { getProjects } from '../../services/app.service';
 import NewProjectDialog from '../../components/NewProjectDialog/NewProjectDialog';
+import { getProjects } from '../../services/app.service';
+import { logout } from '../../assets/helperFunctions';
 
 export default function ProjectsListPage(props) {
     const [ projects, setProjects ] = useState([])
@@ -20,10 +21,7 @@ export default function ProjectsListPage(props) {
                     console.log(data)
                     setProjects(data)
                 } else if (response.status === 401) {
-                    console.log('unauthorized: ')
-                    console.log(data)
-                    localStorage.removeItem("id_token")
-                    window.location.replace("/");
+                    logout()
                 } else {
                     console.log('error: ')
                     console.log(data)
