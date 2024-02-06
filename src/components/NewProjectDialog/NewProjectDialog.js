@@ -9,13 +9,12 @@ import { callAPI } from '../../assets/helperFunctions';
 
 export default function NewProjectDialog(props) {
     const { open, onClose } = props;
-
-    const [ dialogHeight, setDialogHeight ] = useState('85vh')
-    const [ dialogWidth, setDialogWidth ] = useState('60vw')
     const [ projectName, setProjectName ] = useState("")
     const [ projectDescription, setProjectDescription ] = useState("")
     const [ selectedProcessor, setSelectedProcessor ] = useState({processorId: null})
     const [ disableCreateButton, setDisableCreateButton ] = useState(true)
+    const dialogHeight = '85vh'
+    const dialogWidth = '60vw'
 
     const descriptionElementRef = useRef(null);
     useEffect(() => {

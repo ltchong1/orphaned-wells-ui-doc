@@ -1,7 +1,5 @@
-import * as React from 'react';
 import { useNavigate } from "react-router-dom";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material'
-import Paper from '@mui/material/Paper';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
 import { formatDate } from '../../assets/helperFunctions';
 
 export default function ProjectsListTable(props) {
@@ -23,16 +21,7 @@ export default function ProjectsListTable(props) {
   const handleClickProject = (project_id) => {
     navigate("/project/" + project_id)
   }
-
-  const formatAttributes = (attributes) => {
-    let output = ""
-    for (let attribute of attributes) {
-      output += attribute+", "
-    }
-    output = output.substring(0, output.length-2)
-    return output
-  }
-
+  
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="projects table">

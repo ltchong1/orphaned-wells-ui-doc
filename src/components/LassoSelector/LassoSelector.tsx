@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./styles.css";
 
 import ReactLassoSelect from "react-lasso-select";
@@ -8,11 +8,7 @@ interface Point {
   y: number;
 }
 
-function pointsToString(points: Point[]): string {
-  return points.map(({ x, y }) => `${x},${y}`).join(" ");
-}
-
-export default function LassoSelector(props: { image: string, handleUpdatePoints: Function, displayPoints: number[][], setShowCompletedPoints: Function, disabled: boolean }) {
+export default function LassoSelector(props: { image: string, displayPoints: number[][], disabled: boolean }) {
   const [src, setSrc] = useState(props.image);
   const [img, setImg] = useState({ width: 0, height: 0 });
   const [width, setWidth] = useState(28);
@@ -32,13 +28,13 @@ export default function LassoSelector(props: { image: string, handleUpdatePoints
         }
         newPoints.push(newPoint)
       }
-      props.setShowCompletedPoints(false)
+      // props.setShowCompletedPoints(false)
       setPoints(newPoints)
     }
   }, [props.displayPoints])
 
   const handleSetPoints = (path: Point[]) => {
-    props.setShowCompletedPoints(true)
+    // props.setShowCompletedPoints(true)
     setPoints(path);
   }
 
@@ -47,7 +43,6 @@ export default function LassoSelector(props: { image: string, handleUpdatePoints
     for (let point of path) {
       temp_points.push([point.x,point.y])
     }
-    props.handleUpdatePoints(temp_points)
     setPoints(path);
   }
 

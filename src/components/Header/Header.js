@@ -1,8 +1,7 @@
 import './Header.css';
 import React from 'react';
-import logo from "../../assets/CATALOG-logo.png";
 import { useNavigate } from "react-router-dom";
-import { Button, Menu, MenuItem, IconButton } from '@mui/material';
+import { Menu, MenuItem, IconButton } from '@mui/material';
 import ListIcon from '@mui/icons-material/List';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
