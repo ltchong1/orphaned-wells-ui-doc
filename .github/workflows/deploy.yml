@@ -1,0 +1,33 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [google-auth]
+  pull_request:
+    branches: [main]
+
+env:
+  PYTEST_ADDOPTS: "--color=yes"
+
+jobs:
+
+  code-formatting:
+    name: Deploy to Google cloud storage bucket
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: 'google-github-actions/auth@v2'
+        with:
+            credentials_json: '${{ secrets.GCLOUD_SERVICE_ACCOUNT_JSON }}'
+
+      - name: Install packages
+        run: |
+            npm clean-install
+
+      - name: Build frontend
+        run: |
+            npm run build
+
+      - name: Deploy
+        run: |
+            gcloud app deploy
