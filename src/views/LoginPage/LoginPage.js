@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Box, Grid, Button, Typography, Modal } from '@mui/material';
-import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import { Box, Button, Typography, Modal } from '@mui/material';
+import { useGoogleLogin } from '@react-oauth/google';
 import { authLogin } from '../../services/app.service';
 import GoogleIcon from '@mui/icons-material/Google';
 
@@ -50,9 +50,7 @@ export default function LoginPage(props) {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: 400,
-            // bgcolor: 'background.paper',
             backgroundColor: "#FAFAFA",
-            // border: '2px solid #000',
             boxShadow: 24,
             px: 4,
             py: 8,
@@ -60,7 +58,6 @@ export default function LoginPage(props) {
             "&:focus":{
                 outline: "none"
             },
-            // minHeight: "20vh"
         },
         modalTitle: {
             display: "flex", 
@@ -81,7 +78,6 @@ export default function LoginPage(props) {
             <Box sx={styles.innerBox}>
             <Modal
                 open={true}
-                // onClose={handleClose}
             >
             <Box sx={styles.modalBox}>
                 <Typography sx={styles.modalTitle} variant="h6" component="h2">
@@ -91,7 +87,6 @@ export default function LoginPage(props) {
                     <Button sx={styles.button} onClick={googleLogin} variant="contained" startIcon={<GoogleIcon/>}>
                         Login with Google
                     </Button>
-                    {/* {() => googleLogin()} */}
                 </Typography>
             </Box>
             </Modal>

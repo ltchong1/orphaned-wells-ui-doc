@@ -61,5 +61,5 @@ export const callAPIWithBlobResponse = (apiFunc, apiParams, onSuccess, onError) 
       })
   }).catch((e) =>{
     onError(e)
-  })
+  })  
 } 

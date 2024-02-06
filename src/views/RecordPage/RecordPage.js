@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Grid } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
 import { getRecordData, updateRecord, deleteRecord } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
@@ -7,7 +7,7 @@ import Subheader from '../../components/Subheader/Subheader';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
 
-export default function Record(props) {
+export default function Record() {
     const [ recordData, setRecordData ] = useState({})
     const [ wasEdited, setWasEdited ] = useState(false)
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)

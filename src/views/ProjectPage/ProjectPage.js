@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
 import { getProjectData, uploadDocument, deleteProject } from '../../services/app.service';
@@ -8,7 +8,7 @@ import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDo
 import PopupModal from '../../components/PopupModal/PopupModal';
 import { callAPI } from '../../assets/helperFunctions';
 
-export default function Project(props) {
+export default function Project() {
     const [ records, setRecords ] = useState([])
     const [ projectData, setProjectData ] = useState({attributes: []})
     const [ showDocumentModal, setShowDocumentModal ] = useState(false)

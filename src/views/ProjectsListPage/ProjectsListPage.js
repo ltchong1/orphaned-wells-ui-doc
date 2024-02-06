@@ -6,7 +6,7 @@ import NewProjectDialog from '../../components/NewProjectDialog/NewProjectDialog
 import { getProjects } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 
-export default function ProjectsListPage(props) {
+export default function ProjectsListPage() {
     const [ projects, setProjects ] = useState([])
     const [ unableToConnect, setUnableToConnect ]  = useState(false)
     const [ showNewProjectDialog, setShowNewProjectDialog ] = useState(false)
