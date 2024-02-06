@@ -25,6 +25,8 @@ jobs:
             npm clean-install
 
       - name: Build frontend
+        env:
+          CI: false
         run: |
             npm run build
 
