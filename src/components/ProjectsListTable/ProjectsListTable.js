@@ -27,7 +27,7 @@ export default function ProjectsListTable(props) {
       <Table sx={{ minWidth: 650 }} aria-label="projects table">
         <TableHead>
           <TableRow>
-            {["Project Name", "Description", "Document Type", "Locations", "Date"].map((value)=>(
+            {["Project Name", "Description", "Document Type", "Locations", "Creator", "Date"].map((value)=>(
               <TableCell sx={styles.headerRow} key={value}>{value}</TableCell>
             ))}
           </TableRow>
@@ -45,6 +45,7 @@ export default function ProjectsListTable(props) {
               <TableCell>{row.description}</TableCell>
               <TableCell>{row.documentType}</TableCell>
               <TableCell>{row.state}</TableCell>
+              <TableCell>{row.creator.name}</TableCell>
               <TableCell>{formatDate(row.dateCreated)}</TableCell>
             </TableRow>
           ))}
