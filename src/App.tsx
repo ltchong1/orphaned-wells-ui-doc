@@ -22,11 +22,7 @@ function App() {
   let navigate = useNavigate()
 
   React.useEffect(() => {
-    // let access_token = localStorage.getItem("access_token")
-    // let refresh_token = localStorage.getItem("refresh_token")
-    // localStorage.removeItem("id_token")
     let id_token = localStorage.getItem("id_token")
-    
     if (id_token !== null) {
       // setUserCredentials({id_token: id_token})
       checkAuthentication(id_token)
