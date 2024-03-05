@@ -5,7 +5,16 @@ import ProjectsListPage from './views/ProjectsListPage/ProjectsListPage';
 import Project from './views/ProjectPage/ProjectPage';
 import Record from './views/RecordPage/RecordPage';
 import Header from './components/Header/Header'; 
+import { callAPI } from './assets/helperFunctions';
+import { checkAuth } from './services/app.service';
 import './App.css';
+
+interface User {
+  email: string,
+  name: string,
+  picture: string,
+  hd: string
+}
 
 function App() {
   const [ authenticated, setAuthenticated ] = React.useState(false)
@@ -17,13 +26,35 @@ function App() {
     // let refresh_token = localStorage.getItem("refresh_token")
     // localStorage.removeItem("id_token")
     let id_token = localStorage.getItem("id_token")
+    
     if (id_token !== null) {
       // setUserCredentials({id_token: id_token})
-      setAuthenticated(true)
+      checkAuthentication(id_token)
     } else {
       navigate("/login")
     }
   }, [])
+
+  const checkAuthentication = (id_token: string) => {
+    callAPI(
+      checkAuth,
+      [id_token],
+      handleSuccess,
+      handleFailure
+    )
+  }
+
+  const handleSuccess = (user_data: User) => {
+    setAuthenticated(true)
+    localStorage.setItem("user_email", user_data.email)
+    localStorage.setItem("user_name", user_data.name)
+    localStorage.setItem("user_picture", user_data.picture)
+    localStorage.setItem("user_hd", user_data.hd)
+  }
+
+  const handleFailure = () => {
+    navigate("/login")
+  }
 
   const handleSuccessfulAuthentication = (access_token: string, refresh_token: string, id_token: string) => {
     // gotta store credentials so they stay logged in
@@ -35,7 +66,8 @@ function App() {
     //   // refresh_token: refresh_token, 
     //   id_token: id_token
     // })
-    setAuthenticated(true)
+    // setAuthenticated(true)
+    checkAuthentication(id_token)
   }
 
   return (

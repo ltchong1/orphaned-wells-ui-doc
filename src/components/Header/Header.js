@@ -1,7 +1,7 @@
 import './Header.css';
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Menu, MenuItem, IconButton } from '@mui/material';
+import { Menu, MenuItem, IconButton, Avatar } from '@mui/material';
 import ListIcon from '@mui/icons-material/List';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { logout } from '../../assets/helperFunctions';
@@ -16,7 +16,12 @@ export default function Header(props) {
   const styles = {
     icon: {
       top: 5,
-      color: "black"
+      color: "black",
+      right: 5
+    },
+    avatar: {
+      width: 24,
+      height: 24
     }
   }
 
@@ -54,7 +59,11 @@ export default function Header(props) {
           CATALOG
         </div>
         <div  className="right" >
-          <IconButton sx={styles.icon} onClick={handleShowProfileActions}><AccountCircleIcon/></IconButton>
+        <IconButton sx={styles.icon} onClick={handleShowProfileActions}>
+          <Avatar sx={styles.avatar} alt={localStorage.getItem("user_name")} src={localStorage.getItem("user_picture")}/>
+        </IconButton>
+          
+          {/* <IconButton sx={styles.icon} onClick={handleShowProfileActions}><AccountCircleIcon/></IconButton> */}
           <Menu
             id="actions-list"
             anchorEl={anchorAr}

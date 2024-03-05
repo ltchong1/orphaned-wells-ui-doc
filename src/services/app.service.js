@@ -91,3 +91,12 @@ export const authLogin = (code) => {
         headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
     });
 }
+
+export const checkAuth = (idtoken) => {
+    return fetch(BACKEND_URL+'/token', {
+        method: 'POST', 
+        mode: 'cors',
+        body: JSON.stringify(idtoken),
+        headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
+    });
+}
