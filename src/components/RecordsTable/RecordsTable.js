@@ -57,7 +57,7 @@ export default function RecordsTable(props) {
     if (row.attributes === undefined) {
       return (
         <TableRow sx={styles.projectRow}>
-          <TableCell align="center" colSpan={projectData.attributes.length+1} sx={{padding:0, position: "relative"}}>
+          <TableCell align="center" colSpan={projectData.attributes.length+2} sx={{padding:0, position: "relative"}}>
             {/* <span style={{position: "absolute", top:"25%", right: "54%"}}>processing</span> */}
             <DNA
               style={{margin: 0, padding: 0}}
@@ -84,6 +84,7 @@ export default function RecordsTable(props) {
                 return <TableCell key={attribute_idx}>error</TableCell>
               }                  
             })}
+            <TableCell>{row.contributor.name}</TableCell>
             <TableCell>{formatDate(row.dateCreated)}</TableCell>
         </TableRow>
       )
@@ -105,6 +106,7 @@ export default function RecordsTable(props) {
                     <TableCell key={idx}>{attribute}</TableCell>
                 ))
             }
+            <TableCell>Contributor</TableCell>
             <TableCell>Date Uploaded</TableCell>
           </TableRow>
         </TableHead>
