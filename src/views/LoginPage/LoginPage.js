@@ -76,11 +76,12 @@ export default function LoginPage(props) {
         modalTitle: {
             display: "flex", 
             justifyContent: "center",
+            fontWeight: "bold"
         },
         modalBody: {
             display: "flex",
             justifyContent: "center",
-            mt: 2
+            mt: 4
         },
         button: {
             backgroundColor: "#4285F4",
