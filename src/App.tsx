@@ -58,12 +58,6 @@ function App() {
     localStorage.setItem("access_token", access_token)
     localStorage.setItem("refresh_token", refresh_token)
     localStorage.setItem("id_token", id_token)
-    // setUserCredentials({
-    //   // access_token: access_token, 
-    //   // refresh_token: refresh_token, 
-    //   id_token: id_token
-    // })
-    // setAuthenticated(true)
     checkAuthentication(id_token)
   }
 
