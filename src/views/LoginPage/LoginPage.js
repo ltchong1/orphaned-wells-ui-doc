@@ -20,16 +20,28 @@ export default function LoginPage(props) {
         onSuccess: async ({ code }) => {
             console.log("code " + code);
             authLogin(code)
-            .then(response => response.json())
-            .then((data) => {
-                if (data.access_token !== undefined) {
-                    let access_token = data.access_token
-                    let refresh_token = data.refresh_token
-                    let id_token = data.id_token
-                    handleSuccessfulAuthentication(access_token, refresh_token, id_token)
-                } else {
-                    // unable to authenticate
-                }
+            .then(response => {
+                response.json()
+                .then((data)=> {
+                    if (response.status === 200) {
+                        if (data.access_token !== undefined) {
+                            let access_token = data.access_token
+                            let refresh_token = data.refresh_token
+                            let id_token = data.id_token
+                            handleSuccessfulAuthentication(access_token, refresh_token, id_token)
+                        } else {
+                            // unable to authenticate
+                            console.error("error trying to login")
+                        }
+                    } else if (response.status === 403) {
+                        console.error("403 error: user is pending")
+                        // TODO: display message to user saying that they are awaiting approval
+                    }
+                }).catch((e) => {
+                    console.error("error trying to login: "+e)
+                })
+            }).catch((e) =>{
+                console.error("error trying to login: "+e)
             })
         },
         flow: 'auth-code',
