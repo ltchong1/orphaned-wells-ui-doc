@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Typography, Modal } from '@mui/material';
 import { useGoogleLogin } from '@react-oauth/google';
@@ -8,6 +8,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 
 export default function LoginPage(props) {
     const { handleSuccessfulAuthentication, authenticated } = props;
+    const [ showUnauthorizedMessage, setShowUnauthorizedMessage ] = useState(false)
     let navigate = useNavigate()
 
     useEffect(() => {
@@ -36,6 +37,7 @@ export default function LoginPage(props) {
                     } else if (response.status === 403) {
                         console.error("403 error: user is pending")
                         // TODO: display message to user saying that they are awaiting approval
+                        setShowUnauthorizedMessage(true)
                     }
                 }).catch((e) => {
                     console.error("error trying to login: "+e)
@@ -82,6 +84,10 @@ export default function LoginPage(props) {
         },
         button: {
             backgroundColor: "#4285F4",
+        },
+        unauthorized: {
+            pt: 5,
+            color: "red"
         }
     }
 
@@ -99,6 +105,11 @@ export default function LoginPage(props) {
                     <Button sx={styles.button} onClick={googleLogin} variant="contained" startIcon={<GoogleIcon/>}>
                         Login with Google
                     </Button>
+                </Typography>
+                <Typography sx={styles.unauthorized}>
+                    {
+                        showUnauthorizedMessage && "*You are not authorized to access this application. Please login with a different account or contact the development team to gain access."
+                    }
                 </Typography>
             </Box>
             </Modal>
