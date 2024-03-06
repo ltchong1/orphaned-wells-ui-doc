@@ -100,3 +100,12 @@ export const checkAuth = (idtoken) => {
         headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
     });
 }
+
+export const refreshAuth = () => {
+    return fetch(BACKEND_URL+'/auth_refresh', {
+        method: 'POST', 
+        mode: 'cors',
+        body: JSON.stringify(localStorage.getItem("refresh_token")),
+        headers: {"Authorization": "Bearer "+ localStorage.getItem("refresh_token")}
+    });
+}
