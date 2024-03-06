@@ -8,6 +8,9 @@ const mockProjects = [
         "name": "Test Project",
         "description": "This is a Colorado project",
         "state": "CO",
+        "creator": {
+            "name": "test"
+        },
         "history": [
             ""
         ]
@@ -17,6 +20,9 @@ const mockProjects = [
         "name": "Test Project 2",
         "description": "This is a California project",
         "state": "CA",
+        "creator": {
+            "name": "test"
+        },
         "history": [
             ""
         ]
