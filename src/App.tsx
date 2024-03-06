@@ -23,6 +23,7 @@ function App() {
 
   React.useEffect(() => {
     let id_token = localStorage.getItem("id_token")
+    // localStorage.clear()
     if (id_token !== null) {
       // setUserCredentials({id_token: id_token})
       checkAuthentication(id_token)
@@ -54,8 +55,8 @@ function App() {
 
   const handleSuccessfulAuthentication = (access_token: string, refresh_token: string, id_token: string) => {
     // gotta store credentials so they stay logged in
-    // localStorage.setItem("access_token", access_token)
-    // localStorage.setItem("refresh_token", refresh_token)
+    localStorage.setItem("access_token", access_token)
+    localStorage.setItem("refresh_token", refresh_token)
     localStorage.setItem("id_token", id_token)
     // setUserCredentials({
     //   // access_token: access_token, 
