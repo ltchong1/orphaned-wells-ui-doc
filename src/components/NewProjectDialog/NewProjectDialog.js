@@ -93,9 +93,15 @@ export default function NewProjectDialog(props) {
         callAPI(
             addProject,
             [body],
-            window.location.reload(),
+            handleSuccessfulProjectCreation,
             (e) => console.error('error on project add ',e)
         )
+    }
+
+    const handleSuccessfulProjectCreation = () => {
+        setTimeout(function() {
+            window.location.reload()
+          }, 500)
     }
 
     return (

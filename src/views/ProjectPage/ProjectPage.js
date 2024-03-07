@@ -59,9 +59,15 @@ export default function Project() {
         callAPI(
             uploadDocument,
             [formData, projectData.id_],
-            window.location.reload(),
+            handleSuccessfulDocumentUpload,
             (e) => {console.error('error on file upload: ',e)}
         )
+    }
+
+    const handleSuccessfulDocumentUpload = () => {
+        setTimeout(function() {
+            window.location.reload()
+          }, 500)
     }
 
     const handleUpdateProject = () => {
