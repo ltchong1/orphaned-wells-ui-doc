@@ -11,7 +11,8 @@ env:
 
 jobs:
 
-  code-formatting:
+  production-deploy:
+    if: github.repository == 'CATALOG-Historic-Records/orphaned-wells-ui'
     name: Deploy to Google cloud storage bucket
     runs-on: ubuntu-latest
     steps:
