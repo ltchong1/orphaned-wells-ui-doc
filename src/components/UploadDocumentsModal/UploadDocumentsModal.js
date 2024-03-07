@@ -1,12 +1,6 @@
-import React from 'react';
-import {useState, useEffect} from 'react';   
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
+import { useState } from 'react';   
+import { Grid, Box, Modal, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import Button from '@mui/material/Button';
 import { FileUploader } from "react-drag-drop-files";
 
 
@@ -32,21 +26,13 @@ export default function UploadDocumentsModal(props) {
       p: 2,
     },
     header:{
-        // color:"#0884b4",
         marginTop:5
     },
     button: {
-        // backgroundColor: '#0884b4',
         borderRadius: '8px', 
-        // color:'white',
         width: 200,
-        // '&:hover': {
-        //     backgroundColor: '#0884b4',
-        //     opacity: 0.9
-        // },
     },
     sampleFile:{
-        // color:"#0884b4",
         textDecoration: "none",
         fontWeight: "bold",
         cursor: 'pointer'

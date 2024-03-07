@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Grid, Box, Table, TableBody, TableCell, TableHead, TableRow, TableContainer, TextField } from '@mui/material';
 import LassoSelector from '../../components/LassoSelector/LassoSelector';
 
 export default function DocumentContainer(props) {
     const { image, attributes, handleChangeValue } = props;
-    const [ points, setPoints ] = useState(null)
     const [ displayPoints, setDisplayPoints ] = useState(null)
     const [ displayKey, setDisplayKey ] = useState(null)
-    const [ showCompletedPoints, setShowCompletedPoints ] = useState(true)
     const [ imageDimensions, setImageDimensions ] = useState([])
     const [ checkAgain, setCheckAgain ] = useState(0)
     const [ editingFields, setEditingFields ] = useState([])
@@ -53,12 +51,6 @@ export default function DocumentContainer(props) {
         }
     }
 
-    const handleUpdatePoints = (newPoints) => {
-        // if (newPoints.length === 4 && showCompletedPoints) {
-        //     setPoints(newPoints)
-        // }
-    }
-
     const handleClickField = (key, normalized_vertices) => {
         if(key === displayKey) {
             setDisplayPoints([])
@@ -102,10 +94,8 @@ export default function DocumentContainer(props) {
                 <Grid item xs={6}>
                     {image !== undefined && 
                     <LassoSelector 
-                        image={image} 
-                        handleUpdatePoints={handleUpdatePoints} 
-                        displayPoints={displayPoints} 
-                        setShowCompletedPoints={setShowCompletedPoints}
+                        image={image}
+                        displayPoints={displayPoints}
                         disabled
                     />
                     // <img style={styles.image} src={image}></img>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Button, Grid, IconButton, Box, Menu, MenuItem } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
@@ -8,7 +8,6 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 export default function Subheader(props) {
     let navigate = useNavigate();
     const { currentPage, buttonName, subtext, handleClickButton, disableButton, previousPages, actions } = props;
-    const [ actionOptions, setActionOptions ] = useState(null)
     const [ showActions, setShowActions ] = useState(false)
     const [ anchorEl, setAnchorEl ] = useState(null);
     const styles = {
@@ -83,15 +82,6 @@ export default function Subheader(props) {
                         <IconButton sx={styles.iconButton} onClick={() => handleNavigate("/")}><HomeIcon sx={styles.icon}/></IconButton> 
                         /
                         <IconButton sx={styles.iconButton}><MoreHorizIcon sx={styles.icon}/></IconButton> 
-                        {/* {
-                            previousPages !== undefined &&
-                            previousPages.map((page, idx) => (
-                                <Fragment key={idx}>
-                                    /
-                                    <Button onClick={() => handleNavigate(page.path)} sx={styles.iconButton} size="small">{page.name}</Button>
-                                </Fragment>
-                            ))
-                        } */}
                         /
                         <Button sx={styles.iconButton} size="small" startIcon={<Work/>}>{currentPage}</Button>
                     </div>

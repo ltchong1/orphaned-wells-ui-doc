@@ -2,25 +2,29 @@ import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import Subheader from '../../components/Subheader/Subheader';
 import ProjectsListTable from '../../components/ProjectsListTable/ProjectsListTable';
-import { getProjects } from '../../services/app.service';
 import NewProjectDialog from '../../components/NewProjectDialog/NewProjectDialog';
+import { getProjects } from '../../services/app.service';
+import { callAPI } from '../../assets/helperFunctions';
 
-export default function ProjectsListPage(props) {
+export default function ProjectsListPage() {
     const [ projects, setProjects ] = useState([])
     const [ unableToConnect, setUnableToConnect ]  = useState(false)
     const [ showNewProjectDialog, setShowNewProjectDialog ] = useState(false)
 
     useEffect(()=> {
-        // console.log('getting projects')
-        getProjects().then((response) => response.json()).then((data)=> {
-            // console.log('projects data: ')
-            // console.log(data)
-            setProjects(data)
-        }).catch((e) => {
-            console.error(e)
-            setUnableToConnect(true)
-        })
+        callAPI(getProjects, [], handleSuccess, handleError)
     },[])
+
+    const handleSuccess = (data) => {
+        console.log('projects data: ')
+        console.log(data)
+        setProjects(data)
+    }
+
+    const handleError = (e) => {
+        console.error(e)
+        setUnableToConnect(true)
+    }
 
     const styles = {
         outerBox: {

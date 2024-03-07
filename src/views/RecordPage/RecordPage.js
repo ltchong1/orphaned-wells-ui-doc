@@ -1,26 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Grid } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
 import { getRecordData, updateRecord, deleteRecord } from '../../services/app.service';
+import { callAPI } from '../../assets/helperFunctions';
 import Subheader from '../../components/Subheader/Subheader';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
 
-export default function Record(props) {
+export default function Record() {
     const [ recordData, setRecordData ] = useState({})
     const [ wasEdited, setWasEdited ] = useState(false)
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
     let params = useParams(); 
     let navigate = useNavigate();
     useEffect(() => {
-        getRecordData(params.id)
-        .then(response => response.json())
-        .then((data)=>{
-            // console.log("Record Data:", data);
-            setRecordData(data)
-        }).catch((e) => {
-            console.error('error getting record data: ',e)
-        });
+        callAPI(
+            getRecordData,
+            [params.id],
+            (data) => setRecordData(data),
+            (e) => console.error('error getting record data: ',e)
+        )
     }, [params.id])
 
     const styles = {
@@ -35,15 +34,12 @@ export default function Record(props) {
     }
 
     const handleUpdateRecord = () => {
-        updateRecord(params.id, recordData)
-        .then(response => response.json())
-        .then((data)=> {
-            // console.log("successfully updated record: "+data)
-            setWasEdited(false)
-        }).catch((e) => {
-            console.error("error updating record: ")
-            console.error(e)
-        })
+        callAPI(
+            updateRecord,
+            [params.id, recordData],
+            (data) => setWasEdited(false),
+            (e) => console.error('error updating record: ',e)
+        )
     }
 
     const handleChangeValue = (event) => {
@@ -62,13 +58,12 @@ export default function Record(props) {
 
     const handleDeleteRecord = () => {
         setOpenDeleteModal(false)
-        deleteRecord(params.id)
-        .then(response => response.json())
-        .then((data) => {
-            navigate("/project/"+recordData.project_id, {replace: true})
-        }).catch((e) => {
-            console.error("error on deleting record: "+e)
-        })
+        callAPI(
+            deleteRecord,
+            [params.id],
+            (data) => navigate("/project/"+recordData.project_id, {replace: true}),
+            (e) => console.error('error on deleting record: ',e)
+        )
     }
 
     return (

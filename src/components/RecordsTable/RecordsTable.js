@@ -1,10 +1,10 @@
-import React, { useEffect, Fragment } from 'react';
+import { useEffect, Fragment } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box, Paper } from '@mui/material'
 import { DNA } from 'react-loader-spinner'
 import DownloadIcon from '@mui/icons-material/Download';
 import { downloadRecordsCSV } from '../../services/app.service';
-import { formatDate } from '../../assets/helperFunctions';
+import { formatDate, callAPIWithBlobResponse } from '../../assets/helperFunctions';
 
 
 export default function RecordsTable(props) {
@@ -35,28 +35,32 @@ export default function RecordsTable(props) {
   }
 
   const handleDownloadCSV = () => {
-    downloadRecordsCSV(projectData.id_)
-    .then(response => response.blob())
-    .then((data)=>{
-        const href = window.URL.createObjectURL(data);
-        const link = document.createElement('a');
-        link.href = href;
-        link.setAttribute('download', `${projectData.name}_records.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    })
-    .catch((e) => {
-      console.error("unable to download csv: ")
-      console.error(e)
-    })
+    callAPIWithBlobResponse(
+      downloadRecordsCSV,
+      [projectData.id_],
+      handleSuccess,
+      (e) => console.error("unable to download csv: "+e)
+    )
+  }
+
+  const handleSuccess = (data) => {
+    const href = window.URL.createObjectURL(data);
+    const link = document.createElement('a');
+    link.href = href;
+    link.setAttribute('download', `${projectData.name}_records.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   const tableRow = (row, idx) => {
     if (row.attributes === undefined) {
       return (
-        <TableRow sx={styles.projectRow}>
-          <TableCell align="center" colSpan={projectData.attributes.length+1} sx={{padding:0, position: "relative"}}>
+        <TableRow
+          sx={styles.projectRow}
+          onClick={() => handleClickRecord(row._id)}
+        >
+          <TableCell align="center" colSpan={projectData.attributes.length+2} sx={{padding:0, position: "relative"}}>
             {/* <span style={{position: "absolute", top:"25%", right: "54%"}}>processing</span> */}
             <DNA
               style={{margin: 0, padding: 0}}
@@ -83,6 +87,7 @@ export default function RecordsTable(props) {
                 return <TableCell key={attribute_idx}>error</TableCell>
               }                  
             })}
+            <TableCell>{row.contributor.name}</TableCell>
             <TableCell>{formatDate(row.dateCreated)}</TableCell>
         </TableRow>
       )
@@ -104,6 +109,7 @@ export default function RecordsTable(props) {
                     <TableCell key={idx}>{attribute}</TableCell>
                 ))
             }
+            <TableCell>Contributor</TableCell>
             <TableCell>Date Uploaded</TableCell>
           </TableRow>
         </TableHead>

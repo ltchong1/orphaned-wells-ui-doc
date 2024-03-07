@@ -1,4 +1,4 @@
-import React , {Fragment} from 'react';
+import {Fragment} from 'react';
 import { Grid, Button, Modal, TextField } from '@mui/material';
 
 export default function PopupModal(props) {

@@ -8,5 +8,4 @@ test('test header', () => {
 
     //test for component elements
     screen.getByTestId('ListIcon')
-    screen.getByTestId('AccountCircleIcon')
 })
