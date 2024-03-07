@@ -56,7 +56,10 @@ export default function RecordsTable(props) {
   const tableRow = (row, idx) => {
     if (row.attributes === undefined) {
       return (
-        <TableRow sx={styles.projectRow}>
+        <TableRow
+          sx={styles.projectRow}
+          onClick={() => handleClickRecord(row._id)}
+        >
           <TableCell align="center" colSpan={projectData.attributes.length+2} sx={{padding:0, position: "relative"}}>
             {/* <span style={{position: "absolute", top:"25%", right: "54%"}}>processing</span> */}
             <DNA
