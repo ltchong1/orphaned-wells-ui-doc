@@ -26,6 +26,7 @@ export default function PopupModal(props) {
         buttonTwoColor,
         buttonTwoText,
         inputText,
+        disableSubmit
     } = props;
 
     const styles = {
@@ -66,7 +67,7 @@ export default function PopupModal(props) {
             </Grid>
             <Grid item xs={8}></Grid>
             <Grid item xs={4}>
-                <Button onClick={handleSave} variant={buttonVariant} color={buttonColor}>{buttonText}</Button>
+                <Button onClick={handleSave} variant={buttonVariant} color={buttonColor} disabled={disableSubmit}>{buttonText}</Button>
             </Grid>
             </Grid>
 

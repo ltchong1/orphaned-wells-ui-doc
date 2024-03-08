@@ -12,6 +12,7 @@ export default function AdminPage() {
     const [ showApproveUserModal, setShowApproveUserModal ] = useState(false)
     const [ selectedUser, setSelectedUser ] = useState(null)
     const [ newUser, setNewUser ] = useState("")
+    const [ disableSubmitNewUserButton, setDisableSubmitNewUserButton ] = useState(true)
 
     const styles = {
         outerBox: {
@@ -27,6 +28,15 @@ export default function AdminPage() {
     useEffect(()=> {
         callAPI(getPendingUsers, [], handleAuthSuccess, handleAuthError)
     },[])
+
+    useEffect(()=> {
+        // check if text is a valid email address
+        setDisableSubmitNewUserButton(!emailIsValid(newUser))
+    },[newUser])
+
+    const emailIsValid = (email) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    }
 
     const handleAuthSuccess = (data) => {
         setPendingUsers(data)
@@ -102,6 +112,7 @@ export default function AdminPage() {
                 buttonColor='primary'
                 buttonVariant='contained'
                 width={600}
+                disableSubmit={disableSubmitNewUserButton}
             />
             
         </Box>
