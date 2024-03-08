@@ -11,19 +11,7 @@ export default function AdminPage() {
     const [ showNewUserModal, setShowNewUserModal ] = useState(false)
     const [ showApproveUserModal, setShowApproveUserModal ] = useState(false)
     const [ selectedUser, setSelectedUser ] = useState(null)
-
-    useEffect(()=> {
-        callAPI(getPendingUsers, [], handleSuccess, handleError)
-    },[])
-
-    const handleSuccess = (data) => {
-        setPendingUsers(data)
-    }
-
-    const handleError = (e) => {
-        console.error(e)
-        setUnableToConnect(true)
-    }
+    const [ newUser, setNewUser ] = useState("")
 
     const styles = {
         outerBox: {
@@ -36,26 +24,50 @@ export default function AdminPage() {
         },
     }
 
-    const handleClickAddUser = () => {
+    useEffect(()=> {
+        callAPI(getPendingUsers, [], handleAuthSuccess, handleAuthError)
+    },[])
 
+    const handleAuthSuccess = (data) => {
+        setPendingUsers(data)
+    }
+
+    const handleAuthError = (e) => {
+        console.error(e)
+        setUnableToConnect(true)
     }
 
     const handleApproveUser = () => {
-        callAPI(approveUser, [selectedUser], handleSuccessApproveUser, console.error("unable to approve user"))
+        callAPI(approveUser, [selectedUser], handleSuccess, () => handleUserError("unable to approve user"))
     }
 
-    const handleSuccessApproveUser = (data) => {
+    const handleAddUser = () => {
+        callAPI(addUser, [newUser], handleSuccess, () => handleUserError("unable to add user"))
+    }
+
+    const handleSuccess = () => {
+        setTimeout(function() {
+            window.location.reload()
+          }, 500)
+    }
+
+    const handleClose = () => {
         setShowApproveUserModal(false)
         setSelectedUser(null)
-        window.location.reload()
+        setShowNewUserModal(false)
+        setNewUser("")
+    }
+
+    const handleUserError = (e) => {
+        console.error(e)
     }
 
     return (
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage="Admin"
-                buttonName="add user"
-                handleClickButton={handleClickAddUser}
+                buttonName="+ Add user"
+                handleClickButton={() => setShowNewUserModal(true)}
             />
             <Box sx={styles.innerBox}>
                 {!unableToConnect ? 
@@ -70,7 +82,7 @@ export default function AdminPage() {
             </Box>
             <PopupModal
                 open={showApproveUserModal}
-                handleClose={() => setShowApproveUserModal(false)}
+                handleClose={handleClose}
                 text="Would you like to approve this user for use of the application?"
                 handleSave={handleApproveUser}
                 buttonText='Approve'
@@ -78,19 +90,19 @@ export default function AdminPage() {
                 buttonVariant='contained'
                 width={400}
             />
-            {/* <PopupModal
+            <PopupModal
                 input
-                open={showFieldNameModal}
-                handleClose={() => setShowFieldNameModal(false)}
-                text={customFieldName}
-                textLabel='Optional: add name to save this field location.'
-                handleEditText={handleEditCustomFieldName}
-                handleSave={handleSearchTokens}
+                open={showNewUserModal}
+                handleClose={handleClose}
+                text={newUser}
+                textLabel='Enter email address of new user.'
+                handleEditText={(e) => setNewUser(e.target.value)}
+                handleSave={handleAddUser}
                 buttonText='Submit'
                 buttonColor='primary'
                 buttonVariant='contained'
-                width={400}
-            /> */}
+                width={600}
+            />
             
         </Box>
         
