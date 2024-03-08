@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import Subheader from '../../components/Subheader/Subheader';
 import PopupModal from '../../components/PopupModal/PopupModal';
+import ErrorBar from '../../components/ErrorBar/ErrorBar';
 import { getPendingUsers, approveUser, addUser } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 
@@ -13,6 +14,8 @@ export default function AdminPage() {
     const [ selectedUser, setSelectedUser ] = useState(null)
     const [ newUser, setNewUser ] = useState("")
     const [ disableSubmitNewUserButton, setDisableSubmitNewUserButton ] = useState(true)
+    const [ showError, setShowError ] = useState(false)
+    const [ errorMessage, setErrorMessage ] = useState("")
 
     const styles = {
         outerBox: {
@@ -48,11 +51,11 @@ export default function AdminPage() {
     }
 
     const handleApproveUser = () => {
-        callAPI(approveUser, [selectedUser], handleSuccess, () => handleUserError("unable to approve user"))
+        callAPI(approveUser, [selectedUser], handleSuccess, (e) => handleUserError("unable to approve user", e))
     }
 
     const handleAddUser = () => {
-        callAPI(addUser, [newUser], handleSuccess, () => handleUserError("unable to add user"))
+        callAPI(addUser, [newUser], handleSuccess, (e) => handleUserError("unable to add user", e))
     }
 
     const handleSuccess = () => {
@@ -68,8 +71,10 @@ export default function AdminPage() {
         setNewUser("")
     }
 
-    const handleUserError = (e) => {
-        console.error(e)
+    const handleUserError = (message, e) => {
+        console.error(e.detail)
+        setShowError(true)
+        setErrorMessage(e.detail)
     }
 
     return (
@@ -114,6 +119,9 @@ export default function AdminPage() {
                 width={600}
                 disableSubmit={disableSubmitNewUserButton}
             />
+            {
+                showError && <ErrorBar duration={10000} setOpen={setShowError} severity="error" errorMessage={errorMessage} />
+            }
             
         </Box>
         
