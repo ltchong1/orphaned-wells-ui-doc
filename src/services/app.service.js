@@ -118,3 +118,19 @@ export const getPendingUsers = () => {
         headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
     });
 }
+
+export const approveUser = (email) => {
+    return fetch(BACKEND_URL+'/approve_user/'+email, {
+        method: 'POST', 
+        mode: 'cors',
+        headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
+    });
+}
+
+export const addUser = (email) => {
+    return fetch(BACKEND_URL+'/add_user/'+email, {
+        method: 'POST', 
+        mode: 'cors',
+        headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
+    });
+}
