@@ -134,3 +134,11 @@ export const addUser = (email) => {
         headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
     });
 }
+
+export const deleteUser = (email) => {
+    return fetch(BACKEND_URL+'/delete_user/'+email, {
+        method: 'POST', 
+        mode: 'cors',
+        headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
+    });
+}

@@ -4,7 +4,7 @@ import { Select, MenuItem, FormControl, IconButton, Tooltip, FormHelperText, Inp
 import Subheader from '../../components/Subheader/Subheader';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
-import { getUsers, approveUser, addUser } from '../../services/app.service';
+import { getUsers, approveUser, addUser, deleteUser } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -20,6 +20,7 @@ export default function AdminPage() {
     const [ unableToConnect, setUnableToConnect ]  = useState(false)
     const [ showNewUserModal, setShowNewUserModal ] = useState(false)
     const [ showApproveUserModal, setShowApproveUserModal ] = useState(false)
+    const [ showDeleteUserModal, setShowDeleteUserModal ] = useState(false)
     const [ selectedUser, setSelectedUser ] = useState(null)
     const [ newUser, setNewUser ] = useState("")
     const [ disableSubmitNewUserButton, setDisableSubmitNewUserButton ] = useState(true)
@@ -67,6 +68,10 @@ export default function AdminPage() {
         callAPI(addUser, [newUser], handleSuccess, (e) => handleUserError("unable to add user", e))
     }
 
+    const handleDeleteUser = () => {
+        callAPI(deleteUser, [selectedUser], handleSuccess, (e) => handleUserError("unable to delete user", e))
+    }
+
     const handleSuccess = () => {
         setTimeout(function() {
             window.location.reload()
@@ -99,6 +104,7 @@ export default function AdminPage() {
                         users={users}
                         setSelectedUser={setSelectedUser}
                         setShowApproveUserModal= {setShowApproveUserModal}
+                        setShowDeleteUserModal={setShowDeleteUserModal}
                     />
                 :
                     <h1>You are not authorized to view this page.</h1>
@@ -128,6 +134,16 @@ export default function AdminPage() {
                 width={600}
                 disableSubmit={disableSubmitNewUserButton}
             />
+            <PopupModal
+                open={showDeleteUserModal}
+                handleClose={handleClose}
+                text="Are you sure you would like to remove this user?"
+                handleSave={handleDeleteUser}
+                buttonText='Remove'
+                buttonColor='error'
+                buttonVariant='contained'
+                width={400}
+            />
             {
                 showError && <ErrorBar duration={10000} setOpen={setShowError} severity="error" errorMessage={errorMessage} />
             }
@@ -140,8 +156,8 @@ export default function AdminPage() {
 
 function UsersTable(props) {
 
-    const [ tableRole, setTableRole ] = useState("-1")
-    const { users, setSelectedUser, setShowApproveUserModal } = props;
+    const [ tableRole, setTableRole ] = useState(-1)
+    const { users, setSelectedUser, setShowApproveUserModal, setShowDeleteUserModal } = props;
 
     const styles = {
         headerRow: {
@@ -161,7 +177,8 @@ function UsersTable(props) {
       }
 
       const handleDeleteUser = (user) => {
-
+        setShowDeleteUserModal(true)
+        setSelectedUser(user.email)
       }
 
     return (
@@ -196,7 +213,7 @@ function UsersTable(props) {
                     <Tooltip title="Approve User">
                         <IconButton color="success" disabled={row.role!=-1} onClick={() => handleSelectUser(row)}><CheckCircleIcon/></IconButton>
                     </Tooltip>
-                    <Tooltip title="Discard User">
+                    <Tooltip title="Remove User">
                         <IconButton color="error" onClick={() => handleDeleteUser(row)}><CancelIcon/></IconButton>
                     </Tooltip>
                 </TableCell>
