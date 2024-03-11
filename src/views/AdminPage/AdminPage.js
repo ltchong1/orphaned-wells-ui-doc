@@ -3,11 +3,17 @@ import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
 import Subheader from '../../components/Subheader/Subheader';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
-import { getPendingUsers, approveUser, addUser } from '../../services/app.service';
+import { getUsers, approveUser, addUser } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 
+const ROLES = {
+    "-1": "pending",
+    1: "base user",
+    10: "admin"
+}
+
 export default function AdminPage() {
-    const [ pendingUsers, setPendingUsers ] = useState([])
+    const [ users, setUsers ] = useState([])
     const [ unableToConnect, setUnableToConnect ]  = useState(false)
     const [ showNewUserModal, setShowNewUserModal ] = useState(false)
     const [ showApproveUserModal, setShowApproveUserModal ] = useState(false)
@@ -29,7 +35,7 @@ export default function AdminPage() {
     }
 
     useEffect(()=> {
-        callAPI(getPendingUsers, [], handleAuthSuccess, handleAuthError)
+        callAPI(getUsers, [], handleAuthSuccess, handleAuthError)
     },[])
 
     useEffect(()=> {
@@ -42,7 +48,7 @@ export default function AdminPage() {
     }
 
     const handleAuthSuccess = (data) => {
-        setPendingUsers(data)
+        setUsers(data)
     }
 
     const handleAuthError = (e) => {
@@ -86,8 +92,8 @@ export default function AdminPage() {
             />
             <Box sx={styles.innerBox}>
                 {!unableToConnect ? 
-                    <PendingUsersTable 
-                        pendingUsers={pendingUsers}
+                    <UsersTable 
+                        users={users}
                         setSelectedUser={setSelectedUser}
                         setShowApproveUserModal= {setShowApproveUserModal}
                     />
@@ -129,9 +135,9 @@ export default function AdminPage() {
 
 }
 
-function PendingUsersTable(props) {
+function UsersTable(props) {
 
-    const { pendingUsers, setSelectedUser, setShowApproveUserModal } = props;
+    const { users, setSelectedUser, setShowApproveUserModal } = props;
 
     const styles = {
         headerRow: {
@@ -156,13 +162,14 @@ function PendingUsersTable(props) {
         <Table sx={{ minWidth: 650, borderTop: "5px solid #F5F5F6" }} aria-label="pending users table">
             <TableHead>
             <TableRow>
-                {["Name", "Email", "Organization"].map((value)=>(
+                {["Name", "Email", "Organization", "Role", "Actions"].map((value)=>(
                     <TableCell sx={styles.headerRow} key={value}>{value}</TableCell>
                 ))}
             </TableRow>
             </TableHead>
             <TableBody>
-            {pendingUsers.map((row) => (
+            {users.map((row) => {
+                if (row.role < 1) return (
                 <TableRow
                     key={row.name}
                     sx={styles.userRow}
@@ -173,8 +180,10 @@ function PendingUsersTable(props) {
                 </TableCell>
                 <TableCell>{row.email}</TableCell>
                 <TableCell>{row.hd}</TableCell>
+                <TableCell>{ROLES[row.role]}</TableCell>
+                <TableCell>{row.role < 1 && "approve"}</TableCell>
                 </TableRow>
-            ))}
+            )})}
             </TableBody>
         </Table>
         </TableContainer>

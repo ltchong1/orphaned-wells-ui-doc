@@ -111,8 +111,8 @@ export const refreshAuth = () => {
     });
 }
 
-export const getPendingUsers = () => {
-    return fetch(BACKEND_URL+'/get_pending_users', {
+export const getUsers = () => {
+    return fetch(BACKEND_URL+'/get_users', {
         method: 'GET', 
         mode: 'cors',
         headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
