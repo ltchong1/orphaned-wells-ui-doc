@@ -4,6 +4,7 @@ import LoginPage from './views/LoginPage/LoginPage';
 import ProjectsListPage from './views/ProjectsListPage/ProjectsListPage';
 import Project from './views/ProjectPage/ProjectPage';
 import Record from './views/RecordPage/RecordPage';
+import AdminPage from './views/AdminPage/AdminPage';
 import Header from './components/Header/Header'; 
 import { callAPI } from './assets/helperFunctions';
 import { checkAuth } from './services/app.service';
@@ -80,6 +81,10 @@ function App() {
           <Route 
               path="projects" 
               element={<ProjectsListPage/>} 
+          />
+          <Route
+              path="admin" 
+              element={<AdminPage/>}
           />
           <Route
               path="*" 
