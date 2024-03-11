@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Select, MenuItem, FormControl, IconButton, Tooltip, FormHelperText, InputLabel } from '@mui/material';
 import Subheader from '../../components/Subheader/Subheader';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
 import { getUsers, approveUser, addUser } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 const ROLES = {
     "-1": "pending",
@@ -137,6 +140,7 @@ export default function AdminPage() {
 
 function UsersTable(props) {
 
+    const [ tableRole, setTableRole ] = useState("-1")
     const { users, setSelectedUser, setShowApproveUserModal } = props;
 
     const styles = {
@@ -144,7 +148,7 @@ function UsersTable(props) {
           fontWeight: "bold"
         },
         userRow: {
-          cursor: "pointer",
+        //   cursor: "pointer",
           "&:hover": {
             background: "#efefef"
           },
@@ -156,24 +160,31 @@ function UsersTable(props) {
         setSelectedUser(user.email)
       }
 
+      const handleDeleteUser = (user) => {
+
+      }
+
     return (
         <TableContainer component={Paper}>
-            <h1>Pending Users</h1>
+            <h1>Users</h1> 
+            <RoleDropdown role={tableRole} handleSelectRole={setTableRole}/>
+            
+            
         <Table sx={{ minWidth: 650, borderTop: "5px solid #F5F5F6" }} aria-label="pending users table">
             <TableHead>
             <TableRow>
-                {["Name", "Email", "Organization", "Role", "Actions"].map((value)=>(
-                    <TableCell sx={styles.headerRow} key={value}>{value}</TableCell>
+                {[["Name", "20%"], ["Email", "25%"], ["Organization", "15%"], ["Role", "20%"], ["Actions", "20%"]].map((value)=>(
+                    <TableCell width={value[1]} sx={styles.headerRow} key={value}>{value[0]}</TableCell>
                 ))}
             </TableRow>
             </TableHead>
             <TableBody>
             {users.map((row) => {
-                if (row.role < 1) return (
+                if (row.role === tableRole) return (
                 <TableRow
                     key={row.name}
                     sx={styles.userRow}
-                    onClick={() => handleSelectUser(row)}
+                    // onClick={() => handleSelectUser(row)}
                 >
                 <TableCell component="th" scope="row">
                     {row.name}
@@ -181,11 +192,47 @@ function UsersTable(props) {
                 <TableCell>{row.email}</TableCell>
                 <TableCell>{row.hd}</TableCell>
                 <TableCell>{ROLES[row.role]}</TableCell>
-                <TableCell>{row.role < 1 && "approve"}</TableCell>
+                <TableCell>
+                    <Tooltip title="Approve User">
+                        <IconButton color="success" disabled={row.role!=-1} onClick={() => handleSelectUser(row)}><CheckCircleIcon/></IconButton>
+                    </Tooltip>
+                    <Tooltip title="Discard User">
+                        <IconButton color="error" onClick={() => handleDeleteUser(row)}><CancelIcon/></IconButton>
+                    </Tooltip>
+                </TableCell>
                 </TableRow>
             )})}
             </TableBody>
         </Table>
         </TableContainer>
+    )
+}
+
+function RoleDropdown(props) {
+
+    const { role, handleSelectRole } = props;
+
+    return (
+        <FormControl sx={{ width: 200, pb: 3 }}>
+            <InputLabel id="role-dropdown-label">Role</InputLabel>
+            <Select
+                labelId="role-dropdown-label"
+                id="role-dropdown"
+                label="Role"
+                value={role}
+                onChange={(event) => handleSelectRole(event.target.value)}
+                size="small"
+            >
+            {[-1, 1].map((roleIdx) => (
+                <MenuItem
+                    key={roleIdx}
+                    value={roleIdx}
+                >
+                    {ROLES[roleIdx]}
+                </MenuItem>
+            ))}
+            </Select>
+            {/* <FormHelperText>Select role</FormHelperText> */}
+        </FormControl>
     )
 }
