@@ -11,21 +11,15 @@ export default function Record() {
     const [ recordData, setRecordData ] = useState({})
     const [ wasEdited, setWasEdited ] = useState(false)
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
+    const [ openUpdateNameModal, setOpenUpdateNameModal ] = useState(false)
+    const [ recordName, setRecordName ] = useState("")
     let params = useParams(); 
     let navigate = useNavigate();
-    useEffect(() => {
-        callAPI(
-            getRecordData,
-            [params.id],
-            (data) => setRecordData(data),
-            (e) => console.error('error getting record data: ',e)
-        )
-    }, [params.id])
 
     const styles = {
         outerBox: {
             backgroundColor: "#F5F5F6",
-            height: "100vh"
+            height: "100%"
         },
         innerBox: {
             paddingY:5,
@@ -33,10 +27,38 @@ export default function Record() {
         },
     }
 
+    useEffect(() => {
+        callAPI(
+            getRecordData,
+            [params.id],
+            handleSuccessfulFetchRecord,
+            (e) => console.error('error getting record data: ',e)
+        )
+    }, [params.id])
+
+    const handleSuccessfulFetchRecord = (data) => {
+        setRecordData(data)
+        setRecordName(data.name)
+    }
+
+    const handleChangeRecordName = (event) => {
+        setRecordName(event.target.value)
+    }
+
+    const handleUpdateRecordName = () => {
+        setOpenUpdateNameModal(false)
+        callAPI(
+            updateRecord,
+            [params.id, {data: {name: recordName}, type: "name"}],
+            (data) => window.location.reload(),
+            (e) => console.error('error on updating record name: ',e)
+        )
+    }
+
     const handleUpdateRecord = () => {
         callAPI(
             updateRecord,
-            [params.id, recordData],
+            [params.id, {data: recordData, type: "attributes"}],
             (data) => setWasEdited(false),
             (e) => console.error('error updating record: ',e)
         )
@@ -66,15 +88,20 @@ export default function Record() {
         )
     }
 
+    
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
-                currentPage={recordData.filename}
+                currentPage={recordData.name}
                 buttonName="Update Record"
                 // subtext={formatAttributes(projectData.attributes)}
                 handleClickButton={handleUpdateRecord}
                 disableButton={!wasEdited}
-                actions={{"Delete record": () => setOpenDeleteModal(true)}}
+                actions={{
+                    "Change name": () => setOpenUpdateNameModal(true),
+                    "Delete record": () => setOpenDeleteModal(true)
+                }}
                 // previousPages={[{name: "project", path: "/project/"+recordData.project_id}]}
             />
             <Box sx={styles.innerBox}>
@@ -91,6 +118,19 @@ export default function Record() {
                 handleSave={handleDeleteRecord}
                 buttonText='Delete'
                 buttonColor='error'
+                buttonVariant='contained'
+                width={400}
+            />
+            <PopupModal
+                input
+                open={openUpdateNameModal}
+                handleClose={() => setOpenUpdateNameModal(false)}
+                text={recordName}
+                textLabel='Record Name'
+                handleEditText={handleChangeRecordName}
+                handleSave={handleUpdateRecordName}
+                buttonText='Update'
+                buttonColor='primary'
                 buttonVariant='contained'
                 width={400}
             />
