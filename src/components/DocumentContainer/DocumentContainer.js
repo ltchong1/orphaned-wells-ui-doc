@@ -40,7 +40,8 @@ export default function DocumentContainer(props) {
             // marginLeft: 10,
             // marginTop: 10,
             width: "80%",
-            maxHeight: "80vh",
+            maxHeight: "70vh",
+            // padding: 10
         },
         tableHead: {
             backgroundColor: "#EDF2FA",
@@ -56,7 +57,7 @@ export default function DocumentContainer(props) {
             setDisplayPoints([])
             setDisplayKey(null)
         }
-        else {
+        else if(normalized_vertices !== null && normalized_vertices !== undefined) {
             let actual_vertices = []
             for (let each of normalized_vertices) {
                 actual_vertices.push([each[0]*imageDimensions[0], each[1]*imageDimensions[1]])
@@ -98,7 +99,6 @@ export default function DocumentContainer(props) {
                         displayPoints={displayPoints}
                         disabled
                     />
-                    // <img style={styles.image} src={image}></img>
                     }
                 </Grid>
                 <Grid item xs={6}>
