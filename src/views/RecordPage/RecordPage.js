@@ -77,18 +77,19 @@ export default function Record() {
         setWasEdited(true)
     }
 
-
     const handleDeleteRecord = () => {
         setOpenDeleteModal(false)
         callAPI(
             deleteRecord,
             [params.id],
-            (data) => navigate("/project/"+recordData.project_id, {replace: true}),
+            (data) => goToProject,
             (e) => console.error('error on deleting record: ',e)
         )
     }
 
-    
+    const goToProject = () => {
+        navigate("/project/"+recordData.project_id, {replace: true})
+    }
 
     return (
         <Box sx={styles.outerBox}>
@@ -102,6 +103,7 @@ export default function Record() {
                     "Change name": () => setOpenUpdateNameModal(true),
                     "Delete record": () => setOpenDeleteModal(true)
                 }}
+                upFunction={goToProject}
                 // previousPages={[{name: "project", path: "/project/"+recordData.project_id}]}
             />
             <Box sx={styles.innerBox}>
