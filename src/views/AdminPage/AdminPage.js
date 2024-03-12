@@ -43,11 +43,6 @@ export default function AdminPage() {
     },[])
 
     useEffect(()=> {
-        console.log("use effect, users is:")
-        console.log(users)
-    },[users])
-
-    useEffect(()=> {
         // check if text is a valid email address
         setDisableSubmitNewUserButton(!emailIsValid(newUser))
     },[newUser])
