@@ -39,6 +39,7 @@ export default function Record() {
     const handleSuccessfulFetchRecord = (data) => {
         setRecordData(data)
         setRecordName(data.name)
+        console.log(data)
     }
 
     const handleChangeRecordName = (event) => {
@@ -82,7 +83,7 @@ export default function Record() {
         callAPI(
             deleteRecord,
             [params.id],
-            (data) => goToProject,
+            goToProject,
             (e) => console.error('error on deleting record: ',e)
         )
     }
