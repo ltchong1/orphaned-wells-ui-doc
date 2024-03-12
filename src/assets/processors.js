@@ -14,7 +14,7 @@ export const processors = [
         displayName: "Colorado Drilling Report Extractor",
         state: "CO",
         img: "./img/CO-well-completion-report.png",
-        attributes: ['API_Number', 'County', 'Operator', 'Spud_Date', 'State', 'Total_Depth'],
+        attributes: ['API_NUMBER', 'WELL_NAME', 'WELL_NUMBER', 'NAME_OF_OPERATOR', 'TOTAL_DEPTH_TVD', 'TOTAL_DEPTH_MD'],
         documentType: "Well Completion Report",
     },
 ]
