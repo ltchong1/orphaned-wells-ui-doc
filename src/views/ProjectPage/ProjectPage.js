@@ -89,7 +89,7 @@ export default function Project() {
             <Subheader
                 currentPage={projectData.name}
                 buttonName="Upload new record(s)"
-                subtext={formatAttributes(projectData.attributes)}
+                // subtext={formatAttributes(projectData.attributes)}
                 handleClickButton={() => setShowDocumentModal(true)}
                 actions={{"Update project": handleUpdateProject, "Delete project": () => setOpenDeleteModal(true)}}
             />
