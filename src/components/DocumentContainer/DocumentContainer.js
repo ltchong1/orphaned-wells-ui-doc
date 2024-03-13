@@ -2,13 +2,35 @@ import { useState, useEffect } from 'react';
 import { Grid, Box, Table, TableBody, TableCell, TableHead, TableRow, TableContainer, TextField } from '@mui/material';
 import LassoSelector from '../../components/LassoSelector/LassoSelector';
 
+const styles = {
+    imageBox: {
+        // maxHeight: '500px'
+    },
+    image: {
+        height: "75vh"
+    },
+    fieldsTable: {
+        // marginLeft: 10,
+        // marginTop: 10,
+        width: "80%",
+        maxHeight: "70vh",
+        // padding: 10
+    },
+    tableHead: {
+        backgroundColor: "#EDF2FA",
+        fontWeight: "bold",
+    }, 
+    fieldKey: {
+        cursor: "pointer",
+    }
+}
+
 export default function DocumentContainer(props) {
     const { image, attributes, handleChangeValue } = props;
     const [ displayPoints, setDisplayPoints ] = useState(null)
     const [ displayKey, setDisplayKey ] = useState(null)
     const [ imageDimensions, setImageDimensions ] = useState([])
     const [ checkAgain, setCheckAgain ] = useState(0)
-    const [ editingFields, setEditingFields ] = useState([])
 
     useEffect(() => {
         // console.log(props)
@@ -29,29 +51,6 @@ export default function DocumentContainer(props) {
         }
     }, [image, checkAgain])
 
-    const styles = {
-        imageBox: {
-            // maxHeight: '500px'
-        },
-        image: {
-            height: "75vh"
-        },
-        fieldsTable: {
-            // marginLeft: 10,
-            // marginTop: 10,
-            width: "80%",
-            maxHeight: "70vh",
-            // padding: 10
-        },
-        tableHead: {
-            backgroundColor: "#EDF2FA",
-            fontWeight: "bold",
-        }, 
-        fieldKey: {
-            cursor: "pointer",
-        }
-    }
-
     const handleClickField = (key, normalized_vertices) => {
         if(key === displayKey) {
             setDisplayPoints([])
@@ -67,28 +66,6 @@ export default function DocumentContainer(props) {
         }
     }
 
-    const handleDoubleClick = (key) => {
-        // console.log("double clicked "+key)
-        let tempEditingFields = [...editingFields]
-        if (!tempEditingFields.includes(key)) {
-            tempEditingFields.push(key)
-            setEditingFields(tempEditingFields)
-        }
-    }
-
-    const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            const index = editingFields.indexOf(e.target.name);
-            if (index > -1) {
-                let tempEditingFields = [...editingFields]
-                tempEditingFields.splice(index, 1);
-                setEditingFields(tempEditingFields)
-            }
-        } 
-        
-      }
-
     return (
         <Box>
             <Grid container>
@@ -103,38 +80,11 @@ export default function DocumentContainer(props) {
                 </Grid>
                 <Grid item xs={6}>
                     {attributes !== undefined && 
-                    <TableContainer sx={styles.fieldsTable}>
-                        <Table>
-                            <TableHead sx={styles.tableHead}>
-                                <TableRow>
-                                    <TableCell>Field</TableCell>
-                                    <TableCell>Value</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {Object.entries(attributes).map(([k, v]) => (
-                                    <TableRow key={k}>
-                                        <TableCell sx={styles.fieldKey} onClick={() => handleClickField(k, v.normalized_vertices)}>{k}</TableCell>
-                                        <TableCell onDoubleClick={() => handleDoubleClick(k)} onKeyDown={handleKeyDown}>
-                                            {editingFields.includes(k) ? 
-                                                <TextField 
-                                                    autoFocus
-                                                    name={k}
-                                                    size="small" 
-                                                    // label={""} 
-                                                    defaultValue={v.value} 
-                                                    onChange={handleChangeValue} 
-                                                    onFocus={(event) => event.target.select()}
-                                                />
-                                                :
-                                                v.value
-                                            }
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                        <AttributesTable 
+                            attributes={attributes}
+                            handleClickField={handleClickField}
+                            handleChangeValue={handleChangeValue}
+                        />
                     }
                 </Grid>
             </Grid>
@@ -142,4 +92,69 @@ export default function DocumentContainer(props) {
 
     );
 
+}
+
+function AttributesTable(props) {
+    const { attributes, handleClickField, handleChangeValue } = props
+
+
+    return (
+        <TableContainer sx={styles.fieldsTable}>
+            <Table>
+                <TableHead sx={styles.tableHead}>
+                    <TableRow>
+                        <TableCell>Field</TableCell>
+                        <TableCell>Value</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {Object.entries(attributes).map(([k, v]) => (
+                        <AttributeRow 
+                            k={k}
+                            v={v}
+                            handleClickField={handleClickField}
+                            handleChangeValue={handleChangeValue}
+                        />
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    )
+}
+
+function AttributeRow(props) { 
+    const { k, v, handleClickField, handleChangeValue } = props
+    const [ editMode, setEditMode ] = useState(false)
+
+    const handleDoubleClick = () => {
+        setEditMode(true)
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            setEditMode(false)
+        } 
+      }
+
+    return (
+        <TableRow key={k}>
+            <TableCell sx={styles.fieldKey} onClick={() => handleClickField(k, v.normalized_vertices)}>{k}</TableCell>
+            <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
+                {editMode ? 
+                    <TextField 
+                        autoFocus
+                        name={k}
+                        size="small" 
+                        // label={""} 
+                        defaultValue={v.value} 
+                        onChange={handleChangeValue} 
+                        onFocus={(event) => event.target.select()}
+                    />
+                    :
+                    v.value
+                }
+            </TableCell>
+        </TableRow>
+    )
 }
