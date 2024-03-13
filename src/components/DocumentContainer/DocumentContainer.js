@@ -40,6 +40,12 @@ const styles = {
     }
 }
 
+const formatConfidence = (value) => {
+    // let roundedValue = Math.round((value + Number.EPSILON) * 100)
+    let percentageValue = (value * 100).toLocaleString('en-US', {maximumFractionDigits:2})
+    return `${percentageValue} %`
+}
+
 export default function DocumentContainer(props) {
     const { image, attributes, handleChangeValue } = props;
     const [ displayPoints, setDisplayPoints ] = useState(null)
@@ -137,6 +143,7 @@ export default function DocumentContainer(props) {
                                     attributes={attributes}
                                     handleClickField={handleClickField}
                                     handleChangeValue={handleChangeValue}
+                                    fullscreen={fullscreen}
                                 />
                             }
                         </Box>
@@ -151,7 +158,7 @@ export default function DocumentContainer(props) {
 }
 
 function AttributesTable(props) {
-    const { attributes, handleClickField, handleChangeValue } = props
+    const { attributes, handleClickField, handleChangeValue, fullscreen } = props
 
     return (
         <TableContainer sx={styles.fieldsTable}>
@@ -160,6 +167,10 @@ function AttributesTable(props) {
                     <TableRow >
                         <TableCell sx={styles.headerRow}>Field</TableCell>
                         <TableCell sx={styles.headerRow}>Value</TableCell>
+                        {
+                            fullscreen === "table" && 
+                            <TableCell sx={styles.headerRow}>Confidence</TableCell>
+                        }
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -170,6 +181,7 @@ function AttributesTable(props) {
                             v={v}
                             handleClickField={handleClickField}
                             handleChangeValue={handleChangeValue}
+                            fullscreen={fullscreen}
                         />
                     ))}
                 </TableBody>
@@ -179,7 +191,7 @@ function AttributesTable(props) {
 }
 
 function AttributeRow(props) { 
-    const { k, v, handleClickField, handleChangeValue } = props
+    const { k, v, handleClickField, handleChangeValue, fullscreen } = props
     const [ editMode, setEditMode ] = useState(false)
     const [ openSubtable, setOpenSubtable ] = useState(false)
 
@@ -228,6 +240,10 @@ function AttributeRow(props) {
                     v.value
                 }
             </TableCell>
+            {
+                fullscreen === "table" && 
+                <TableCell>{formatConfidence(v.confidence)}</TableCell>
+            }
         </TableRow>
         {
             v.subattributes &&
@@ -237,6 +253,7 @@ function AttributeRow(props) {
                 handleChangeValue={handleChangeValue}
                 open={openSubtable}
                 topLevelAttribute={k}
+                fullscreen={fullscreen}
             />
         }
     </>
@@ -244,7 +261,7 @@ function AttributeRow(props) {
 }
 
 function SubattributesTable(props) {
-    const { attributes, handleClickField, handleChangeValue, open, topLevelAttribute } = props
+    const { attributes, handleClickField, handleChangeValue, open, topLevelAttribute, fullscreen } = props
 
     return (
         <TableRow>
@@ -259,6 +276,10 @@ function SubattributesTable(props) {
                     <TableRow>
                         <TableCell sx={styles.headerRow}>Field</TableCell>
                         <TableCell sx={styles.headerRow}>Value</TableCell>
+                        {
+                            fullscreen === "table" && 
+                            <TableCell sx={styles.headerRow}>Confidence</TableCell>
+                        }
                     </TableRow>
                     </TableHead>
                     <TableBody>
@@ -270,6 +291,7 @@ function SubattributesTable(props) {
                             handleClickField={handleClickField}
                             handleChangeValue={handleChangeValue}
                             topLevelAttribute={topLevelAttribute}
+                            fullscreen={fullscreen}
                         />
                     ))}
                     </TableBody>
@@ -282,7 +304,7 @@ function SubattributesTable(props) {
 }
 
 function SubattributeRow(props) { 
-    const { k, v, handleClickField, handleChangeValue, topLevelAttribute } = props
+    const { k, v, handleClickField, handleChangeValue, topLevelAttribute, fullscreen } = props
     const [ editMode, setEditMode ] = useState(false)
 
     const handleDoubleClick = () => {
@@ -320,6 +342,10 @@ function SubattributeRow(props) {
                     v.value
                 }
             </TableCell>
+            {
+                fullscreen === "table" && 
+                <TableCell>{formatConfidence(v.confidence)}</TableCell>
+            }
         </TableRow>
     )
 }
