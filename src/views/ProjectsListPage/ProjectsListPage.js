@@ -16,8 +16,8 @@ export default function ProjectsListPage() {
     },[])
 
     const handleSuccess = (data) => {
-        console.log('projects data: ')
-        console.log(data)
+        // console.log('projects data: ')
+        // console.log(data)
         setProjects(data)
     }
 
