@@ -319,7 +319,6 @@ function SubattributeRow(props) {
     }
 
     const handleUpdateValue = (event) => {
-        console.log("updating value")
         // TODO: gotta update handlechange function to handle subattributes
         handleChangeValue(event, true, topLevelAttribute)
     }
