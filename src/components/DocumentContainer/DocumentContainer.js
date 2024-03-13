@@ -113,6 +113,7 @@ export default function DocumentContainer(props) {
                                 image={image}
                                 displayPoints={displayPoints}
                                 disabled
+                                fullscreen={fullscreen}
                             />
                             }
                         </Box>
