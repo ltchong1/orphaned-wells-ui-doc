@@ -13,6 +13,7 @@ export default function Record() {
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
     const [ openUpdateNameModal, setOpenUpdateNameModal ] = useState(false)
     const [ recordName, setRecordName ] = useState("")
+    const [ previousPages, setPreviousPages ] = useState({"Projects": () => navigate("/projects", {replace: true}),})
     let params = useParams(); 
     let navigate = useNavigate();
 
@@ -39,7 +40,12 @@ export default function Record() {
     const handleSuccessfulFetchRecord = (data) => {
         setRecordData(data)
         setRecordName(data.name)
-        console.log(data)
+        // console.log(data)
+        let tempPreviousPages = {
+            "Projects": () => navigate("/projects", {replace: true}),
+        }
+        tempPreviousPages[data.project_name] = () => navigate("/project/"+data.project_id, {replace: true})
+        setPreviousPages(tempPreviousPages)
     }
 
     const handleChangeRecordName = (event) => {
@@ -120,7 +126,7 @@ export default function Record() {
                     "Delete record": () => setOpenDeleteModal(true)
                 }}
                 upFunction={goToProject}
-                // previousPages={[{name: "project", path: "/project/"+recordData.project_id}]}
+                previousPages={previousPages}
             />
             <Box sx={styles.innerBox}>
                 <DocumentContainer

@@ -97,7 +97,7 @@ export default function AdminPage() {
                 currentPage="Admin"
                 buttonName="+ Add user"
                 handleClickButton={() => setShowNewUserModal(true)}
-                topLevel
+                // topLevel
             />
             <Box sx={styles.innerBox}>
                 {!unableToConnect ? 

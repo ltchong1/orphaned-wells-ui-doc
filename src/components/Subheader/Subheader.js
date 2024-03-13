@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Button, Grid, IconButton, Box, Menu, MenuItem } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
@@ -32,6 +32,8 @@ export default function Subheader(props) {
             display: "flex",
             justifyContent: "flex-start",
             marginLeft: 40,
+            overflow: "scroll",
+            width: "80vw"
         },
         pageName: {
             display: "flex",
@@ -54,12 +56,6 @@ export default function Subheader(props) {
         }
     }
 
-    useEffect(() => {
-        if (previousPages !== undefined) {
-
-        } 
-    },[props])
-
     const handleNavigate = (path) => {
         navigate(path, {replace: true})
     }
@@ -77,20 +73,29 @@ export default function Subheader(props) {
     return (
         <Box sx={styles.box}>
             <Grid container sx={styles.gridContainer}>
-                <Grid item xs={6} >
+                <Grid item xs={9} >
                     <div style={styles.directoryDispaly}>
                         <IconButton sx={styles.iconButton} onClick={() => handleNavigate("/")}><HomeIcon sx={styles.icon}/></IconButton> 
                         /
-                        
                         {
+                            previousPages && 
+                            Object.entries(previousPages).map(([page, pageAction]) => (
+                                <Fragment key={page}>
+                                    <Button sx={styles.iconButton} size="small" onClick={pageAction}>{page}</Button>
+                                    /
+                                </Fragment>
+                            ))
+                        }
+                        
+                        {/* {
                             !topLevel && 
                             <>
                                 <IconButton sx={styles.iconButton} onClick={upFunction}><MoreHorizIcon sx={styles.icon}/></IconButton> 
                                 /
                             </>
-                        }
+                        } */}
                         
-                        <Button sx={styles.iconButton} size="small" startIcon={<Work/>}>{currentPage}</Button>
+                        <Button sx={styles.iconButton} size="small">{currentPage}</Button>
                     </div>
                     <div style={styles.pageName}>
                         {currentPage}&nbsp;
@@ -115,7 +120,7 @@ export default function Subheader(props) {
                         {subtext}
                     </div>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={3}>
                     <Box sx={styles.newProjectColumn}>
                         <Button variant="contained" onClick={handleClickButton} disabled={disableButton}>
                             {buttonName}

@@ -92,6 +92,7 @@ export default function Project() {
                 // subtext={formatAttributes(projectData.attributes)}
                 handleClickButton={() => setShowDocumentModal(true)}
                 actions={{"Update project": handleUpdateProject, "Delete project": () => setOpenDeleteModal(true)}}
+                previousPages={{"Projects": () => navigate("/projects", {replace: true})}}
             />
             <Box sx={styles.innerBox}>
                 <RecordsTable
