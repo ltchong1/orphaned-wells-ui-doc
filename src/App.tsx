@@ -45,9 +45,9 @@ function App() {
   const handleSuccess = (user_data: User) => {
     setAuthenticated(true)
     localStorage.setItem("user_email", user_data.email)
-    localStorage.setItem("user_name", user_data.name)
-    localStorage.setItem("user_picture", user_data.picture)
     localStorage.setItem("user_hd", user_data.hd)
+    if (user_data.name) localStorage.setItem("user_name", user_data.name)
+    if (user_data.picture) localStorage.setItem("user_picture", user_data.picture)
   }
 
   const handleFailure = () => {
