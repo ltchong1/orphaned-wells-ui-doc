@@ -65,17 +65,32 @@ export default function Record() {
         )
     }
 
-    const handleChangeValue = (event) => {
-        let attribute = event.target.name
-        let value = event.target.value
+    const handleChangeValue = (event, isSubattribute, topLevelAttribute) => {
         let tempRecordData = {...recordData}
         let tempAttributes = {...tempRecordData.attributes}
-        let tempAttribute = {...tempAttributes[attribute]}
-        tempAttribute.value = value
+        let tempAttribute
+        let attribute
+        if (isSubattribute) {
+            attribute = topLevelAttribute
+            let subattribute = event.target.name
+            let value = event.target.value
+            tempAttribute = {...tempAttributes[attribute]}
+            let tempSubattributes = {...tempAttribute["subattributes"]}
+            let tempSubattribute = {...tempSubattributes[subattribute]}
+            tempSubattribute.value = value
+            tempSubattributes[subattribute] = tempSubattribute
+            tempAttribute["subattributes"] = tempSubattributes
+        } else {
+            attribute = event.target.name
+            let value = event.target.value
+            tempAttribute = {...tempAttributes[attribute]}
+            tempAttribute.value = value
+        }
         tempAttributes[attribute] = tempAttribute
         tempRecordData.attributes = tempAttributes
         setRecordData(tempRecordData)
         setWasEdited(true)
+        
     }
 
     const handleDeleteRecord = () => {
