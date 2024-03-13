@@ -16,8 +16,8 @@ export default function ProjectsListPage() {
     },[])
 
     const handleSuccess = (data) => {
-        console.log('projects data: ')
-        console.log(data)
+        // console.log('projects data: ')
+        // console.log(data)
         setProjects(data)
     }
 
@@ -48,6 +48,7 @@ export default function ProjectsListPage() {
                 currentPage="Projects"
                 buttonName="New Project"
                 handleClickButton={handleClickNewProject}
+                // topLevel
             />
             <Box sx={styles.innerBox}>
                 {!unableToConnect ? 

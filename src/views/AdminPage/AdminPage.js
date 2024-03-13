@@ -97,6 +97,7 @@ export default function AdminPage() {
                 currentPage="Admin"
                 buttonName="+ Add user"
                 handleClickButton={() => setShowNewUserModal(true)}
+                // topLevel
             />
             <Box sx={styles.innerBox}>
                 {!unableToConnect ? 
@@ -191,15 +192,15 @@ function UsersTable(props) {
             <TableHead>
             <TableRow>
                 {[["Name", "20%"], ["Email", "25%"], ["Organization", "15%"], ["Role", "20%"], ["Actions", "20%"]].map((value)=>(
-                    <TableCell width={value[1]} sx={styles.headerRow} key={value}>{value[0]}</TableCell>
+                    <TableCell width={value[1]} sx={styles.headerRow} key={value[0]}>{value[0]}</TableCell>
                 ))}
             </TableRow>
             </TableHead>
             <TableBody>
-            {users.map((row) => {
+            {users.map((row, rowIdx) => {
                 if (row.role === tableRole) return (
                 <TableRow
-                    key={row.name}
+                    key={row.email}
                     sx={styles.userRow}
                     // onClick={() => handleSelectUser(row)}
                 >
@@ -210,9 +211,12 @@ function UsersTable(props) {
                 <TableCell>{row.hd}</TableCell>
                 <TableCell>{ROLES[row.role]}</TableCell>
                 <TableCell>
-                    <Tooltip title="Approve User">
-                        <IconButton color="success" disabled={row.role!=-1} onClick={() => handleSelectUser(row)}><CheckCircleIcon/></IconButton>
-                    </Tooltip>
+                    {row.role!=-1 && 
+                        <Tooltip title="Approve User">
+                            <IconButton color="success" disabled={row.role===-1} onClick={() => handleSelectUser(row)}><CheckCircleIcon/></IconButton>
+                        </Tooltip>
+                    }
+                    
                     <Tooltip title="Remove User">
                         <IconButton color="error" onClick={() => handleDeleteUser(row)}><CancelIcon/></IconButton>
                     </Tooltip>

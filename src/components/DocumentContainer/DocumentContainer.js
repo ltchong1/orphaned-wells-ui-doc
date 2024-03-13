@@ -1,6 +1,50 @@
 import { useState, useEffect } from 'react';
-import { Grid, Box, Table, TableBody, TableCell, TableHead, TableRow, TableContainer, TextField } from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
+import { Grid, Box, TextField, Collapse, Typography, IconButton } from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import LassoSelector from '../../components/LassoSelector/LassoSelector';
+
+const styles = {
+    imageBox: {
+        // maxHeight: '500px'
+    },
+    image: {
+        height: "75vh"
+    },
+    fieldsTable: {
+        width: "100%",
+        maxHeight: "90vh",
+        backgroundColor: "white"
+    },
+    tableHead: {
+        backgroundColor: "#EDF2FA",
+        fontWeight: "bold",
+    }, 
+    fieldKey: {
+        cursor: "pointer",
+    },
+    headerRow: {
+        fontWeight: "bold"
+    },
+    gridContainer: {
+        backgroundColor: "white",
+        // pt: 1,
+    },
+    containerActions: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginRight:'10px',
+    }
+}
+
+const formatConfidence = (value) => {
+    // let roundedValue = Math.round((value + Number.EPSILON) * 100)
+    let percentageValue = (value * 100).toLocaleString('en-US', {maximumFractionDigits:2})
+    return `${percentageValue} %`
+}
 
 export default function DocumentContainer(props) {
     const { image, attributes, handleChangeValue } = props;
@@ -8,7 +52,8 @@ export default function DocumentContainer(props) {
     const [ displayKey, setDisplayKey ] = useState(null)
     const [ imageDimensions, setImageDimensions ] = useState([])
     const [ checkAgain, setCheckAgain ] = useState(0)
-    const [ editingFields, setEditingFields ] = useState([])
+    const [ fullscreen, setFullscreen ] = useState(null)
+    const [ gridWidths, setGridWidths ] = useState([5.9,0.2,5.9])
 
     useEffect(() => {
         // console.log(props)
@@ -29,34 +74,12 @@ export default function DocumentContainer(props) {
         }
     }, [image, checkAgain])
 
-    const styles = {
-        imageBox: {
-            // maxHeight: '500px'
-        },
-        image: {
-            height: "75vh"
-        },
-        fieldsTable: {
-            // marginLeft: 10,
-            // marginTop: 10,
-            width: "80%",
-            maxHeight: "80vh",
-        },
-        tableHead: {
-            backgroundColor: "#EDF2FA",
-            fontWeight: "bold",
-        }, 
-        fieldKey: {
-            cursor: "pointer",
-        }
-    }
-
     const handleClickField = (key, normalized_vertices) => {
         if(key === displayKey) {
             setDisplayPoints([])
             setDisplayKey(null)
         }
-        else {
+        else if(normalized_vertices !== null && normalized_vertices !== undefined) {
             let actual_vertices = []
             for (let each of normalized_vertices) {
                 actual_vertices.push([each[0]*imageDimensions[0], each[1]*imageDimensions[1]])
@@ -66,80 +89,262 @@ export default function DocumentContainer(props) {
         }
     }
 
-    const handleDoubleClick = (key) => {
-        // console.log("double clicked "+key)
-        let tempEditingFields = [...editingFields]
-        if (!tempEditingFields.includes(key)) {
-            tempEditingFields.push(key)
-            setEditingFields(tempEditingFields)
+    const handleSetFullscreen = (item) => {
+        if (fullscreen === item)  {
+            setGridWidths([5.9,0.2,5.9])
+            setFullscreen(null)
+        }
+        else { 
+            setFullscreen(item)
+            if (item === "image") setGridWidths([12, 0, 0])
+            else if (item === "table") setGridWidths([0, 0, 12])
         }
     }
-
-    const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            const index = editingFields.indexOf(e.target.name);
-            if (index > -1) {
-                let tempEditingFields = [...editingFields]
-                tempEditingFields.splice(index, 1);
-                setEditingFields(tempEditingFields)
-            }
-        } 
-        
-      }
 
     return (
         <Box>
             <Grid container>
-                <Grid item xs={6}>
-                    {image !== undefined && 
-                    <LassoSelector 
-                        image={image}
-                        displayPoints={displayPoints}
-                        disabled
-                    />
-                    // <img style={styles.image} src={image}></img>
-                    }
-                </Grid>
-                <Grid item xs={6}>
-                    {attributes !== undefined && 
-                    <TableContainer sx={styles.fieldsTable}>
-                        <Table>
-                            <TableHead sx={styles.tableHead}>
-                                <TableRow>
-                                    <TableCell>Field</TableCell>
-                                    <TableCell>Value</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {Object.entries(attributes).map(([k, v]) => (
-                                    <TableRow key={k}>
-                                        <TableCell sx={styles.fieldKey} onClick={() => handleClickField(k, v.normalized_vertices)}>{k}</TableCell>
-                                        <TableCell onDoubleClick={() => handleDoubleClick(k)} onKeyDown={handleKeyDown}>
-                                            {editingFields.includes(k) ? 
-                                                <TextField 
-                                                    autoFocus
-                                                    name={k}
-                                                    size="small" 
-                                                    // label={""} 
-                                                    defaultValue={v.value} 
-                                                    onChange={handleChangeValue} 
-                                                    onFocus={(event) => event.target.select()}
-                                                />
-                                                :
-                                                v.value
-                                            }
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    }
-                </Grid>
+                {fullscreen !== "table" && 
+                    <Grid item xs={gridWidths[0]}>
+                        <Box sx={styles.gridContainer}>
+                            <Box sx={styles.containerActions}>
+                                <IconButton onClick={() => handleSetFullscreen("image")}>
+                                    { 
+                                        fullscreen === "image" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
+                                    }
+                                </IconButton>
+                            </Box>
+                            {image !== undefined && 
+                            <LassoSelector 
+                                image={image}
+                                displayPoints={displayPoints}
+                                disabled
+                                fullscreen={fullscreen}
+                            />
+                            }
+                        </Box>
+                    </Grid>
+                }
+                
+                <Grid item xs={gridWidths[1]}></Grid>
+                {
+                    fullscreen !== "image" && 
+                    <Grid item xs={gridWidths[2]}>
+                        <Box sx={styles.gridContainer}>
+                            <Box sx={styles.containerActions}>
+                                <IconButton onClick={() => handleSetFullscreen("table")}>
+                                    { 
+                                        fullscreen === "table" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
+                                    }
+                                </IconButton>
+                            </Box>
+                            {attributes !== undefined && 
+                                <AttributesTable 
+                                    attributes={attributes}
+                                    handleClickField={handleClickField}
+                                    handleChangeValue={handleChangeValue}
+                                    fullscreen={fullscreen}
+                                />
+                            }
+                        </Box>
+                    </Grid>
+                }
+                
             </Grid>
         </Box>
 
     );
 
+}
+
+function AttributesTable(props) {
+    const { attributes, handleClickField, handleChangeValue, fullscreen } = props
+
+    return (
+        <TableContainer sx={styles.fieldsTable}>
+            <Table stickyHeader>
+                <TableHead sx={styles.tableHead}>
+                    <TableRow >
+                        <TableCell sx={styles.headerRow}>Field</TableCell>
+                        <TableCell sx={styles.headerRow}>Value</TableCell>
+                        {
+                            fullscreen === "table" && 
+                            <TableCell sx={styles.headerRow}>Confidence</TableCell>
+                        }
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {Object.entries(attributes).map(([k, v]) => (
+                        <AttributeRow 
+                            key={k}
+                            k={k}
+                            v={v}
+                            handleClickField={handleClickField}
+                            handleChangeValue={handleChangeValue}
+                            fullscreen={fullscreen}
+                        />
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    )
+}
+
+function AttributeRow(props) { 
+    const { k, v, handleClickField, handleChangeValue, fullscreen } = props
+    const [ editMode, setEditMode ] = useState(false)
+    const [ openSubtable, setOpenSubtable ] = useState(false)
+
+    const handleDoubleClick = () => {
+        setEditMode(true)
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            setEditMode(false)
+        } 
+      }
+
+    return (
+    <>
+        <TableRow key={k}>
+            <TableCell sx={styles.fieldKey}>
+                
+                <span onClick={() => handleClickField(k, v.normalized_vertices)}>
+                    {k}
+                </span>
+                {
+                    v.subattributes &&
+                    <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={() => setOpenSubtable(!openSubtable)}
+                    >
+                        {openSubtable ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    </IconButton>
+                }
+            </TableCell>
+            <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
+                {editMode ? 
+                    <TextField 
+                        autoFocus
+                        name={k}
+                        size="small" 
+                        // label={""} 
+                        defaultValue={v.value} 
+                        onChange={handleChangeValue} 
+                        onFocus={(event) => event.target.select()}
+                    />
+                    :
+                    v.value
+                }
+            </TableCell>
+            {
+                fullscreen === "table" && 
+                <TableCell>{formatConfidence(v.confidence)}</TableCell>
+            }
+        </TableRow>
+        {
+            v.subattributes &&
+            <SubattributesTable 
+                attributes={v.subattributes}
+                handleClickField={handleClickField}
+                handleChangeValue={handleChangeValue}
+                open={openSubtable}
+                topLevelAttribute={k}
+                fullscreen={fullscreen}
+            />
+        }
+    </>
+    )
+}
+
+function SubattributesTable(props) {
+    const { attributes, handleClickField, handleChangeValue, open, topLevelAttribute, fullscreen } = props
+
+    return (
+        <TableRow>
+            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+                <Box sx={{ margin: 1 }}>
+                <Typography variant="h6" gutterBottom component="div">
+                    Properties
+                </Typography>
+                <Table size="small" aria-label="purchases">
+                    <TableHead>
+                    <TableRow>
+                        <TableCell sx={styles.headerRow}>Field</TableCell>
+                        <TableCell sx={styles.headerRow}>Value</TableCell>
+                        {
+                            fullscreen === "table" && 
+                            <TableCell sx={styles.headerRow}>Confidence</TableCell>
+                        }
+                    </TableRow>
+                    </TableHead>
+                    <TableBody>
+                    {Object.entries(attributes).map(([k, v]) => (
+                        <SubattributeRow 
+                            key={k}
+                            k={k}
+                            v={v}
+                            handleClickField={handleClickField}
+                            handleChangeValue={handleChangeValue}
+                            topLevelAttribute={topLevelAttribute}
+                            fullscreen={fullscreen}
+                        />
+                    ))}
+                    </TableBody>
+                </Table>
+                </Box>
+            </Collapse>
+            </TableCell>
+        </TableRow>
+    )
+}
+
+function SubattributeRow(props) { 
+    const { k, v, handleClickField, handleChangeValue, topLevelAttribute, fullscreen } = props
+    const [ editMode, setEditMode ] = useState(false)
+
+    const handleDoubleClick = () => {
+        setEditMode(true)
+    }
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            setEditMode(false)
+        } 
+    }
+
+    const handleUpdateValue = (event) => {
+        // TODO: gotta update handlechange function to handle subattributes
+        handleChangeValue(event, true, topLevelAttribute)
+    }
+
+    return (
+        <TableRow key={k}>
+            <TableCell sx={styles.fieldKey} onClick={() => handleClickField(k, v.normalized_vertices)}>{k}</TableCell>
+            <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
+                {editMode ? 
+                    <TextField 
+                        autoFocus
+                        name={k}
+                        size="small" 
+                        // label={""} 
+                        defaultValue={v.value} 
+                        onChange={handleUpdateValue} 
+                        onFocus={(event) => event.target.select()}
+                    />
+                    :
+                    v.value
+                }
+            </TableCell>
+            {
+                fullscreen === "table" && 
+                <TableCell>{formatConfidence(v.confidence)}</TableCell>
+            }
+        </TableRow>
+    )
 }

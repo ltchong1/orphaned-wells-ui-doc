@@ -1,11 +1,24 @@
 import { useEffect, Fragment } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box, Paper } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box, Paper, IconButton } from '@mui/material'
 import { DNA } from 'react-loader-spinner'
 import DownloadIcon from '@mui/icons-material/Download';
+import ErrorIcon from '@mui/icons-material/Error';
+import CachedIcon from '@mui/icons-material/Cached';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { downloadRecordsCSV } from '../../services/app.service';
 import { formatDate, callAPIWithBlobResponse } from '../../assets/helperFunctions';
 
+const TABLE_ATTRIBUTES = {
+  displayNames: ["Record Name", "Contributor", "Date Uploaded", "Digitization Status", "Review Status"],
+  keyNames: ["name", "contributor", "dateCreated", "status", "review_status"],
+  // "Record Name": "name", 
+  // "Contributor": "contributor",
+  // "Date Uploaded": "dateCreated",
+  // "Digitization Status": "status",
+  // "Review Status": "review_status"
+}
 
 export default function RecordsTable(props) {
   let navigate = useNavigate()
@@ -27,7 +40,10 @@ export default function RecordsTable(props) {
       justifyContent: 'flex-end', 
       marginTop: 2, 
       marginRight: 2
-    }
+    },
+    headerCell: {
+      fontWeight: "bold"
+    },
   }
 
   const handleClickRecord = (record_id) => {
@@ -54,44 +70,44 @@ export default function RecordsTable(props) {
   }
 
   const tableRow = (row, idx) => {
-    if (row.attributes === undefined) {
       return (
         <TableRow
           sx={styles.projectRow}
           onClick={() => handleClickRecord(row._id)}
         >
-          <TableCell align="center" colSpan={projectData.attributes.length+2} sx={{padding:0, position: "relative"}}>
-            {/* <span style={{position: "absolute", top:"25%", right: "54%"}}>processing</span> */}
-            <DNA
-              style={{margin: 0, padding: 0}}
-              visible={true}
-              height="50"
-              width="80"
-              ariaLabel="dna-loading"
-            />
-          </TableCell>
-        </TableRow>
-      )
-    } else {
-      return (
-        <TableRow
-          sx={styles.projectRow}
-          onClick={() => handleClickRecord(row._id)}
-        >
-            {projectData.attributes.map((attribute, attribute_idx) => {
-              try {
-                if (Object.keys(row.attributes).includes(attribute)) {
-                  return <TableCell key={attribute_idx}>{row.attributes[attribute].value}</TableCell>
-                } else return <TableCell key={attribute_idx}>N/A</TableCell>
-              } catch (e) {
-                return <TableCell key={attribute_idx}>error</TableCell>
-              }                  
-            })}
+            <TableCell>{row.name}</TableCell>
             <TableCell>{row.contributor.name}</TableCell>
             <TableCell>{formatDate(row.dateCreated)}</TableCell>
+            <TableCell>
+              {
+                row.status === "processing" ? 
+                <IconButton>
+                  <CachedIcon sx={{color: "#EF6C0B"}} /> 
+                </IconButton> :
+                row.status === "digitized" ? 
+                <IconButton>
+                  <CheckCircleOutlineIcon sx={{color: "green"}}/>
+                </IconButton> :
+                null
+              }
+              {row.status}
+            </TableCell>
+            <TableCell>
+              {
+                row.review_status === "unreviewed" ? 
+                <IconButton >
+                  <ErrorIcon /> 
+                </IconButton> :
+                row.review_status === "reviewed" ? 
+                <IconButton>
+                  <CheckCircleIcon sx={{color: "green"}}/> 
+                </IconButton> :
+                null
+              }
+              {row.review_status}
+            </TableCell>
         </TableRow>
       )
-    }
   }
 
   return (
@@ -105,12 +121,10 @@ export default function RecordsTable(props) {
         <TableHead>
           <TableRow>
             {
-                projectData.attributes.map((attribute, idx) => (
-                    <TableCell key={idx}>{attribute}</TableCell>
+                TABLE_ATTRIBUTES.displayNames.map((attribute, idx) => (
+                    <TableCell sx={styles.headerCell} key={idx}>{attribute}</TableCell>
                 ))
             }
-            <TableCell>Contributor</TableCell>
-            <TableCell>Date Uploaded</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
