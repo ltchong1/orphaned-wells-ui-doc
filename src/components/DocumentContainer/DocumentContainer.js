@@ -3,6 +3,8 @@ import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from
 import { Grid, Box, TextField, Collapse, Typography, IconButton } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import LassoSelector from '../../components/LassoSelector/LassoSelector';
 
 const styles = {
@@ -13,11 +15,9 @@ const styles = {
         height: "75vh"
     },
     fieldsTable: {
-        // marginLeft: 10,
-        // marginTop: 10,
         width: "100%",
         maxHeight: "90vh",
-        // padding: 10
+        backgroundColor: "white"
     },
     tableHead: {
         backgroundColor: "#EDF2FA",
@@ -28,6 +28,15 @@ const styles = {
     },
     headerRow: {
         fontWeight: "bold"
+    },
+    gridContainer: {
+        backgroundColor: "white",
+        // pt: 1,
+    },
+    containerActions: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginRight:'10px',
     }
 }
 
@@ -37,6 +46,8 @@ export default function DocumentContainer(props) {
     const [ displayKey, setDisplayKey ] = useState(null)
     const [ imageDimensions, setImageDimensions ] = useState([])
     const [ checkAgain, setCheckAgain ] = useState(0)
+    const [ fullscreen, setFullscreen ] = useState(null)
+    const [ gridWidths, setGridWidths ] = useState([5.9,0.2,5.9])
 
     useEffect(() => {
         // console.log(props)
@@ -72,27 +83,65 @@ export default function DocumentContainer(props) {
         }
     }
 
+    const handleSetFullscreen = (item) => {
+        if (fullscreen === item)  {
+            setGridWidths([5.9,0.2,5.9])
+            setFullscreen(null)
+        }
+        else { 
+            setFullscreen(item)
+            if (item === "image") setGridWidths([12, 0, 0])
+            else if (item === "table") setGridWidths([0, 0, 12])
+        }
+    }
+
     return (
         <Box>
             <Grid container>
-                <Grid item xs={6}>
-                    {image !== undefined && 
-                    <LassoSelector 
-                        image={image}
-                        displayPoints={displayPoints}
-                        disabled
-                    />
-                    }
-                </Grid>
-                <Grid item xs={6}>
-                    {attributes !== undefined && 
-                        <AttributesTable 
-                            attributes={attributes}
-                            handleClickField={handleClickField}
-                            handleChangeValue={handleChangeValue}
-                        />
-                    }
-                </Grid>
+                {fullscreen !== "table" && 
+                    <Grid item xs={gridWidths[0]}>
+                        <Box sx={styles.gridContainer}>
+                            <Box sx={styles.containerActions}>
+                                <IconButton onClick={() => handleSetFullscreen("image")}>
+                                    { 
+                                        fullscreen === "image" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
+                                    }
+                                </IconButton>
+                            </Box>
+                            {image !== undefined && 
+                            <LassoSelector 
+                                image={image}
+                                displayPoints={displayPoints}
+                                disabled
+                            />
+                            }
+                        </Box>
+                    </Grid>
+                }
+                
+                <Grid item xs={gridWidths[1]}></Grid>
+                {
+                    fullscreen !== "image" && 
+                    <Grid item xs={gridWidths[2]}>
+                        <Box sx={styles.gridContainer}>
+                            <Box sx={styles.containerActions}>
+                                <IconButton onClick={() => handleSetFullscreen("table")}>
+                                    { 
+                                        fullscreen === "table" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
+                                    }
+                                </IconButton>
+                            </Box>
+                            {attributes !== undefined && 
+                                <AttributesTable 
+                                    attributes={attributes}
+                                    handleClickField={handleClickField}
+                                    handleChangeValue={handleChangeValue}
+                                />
+                            }
+                        </Box>
+                    </Grid>
+                }
+                
             </Grid>
         </Box>
 
@@ -207,8 +256,8 @@ function SubattributesTable(props) {
                 <Table size="small" aria-label="purchases">
                     <TableHead>
                     <TableRow>
-                        <TableCell>Field</TableCell>
-                        <TableCell>Value</TableCell>
+                        <TableCell sx={styles.headerRow}>Field</TableCell>
+                        <TableCell sx={styles.headerRow}>Value</TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
