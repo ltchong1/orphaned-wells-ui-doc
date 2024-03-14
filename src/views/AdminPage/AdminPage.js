@@ -213,7 +213,7 @@ function UsersTable(props) {
                 <TableCell>
                     {row.role===-1 && 
                         <Tooltip title="Approve User">
-                            <IconButton color="success" disabled={row.role===-1} onClick={() => handleSelectUser(row)}><CheckCircleIcon/></IconButton>
+                            <IconButton color="success" disabled={row.role!=-1} onClick={() => handleSelectUser(row)}><CheckCircleIcon/></IconButton>
                         </Tooltip>
                     }
                     
