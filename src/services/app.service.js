@@ -1,8 +1,5 @@
-let BACKEND_URL = "http://localhost:8001"
-// this is subject to change every time we stop and start the server
-// let BACKEND_URL = "http://34.121.174.243:8001"
-// let BACKEND_URL = "https://104.197.87.233:443"
-
+// let BACKEND_URL = "http://localhost:8001"
+let BACKEND_URL = "https://server.uow-carbon.org"
 
 export const getProjects = () => {
     return fetch(BACKEND_URL+'/get_projects', {
