@@ -1,4 +1,4 @@
-import { refreshAuth } from "../services/app.service"
+import { refreshAuth, revokeToken } from "../services/app.service"
 
 export const formatDate = (timestamp) => {
   if (timestamp !== null) {
@@ -12,6 +12,7 @@ export const formatDate = (timestamp) => {
 }
 
 export const logout = () => {
+  revokeToken()
   console.log("logging out")
   localStorage.clear()
   window.location.replace("/")

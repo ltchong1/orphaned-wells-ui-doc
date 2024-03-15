@@ -139,3 +139,12 @@ export const deleteUser = (email) => {
         headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
     });
 }
+
+export const revokeToken = () => {
+    return fetch(BACKEND_URL+'/logout', {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify(localStorage.getItem("refresh_token")),
+        headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
+    });
+}
