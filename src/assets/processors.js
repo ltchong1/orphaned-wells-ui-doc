@@ -1,8 +1,8 @@
 export const processors = [
     {
         id: "e7fedd7b9161dd4b",
-        name: "Well Completion Report",
-        displayName: "Colorado Well Completion Report",
+        name: "Default Google Processor",
+        displayName: "Default Google Processor",
         state: "CO",
         img: "./img/CO-well-completion-report.png",
         attributes: [
@@ -25,7 +25,7 @@ export const processors = [
                 name: 'Total_Depth',
             },
         ],
-        documentType: "Well Completion Report",
+        documentType: "Default Google Processor",
     },
     {
         id: "b61bb82a239330",
