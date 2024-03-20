@@ -11,6 +11,25 @@ export const formatDate = (timestamp) => {
   } else return timestamp
 }
 
+export const median = (numbers) => {
+  const sorted = Array.from(numbers).sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+
+  if (sorted.length % 2 === 0) {
+      return (sorted[middle - 1] + sorted[middle]) / 2;
+  }
+
+  return sorted[middle];
+}
+
+export const average = array => array.reduce((a, b) => a + b) / array.length;
+
+export const formatConfidence = (value) => {
+  // let roundedValue = Math.round((value + Number.EPSILON) * 100)
+  let percentageValue = (value * 100).toLocaleString('en-US', {maximumFractionDigits:0})
+  return `${percentageValue} %`
+}
+
 export const logout = () => {
   revokeToken()
   console.log("logging out")
