@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, IconButton } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
-import { getRecordData, updateRecord, deleteRecord, getNextRecord } from '../../services/app.service';
+import { getRecordData, updateRecord, deleteRecord, getNextRecord, getPreviousRecord } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 import Subheader from '../../components/Subheader/Subheader';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
@@ -127,12 +127,21 @@ export default function Record() {
         callAPI(
           getNextRecord,
           [recordData],
-          handleSuccessNext,
+          handleSuccessNavigateRecord,
           (e) => console.error("unable to go to next record: "+e)
         )
     }
 
-    const handleSuccessNext = (data) => {
+    const handleClickPrevious = () => {
+        callAPI(
+          getPreviousRecord,
+          [recordData],
+          handleSuccessNavigateRecord,
+          (e) => console.error("unable to go to next record: "+e)
+        )
+    }
+
+    const handleSuccessNavigateRecord = (data) => {
         navigate("/record/"+data._id, {replace: true})
     }
 
@@ -153,7 +162,7 @@ export default function Record() {
             />
             <Box sx={styles.navigationBox}>
                 <IconButton>
-                    <ArrowBackIcon />
+                    <ArrowBackIcon onClick={handleClickPrevious}/>
                 </IconButton>
                 <IconButton onClick={handleClickNext}>
                     <ArrowForwardIcon/>
