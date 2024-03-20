@@ -10,7 +10,8 @@ import { formatConfidence } from '../../assets/helperFunctions';
 
 const styles = {
     imageBox: {
-        // maxHeight: '500px'
+        height: "90vh",
+        overflowY: "scroll"
     },
     image: {
         height: "75vh"
@@ -38,7 +39,7 @@ const styles = {
         display: 'flex',
         justifyContent: 'flex-end',
         marginRight:'10px',
-    }
+    },
 }
 
 export default function DocumentContainer(props) {
@@ -109,14 +110,16 @@ export default function DocumentContainer(props) {
                                     }
                                 </IconButton>
                             </Box>
-                            {image !== undefined && 
-                            <LassoSelector 
-                                image={image}
-                                displayPoints={displayPoints}
-                                disabled
-                                fullscreen={fullscreen}
-                            />
-                            }
+                            <Box sx={styles.imageBox}>
+                                {image !== undefined && 
+                                <LassoSelector 
+                                    image={image}
+                                    displayPoints={displayPoints}
+                                    disabled
+                                    fullscreen={fullscreen}
+                                />
+                                }
+                            </Box>
                         </Box>
                     </Grid>
                 }

@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
 import { getRecordData, updateRecord, deleteRecord } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 import Subheader from '../../components/Subheader/Subheader';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
 
 export default function Record() {
     const [ recordData, setRecordData ] = useState({})
@@ -23,8 +26,15 @@ export default function Record() {
             height: "100%"
         },
         innerBox: {
-            paddingY:5,
+            paddingTop:2,
+            paddingBottom: 5,
             paddingX:5,
+        },
+        navigationBox: {
+            paddingX: 5,
+            paddingTop: 2,
+            display: "flex",
+            justifyContent: "space-between",
         },
     }
 
@@ -128,6 +138,10 @@ export default function Record() {
                 upFunction={goToProject}
                 previousPages={previousPages}
             />
+            <Box sx={styles.navigationBox}>
+                <IconButton><ArrowBackIcon/></IconButton>
+                <IconButton><ArrowForwardIcon/></IconButton>
+            </Box>
             <Box sx={styles.innerBox}>
                 <DocumentContainer
                     image={recordData.img_url}
