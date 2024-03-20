@@ -79,7 +79,7 @@ export default function RecordsTable(props) {
           sx={styles.projectRow}
           onClick={() => handleClickRecord(row._id)}
         >
-            <TableCell>{idx}. {row.name}</TableCell>
+            <TableCell>{row.recordIndex}. {row.name}</TableCell>
             <TableCell>{row.contributor.name}</TableCell>
             <TableCell>{formatDate(row.dateCreated)}</TableCell>
             <TableCell align="right">{row.attributes.API_NUMBER.value}</TableCell>
