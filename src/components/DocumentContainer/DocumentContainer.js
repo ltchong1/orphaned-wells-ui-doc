@@ -6,6 +6,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import LassoSelector from '../../components/LassoSelector/LassoSelector';
+import { formatConfidence } from '../../assets/helperFunctions';
 
 const styles = {
     imageBox: {
@@ -38,12 +39,6 @@ const styles = {
         justifyContent: 'flex-end',
         marginRight:'10px',
     }
-}
-
-const formatConfidence = (value) => {
-    // let roundedValue = Math.round((value + Number.EPSILON) * 100)
-    let percentageValue = (value * 100).toLocaleString('en-US', {maximumFractionDigits:2})
-    return `${percentageValue} %`
 }
 
 export default function DocumentContainer(props) {
