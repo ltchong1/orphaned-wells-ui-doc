@@ -161,8 +161,8 @@ export default function Record() {
                 previousPages={previousPages}
             />
             <Box sx={styles.navigationBox}>
-                <IconButton>
-                    <ArrowBackIcon onClick={handleClickPrevious}/>
+                <IconButton onClick={handleClickPrevious}>
+                    <ArrowBackIcon/>
                 </IconButton>
                 <IconButton onClick={handleClickNext}>
                     <ArrowForwardIcon/>
