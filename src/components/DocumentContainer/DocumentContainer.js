@@ -220,21 +220,25 @@ function AttributeRow(props) {
                     </IconButton>
                 }
             </TableCell>
-            <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
-                {editMode ? 
-                    <TextField 
-                        autoFocus
-                        name={k}
-                        size="small" 
-                        // label={""} 
-                        defaultValue={v.value} 
-                        onChange={handleChangeValue} 
-                        onFocus={(event) => event.target.select()}
-                    />
-                    :
-                    v.value
-                }
-            </TableCell>
+            {
+                v.subattributes ? <TableCell/> :
+                <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
+                    {editMode ? 
+                        <TextField 
+                            autoFocus
+                            name={k}
+                            size="small" 
+                            // label={""} 
+                            defaultValue={v.value} 
+                            onChange={handleChangeValue} 
+                            onFocus={(event) => event.target.select()}
+                        />
+                        :
+                        v.value
+                    }
+                </TableCell>
+            }
+            
             {
                 fullscreen === "table" && 
                 <TableCell>{formatConfidence(v.confidence)}</TableCell>
