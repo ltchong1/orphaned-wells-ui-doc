@@ -148,3 +148,12 @@ export const revokeToken = () => {
         headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
     });
 }
+
+export const getNextRecord = (data) => {
+    return fetch(BACKEND_URL+'/get_next_record', {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify(data),
+        headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
+    });
+}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, IconButton } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
-import { getRecordData, updateRecord, deleteRecord } from '../../services/app.service';
+import { getRecordData, updateRecord, deleteRecord, getNextRecord } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 import Subheader from '../../components/Subheader/Subheader';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
@@ -123,6 +123,19 @@ export default function Record() {
         navigate("/project/"+recordData.project_id, {replace: true})
     }
 
+    const handleClickNext = () => {
+        callAPI(
+          getNextRecord,
+          [recordData],
+          handleSuccessNext,
+          (e) => console.error("unable to go to next record: "+e)
+        )
+    }
+
+    const handleSuccessNext = (data) => {
+        navigate("/record/"+data._id, {replace: true})
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
@@ -139,8 +152,12 @@ export default function Record() {
                 previousPages={previousPages}
             />
             <Box sx={styles.navigationBox}>
-                <IconButton><ArrowBackIcon/></IconButton>
-                <IconButton><ArrowForwardIcon/></IconButton>
+                <IconButton>
+                    <ArrowBackIcon />
+                </IconButton>
+                <IconButton onClick={handleClickNext}>
+                    <ArrowForwardIcon/>
+                </IconButton>
             </Box>
             <Box sx={styles.innerBox}>
                 <DocumentContainer
