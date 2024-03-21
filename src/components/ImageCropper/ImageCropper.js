@@ -30,6 +30,15 @@ export const ImageCropper = (props) => {
         } else {
             setWidth("45vw")
         }
+        if (crop) {
+            // gotta recrop the image so that the border increases along with the increase in image size
+            let tempCrop = Object.assign(crop)
+            setCrop(null)
+            setTimeout(function() {
+                setCrop(tempCrop)
+            }, 0)
+            
+        }
     }, [fullscreen])
 
     useEffect(() => {
