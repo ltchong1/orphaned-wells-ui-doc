@@ -41,6 +41,7 @@ const styles = {
         display: 'flex',
         justifyContent: 'flex-end',
         marginRight:'10px',
+        height: '40px'
     },
 }
 
@@ -108,11 +109,11 @@ export default function DocumentContainer(props) {
                     <Grid item xs={gridWidths[0]}>
                         <Box sx={styles.gridContainer}>
                             <Box sx={styles.containerActions}>
-                                <IconButton onClick={() => handleSetFullscreen("image")}>
+                                {/* <IconButton onClick={() => handleSetFullscreen("image")}>
                                     { 
                                         fullscreen === "image" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
                                     }
-                                </IconButton>
+                                </IconButton> */}
                             </Box>
                             <Box sx={styles.imageBox}>
                                 {image !== undefined && 
