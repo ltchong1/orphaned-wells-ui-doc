@@ -34,12 +34,14 @@ export const ImageCropper = (props) => {
 
     useEffect(() => {
         if (displayPoints) {
-            let crop_width = displayPoints[1][0] - displayPoints[0][0]
-            let crop_height = displayPoints[2][1] - displayPoints[1][1]
+            let crop_x = displayPoints[0][0] - 0.3
+            let crop_y = displayPoints[0][1] - 0.3
+            let crop_width = displayPoints[1][0] - displayPoints[0][0] + 0.6
+            let crop_height = displayPoints[2][1] - displayPoints[1][1] + 0.6
             let newCrop = {
                 unit: "%",
-                x: displayPoints[0][0],
-                y: displayPoints[0][1],
+                x: crop_x,
+                y: crop_y,
                 width: crop_width,
                 height: crop_height
             }
@@ -72,7 +74,7 @@ export const ImageCropper = (props) => {
     }
 
     return (
-        <ReactCrop crop={crop} onChange={c => handleSetCrop(c)}>
+        <ReactCrop crop={crop} onChange={c => handleSetCrop(c)} locked={disabled}>
             <img src={image} style={styles.imageStyle}/>
         </ReactCrop>
     )
