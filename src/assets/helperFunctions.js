@@ -1,4 +1,5 @@
 import { refreshAuth, revokeToken } from "../services/app.service"
+import { useEffect } from 'react';
 
 export const formatDate = (timestamp) => {
   if (timestamp !== null) {
@@ -29,6 +30,22 @@ export const formatConfidence = (value) => {
   let percentageValue = (value * 100).toLocaleString('en-US', {maximumFractionDigits:0})
   return `${percentageValue} %`
 }
+
+export const useKeyDown = (callback, keys) => {
+  const onKeyDown = (event) => {
+    const wasAnyKeyPressed = keys.some((key) => event.key === key);
+    if (wasAnyKeyPressed) {
+      event.preventDefault();
+      callback();
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [onKeyDown]);
+};
 
 export const logout = () => {
   revokeToken()
