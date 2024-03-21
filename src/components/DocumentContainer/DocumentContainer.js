@@ -6,12 +6,14 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import LassoSelector from '../../components/LassoSelector/LassoSelector';
+import { ImageCropper } from '../ImageCropper/ImageCropper';
 import { formatConfidence } from '../../assets/helperFunctions';
 
 const styles = {
     imageBox: {
         height: "90vh",
-        overflowY: "scroll"
+        overflowY: "scroll",
+        position: "relative"
     },
     image: {
         height: "75vh"
@@ -72,15 +74,17 @@ export default function DocumentContainer(props) {
 
     const handleClickField = (key, normalized_vertices) => {
         if(key === displayKey) {
-            setDisplayPoints([])
+            setDisplayPoints(null)
             setDisplayKey(null)
         }
         else if(normalized_vertices !== null && normalized_vertices !== undefined) {
             let actual_vertices = []
+            let percentage_vertices = []
             for (let each of normalized_vertices) {
-                actual_vertices.push([each[0]*imageDimensions[0], each[1]*imageDimensions[1]])
+                // actual_vertices.push([each[0]*imageDimensions[0], each[1]*imageDimensions[1]])
+                percentage_vertices.push([each[0]*100, each[1]*100])
             }
-            setDisplayPoints(actual_vertices)
+            setDisplayPoints(percentage_vertices)
             setDisplayKey(key)
         }
     }
@@ -112,12 +116,18 @@ export default function DocumentContainer(props) {
                             </Box>
                             <Box sx={styles.imageBox}>
                                 {image !== undefined && 
-                                <LassoSelector 
-                                    image={image}
-                                    displayPoints={displayPoints}
-                                    disabled
-                                    fullscreen={fullscreen}
-                                />
+                                // <LassoSelector 
+                                //     image={image}
+                                //     displayPoints={displayPoints}
+                                //     disabled
+                                //     fullscreen={fullscreen}
+                                // />
+                                    <ImageCropper 
+                                        image={image}
+                                        displayPoints={displayPoints}
+                                        disabled
+                                        fullscreen={fullscreen}
+                                    />
                                 }
                             </Box>
                         </Box>
