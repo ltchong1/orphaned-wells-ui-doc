@@ -12,8 +12,7 @@ import { formatConfidence, useKeyDown } from '../../assets/helperFunctions';
 const styles = {
     imageBox: {
         height: "90vh",
-        overflowY: "scroll",
-        position: "relative"
+        overflowX: "scroll"
     },
     image: {
         height: "75vh"
@@ -53,6 +52,13 @@ export default function DocumentContainer(props) {
     // const [ displayTopLevelKey, setDisplayTopLevelKey ] = useState(null)
     const [ fullscreen, setFullscreen ] = useState(null)
     const [ gridWidths, setGridWidths ] = useState([5.9,0.2,5.9])
+    const [ width, setWidth ] = useState("100%")
+    const [ height, setHeight ] = useState("auto")
+
+    const imageDivStyle={
+        width: width,
+        height: height,
+    }
 
     useKeyDown(() => {
         tabCallback();
@@ -68,7 +74,9 @@ export default function DocumentContainer(props) {
         } else attribute_index = 0
         if (attribute_index === attributeKeys.length) attribute_index = 0
         let keepGoing = true
-        while (keepGoing) {
+        let i = 0;
+        while (keepGoing && i < 100) {
+            i+=1
             let newDisplayKey = attributeKeys[attribute_index]
             let newVertices = attributes[newDisplayKey].normalized_vertices
             if(newVertices !== null && newVertices !== undefined) {
@@ -124,13 +132,16 @@ export default function DocumentContainer(props) {
                                 </IconButton>
                             </Box>
                             <Box sx={styles.imageBox}>
+                                
                                 {image !== undefined &&
+                                <div style={imageDivStyle}>
                                     <ImageCropper 
                                         image={image}
                                         displayPoints={displayPoints}
                                         disabled
                                         fullscreen={fullscreen}
                                     />
+                                </div>
                                 }
                             </Box>
                         </Box>

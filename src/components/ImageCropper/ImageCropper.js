@@ -16,20 +16,23 @@ export const ImageCropper = (props) => {
     const { image, displayPoints, disabled, fullscreen } = props
     const [crop, setCrop] = useState()
     const [zoom, setZoom] = useState(1)
-    const [ width, setWidth ] = useState("45vw")
+    const [ imageDimensions, setImageDimensions ] = useState([])
+    const [ width, setWidth ] = useState("100%")
+    const [ height, setHeight ] = useState("100%")
 
     const styles = {
-        imageStyle: {
-            width:width
+        imageDiv: {
+            width: width,
+            height: height,
         }
     }
 
     useEffect(() => {
-        if (fullscreen) {
-            setWidth("90vw")
-        } else {
-            setWidth("45vw")
-        }
+        // if (fullscreen) {
+        //     setWidth("90vw")
+        // } else {
+        //     setWidth("45vw")
+        // }
         if (crop) {
             // gotta recrop the image so that the border increases along with the increase in image size
             let tempCrop = Object.assign(crop)
@@ -66,7 +69,16 @@ export const ImageCropper = (props) => {
     }, [displayPoints])
 
     useEffect(() => {
-    }, [props])
+        var img = new Image();
+
+        img.onload = function(){
+            var height = img.height;
+            var width = img.width;
+            setImageDimensions([width,height])
+        }
+
+        img.src = image;
+    },[])
 
     const handleSetCrop = (c) => {
         setCrop(c)
@@ -79,12 +91,11 @@ export const ImageCropper = (props) => {
                 dragHandle[0].style.display="none"
             }
         }
-        
     }
 
     return (
-        <ReactCrop crop={crop} onChange={c => handleSetCrop(c)} locked={disabled}>
-            <img src={image} style={styles.imageStyle}/>
-        </ReactCrop>
+            <ReactCrop crop={crop} onChange={c => handleSetCrop(c)} locked={disabled}>
+                <img src={image}/>
+            </ReactCrop>
     )
 }
