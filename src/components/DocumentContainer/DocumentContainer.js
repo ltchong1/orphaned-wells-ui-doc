@@ -81,7 +81,9 @@ export default function DocumentContainer(props) {
             let tempKey = attributesList[tempIndex].key
             let tempVertices = attributesList[tempIndex].normalized_vertices
             if(tempVertices !== null && tempVertices !== undefined) {
-                handleClickField(tempKey, tempVertices)
+                let isSubattribute = attributesList[tempIndex].isSubattribute
+                let topLevelAttribute = attributesList[tempIndex].topLevelAttribute
+                handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute)
                 keepGoing = false 
                 // setDisplayKeyIndex(tempIndex)
             }
@@ -93,7 +95,7 @@ export default function DocumentContainer(props) {
         
     }
 
-    const handleClickField = (key, normalized_vertices) => {
+    const handleClickField = (key, normalized_vertices, isSubattribute, topLevelAttribute) => {
         if(key === displayKey) {
             setDisplayPoints(null)
             setDisplayKey(null)
@@ -108,14 +110,18 @@ export default function DocumentContainer(props) {
             setDisplayKey(key)
 
             // set display key index
-
             let keepGoing = true
             let i = 0
             while (keepGoing && i < attributesList.length) {
                 let tempAttr = attributesList[i]
                 if (key === tempAttr.key) {
-                    setDisplayKeyIndex(i)
-                    keepGoing = false
+                    if (!isSubattribute) {
+                        setDisplayKeyIndex(i)
+                        keepGoing = false
+                    } else if(isSubattribute && topLevelAttribute === tempAttr.topLevelAttribute) {
+                        setDisplayKeyIndex(i)
+                        keepGoing = false
+                    }
                 }
                 i++
             }
@@ -257,7 +263,7 @@ function AttributeRow(props) {
 
     return (
     <>
-        <TableRow key={k}>
+        <TableRow key={k} id={`${k}`}>
             <TableCell sx={styles.fieldKey}>
                 
                 <span 
@@ -388,10 +394,10 @@ function SubattributeRow(props) {
     }
 
     return (
-        <TableRow key={k}>
+        <TableRow key={k} id={`${topLevelAttribute}::${k}`}>
             <TableCell sx={styles.fieldKey} >
             <span 
-                onClick={() => handleClickField(k, v.normalized_vertices)}
+                onClick={() => handleClickField(k, v.normalized_vertices, true, topLevelAttribute)}
                 style={k === displayKey ? {fontWeight:"bold"} : {}}
             >
                 {k}
