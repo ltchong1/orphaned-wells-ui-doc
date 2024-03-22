@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Box, IconButton } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
 import { getRecordData, updateRecord, deleteRecord, getNextRecord, getPreviousRecord } from '../../services/app.service';
-import { callAPI } from '../../assets/helperFunctions';
+import { callAPI, useKeyDown } from '../../assets/helperFunctions';
 import Subheader from '../../components/Subheader/Subheader';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
@@ -140,6 +140,14 @@ export default function Record() {
           (e) => console.error("unable to go to next record: "+e)
         )
     }
+
+    useKeyDown(() => {
+        handleClickPrevious();
+    }, ["ArrowLeft"]);
+
+    useKeyDown(() => {
+        handleClickNext();
+    }, ["ArrowRight"]);
 
     const handleSuccessNavigateRecord = (data) => {
         navigate("/record/"+data._id, {replace: true})
