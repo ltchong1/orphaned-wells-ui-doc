@@ -11,7 +11,7 @@ import { downloadRecordsCSV } from '../../services/app.service';
 import { formatDate, callAPIWithBlobResponse, median, average, formatConfidence } from '../../assets/helperFunctions';
 
 const TABLE_ATTRIBUTES = {
-  displayNames: ["Record Name", "Contributor", "Date Uploaded", "API Number", "Average Confidence", "Digitization Status", "Review Status"],
+  displayNames: ["Record Name", "Date Uploaded", "API Number", "Mean Confidence", "Lowest Confidence", "Digitization Status", "Review Status"],
   keyNames: ["name", "contributor", "dateCreated", "API_NUMBER", "confidence_median", "confidence_lowest", "status", "review_status"],
 }
 
@@ -73,18 +73,30 @@ export default function RecordsTable(props) {
     return formatConfidence(average(confidences))
   }
 
+  const calculateLowestConfidence = (attributes) => {
+    let lowestConfidence = 100
+    for (let key of Object.keys(attributes)) {
+      let attr = attributes[key]
+      if (attr.confidence < lowestConfidence) {
+        lowestConfidence = attr.confidence
+      }
+    }
+    return formatConfidence(lowestConfidence)
+  }
+
   const tableRow = (row, idx) => {
       return (
         <TableRow
           sx={styles.projectRow}
           onClick={() => handleClickRecord(row._id)}
         >
-            <TableCell>{row.recordIndex}. {row.name}</TableCell>
-            <TableCell>{row.contributor.name}</TableCell>
+            <TableCell align="right">{row.recordIndex}.</TableCell>
+            <TableCell>{row.name}</TableCell>
+            {/* <TableCell>{row.contributor.name}</TableCell> */}
             <TableCell>{formatDate(row.dateCreated)}</TableCell>
             <TableCell align="right">{row.attributes.API_NUMBER.value}</TableCell>
             <TableCell align="right">{calculateAverageConfidence(row.attributes)}</TableCell>
-            {/* <TableCell>{calculateLowestConfidence(row.attributes)}</TableCell> */}
+            <TableCell align="right">{calculateLowestConfidence(row.attributes)}</TableCell>
             <TableCell align="right">
               {
                 row.status === "processing" ? 
@@ -124,12 +136,13 @@ export default function RecordsTable(props) {
           Download csv
         </Button>
       </Box>
-      <Table sx={{ minWidth: 650 }} aria-label="records table">
+      <Table sx={{ minWidth: 650, marginTop: 1 }} aria-label="records table" size="small">
         <TableHead>
           <TableRow>
+            <TableCell></TableCell>
             {
                 TABLE_ATTRIBUTES.displayNames.map((attribute, idx) => (
-                    <TableCell sx={styles.headerCell} key={idx} align={idx > 2 ? "right" : "left"}>{attribute}</TableCell>
+                    <TableCell sx={styles.headerCell} key={idx} align={idx > 1 ? "right" : "left"}>{attribute}</TableCell>
                 ))
             }
           </TableRow>
