@@ -12,6 +12,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 export default function Record() {
     const [ recordData, setRecordData ] = useState({})
+    const [ attributesList, setAttributesList ] = useState([])
     const [ wasEdited, setWasEdited ] = useState(false)
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
     const [ openUpdateNameModal, setOpenUpdateNameModal ] = useState(false)
@@ -62,6 +63,26 @@ export default function Record() {
         }
         tempPreviousPages[data.project_name] = () => navigate("/project/"+data.project_id, {replace: true})
         setPreviousPages(tempPreviousPages)
+
+        // convert attributes to list
+        let tempAttributesList = []
+        for (let attributeKey of Object.keys(data.attributes)) {
+            let attribute = data.attributes[attributeKey]
+            let attributeEntry = attribute
+            attributeEntry["key"] = attributeKey
+            tempAttributesList.push(attributeEntry)
+            if (attribute.subattributes) {
+                for (let sub_attributeKey of Object.keys(attribute.subattributes)) {
+                    let sub_attribute = attribute.subattributes[sub_attributeKey]
+                    let sub_attributeEntry = sub_attribute
+                    sub_attributeEntry["key"] = sub_attributeKey
+                    sub_attributeEntry["isSubattribute"] = true
+                    sub_attributeEntry["topLevelAttribute"] = attributeKey
+                    tempAttributesList.push(sub_attributeEntry)
+                }
+            }
+        }
+        setAttributesList(tempAttributesList)
     }
 
     const handleChangeRecordName = (event) => {
@@ -187,6 +208,7 @@ export default function Record() {
                     image={recordData.img_url}
                     attributes={recordData.attributes}
                     handleChangeValue={handleChangeValue}
+                    attributesList={attributesList}
                 />
             </Box>
             <Box sx={styles.navigationBoxBottom}>
