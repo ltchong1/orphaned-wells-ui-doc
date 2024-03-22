@@ -83,7 +83,7 @@ export default function DocumentContainer(props) {
             if(tempVertices !== null && tempVertices !== undefined) {
                 handleClickField(tempKey, tempVertices)
                 keepGoing = false 
-                setDisplayKeyIndex(tempIndex)
+                // setDisplayKeyIndex(tempIndex)
             }
             else {
                 tempIndex+=1
@@ -97,6 +97,7 @@ export default function DocumentContainer(props) {
         if(key === displayKey) {
             setDisplayPoints(null)
             setDisplayKey(null)
+            setDisplayKeyIndex(null)
         }
         else if(normalized_vertices !== null && normalized_vertices !== undefined) {
             let percentage_vertices = []
@@ -105,6 +106,19 @@ export default function DocumentContainer(props) {
             }
             setDisplayPoints(percentage_vertices)
             setDisplayKey(key)
+
+            // set display key index
+
+            let keepGoing = true
+            let i = 0
+            while (keepGoing && i < attributesList.length) {
+                let tempAttr = attributesList[i]
+                if (key === tempAttr.key) {
+                    setDisplayKeyIndex(i)
+                    keepGoing = false
+                }
+                i++
+            }
         }
     }
 
