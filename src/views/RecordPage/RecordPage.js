@@ -27,12 +27,18 @@ export default function Record() {
         },
         innerBox: {
             paddingTop:2,
-            paddingBottom: 5,
+            paddingBottom: 2,
             paddingX:5,
         },
         navigationBox: {
             paddingX: 5,
             paddingTop: 2,
+            display: "flex",
+            justifyContent: "space-between",
+        },
+        navigationBoxBottom: {
+            paddingX: 5,
+            paddingBottom: 5,
             display: "flex",
             justifyContent: "space-between",
         },
@@ -182,6 +188,14 @@ export default function Record() {
                     attributes={recordData.attributes}
                     handleChangeValue={handleChangeValue}
                 />
+            </Box>
+            <Box sx={styles.navigationBoxBottom}>
+                <IconButton onClick={handleClickPrevious}>
+                    <ArrowBackIcon/>
+                </IconButton>
+                <IconButton onClick={handleClickNext}>
+                    <ArrowForwardIcon/>
+                </IconButton>
             </Box>
             <PopupModal
                 open={openDeleteModal}
