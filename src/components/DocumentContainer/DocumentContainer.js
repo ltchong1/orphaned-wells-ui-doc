@@ -46,10 +46,10 @@ const styles = {
 
 
 export default function DocumentContainer(props) {
-    const { image, attributes, handleChangeValue } = props;
+    const { image, attributes, handleChangeValue, attributesList } = props;
     const [ displayPoints, setDisplayPoints ] = useState(null)
     const [ displayKey, setDisplayKey ] = useState(null)
-    // const [ displayTopLevelKey, setDisplayTopLevelKey ] = useState(null)
+    const [ displayKeyIndex, setDisplayKeyIndex ] = useState(null)
     const [ fullscreen, setFullscreen ] = useState(null)
     const [ gridWidths, setGridWidths ] = useState([5.9,0.2,5.9])
     const [ width, setWidth ] = useState("100%")
@@ -66,26 +66,28 @@ export default function DocumentContainer(props) {
 
     const tabCallback = () => {
         // TODO: make this function handle the selection of subattributes as well
+        let tempIndex
+        if (displayKeyIndex === null || displayKeyIndex === attributesList.length - 1) {
+            tempIndex = 0
+        } else {
+            tempIndex = displayKeyIndex + 1
+            console.log(tempIndex)
+        }
         
-        let attributeKeys = Object.keys(attributes)
-        let attribute_index
-        if (displayKey) {
-            attribute_index = attributeKeys.indexOf(displayKey) + 1
-        } else attribute_index = 0
-        if (attribute_index === attributeKeys.length) attribute_index = 0
         let keepGoing = true
         let i = 0;
         while (keepGoing && i < 100) {
             i+=1
-            let newDisplayKey = attributeKeys[attribute_index]
-            let newVertices = attributes[newDisplayKey].normalized_vertices
-            if(newVertices !== null && newVertices !== undefined) {
-                handleClickField(newDisplayKey, newVertices)
+            let tempKey = attributesList[tempIndex].key
+            let tempVertices = attributesList[tempIndex].normalized_vertices
+            if(tempVertices !== null && tempVertices !== undefined) {
+                handleClickField(tempKey, tempVertices)
                 keepGoing = false 
+                setDisplayKeyIndex(tempIndex)
             }
             else {
-                attribute_index+=1
-                if (attribute_index === attributeKeys.length) attribute_index = 0
+                tempIndex+=1
+                if (tempIndex === attributesList.length) tempIndex = 0
             }
         }
         
