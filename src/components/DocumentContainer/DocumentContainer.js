@@ -54,6 +54,7 @@ export default function DocumentContainer(props) {
     const [ gridWidths, setGridWidths ] = useState([5.9,0.2,5.9])
     const [ width, setWidth ] = useState("100%")
     const [ height, setHeight ] = useState("auto")
+    const [ forceOpenSubtable, setForceOpenSubtable ] = useState(null)
 
     const imageDivStyle={
         width: width,
@@ -65,15 +66,12 @@ export default function DocumentContainer(props) {
     }, ["Tab"]);
 
     const tabCallback = () => {
-        // TODO: make this function handle the selection of subattributes as well
         let tempIndex
         if (displayKeyIndex === null || displayKeyIndex === attributesList.length - 1) {
             tempIndex = 0
         } else {
             tempIndex = displayKeyIndex + 1
-            console.log(tempIndex)
         }
-        
         let keepGoing = true
         let i = 0;
         while (keepGoing && i < 100) {
@@ -85,7 +83,7 @@ export default function DocumentContainer(props) {
                 let topLevelAttribute = attributesList[tempIndex].topLevelAttribute
                 handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute)
                 keepGoing = false 
-                // setDisplayKeyIndex(tempIndex)
+                if (isSubattribute) setForceOpenSubtable(topLevelAttribute)
             }
             else {
                 tempIndex+=1
@@ -162,6 +160,7 @@ export default function DocumentContainer(props) {
                                         displayPoints={displayPoints}
                                         disabled
                                         fullscreen={fullscreen}
+                                        
                                     />
                                 </div>
                                 }
@@ -189,6 +188,9 @@ export default function DocumentContainer(props) {
                                     handleChangeValue={handleChangeValue}
                                     fullscreen={fullscreen}
                                     displayKey={displayKey}
+                                    forceOpenSubtable={forceOpenSubtable}
+                                    attributesList={attributesList}
+                                    displayKeyIndex={displayKeyIndex}
                                 />
                             }
                         </Box>
@@ -203,7 +205,7 @@ export default function DocumentContainer(props) {
 }
 
 function AttributesTable(props) {
-    const { attributes, handleClickField, handleChangeValue, fullscreen, displayKey } = props
+    const { attributes, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, attributesList, displayKeyIndex } = props
 
     return (
         <TableContainer sx={styles.fieldsTable}>
@@ -228,6 +230,9 @@ function AttributesTable(props) {
                             handleChangeValue={handleChangeValue}
                             fullscreen={fullscreen}
                             displayKey={displayKey}
+                            forceOpenSubtable={forceOpenSubtable}
+                            attributesList={attributesList}
+                            displayKeyIndex={displayKeyIndex}
                         />
                     ))}
                 </TableBody>
@@ -237,9 +242,13 @@ function AttributesTable(props) {
 }
 
 function AttributeRow(props) { 
-    const { k, v, handleClickField, handleChangeValue, fullscreen, displayKey } = props
+    const { k, v, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, attributesList, displayKeyIndex } = props
     const [ editMode, setEditMode ] = useState(false)
     const [ openSubtable, setOpenSubtable ] = useState(false)
+
+    useEffect(() => {
+        if (forceOpenSubtable === k) setOpenSubtable(true)
+    }, [forceOpenSubtable])
 
     const handleDoubleClick = () => {
         setEditMode(true)
@@ -323,6 +332,8 @@ function AttributeRow(props) {
                 topLevelAttribute={k}
                 fullscreen={fullscreen}
                 displayKey={displayKey}
+                attributesList={attributesList}
+                displayKeyIndex={displayKeyIndex}
             />
         }
     </>
@@ -330,7 +341,7 @@ function AttributeRow(props) {
 }
 
 function SubattributesTable(props) {
-    const { attributes, handleClickField, handleChangeValue, open, topLevelAttribute, fullscreen, displayKey } = props
+    const { attributes, handleClickField, handleChangeValue, open, topLevelAttribute, fullscreen, displayKey, attributesList, displayKeyIndex } = props
 
     return (
         <TableRow>
@@ -362,6 +373,8 @@ function SubattributesTable(props) {
                             topLevelAttribute={topLevelAttribute}
                             fullscreen={fullscreen}
                             displayKey={displayKey}
+                            attributesList={attributesList}
+                            displayKeyIndex={displayKeyIndex}
                         />
                     ))}
                     </TableBody>
@@ -374,7 +387,7 @@ function SubattributesTable(props) {
 }
 
 function SubattributeRow(props) { 
-    const { k, v, handleClickField, handleChangeValue, topLevelAttribute, fullscreen, displayKey } = props
+    const { k, v, handleClickField, handleChangeValue, topLevelAttribute, fullscreen, displayKey, attributesList, displayKeyIndex } = props
     const [ editMode, setEditMode ] = useState(false)
 
     const handleDoubleClick = () => {
@@ -398,7 +411,7 @@ function SubattributeRow(props) {
             <TableCell sx={styles.fieldKey} >
             <span 
                 onClick={() => handleClickField(k, v.normalized_vertices, true, topLevelAttribute)}
-                style={k === displayKey ? {fontWeight:"bold"} : {}}
+                style={ (k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute) ? {fontWeight:"bold"} : {}}
             >
                 {k}
             </span>
