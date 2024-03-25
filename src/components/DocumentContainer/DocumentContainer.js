@@ -82,7 +82,13 @@ export default function DocumentContainer(props) {
                 let isSubattribute = attributesList[tempIndex].isSubattribute
                 let topLevelAttribute = attributesList[tempIndex].topLevelAttribute
                 handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute)
-                scrollToAttribute("table-container", tempIndex*1500 / attributesList.length)
+
+                // scroll down to attribute. if it is a sub attribute, we may have to wait for the drop down to open
+                let waitTime = 0
+                if (isSubattribute) waitTime = 150
+                setTimeout(function() {
+                    scrollToAttribute("table-container", (tempIndex / attributesList.length) * 2, isSubattribute)
+                }, waitTime)
                 keepGoing = false 
                 let elementId
                 if (isSubattribute) {
@@ -139,16 +145,18 @@ export default function DocumentContainer(props) {
                 }
                 
             }
-            scrollToAttribute("image-box", normalized_vertices[2][1] * 300)
+            // scrollToAttribute("image-box", normalized_vertices[2][1] * 300)
+            scrollToAttribute("image-box", normalized_vertices[2][1])
         }
     }
 
     const scrollToAttribute = (id, top) => {
         let imageContainerId = id
         let imageContainerElement = document.getElementById(imageContainerId)
+        
         if (imageContainerElement) {
             imageContainerElement.scrollTo({
-                top: top,
+                top: top * imageContainerElement.clientHeight,
                 // left: coordinates[1],
                 behavior: "smooth",
                 });
