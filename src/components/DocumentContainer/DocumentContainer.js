@@ -82,8 +82,23 @@ export default function DocumentContainer(props) {
                 let isSubattribute = attributesList[tempIndex].isSubattribute
                 let topLevelAttribute = attributesList[tempIndex].topLevelAttribute
                 handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute)
+                scrollToAttribute("table-container", tempIndex*1500 / attributesList.length)
                 keepGoing = false 
-                if (isSubattribute) setForceOpenSubtable(topLevelAttribute)
+                let elementId
+                if (isSubattribute) {
+                    setForceOpenSubtable(topLevelAttribute)
+                    elementId = `${topLevelAttribute}::${tempKey}`
+                } else elementId = tempKey
+                let element = document.getElementById(elementId)
+                if (element) {
+                    // element.scrollIntoView(true)
+                    element.scroll({
+                        top: 100,
+                        left: 100,
+                        behavior: "smooth",
+                    });
+                }
+                // else console.log(elementId,"is null")
             }
             else {
                 tempIndex+=1
@@ -109,8 +124,9 @@ export default function DocumentContainer(props) {
 
             // set display key index
             let keepGoing = true
-            let i = 0
+            let i = -1
             while (keepGoing && i < attributesList.length) {
+                i++
                 let tempAttr = attributesList[i]
                 if (key === tempAttr.key) {
                     if (!isSubattribute) {
@@ -121,10 +137,24 @@ export default function DocumentContainer(props) {
                         keepGoing = false
                     }
                 }
-                i++
+                
             }
+            scrollToAttribute("image-box", normalized_vertices[2][1] * 300)
         }
     }
+
+    const scrollToAttribute = (id, top) => {
+        let imageContainerId = id
+        let imageContainerElement = document.getElementById(imageContainerId)
+        if (imageContainerElement) {
+            imageContainerElement.scrollTo({
+                top: top,
+                // left: coordinates[1],
+                behavior: "smooth",
+                });
+        }
+    }
+
 
     const handleSetFullscreen = (item) => {
         if (fullscreen === item)  {
@@ -151,7 +181,7 @@ export default function DocumentContainer(props) {
                                     }
                                 </IconButton>
                             </Box>
-                            <Box sx={styles.imageBox}>
+                            <Box id="image-box" sx={styles.imageBox}>
                                 
                                 {image !== undefined &&
                                 <div style={imageDivStyle}>
@@ -160,7 +190,6 @@ export default function DocumentContainer(props) {
                                         displayPoints={displayPoints}
                                         disabled
                                         fullscreen={fullscreen}
-                                        
                                     />
                                 </div>
                                 }
@@ -208,7 +237,7 @@ function AttributesTable(props) {
     const { attributes, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, attributesList, displayKeyIndex } = props
 
     return (
-        <TableContainer sx={styles.fieldsTable}>
+        <TableContainer id="table-container" sx={styles.fieldsTable}>
             <Table stickyHeader>
                 <TableHead sx={styles.tableHead}>
                     <TableRow >
