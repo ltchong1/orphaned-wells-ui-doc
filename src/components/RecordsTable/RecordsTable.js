@@ -84,6 +84,14 @@ export default function RecordsTable(props) {
     return formatConfidence(lowestConfidence)
   }
 
+  const getAPINumber = (record) => {
+    try {
+      return record.attributes.API_NUMBER.value
+    } catch (e) {
+      return ""
+    }
+  }
+
   const tableRow = (row, idx) => {
       return (
         <TableRow
@@ -94,9 +102,9 @@ export default function RecordsTable(props) {
             <TableCell>{row.name}</TableCell>
             {/* <TableCell>{row.contributor.name}</TableCell> */}
             <TableCell>{formatDate(row.dateCreated)}</TableCell>
-            <TableCell align="right">{row.attributes.API_NUMBER.value}</TableCell>
-            <TableCell align="right">{calculateAverageConfidence(row.attributes)}</TableCell>
-            <TableCell align="right">{calculateLowestConfidence(row.attributes)}</TableCell>
+            <TableCell align="right">{row.status === "digitized" ? getAPINumber(row) : null}</TableCell>
+            <TableCell align="right">{row.status === "digitized" ? calculateAverageConfidence(row.attributes) : null}</TableCell>
+            <TableCell align="right">{row.status === "digitized" ? calculateLowestConfidence(row.attributes) : null}</TableCell>
             <TableCell align="right">
               {
                 row.status === "processing" ? 
