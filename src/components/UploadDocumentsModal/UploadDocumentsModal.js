@@ -57,7 +57,7 @@ export default function UploadDocumentsModal(props) {
             setShowWarning(false)
           }, 5000)
     } else {
-        console.log('valid file entry')
+        // console.log('valid file entry')
         handleUploadDocument(file)
         setShowWarning(false)
         setShowModal(false)
@@ -93,7 +93,7 @@ export default function UploadDocumentsModal(props) {
 
    function DragDrop() {
     const handleChange = (file) => {
-        console.log('setting file: '+file.name)
+        // console.log('setting file: '+file.name)
       setFile(file);
     };
     return (
