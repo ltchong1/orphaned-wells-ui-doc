@@ -1,4 +1,5 @@
 import { refreshAuth, revokeToken } from "../services/app.service"
+import { useEffect } from 'react';
 
 export const formatDate = (timestamp) => {
   if (timestamp !== null) {
@@ -10,6 +11,41 @@ export const formatDate = (timestamp) => {
     return formattedDate
   } else return timestamp
 }
+
+export const median = (numbers) => {
+  const sorted = Array.from(numbers).sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+
+  if (sorted.length % 2 === 0) {
+      return (sorted[middle - 1] + sorted[middle]) / 2;
+  }
+
+  return sorted[middle];
+}
+
+export const average = array => array.reduce((a, b) => a + b) / array.length;
+
+export const formatConfidence = (value) => {
+  // let roundedValue = Math.round((value + Number.EPSILON) * 100)
+  let percentageValue = (value * 100).toLocaleString('en-US', {maximumFractionDigits:0})
+  return `${percentageValue} %`
+}
+
+export const useKeyDown = (callback, keys) => {
+  const onKeyDown = (event) => {
+    const wasAnyKeyPressed = keys.some((key) => event.key === key);
+    if (wasAnyKeyPressed) {
+      event.preventDefault();
+      callback();
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [onKeyDown]);
+};
 
 export const logout = () => {
   revokeToken()

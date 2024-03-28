@@ -33,9 +33,9 @@ export default function ProjectsListTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {projects.map((row) => (
+          {projects.map((row, idx) => (
             <TableRow
-              key={row.name}
+              key={row.name+ " " + idx}
               sx={styles.projectRow}
               onClick={() => handleClickProject(row.id_)}
             >

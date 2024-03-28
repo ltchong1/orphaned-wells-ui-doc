@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
-import { getRecordData, updateRecord, deleteRecord } from '../../services/app.service';
-import { callAPI } from '../../assets/helperFunctions';
+import { getRecordData, updateRecord, deleteRecord, getNextRecord, getPreviousRecord } from '../../services/app.service';
+import { callAPI, useKeyDown } from '../../assets/helperFunctions';
 import Subheader from '../../components/Subheader/Subheader';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
 
 export default function Record() {
     const [ recordData, setRecordData ] = useState({})
+    const [ attributesList, setAttributesList ] = useState([])
     const [ wasEdited, setWasEdited ] = useState(false)
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
     const [ openUpdateNameModal, setOpenUpdateNameModal ] = useState(false)
@@ -23,8 +27,21 @@ export default function Record() {
             height: "100%"
         },
         innerBox: {
-            paddingY:5,
+            paddingTop:2,
+            paddingBottom: 2,
             paddingX:5,
+        },
+        navigationBox: {
+            paddingX: 5,
+            paddingTop: 2,
+            display: "flex",
+            justifyContent: "space-between",
+        },
+        navigationBoxBottom: {
+            paddingX: 5,
+            paddingBottom: 5,
+            display: "flex",
+            justifyContent: "space-between",
         },
     }
 
@@ -46,6 +63,26 @@ export default function Record() {
         }
         tempPreviousPages[data.project_name] = () => navigate("/project/"+data.project_id, {replace: true})
         setPreviousPages(tempPreviousPages)
+
+        // convert attributes to list
+        let tempAttributesList = []
+        for (let attributeKey of Object.keys(data.attributes)) {
+            let attribute = data.attributes[attributeKey]
+            let attributeEntry = attribute
+            attributeEntry["key"] = attributeKey
+            tempAttributesList.push(attributeEntry)
+            if (attribute.subattributes) {
+                for (let sub_attributeKey of Object.keys(attribute.subattributes)) {
+                    let sub_attribute = attribute.subattributes[sub_attributeKey]
+                    let sub_attributeEntry = sub_attribute
+                    sub_attributeEntry["key"] = sub_attributeKey
+                    sub_attributeEntry["isSubattribute"] = true
+                    sub_attributeEntry["topLevelAttribute"] = attributeKey
+                    tempAttributesList.push(sub_attributeEntry)
+                }
+            }
+        }
+        setAttributesList(tempAttributesList)
     }
 
     const handleChangeRecordName = (event) => {
@@ -113,10 +150,40 @@ export default function Record() {
         navigate("/project/"+recordData.project_id, {replace: true})
     }
 
+    const handleClickNext = () => {
+        callAPI(
+          getNextRecord,
+          [recordData],
+          handleSuccessNavigateRecord,
+          (e) => console.error("unable to go to next record: "+e)
+        )
+    }
+
+    const handleClickPrevious = () => {
+        callAPI(
+          getPreviousRecord,
+          [recordData],
+          handleSuccessNavigateRecord,
+          (e) => console.error("unable to go to next record: "+e)
+        )
+    }
+
+    useKeyDown(() => {
+        handleClickPrevious();
+    }, ["ArrowLeft"]);
+
+    useKeyDown(() => {
+        handleClickNext();
+    }, ["ArrowRight"]);
+
+    const handleSuccessNavigateRecord = (data) => {
+        navigate("/record/"+data._id, {replace: true})
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
-                currentPage={recordData.name}
+                currentPage={`${recordData.recordIndex}. ${recordData.name}`}
                 buttonName="Update Record"
                 // subtext={formatAttributes(projectData.attributes)}
                 handleClickButton={handleUpdateRecord}
@@ -128,12 +195,29 @@ export default function Record() {
                 upFunction={goToProject}
                 previousPages={previousPages}
             />
+            <Box sx={styles.navigationBox}>
+                <IconButton onClick={handleClickPrevious}>
+                    <ArrowBackIcon/>
+                </IconButton>
+                <IconButton onClick={handleClickNext}>
+                    <ArrowForwardIcon/>
+                </IconButton>
+            </Box>
             <Box sx={styles.innerBox}>
                 <DocumentContainer
                     image={recordData.img_url}
                     attributes={recordData.attributes}
                     handleChangeValue={handleChangeValue}
+                    attributesList={attributesList}
                 />
+            </Box>
+            <Box sx={styles.navigationBoxBottom}>
+                <IconButton onClick={handleClickPrevious}>
+                    <ArrowBackIcon/>
+                </IconButton>
+                <IconButton onClick={handleClickNext}>
+                    <ArrowForwardIcon/>
+                </IconButton>
             </Box>
             <PopupModal
                 open={openDeleteModal}

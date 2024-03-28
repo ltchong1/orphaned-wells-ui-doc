@@ -6,10 +6,13 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import LassoSelector from '../../components/LassoSelector/LassoSelector';
+import { ImageCropper } from '../ImageCropper/ImageCropper';
+import { formatConfidence, useKeyDown } from '../../assets/helperFunctions';
 
 const styles = {
     imageBox: {
-        // maxHeight: '500px'
+        height: "90vh",
+        overflowX: "scroll"
     },
     image: {
         height: "75vh"
@@ -37,57 +40,129 @@ const styles = {
         display: 'flex',
         justifyContent: 'flex-end',
         marginRight:'10px',
-    }
+        // height: '40px'
+    },
 }
 
-const formatConfidence = (value) => {
-    // let roundedValue = Math.round((value + Number.EPSILON) * 100)
-    let percentageValue = (value * 100).toLocaleString('en-US', {maximumFractionDigits:2})
-    return `${percentageValue} %`
-}
 
 export default function DocumentContainer(props) {
-    const { image, attributes, handleChangeValue } = props;
+    const { image, attributes, handleChangeValue, attributesList } = props;
     const [ displayPoints, setDisplayPoints ] = useState(null)
     const [ displayKey, setDisplayKey ] = useState(null)
-    const [ imageDimensions, setImageDimensions ] = useState([])
-    const [ checkAgain, setCheckAgain ] = useState(0)
+    const [ displayKeyIndex, setDisplayKeyIndex ] = useState(null)
     const [ fullscreen, setFullscreen ] = useState(null)
     const [ gridWidths, setGridWidths ] = useState([5.9,0.2,5.9])
+    const [ width, setWidth ] = useState("100%")
+    const [ height, setHeight ] = useState("auto")
+    const [ forceOpenSubtable, setForceOpenSubtable ] = useState(null)
 
-    useEffect(() => {
-        // console.log(props)
-        if (image !== undefined) {
-            let img = new Image();
-            img.src = image
-            
-            // for some reason image dimensions arent accessible for a half a second or so
-            if (img.width === 0) {
+    const imageDivStyle={
+        width: width,
+        height: height,
+    }
+
+    useKeyDown(() => {
+        tabCallback();
+    }, ["Tab"]);
+
+    const tabCallback = () => {
+        let tempIndex
+        if (displayKeyIndex === null || displayKeyIndex === attributesList.length - 1) {
+            tempIndex = 0
+        } else {
+            tempIndex = displayKeyIndex + 1
+        }
+        let keepGoing = true
+        let i = 0;
+        while (keepGoing && i < 100) {
+            i+=1
+            let tempKey = attributesList[tempIndex].key
+            let tempVertices = attributesList[tempIndex].normalized_vertices
+            if(tempVertices !== null && tempVertices !== undefined) {
+                let isSubattribute = attributesList[tempIndex].isSubattribute
+                let topLevelAttribute = attributesList[tempIndex].topLevelAttribute
+                handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute)
+
+                // scroll down to attribute. if it is a sub attribute, we may have to wait for the drop down to open
+                let waitTime = 0
+                if (isSubattribute) waitTime = 150
                 setTimeout(function() {
-                    setCheckAgain(checkAgain+1)
-                }, 500)
-                
-            } else {
-                let tempImageDimensions = [img.width, img.height]
-                setImageDimensions(tempImageDimensions)
+                    scrollToAttribute("table-container", (tempIndex / attributesList.length) * 2, isSubattribute)
+                }, waitTime)
+                keepGoing = false 
+                let elementId
+                if (isSubattribute) {
+                    setForceOpenSubtable(topLevelAttribute)
+                    elementId = `${topLevelAttribute}::${tempKey}`
+                } else elementId = tempKey
+                let element = document.getElementById(elementId)
+                if (element) {
+                    // element.scrollIntoView(true)
+                    element.scroll({
+                        top: 100,
+                        left: 100,
+                        behavior: "smooth",
+                    });
+                }
+                // else console.log(elementId,"is null")
+            }
+            else {
+                tempIndex+=1
+                if (tempIndex === attributesList.length) tempIndex = 0
             }
         }
-    }, [image, checkAgain])
+        
+    }
 
-    const handleClickField = (key, normalized_vertices) => {
+    const handleClickField = (key, normalized_vertices, isSubattribute, topLevelAttribute) => {
         if(key === displayKey) {
-            setDisplayPoints([])
+            setDisplayPoints(null)
             setDisplayKey(null)
+            setDisplayKeyIndex(null)
         }
         else if(normalized_vertices !== null && normalized_vertices !== undefined) {
-            let actual_vertices = []
+            let percentage_vertices = []
             for (let each of normalized_vertices) {
-                actual_vertices.push([each[0]*imageDimensions[0], each[1]*imageDimensions[1]])
+                percentage_vertices.push([each[0]*100, each[1]*100])
             }
-            setDisplayPoints(actual_vertices)
+            setDisplayPoints(percentage_vertices)
             setDisplayKey(key)
+
+            // set display key index
+            let keepGoing = true
+            let i = -1
+            while (keepGoing && i < attributesList.length) {
+                i++
+                let tempAttr = attributesList[i]
+                if (key === tempAttr.key) {
+                    if (!isSubattribute) {
+                        setDisplayKeyIndex(i)
+                        keepGoing = false
+                    } else if(isSubattribute && topLevelAttribute === tempAttr.topLevelAttribute) {
+                        setDisplayKeyIndex(i)
+                        keepGoing = false
+                    }
+                }
+                
+            }
+            // scrollToAttribute("image-box", normalized_vertices[2][1] * 300)
+            scrollToAttribute("image-box", normalized_vertices[2][1])
         }
     }
+
+    const scrollToAttribute = (id, top) => {
+        let imageContainerId = id
+        let imageContainerElement = document.getElementById(imageContainerId)
+        
+        if (imageContainerElement) {
+            imageContainerElement.scrollTo({
+                top: top * imageContainerElement.clientHeight,
+                // left: coordinates[1],
+                behavior: "smooth",
+                });
+        }
+    }
+
 
     const handleSetFullscreen = (item) => {
         if (fullscreen === item)  {
@@ -114,14 +189,19 @@ export default function DocumentContainer(props) {
                                     }
                                 </IconButton>
                             </Box>
-                            {image !== undefined && 
-                            <LassoSelector 
-                                image={image}
-                                displayPoints={displayPoints}
-                                disabled
-                                fullscreen={fullscreen}
-                            />
-                            }
+                            <Box id="image-box" sx={styles.imageBox}>
+                                
+                                {image !== undefined &&
+                                <div style={imageDivStyle}>
+                                    <ImageCropper 
+                                        image={image}
+                                        displayPoints={displayPoints}
+                                        disabled
+                                        fullscreen={fullscreen}
+                                    />
+                                </div>
+                                }
+                            </Box>
                         </Box>
                     </Grid>
                 }
@@ -144,6 +224,10 @@ export default function DocumentContainer(props) {
                                     handleClickField={handleClickField}
                                     handleChangeValue={handleChangeValue}
                                     fullscreen={fullscreen}
+                                    displayKey={displayKey}
+                                    forceOpenSubtable={forceOpenSubtable}
+                                    attributesList={attributesList}
+                                    displayKeyIndex={displayKeyIndex}
                                 />
                             }
                         </Box>
@@ -158,10 +242,10 @@ export default function DocumentContainer(props) {
 }
 
 function AttributesTable(props) {
-    const { attributes, handleClickField, handleChangeValue, fullscreen } = props
+    const { attributes, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, attributesList, displayKeyIndex } = props
 
     return (
-        <TableContainer sx={styles.fieldsTable}>
+        <TableContainer id="table-container" sx={styles.fieldsTable}>
             <Table stickyHeader>
                 <TableHead sx={styles.tableHead}>
                     <TableRow >
@@ -182,6 +266,10 @@ function AttributesTable(props) {
                             handleClickField={handleClickField}
                             handleChangeValue={handleChangeValue}
                             fullscreen={fullscreen}
+                            displayKey={displayKey}
+                            forceOpenSubtable={forceOpenSubtable}
+                            attributesList={attributesList}
+                            displayKeyIndex={displayKeyIndex}
                         />
                     ))}
                 </TableBody>
@@ -191,9 +279,13 @@ function AttributesTable(props) {
 }
 
 function AttributeRow(props) { 
-    const { k, v, handleClickField, handleChangeValue, fullscreen } = props
+    const { k, v, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, attributesList, displayKeyIndex } = props
     const [ editMode, setEditMode ] = useState(false)
     const [ openSubtable, setOpenSubtable ] = useState(false)
+
+    useEffect(() => {
+        if (forceOpenSubtable === k) setOpenSubtable(true)
+    }, [forceOpenSubtable])
 
     const handleDoubleClick = () => {
         setEditMode(true)
@@ -204,14 +296,26 @@ function AttributeRow(props) {
             e.preventDefault();
             setEditMode(false)
         } 
-      }
+    }
+
+    const formatSubattributesTogether = (attr) => {
+        let total = ""
+        for (let key of Object.keys(attr)) {
+            let value = attr[key].value
+            total += value += " "
+        }
+        return total
+    }
 
     return (
     <>
-        <TableRow key={k}>
+        <TableRow key={k} id={`${k}`}>
             <TableCell sx={styles.fieldKey}>
                 
-                <span onClick={() => handleClickField(k, v.normalized_vertices)}>
+                <span 
+                    onClick={() => handleClickField(k, v.normalized_vertices)}
+                    style={k === displayKey ? {fontWeight:"bold"} : {}}
+                >
                     {k}
                 </span>
                 {
@@ -225,21 +329,31 @@ function AttributeRow(props) {
                     </IconButton>
                 }
             </TableCell>
-            <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
-                {editMode ? 
-                    <TextField 
-                        autoFocus
-                        name={k}
-                        size="small" 
-                        // label={""} 
-                        defaultValue={v.value} 
-                        onChange={handleChangeValue} 
-                        onFocus={(event) => event.target.select()}
-                    />
-                    :
-                    v.value
-                }
-            </TableCell>
+            {
+                v.subattributes ? 
+                <TableCell>
+
+                    {formatSubattributesTogether(v.subattributes)}
+                </TableCell> 
+                
+                :
+                <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
+                    {editMode ? 
+                        <TextField 
+                            autoFocus
+                            name={k}
+                            size="small" 
+                            // label={""} 
+                            defaultValue={v.value} 
+                            onChange={handleChangeValue} 
+                            onFocus={(event) => event.target.select()}
+                        />
+                        :
+                        v.value
+                    }
+                </TableCell>
+            }
+            
             {
                 fullscreen === "table" && 
                 <TableCell>{formatConfidence(v.confidence)}</TableCell>
@@ -254,6 +368,9 @@ function AttributeRow(props) {
                 open={openSubtable}
                 topLevelAttribute={k}
                 fullscreen={fullscreen}
+                displayKey={displayKey}
+                attributesList={attributesList}
+                displayKeyIndex={displayKeyIndex}
             />
         }
     </>
@@ -261,7 +378,7 @@ function AttributeRow(props) {
 }
 
 function SubattributesTable(props) {
-    const { attributes, handleClickField, handleChangeValue, open, topLevelAttribute, fullscreen } = props
+    const { attributes, handleClickField, handleChangeValue, open, topLevelAttribute, fullscreen, displayKey, attributesList, displayKeyIndex } = props
 
     return (
         <TableRow>
@@ -292,6 +409,9 @@ function SubattributesTable(props) {
                             handleChangeValue={handleChangeValue}
                             topLevelAttribute={topLevelAttribute}
                             fullscreen={fullscreen}
+                            displayKey={displayKey}
+                            attributesList={attributesList}
+                            displayKeyIndex={displayKeyIndex}
                         />
                     ))}
                     </TableBody>
@@ -304,7 +424,7 @@ function SubattributesTable(props) {
 }
 
 function SubattributeRow(props) { 
-    const { k, v, handleClickField, handleChangeValue, topLevelAttribute, fullscreen } = props
+    const { k, v, handleClickField, handleChangeValue, topLevelAttribute, fullscreen, displayKey, attributesList, displayKeyIndex } = props
     const [ editMode, setEditMode ] = useState(false)
 
     const handleDoubleClick = () => {
@@ -324,8 +444,15 @@ function SubattributeRow(props) {
     }
 
     return (
-        <TableRow key={k}>
-            <TableCell sx={styles.fieldKey} onClick={() => handleClickField(k, v.normalized_vertices)}>{k}</TableCell>
+        <TableRow key={k} id={`${topLevelAttribute}::${k}`}>
+            <TableCell sx={styles.fieldKey} >
+            <span 
+                onClick={() => handleClickField(k, v.normalized_vertices, true, topLevelAttribute)}
+                style={ (k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute) ? {fontWeight:"bold"} : {}}
+            >
+                {k}
+            </span>
+            </TableCell>
             <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
                 {editMode ? 
                     <TextField 
