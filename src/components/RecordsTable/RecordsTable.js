@@ -86,7 +86,8 @@ export default function RecordsTable(props) {
 
   const getAPINumber = (record) => {
     try {
-      return record.attributes.API_NUMBER.value
+      if (record.attributes.API_NUMBER) return record.attributes.API_NUMBER.value
+      else return ""
     } catch (e) {
       return ""
     }
