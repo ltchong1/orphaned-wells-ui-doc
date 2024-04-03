@@ -1,32 +1,32 @@
 export const processors = [
-    {
-        id: "e7fedd7b9161dd4b",
-        name: "Default Google Processor",
-        displayName: "Default Google Processor",
-        state: "CO",
-        img: "./img/CO-well-completion-report.png",
-        attributes: [
-            {
-                name: 'API_Number', 
-            },
-            {
-                name: 'County',
-            },
-            {
-                name: 'Operator', 
-            },
-            {
-                name: 'Spud_Date',
-            },
-            {
-                name: 'State', 
-            },
-            {
-                name: 'Total_Depth',
-            },
-        ],
-        documentType: "Default Google Processor",
-    },
+    // {
+    //     id: "e7fedd7b9161dd4b",
+    //     name: "Default Google Processor",
+    //     displayName: "Default Google Processor",
+    //     state: "CO",
+    //     img: "./img/CO-well-completion-report.png",
+    //     attributes: [
+    //         {
+    //             name: 'API_Number', 
+    //         },
+    //         {
+    //             name: 'County',
+    //         },
+    //         {
+    //             name: 'Operator', 
+    //         },
+    //         {
+    //             name: 'Spud_Date',
+    //         },
+    //         {
+    //             name: 'State', 
+    //         },
+    //         {
+    //             name: 'Total_Depth',
+    //         },
+    //     ],
+    //     documentType: "Default Google Processor",
+    // },
     {
         id: "b61bb82a239330",
         name: "ColoradoDrillingReportExtractor",
