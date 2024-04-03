@@ -10,11 +10,12 @@ export default function ColumnSelectDialog(props) {
     const { open, onClose, columns } = props;
 
     const [ selectedColumns, setSelectedColumns ] = useState([...columns]);
+    const [ exportType, setExportType ]= useState("csv")
     const dialogHeight = '85vh'
     const dialogWidth = '60vw'
 
     useEffect(() => {
-        // console.log(columns)
+        setSelectedColumns([...columns])
     }, [columns]);
 
 
@@ -46,19 +47,24 @@ export default function ColumnSelectDialog(props) {
     };
 
     const handleExport = () => {
-        console.log("exporting: "+selectedColumns)
+        console.log("exporting as "+exportType+": "+selectedColumns)
+        // let body = {
+        //     exportType: exportType,
+        //     columns: selectedColumns
+        // }
         // callAPIWithBlobResponse(
-        //   downloadRecordsCSV,
-        //   [projectData.id_],
-        //   handleSuccess,
+        //     downloadRecords,
+        //   [projectData.id_, body],
+        //   handleSuccessfulExport,
         //   (e) => console.error("unable to download csv: "+e)
         // )
       }
 
     const handleSuccessfulExport = () => {
-        setTimeout(function() {
-            window.location.reload()
-          }, 500)
+        console.log("successful export")
+        // setTimeout(function() {
+        //     window.location.reload()
+        //   }, 500)
     }
 
     return (
@@ -95,6 +101,8 @@ export default function ColumnSelectDialog(props) {
                 columns={columns} 
                 selected={selectedColumns}
                 setSelected={setSelectedColumns}
+                exportType={exportType}
+                setExportType={setExportType}
             />
             </DialogContentText>
             <Button 
@@ -115,7 +123,10 @@ export default function ColumnSelectDialog(props) {
 
 
 export function CheckboxesGroup(props) {
-    const { columns, selected, setSelected } = props;
+    const { columns, selected, setSelected, exportType, setExportType } = props;
+    useEffect(() => {
+        // console.log(selected)
+    }, [columns]);
 
   const handleChange = (event) => {
     let isSelected = event.target.checked
@@ -134,11 +145,14 @@ export function CheckboxesGroup(props) {
     setSelected(tempSelected)
   };
 
+  const handleSelectExportType = (event) => {
+
+  };
+
 
   return (
     <Box sx={{ display: 'flex' }}>
       <FormControl sx={{ m: 3 }} component="fieldset" variant="standard" required>
-
 
             <FormLabel component="legend" id="export-type-label">Export Type</FormLabel>
             <RadioGroup
@@ -146,28 +160,30 @@ export function CheckboxesGroup(props) {
                 name="export-type"
                 required
                 sx={{paddingBottom: 5}}
+                value={exportType}
+                onChange={(event) => setExportType(event.target.value)}
             >
                 <FormControlLabel value="csv" control={<Radio />} label="CSV" />
                 <FormControlLabel value="json" control={<Radio />} label="JSON" />
             </RadioGroup>
 
+            <FormLabel component="legend">Select attributes to export</FormLabel>
+            <FormGroup row>
+                <Grid container>
+                    { columns.map((column, colIdx) => (
+                        <Grid key={`${colIdx}_${column}`} item xs={6}>
+                        <FormControlLabel
+                            control={
+                            <Checkbox checked={selected.includes(column)} onChange={handleChange} name={column} />
+                            }
+                            label={column}
+                        />
 
-        <FormLabel component="legend">Select attributes to export</FormLabel>
-        <FormGroup row>
-            <Grid container>
-                { columns.map((column, colIdx) => (
-                    <Grid key={`${colIdx}_${column}`} item xs={6}>
-                    <FormControlLabel
-                        control={
-                        <Checkbox checked={selected.includes(column)} onChange={handleChange} name={column} />
-                        }
-                        label={column}
-                    />
+                        </Grid>
+                    ))}
+                </Grid>
+            </FormGroup>
 
-                    </Grid>
-                ))}
-            </Grid>
-        </FormGroup>
       </FormControl>
     </Box>
   );
