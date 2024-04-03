@@ -183,7 +183,7 @@ export default function Record() {
     return (
         <Box sx={styles.outerBox}>
             <Subheader
-                currentPage={`${recordData.recordIndex}. ${recordData.name}`}
+                currentPage={`${recordData.recordIndex !== undefined ? recordData.recordIndex : ""}. ${recordData.name !== undefined ? recordData.name : ""}`}
                 buttonName="Update Record"
                 // subtext={formatAttributes(projectData.attributes)}
                 handleClickButton={handleUpdateRecord}
