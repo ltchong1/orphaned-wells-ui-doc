@@ -7,7 +7,7 @@ import { downloadRecords } from '../../services/app.service';
 
 
 export default function ColumnSelectDialog(props) {
-    const { open, onClose, columns } = props;
+    const { open, onClose, columns, project_id, project_name } = props;
 
     const [ selectedColumns, setSelectedColumns ] = useState([...columns]);
     const [ exportType, setExportType ]= useState("csv")
@@ -48,23 +48,26 @@ export default function ColumnSelectDialog(props) {
 
     const handleExport = () => {
         console.log("exporting as "+exportType+": "+selectedColumns)
-        // let body = {
-        //     exportType: exportType,
-        //     columns: selectedColumns
-        // }
-        // callAPIWithBlobResponse(
-        //     downloadRecords,
-        //   [projectData.id_, body],
-        //   handleSuccessfulExport,
-        //   (e) => console.error("unable to download csv: "+e)
-        // )
+        let body = {
+            exportType: exportType,
+            columns: selectedColumns
+        }
+        callAPIWithBlobResponse(
+            downloadRecords,
+          [project_id, body],
+          handleSuccessfulExport,
+          (e) => console.error("unable to download csv: "+e)
+        )
       }
 
-    const handleSuccessfulExport = () => {
-        console.log("successful export")
-        // setTimeout(function() {
-        //     window.location.reload()
-        //   }, 500)
+    const handleSuccessfulExport = (data) => {
+        const href = window.URL.createObjectURL(data);
+        const link = document.createElement('a');
+        link.href = href;
+        link.setAttribute('download', `${project_name}_records.${exportType}`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
     return (

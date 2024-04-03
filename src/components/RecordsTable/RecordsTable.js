@@ -178,6 +178,8 @@ export default function RecordsTable(props) {
             open={openColumnSelect}
             onClose={() => setOpenColumnSelect(false)}
             columns={attributes}
+            project_id={projectData.id_}
+            project_name={projectData.name}
         />
     </TableContainer>
   );
