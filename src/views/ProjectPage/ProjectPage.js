@@ -41,18 +41,6 @@ export default function Project() {
         },
     }
 
-    const formatAttributes = (attributes) => {
-        let output = "Attributes: "
-        if (attributes.length > 0) {
-            
-            for (let attribute of attributes) {
-                output+=attribute+", "
-            }
-            output = output.substring(0,output.length-2)
-        }
-        return output
-    }
-
     const handleUploadDocument = (file) => {
         const formData = new FormData();
         formData.append('file', file, file.name);
@@ -89,7 +77,6 @@ export default function Project() {
             <Subheader
                 currentPage={projectData.name}
                 buttonName="Upload new record(s)"
-                // subtext={formatAttributes(projectData.attributes)}
                 handleClickButton={() => setShowDocumentModal(true)}
                 actions={{"Update project": handleUpdateProject, "Delete project": () => setOpenDeleteModal(true)}}
                 previousPages={{"Projects": () => navigate("/projects", {replace: true})}}
