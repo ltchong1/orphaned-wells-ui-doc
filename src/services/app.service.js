@@ -47,6 +47,15 @@ export const downloadRecordsCSV = (project_id) => {
     });
 }
 
+export const downloadRecords = (project_id, data) => {
+    return fetch(BACKEND_URL+'/download_records/'+project_id, {
+        method: 'POST', 
+        mode: 'cors',
+        body: JSON.stringify(data),
+        headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
+    });
+}
+
 export const updateProject = (project_id, data) => {
     return fetch(BACKEND_URL+'/update_project/'+project_id, {
         method: 'POST', 

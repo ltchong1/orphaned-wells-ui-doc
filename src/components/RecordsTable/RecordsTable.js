@@ -1,4 +1,4 @@
-import { useEffect, Fragment } from 'react';
+import { useEffect, Fragment, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box, Paper, IconButton } from '@mui/material'
 import { DNA } from 'react-loader-spinner'
@@ -8,6 +8,7 @@ import CachedIcon from '@mui/icons-material/Cached';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { downloadRecordsCSV } from '../../services/app.service';
+import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelectDialog';
 import { formatDate, callAPIWithBlobResponse, median, average, formatConfidence } from '../../assets/helperFunctions';
 
 const TABLE_ATTRIBUTES = {
@@ -18,10 +19,16 @@ const TABLE_ATTRIBUTES = {
 export default function RecordsTable(props) {
   let navigate = useNavigate()
   const { projectData, records } = props;
+  const [ openColumnSelect, setOpenColumnSelect ] = useState(false)
+  const [ attributes, setAttributes ] = useState([])
 
   useEffect(() => {
-
-  },[props])
+    let tempColumns = []
+    for (let each of projectData.attributes) {
+      tempColumns.push(each.name)
+    }
+    setAttributes(tempColumns)
+  },[projectData])
 
   const styles = {
     projectRow: {
@@ -141,8 +148,9 @@ export default function RecordsTable(props) {
   return (
     <TableContainer component={Paper}>
       <Box sx={styles.topSection}>
-        <Button variant="contained" onClick={handleDownloadCSV} startIcon={<DownloadIcon/>}>
-          Download csv
+        {/* <Button variant="contained" onClick={handleDownloadCSV} startIcon={<DownloadIcon/>}> */}
+        <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<DownloadIcon/>}>
+           Export Project
         </Button>
       </Box>
       <Table sx={{ minWidth: 650, marginTop: 1 }} aria-label="records table" size="small">
@@ -165,6 +173,12 @@ export default function RecordsTable(props) {
           ))}
         </TableBody>
       </Table>
+
+      <ColumnSelectDialog
+            open={openColumnSelect}
+            onClose={() => setOpenColumnSelect(false)}
+            columns={attributes}
+        />
     </TableContainer>
   );
 }
