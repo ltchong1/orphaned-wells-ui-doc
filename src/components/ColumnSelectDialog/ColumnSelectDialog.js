@@ -61,6 +61,7 @@ export default function ColumnSelectDialog(props) {
       }
 
     const handleSuccessfulExport = (data) => {
+        onClose()
         const href = window.URL.createObjectURL(data);
         const link = document.createElement('a');
         link.href = href;
