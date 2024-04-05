@@ -52,7 +52,6 @@ export default function ColumnSelectDialog(props) {
     };
 
     const handleExport = () => {
-        console.log("exporting as "+exportType+": "+selectedColumns)
         let body = {
             exportType: exportType,
             columns: selectedColumns
