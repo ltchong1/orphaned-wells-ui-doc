@@ -1,8 +1,8 @@
 import { useEffect, Fragment, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box, Paper, IconButton } from '@mui/material'
-import { DNA } from 'react-loader-spinner'
 import DownloadIcon from '@mui/icons-material/Download';
+import IosShareIcon from '@mui/icons-material/IosShare';
 import ErrorIcon from '@mui/icons-material/Error';
 import CachedIcon from '@mui/icons-material/Cached';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -149,7 +149,7 @@ export default function RecordsTable(props) {
     <TableContainer component={Paper}>
       <Box sx={styles.topSection}>
         {/* <Button variant="contained" onClick={handleDownloadCSV} startIcon={<DownloadIcon/>}> */}
-        <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<DownloadIcon/>}>
+        <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<IosShareIcon/>}>
            Export Project
         </Button>
       </Box>
