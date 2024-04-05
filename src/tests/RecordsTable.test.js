@@ -13,6 +13,9 @@ const mockProjects = [
         },
         "history": [
             ""
+        ],
+        "attributes": [
+            "attribute 1"
         ]
     },
     {
@@ -25,6 +28,10 @@ const mockProjects = [
         },
         "history": [
             ""
+        ],
+        "attributes": [
+            "attribute 1",
+            "attribute 2"
         ]
     }
 ]
