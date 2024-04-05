@@ -7,7 +7,7 @@ import { downloadRecords } from '../../services/app.service';
 
 
 export default function ColumnSelectDialog(props) {
-    const { open, onClose, columns, project_id, project_name } = props;
+    const { open, onClose, columns, project_id, project_name, project_settings } = props;
 
     const [ selectedColumns, setSelectedColumns ] = useState([...columns]);
     const [ exportType, setExportType ]= useState("csv")
@@ -15,7 +15,12 @@ export default function ColumnSelectDialog(props) {
     const dialogWidth = '60vw'
 
     useEffect(() => {
-        setSelectedColumns([...columns])
+        if (project_settings && project_settings.exportColumns){
+            setSelectedColumns([...project_settings.exportColumns])
+        } else {
+            setSelectedColumns([...columns])
+        }
+        
     }, [columns]);
 
 

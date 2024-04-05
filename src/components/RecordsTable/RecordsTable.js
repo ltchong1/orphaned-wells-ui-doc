@@ -180,6 +180,7 @@ export default function RecordsTable(props) {
             columns={attributes}
             project_id={projectData.id_}
             project_name={projectData.name}
+            project_settings={projectData.settings}
         />
     </TableContainer>
   );
