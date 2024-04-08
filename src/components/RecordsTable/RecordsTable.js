@@ -76,7 +76,7 @@ export default function RecordsTable(props) {
     try {
       for (let key of Object.keys(attributes)) {
         let attr = attributes[key]
-        confidences.push(attr.confidence)
+        if (attr.confidence) confidences.push(attr.confidence)
       }
       return formatConfidence(average(confidences))
     } catch (e) {
@@ -89,7 +89,7 @@ export default function RecordsTable(props) {
     let lowestConfidence = 1
     for (let key of Object.keys(attributes)) {
       let attr = attributes[key]
-      if (attr.confidence < lowestConfidence) {
+      if (attr.confidence && attr.confidence < lowestConfidence) {
         lowestConfidence = attr.confidence
       }
     }
