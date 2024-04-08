@@ -73,22 +73,28 @@ export default function RecordsTable(props) {
 
   const calculateAverageConfidence = (attributes) => {
     let confidences = []
-    for (let key of Object.keys(attributes)) {
-      let attr = attributes[key]
-      confidences.push(attr.confidence)
+    try {
+      for (let key of Object.keys(attributes)) {
+        let attr = attributes[key]
+        confidences.push(attr.confidence)
+      }
+      return formatConfidence(average(confidences))
+    } catch (e) {
+      return null
     }
-    return formatConfidence(average(confidences))
+    
   }
 
   const calculateLowestConfidence = (attributes) => {
-    let lowestConfidence = 100
+    let lowestConfidence = 1
     for (let key of Object.keys(attributes)) {
       let attr = attributes[key]
       if (attr.confidence < lowestConfidence) {
         lowestConfidence = attr.confidence
       }
     }
-    return formatConfidence(lowestConfidence)
+    return  formatConfidence(lowestConfidence)
+    
   }
 
   const getAPINumber = (record) => {
