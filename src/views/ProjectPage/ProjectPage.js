@@ -6,6 +6,7 @@ import RecordsTable from '../../components/RecordsTable/RecordsTable';
 import Subheader from '../../components/Subheader/Subheader';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 import PopupModal from '../../components/PopupModal/PopupModal';
+import AddContributors from '../../components/AddContributors/AddContributors';
 import { callAPI } from '../../assets/helperFunctions';
 
 export default function Project() {
@@ -13,6 +14,7 @@ export default function Project() {
     const [ projectData, setProjectData ] = useState({attributes: []})
     const [ showDocumentModal, setShowDocumentModal ] = useState(false)
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
+    const [ openAddContributors, setOpenAddContributors ] = useState(false)
     let params = useParams(); 
     let navigate = useNavigate();
     
@@ -78,7 +80,13 @@ export default function Project() {
                 currentPage={projectData.name}
                 buttonName="Upload new record(s)"
                 handleClickButton={() => setShowDocumentModal(true)}
-                actions={{"Update project": handleUpdateProject, "Delete project": () => setOpenDeleteModal(true)}}
+                actions={
+                    {
+                        "Update project": handleUpdateProject, 
+                        "Delete project": () => setOpenDeleteModal(true),
+                        "Add contributors": () => setOpenAddContributors(true),
+                    }
+                }
                 previousPages={{"Projects": () => navigate("/projects", {replace: true})}}
             />
             <Box sx={styles.innerBox}>
@@ -102,6 +110,10 @@ export default function Project() {
                 buttonColor='error'
                 buttonVariant='contained'
                 width={400}
+            />
+            <AddContributors
+                open={openAddContributors}
+                onClose={() => setOpenAddContributors(false)}
             />
             
         </Box>
