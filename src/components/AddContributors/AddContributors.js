@@ -33,9 +33,19 @@ export default function AddContributors(props) {
     },[props])
 
     const handleGetUsersSuccess = (data) => {
+        let i = 0
+        let userIdx
         for (let each of data) {
             each["label"] = each["email"]
+            if (each["email"] === localStorage.getItem("user_email")) userIdx = i
+            i+=1
         }
+        try {
+            data.splice(userIdx,1)
+        } catch(e) {
+            console.log("unable to remove current user")
+        }
+        
         setUsers(data)
         setSearchTerm(null)
         setSelectedUsers([])
@@ -116,19 +126,10 @@ export default function AddContributors(props) {
             >   
                 <Grid container>
                     <Grid item xs={5}>
-                        {/* <TextField
-                            fullWidth
-                            label="Contributor email"
-                            variant="outlined" 
-                            // size="small"
-                            value={searchTerm}
-                            onChange={(event) => setSearchTerm(event.target.value)}
-                            sx={styles.searchBar}
-                        /> */}
                         <Autocomplete
                             disablePortal
                             fullWidth
-                            id="combo-box-demo"
+                            id="contributor-search"
                             value={searchTerm}
                             onChange={(event, newValue) => {
                                 handleAutocompleteAdd(newValue)
