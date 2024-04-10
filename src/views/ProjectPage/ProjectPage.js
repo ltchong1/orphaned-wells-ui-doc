@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
-import { getProjectData, uploadDocument, deleteProject } from '../../services/app.service';
+import { getProjectData, uploadDocument, deleteProject, updateProject } from '../../services/app.service';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
 import Subheader from '../../components/Subheader/Subheader';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
@@ -15,9 +15,11 @@ export default function Project() {
     const [ showDocumentModal, setShowDocumentModal ] = useState(false)
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
     const [ openAddContributors, setOpenAddContributors ] = useState(false)
+    const [ openUpdateNameModal, setOpenUpdateNameModal ] = useState(false)
+    const [ projectName, setProjectName ] = useState("")
     let params = useParams(); 
     let navigate = useNavigate();
-    
+
     useEffect(() => {
         callAPI(
             getProjectData,
@@ -30,6 +32,7 @@ export default function Project() {
     const handleSuccess = (data) => {
         setRecords(data.records)
         setProjectData(data.project_data)
+        setProjectName(data.project_data.name)
     }
 
     const styles = {
@@ -61,7 +64,7 @@ export default function Project() {
     }
 
     const handleUpdateProject = () => {
-        console.log("hanlde update project")
+        setOpenUpdateNameModal(true)
     }
 
     const handleDeleteProject = () => {
@@ -71,6 +74,20 @@ export default function Project() {
             [projectData.id_],
             (data) => navigate("/projects", {replace: true}),
             (e) => {console.error('error on deleting project: ',e)}
+        )
+    }
+
+    const handleChangeProjectName = (event) => {
+        setProjectName(event.target.value)
+    }
+
+    const handleUpdateProjectName = () => {
+        setOpenUpdateNameModal(false)
+        callAPI(
+            updateProject,
+            [params.id, {name: projectName}],
+            (data) => window.location.reload(),
+            (e) => console.error('error on updating project name: ',e)
         )
     }
 
@@ -108,6 +125,19 @@ export default function Project() {
                 handleSave={handleDeleteProject}
                 buttonText='Delete'
                 buttonColor='error'
+                buttonVariant='contained'
+                width={400}
+            />
+            <PopupModal
+                input
+                open={openUpdateNameModal}
+                handleClose={() => setOpenUpdateNameModal(false)}
+                text={projectName}
+                textLabel='Project Name'
+                handleEditText={handleChangeProjectName}
+                handleSave={handleUpdateProjectName}
+                buttonText='Update'
+                buttonColor='primary'
                 buttonVariant='contained'
                 width={400}
             />
