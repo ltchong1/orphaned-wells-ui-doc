@@ -99,9 +99,9 @@ export default function Project() {
                 handleClickButton={() => setShowDocumentModal(true)}
                 actions={
                     {
+                        "Add contributors": () => setOpenAddContributors(true),
                         "Update project": handleUpdateProject, 
                         "Delete project": () => setOpenDeleteModal(true),
-                        "Add contributors": () => setOpenAddContributors(true),
                     }
                 }
                 previousPages={{"Projects": () => navigate("/projects", {replace: true})}}
