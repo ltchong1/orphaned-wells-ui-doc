@@ -25,6 +25,9 @@ export default function AddContributors(props) {
         },
         searchBar: {
             marginBottom: 2,
+        },
+        selectedUser: {
+            margin: 0
         }
     }
 
@@ -77,7 +80,7 @@ export default function AddContributors(props) {
         tempSelectedUsers.push(value)
         setSelectedUsers(tempSelectedUsers)
         setSearchTerm(null)
-
+        
         // remove this user from search options
         let tempUsers = [...users]
         let i = 0
@@ -141,9 +144,9 @@ export default function AddContributors(props) {
                     </Grid>
                     <Grid item xs={2}></Grid>
                     <Grid item xs={5}>
-                        
+                            <p>Contributors to add:</p>
                             {selectedUsers.map((value, idx) => (
-                                <p key={value.email+idx}>{value.email+ " "}</p>
+                                <p style={styles.selectedUser} key={value.email+idx}>{value.email+ " "}</p>
                             ))}
                         
                     </Grid>
