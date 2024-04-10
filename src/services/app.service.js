@@ -176,8 +176,8 @@ export const getPreviousRecord = (data) => {
     });
 }
 
-export const addContributors = (data) => {
-    return fetch(BACKEND_URL+'/add_contributors', {
+export const addContributors = (project_id, data) => {
+    return fetch(BACKEND_URL+'/add_contributors/'+project_id, {
         method: 'POST',
         mode: 'cors',
         body: JSON.stringify(data),

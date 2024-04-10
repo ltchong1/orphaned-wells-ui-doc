@@ -1,4 +1,5 @@
 import {useEffect, useState, useRef } from 'react';
+import { useParams } from "react-router-dom";
 import { Box, TextField, IconButton, Grid, Autocomplete } from '@mui/material';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -7,38 +8,13 @@ import { callAPI } from '../../assets/helperFunctions';
 
 
 export default function AddContributors(props) {
+    let params = useParams(); 
     const { open, onClose } = props;
     const [ users, setUsers ] = useState([])
     const [ selectedUsers, setSelectedUsers ] = useState([])
-    const [ searchTerm, setSearchTerm ] = useState("")
+    const [ searchTerm, setSearchTerm ] = useState(null)
     const dialogHeight = '60vh'
     const dialogWidth = '60vw'
-
-    const top100Films = [
-        { label: 'The Shawshank Redemption', year: 1994 },
-        { label: 'The Godfather', year: 1972 },
-        { label: 'The Godfather: Part II', year: 1974 },
-        { label: 'The Dark Knight', year: 2008 },
-        { label: '12 Angry Men', year: 1957 },
-        { label: "Schindler's List", year: 1993 },
-        { label: 'Pulp Fiction', year: 1994 },
-        {
-          label: 'The Lord of the Rings: The Return of the King',
-          year: 2003,
-        },
-        { label: 'The Shawshank Redemption', year: 1994 },
-        { label: 'The Godfather', year: 1972 },
-        { label: 'The Godfather: Part II', year: 1974 },
-        { label: 'The Dark Knight', year: 2008 },
-        { label: '12 Angry Men', year: 1957 },
-        { label: "Schindler's List", year: 1993 },
-        { label: 'Pulp Fiction', year: 1994 },
-        {
-          label: 'The Lord of the Rings: The Return of the King',
-          year: 2003,
-        },
-    ]
-
 
     const styles = {
         dialogPaper: {
@@ -54,14 +30,15 @@ export default function AddContributors(props) {
 
     useEffect(()=> {
         callAPI(getUsers, ["admin"], handleGetUsersSuccess, handleGetUsersError)
-    },[])
+    },[props])
 
     const handleGetUsersSuccess = (data) => {
         for (let each of data) {
             each["label"] = each["email"]
         }
-        console.log(data)
         setUsers(data)
+        setSearchTerm(null)
+        setSelectedUsers([])
     } 
 
     const handleGetUsersError = (e) => {
@@ -73,28 +50,39 @@ export default function AddContributors(props) {
     };
 
     const handleAddContributors = () => {
-        // check that there is a processor selected
-        // let body = {
-        //     name: projectName,
-        //     description: projectDescription,
-        //     state: processors[selectedProcessor.idx].state,
-        //     history: [],
-        //     attributes: processors[selectedProcessor.idx].attributes,
-        //     documentType: processors[selectedProcessor.idx].documentType,
-        //     processorId: processors[selectedProcessor.idx].id,
-        // }
-        // callAPI(
-        //     addContributors,
-        //     [body],
-        //     handleSuccessfulAPICall,
-        //     (e) => console.error('unable to add contributors ',e)
-        // )
+        let body = {
+            users: selectedUsers,
+        }
+        callAPI(
+            addContributors,
+            [params.id, body],
+            handleSuccessfulAPICall,
+            (e) => console.error('unable to add contributors ',e)
+        )
+    }
+
+    const handleAutocompleteAdd = (value) => {
+        if (value === null || value === "") return
+        let tempSelectedUsers = [...selectedUsers]
+        tempSelectedUsers.push(value)
+        setSelectedUsers(tempSelectedUsers)
+        setSearchTerm(null)
+
+        // remove this user from search options
+        let tempUsers = [...users]
+        let i = 0
+        for (let user of users) {
+            if (user.email === value.email) {
+                tempUsers.splice(i, 1)
+                setUsers(tempUsers)
+                break
+            }
+            i++
+        }
     }
 
     const handleSuccessfulAPICall = () => {
-        setTimeout(function() {
-            window.location.reload()
-          }, 500)
+        onClose()
     }
 
     return (
@@ -141,6 +129,10 @@ export default function AddContributors(props) {
                             disablePortal
                             fullWidth
                             id="combo-box-demo"
+                            value={searchTerm}
+                            onChange={(event, newValue) => {
+                                handleAutocompleteAdd(newValue)
+                            }}
                             options={users}
                             // sx={{ width: 300 }}
                             renderInput={(params) => <TextField  {...params} label="User" />}
@@ -148,9 +140,11 @@ export default function AddContributors(props) {
                     </Grid>
                     <Grid item xs={2}></Grid>
                     <Grid item xs={5}>
-                        <p>
-                            display added users
-                        </p>
+                        
+                            {selectedUsers.map((value, idx) => (
+                                <p key={value.email+idx}>{value.email+ " "}</p>
+                            ))}
+                        
                     </Grid>
                 </Grid>
             </DialogContentText>
