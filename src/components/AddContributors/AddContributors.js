@@ -32,21 +32,12 @@ export default function AddContributors(props) {
     }
 
     useEffect(()=> {
-        callAPI(getUsers, ["admin"], handleGetUsersSuccess, handleGetUsersError)
+        callAPI(getUsers, ["admin", {project_id: params.id}], handleGetUsersSuccess, handleGetUsersError)
     },[props])
 
     const handleGetUsersSuccess = (data) => {
-        let i = 0
-        let userIdx
         for (let each of data) {
             each["label"] = each["email"]
-            if (each["email"] === localStorage.getItem("user_email")) userIdx = i
-            i+=1
-        }
-        try {
-            data.splice(userIdx,1)
-        } catch(e) {
-            console.log("unable to remove current user")
         }
         
         setUsers(data)

@@ -39,7 +39,7 @@ export default function AdminPage() {
     }
 
     useEffect(()=> {
-        callAPI(getUsers, ["base_user"], handleAuthSuccess, handleAuthError)
+        callAPI(getUsers, ["base_user", {}], handleAuthSuccess, handleAuthError)
     },[])
 
     useEffect(()=> {
