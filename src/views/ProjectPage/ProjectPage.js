@@ -99,7 +99,7 @@ export default function Project() {
                 handleClickButton={() => setShowDocumentModal(true)}
                 actions={
                     {
-                        "Add contributors": () => setOpenAddContributors(true),
+                        // "Add contributors": () => setOpenAddContributors(true),
                         "Update project": handleUpdateProject, 
                         "Delete project": () => setOpenDeleteModal(true),
                     }
