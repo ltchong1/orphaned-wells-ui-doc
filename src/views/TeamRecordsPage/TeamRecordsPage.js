@@ -18,8 +18,6 @@ export default function TeamRecordsPage() {
     }, [])
 
     const handleSuccess = (data) => {
-        console.log('setting records')
-        console.log(data.records)
         setRecords(data.records)
     }
 
