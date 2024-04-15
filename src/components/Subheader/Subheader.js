@@ -122,9 +122,12 @@ export default function Subheader(props) {
                 </Grid>
                 <Grid item xs={3}>
                     <Box sx={styles.newProjectColumn}>
-                        <Button variant="contained" onClick={handleClickButton} disabled={disableButton}>
-                            {buttonName}
-                        </Button>
+                        {buttonName && 
+                            <Button variant="contained" onClick={handleClickButton} disabled={disableButton}>
+                                {buttonName}
+                            </Button>
+                        }
+                        
                     </Box>
                 </Grid>
             </Grid>
