@@ -12,7 +12,7 @@ export default function Header(props) {
   const [ anchorEl, setAnchorEl ] = useState(null);
   const [ anchorAr, setAnchorAr ] = useState(null);
   const [ profileActions, setProfileActions ] = useState(false)
-  const [ tabValue, setTabValue ] = useState(null);
+  const [ tabValue, setTabValue ] = useState(0);
 
   const styles = {
     iconLeft: {
@@ -37,9 +37,9 @@ export default function Header(props) {
   }
 
   useEffect(() => {
-    if (window.location.hash.includes("projects")) {
+    if (window.location.hash.includes("project")) {
       setTabValue(0)
-    } else if (window.location.hash.includes("records")) {
+    } else if (window.location.hash.includes("record")) {
       setTabValue(1)
     }
     else if (window.location.hash.includes("users")) {
