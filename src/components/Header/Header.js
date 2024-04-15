@@ -12,7 +12,7 @@ export default function Header(props) {
   const [ anchorEl, setAnchorEl ] = useState(null);
   const [ anchorAr, setAnchorAr ] = useState(null);
   const [ profileActions, setProfileActions ] = useState(false)
-  const [ tabValue, setTabValue ] = useState(0);
+  const [ tabValue, setTabValue ] = useState(null);
 
   const styles = {
     iconLeft: {
@@ -45,6 +45,7 @@ export default function Header(props) {
     else if (window.location.hash.includes("users")) {
       setTabValue(2)
     } 
+    else setTabValue(null)
   }, [props])
 
   const handleNavigateHome = () => {
