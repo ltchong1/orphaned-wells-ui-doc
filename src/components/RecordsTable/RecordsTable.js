@@ -23,11 +23,14 @@ export default function RecordsTable(props) {
   const [ attributes, setAttributes ] = useState([])
 
   useEffect(() => {
-    let tempColumns = []
-    for (let each of projectData.attributes) {
-      tempColumns.push(each.name)
+      if (projectData) {
+        let tempColumns = []
+      for (let each of projectData.attributes) {
+        tempColumns.push(each.name)
+      }
+      setAttributes(tempColumns)
     }
-    setAttributes(tempColumns)
+    
   },[projectData])
 
   const styles = {
@@ -50,25 +53,6 @@ export default function RecordsTable(props) {
 
   const handleClickRecord = (record_id) => {
     navigate("/record/" + record_id)
-  }
-
-  const handleDownloadCSV = () => {
-    callAPIWithBlobResponse(
-      downloadRecordsCSV,
-      [projectData.id_],
-      handleSuccess,
-      (e) => console.error("unable to download csv: "+e)
-    )
-  }
-
-  const handleSuccess = (data) => {
-    const href = window.URL.createObjectURL(data);
-    const link = document.createElement('a');
-    link.href = href;
-    link.setAttribute('download', `${projectData.name}_records.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   }
 
   const calculateAverageConfidence = (attributes) => {
@@ -155,9 +139,12 @@ export default function RecordsTable(props) {
     <TableContainer component={Paper}>
       <Box sx={styles.topSection}>
         {/* <Button variant="contained" onClick={handleDownloadCSV} startIcon={<DownloadIcon/>}> */}
-        <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<IosShareIcon/>}>
-           Export Project
+        {projectData && 
+          <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<IosShareIcon/>}>
+            Export Project
         </Button>
+        }
+        
       </Box>
       <Table sx={{ minWidth: 650, marginTop: 1 }} aria-label="records table" size="small">
         <TableHead>
@@ -179,15 +166,17 @@ export default function RecordsTable(props) {
           ))}
         </TableBody>
       </Table>
-
-      <ColumnSelectDialog
-            open={openColumnSelect}
-            onClose={() => setOpenColumnSelect(false)}
-            columns={attributes}
-            project_id={projectData.id_}
-            project_name={projectData.name}
-            project_settings={projectData.settings}
-        />
+          { projectData && 
+            <ColumnSelectDialog
+              open={openColumnSelect}
+              onClose={() => setOpenColumnSelect(false)}
+              columns={attributes}
+              project_id={projectData.id_}
+              project_name={projectData.name}
+              project_settings={projectData.settings}
+          />
+          }
+      
     </TableContainer>
   );
 }
