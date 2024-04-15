@@ -83,6 +83,7 @@ export default function AdminPage() {
         setSelectedUser(null)
         setShowNewUserModal(false)
         setNewUser("")
+        setShowDeleteUserModal(false)
     }
 
     const handleUserError = (message, e) => {
