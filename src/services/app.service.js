@@ -15,6 +15,13 @@ export const getProjectData = (project_id) => {
     });
 }; 
 
+export const getTeamRecords = () => {
+    return fetch(BACKEND_URL+'/get_team_records', {
+        mode: 'cors',
+        headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
+    });
+}; 
+
 export const addProject = (data) => {
     return fetch(BACKEND_URL+'/add_project', {
         method: 'POST', 
