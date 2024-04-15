@@ -83,7 +83,7 @@ function App() {
               element={<ProjectsListPage/>} 
           />
           <Route
-              path="admin" 
+              path="users" 
               element={<AdminPage/>}
           />
           <Route

@@ -37,13 +37,12 @@ export default function Header(props) {
   }
 
   useEffect(() => {
-    console.log(window.location.hash)
     if (window.location.hash.includes("projects")) {
       setTabValue(0)
     } else if (window.location.hash.includes("records")) {
       setTabValue(1)
     }
-    else if (window.location.hash.includes("admin")) {
+    else if (window.location.hash.includes("users")) {
       setTabValue(2)
     } 
   }, [props])
@@ -69,7 +68,7 @@ export default function Header(props) {
       let newLocation
       if (newValue === 0) newLocation = "projects"
       else if (newValue === 1) newLocation = "records"
-      else if (newValue === 2) newLocation = "admin"
+      else if (newValue === 2) newLocation = "users"
       navigate(newLocation, {replace: true})
     }
     
