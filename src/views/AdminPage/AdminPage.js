@@ -39,7 +39,7 @@ export default function AdminPage() {
     }
 
     useEffect(()=> {
-        callAPI(getUsers, ["base_user", {}], handleAuthSuccess, handleAuthError)
+        callAPI(getUsers, ["admin", {}], handleAuthSuccess, handleAuthError)
     },[])
 
     useEffect(()=> {
@@ -186,10 +186,10 @@ function UsersTable(props) {
     return (
         <TableContainer component={Paper}>
             <h1>Users</h1> 
-            <RoleDropdown role={tableRole} handleSelectRole={setTableRole}/>
+            {/* <RoleDropdown role={tableRole} handleSelectRole={setTableRole}/> */}
             
             
-        <Table sx={{ minWidth: 650, borderTop: "5px solid #F5F5F6" }} aria-label="pending users table">
+        <Table sx={{ minWidth: 650, borderTop: "5px solid #F5F5F6" }} aria-label="pending users table" size="small">
             <TableHead>
             <TableRow>
                 {[["Name", "20%"], ["Email", "25%"], ["Organization", "15%"], ["Role", "20%"], ["Actions", "20%"]].map((value)=>(
@@ -199,7 +199,8 @@ function UsersTable(props) {
             </TableHead>
             <TableBody>
             {users.map((row, rowIdx) => {
-                if (row.role === tableRole) return (
+                // if (row.role === tableRole) return (
+                return (
                 <TableRow
                     key={row.email}
                     sx={styles.userRow}
