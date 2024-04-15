@@ -41,10 +41,10 @@ export default function TeamRecordsPage() {
                 // buttonName="Upload new record(s)"
             />
             <Box sx={styles.innerBox}>
-                {/* <RecordsTable
+                <RecordsTable
                     // projectData={projectData}
                     records={records}
-                /> */}
+                />
             </Box>
         </Box>
     );
