@@ -15,6 +15,13 @@ export const getProjectData = (project_id) => {
     });
 }; 
 
+export const getTeamRecords = () => {
+    return fetch(BACKEND_URL+'/get_team_records', {
+        mode: 'cors',
+        headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
+    });
+}; 
+
 export const addProject = (data) => {
     return fetch(BACKEND_URL+'/add_project', {
         method: 'POST', 
@@ -117,10 +124,11 @@ export const refreshAuth = () => {
     });
 }
 
-export const getUsers = () => {
-    return fetch(BACKEND_URL+'/get_users', {
-        method: 'GET', 
+export const getUsers = (role, data) => {
+    return fetch(BACKEND_URL+'/get_users/'+role, {
+        method: 'POST', 
         mode: 'cors',
+        body: JSON.stringify(data),
         headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
     });
 }
@@ -169,6 +177,15 @@ export const getNextRecord = (data) => {
 
 export const getPreviousRecord = (data) => {
     return fetch(BACKEND_URL+'/get_previous_record', {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify(data),
+        headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
+    });
+}
+
+export const addContributors = (project_id, data) => {
+    return fetch(BACKEND_URL+'/add_contributors/'+project_id, {
         method: 'POST',
         mode: 'cors',
         body: JSON.stringify(data),

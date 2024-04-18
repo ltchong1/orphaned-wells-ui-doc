@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
-import { getProjectData, uploadDocument, deleteProject } from '../../services/app.service';
+import { getProjectData, uploadDocument, deleteProject, updateProject } from '../../services/app.service';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
 import Subheader from '../../components/Subheader/Subheader';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 import PopupModal from '../../components/PopupModal/PopupModal';
+import AddContributors from '../../components/AddContributors/AddContributors';
 import { callAPI } from '../../assets/helperFunctions';
 
 export default function Project() {
@@ -13,9 +14,12 @@ export default function Project() {
     const [ projectData, setProjectData ] = useState({attributes: []})
     const [ showDocumentModal, setShowDocumentModal ] = useState(false)
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
+    const [ openAddContributors, setOpenAddContributors ] = useState(false)
+    const [ openUpdateNameModal, setOpenUpdateNameModal ] = useState(false)
+    const [ projectName, setProjectName ] = useState("")
     let params = useParams(); 
     let navigate = useNavigate();
-    
+
     useEffect(() => {
         callAPI(
             getProjectData,
@@ -28,6 +32,7 @@ export default function Project() {
     const handleSuccess = (data) => {
         setRecords(data.records)
         setProjectData(data.project_data)
+        setProjectName(data.project_data.name)
     }
 
     const styles = {
@@ -59,7 +64,7 @@ export default function Project() {
     }
 
     const handleUpdateProject = () => {
-        console.log("hanlde update project")
+        setOpenUpdateNameModal(true)
     }
 
     const handleDeleteProject = () => {
@@ -72,13 +77,33 @@ export default function Project() {
         )
     }
 
+    const handleChangeProjectName = (event) => {
+        setProjectName(event.target.value)
+    }
+
+    const handleUpdateProjectName = () => {
+        setOpenUpdateNameModal(false)
+        callAPI(
+            updateProject,
+            [params.id, {name: projectName}],
+            (data) => window.location.reload(),
+            (e) => console.error('error on updating project name: ',e)
+        )
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={projectData.name}
                 buttonName="Upload new record(s)"
                 handleClickButton={() => setShowDocumentModal(true)}
-                actions={{"Update project": handleUpdateProject, "Delete project": () => setOpenDeleteModal(true)}}
+                actions={
+                    {
+                        // "Add contributors": () => setOpenAddContributors(true),
+                        "Update project": handleUpdateProject, 
+                        "Delete project": () => setOpenDeleteModal(true),
+                    }
+                }
                 previousPages={{"Projects": () => navigate("/projects", {replace: true})}}
             />
             <Box sx={styles.innerBox}>
@@ -102,6 +127,23 @@ export default function Project() {
                 buttonColor='error'
                 buttonVariant='contained'
                 width={400}
+            />
+            <PopupModal
+                input
+                open={openUpdateNameModal}
+                handleClose={() => setOpenUpdateNameModal(false)}
+                text={projectName}
+                textLabel='Project Name'
+                handleEditText={handleChangeProjectName}
+                handleSave={handleUpdateProjectName}
+                buttonText='Update'
+                buttonColor='primary'
+                buttonVariant='contained'
+                width={400}
+            />
+            <AddContributors
+                open={openAddContributors}
+                onClose={() => setOpenAddContributors(false)}
             />
             
         </Box>

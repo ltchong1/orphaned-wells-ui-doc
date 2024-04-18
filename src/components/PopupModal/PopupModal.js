@@ -1,5 +1,6 @@
 import {Fragment} from 'react';
-import { Grid, Button, Modal, TextField } from '@mui/material';
+import { Grid, Button, Modal, TextField, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function PopupModal(props) {
 
@@ -50,9 +51,21 @@ export default function PopupModal(props) {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
+            
             {input ? 
 
             <Grid container sx={styles.modalStyle} spacing={1}>
+            <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 8,
+                }}
+                >
+                <CloseIcon />
+            </IconButton>
                         
             <Grid item xs={12}>
                 <TextField
@@ -73,6 +86,17 @@ export default function PopupModal(props) {
 
             :
             <Grid container sx={styles.modalStyle} spacing={1}>
+            <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 8,
+                }}
+                >
+                <CloseIcon />
+            </IconButton>
             <Grid item xs={12}>
                 <p>{text}{showError && <span style={{color: "red"}}>{errorText}</span>}</p>
             </Grid>
