@@ -1,8 +1,8 @@
 import { useState } from 'react';   
 import { Grid, Box, Modal, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { FileUploader } from "react-drag-drop-files";
-
 
 
 export default function UploadDocumentsModal(props) {
@@ -10,7 +10,8 @@ export default function UploadDocumentsModal(props) {
     const [ showWarning, setShowWarning ] = useState(false)
     const [ warningMessage, setWarningMessage ] = useState("")
     const [ file, setFile ] = useState(null)
-    const fileTypes = ["tiff", "tif", "png", "jpg", "jpeg"];
+    const maxFileSize = 10
+    const fileTypes = ["tiff", "tif", "pdf", "png", "jpg", "jpeg"];
 
    const styles = {
     modalStyle: {
@@ -38,11 +39,27 @@ export default function UploadDocumentsModal(props) {
         cursor: 'pointer'
     },
     fileUploaderBox: {
-        border: '2px dashed black',
+        // border: '2px dashed black',
+        border: showWarning ? '2px dashed #E07174' : '2px dashed black' ,
         borderRadius:2,
-        p:10,
-        cursor: "pointer"
-    }
+        p:8,
+        cursor: "pointer",
+        backgroundColor: showWarning ? '#FDF7F7' : 'white' ,
+        // backgroundColor: "#FDF7F7",
+    },
+    uploadIcon: {
+        color: showWarning ? "#D3242F" : "#2196F3",
+        paddingBottom: 3
+    },
+    uploadContainerBox: {
+        display: 'flex', 
+        justifyContent: 'center'
+    },
+    uploadContainerItem: {
+        display: 'flex', 
+        justifyContent: 'center'
+    },
+
    }
 
    const handleClose = () => {
@@ -65,27 +82,53 @@ export default function UploadDocumentsModal(props) {
    }
 
    const fileTypeError = () => {
-        setWarningMessage("Please choose a valid image (or zip coming soon hehe) file")
+        setWarningMessage("Unsupported file type")
         setShowWarning(true)
-        setTimeout(function() {
-            setShowWarning(false)
-          }, 5000)
+        // setTimeout(function() {
+        //     setShowWarning(false)
+        //   }, 5000)
    }
+
+   const fileSizeError = () => {
+    setWarningMessage("File too large")
+    setShowWarning(true)
+    // setTimeout(function() {
+    //     setShowWarning(false)
+    //   }, 5000)
+}
 
    const fileUploaderContainer = () => {
     return (
         <Box sx={styles.fileUploaderBox}>
-            <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                <h2 style={{marginTop:0, paddingTop:0, color:"#9B9B9B"}}>Drag and Drop File</h2>
+            <Box sx={styles.uploadContainerBox}>
+                <IconButton sx={styles.uploadIcon}>
+                    <UploadFileIcon/>
+                </IconButton>
             </Box>
-            <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                <h2 style={{marginTop:0, paddingTop:0, color:"#9B9B9B"}}>or</h2>
+            <Box sx={styles.uploadContainerBox}>
+                <h3 style={{marginTop:0, paddingTop:0, color:"#2196F3", textDecoration: "underline"}}>Browse files</h3>
             </Box>
-            <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                <Button style={{color: '#0884b4',}} variant="outlined">Browse...</Button>
+            <Box sx={styles.uploadContainerBox}>
+                <p style={{marginTop:0, paddingTop:0}}>or Drag and Drop File</p>
             </Box>
-            <Box sx={{display: 'flex', justifyContent: 'center'}}>
-                <p style={{marginBottom:0, paddingTop:0}}>{file === null ? "" : file.name}</p>
+            {showWarning && 
+                <Box sx={styles.uploadContainerBox}>
+                    <p style={{marginTop:0, paddingTop:0, color: "#AD3244", fontWeight: "bold"}}>{warningMessage}</p>
+                </Box>
+            }
+            <Box sx={styles.uploadContainerBox}>
+                <p style={{margin:0, padding:0, color:"#9B9B9B"}}>Choose from supported files:</p>
+            </Box>
+            <Box sx={styles.uploadContainerBox}>
+                <p style={{marginTop:0, paddingTop:0, color:"#9B9B9B"}}>
+                    {fileTypes.map((v, i) => {
+                        if (i === fileTypes.length-1) return "or " + v.toUpperCase() + ` (max ${maxFileSize}MB)`
+                        else return v.toUpperCase()+ ", "
+                    })}
+                </p>
+            </Box>
+            <Box sx={styles.uploadContainerBox}>
+                <p style={{margin: 0, padding: 0}}>{file === null ? "" : file.name}</p>
             </Box>
         </Box>
     )
@@ -94,7 +137,9 @@ export default function UploadDocumentsModal(props) {
    function DragDrop() {
     const handleChange = (file) => {
         // console.log('setting file: '+file.name)
-      setFile(file);
+        setWarningMessage(null)
+        setShowWarning(false)
+        setFile(file);
     };
     return (
       <FileUploader 
@@ -103,6 +148,8 @@ export default function UploadDocumentsModal(props) {
         types={fileTypes}
         children={fileUploaderContainer()}
         onTypeError={fileTypeError}
+        onSizeError={fileSizeError}
+        maxSize={maxFileSize}
       />
     );
   }
@@ -127,18 +174,16 @@ export default function UploadDocumentsModal(props) {
             </Box>
         </Grid>
 
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
             <p style={{color:"#666666"}}>Document file</p>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
             {DragDrop()}
         </Grid>
-        <Grid item xs={6}></Grid>
-        <Grid item xs={6}>
-            {showWarning && <p style={{color:'red', }}>{warningMessage}</p>}
-        </Grid>
         <Grid item xs={12}>
-            <Button variant="contained" style={styles.button} onClick={handleClickUpload}>Upload File</Button>
+            <Box style={{display: "flex", justifyContent: "center"}}>
+                <Button variant="contained" style={styles.button} onClick={handleClickUpload} disabled={file===null}>Upload File</Button>
+            </Box>
         </Grid>
         </Grid>
     </Modal>
