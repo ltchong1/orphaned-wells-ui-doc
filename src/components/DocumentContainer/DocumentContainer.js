@@ -11,15 +11,15 @@ import { formatConfidence, useKeyDown } from '../../assets/helperFunctions';
 
 const styles = {
     imageBox: {
-        height: "90vh",
+        height: "65vh",
         overflowX: "scroll"
     },
     image: {
-        height: "75vh"
+        height: "50vh"
     },
     fieldsTable: {
         width: "100%",
-        maxHeight: "90vh",
+        maxHeight: "65vh",
         backgroundColor: "white"
     },
     tableHead: {
@@ -84,10 +84,11 @@ export default function DocumentContainer(props) {
                 handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute)
 
                 // scroll down to attribute. if it is a sub attribute, we may have to wait for the drop down to open
+                let scrollFactor = 5
                 let waitTime = 0
                 if (isSubattribute) waitTime = 150
                 setTimeout(function() {
-                    scrollToAttribute("table-container", (tempIndex / attributesList.length) * 2, isSubattribute)
+                    scrollToAttribute("table-container", (tempIndex / attributesList.length) * scrollFactor, isSubattribute)
                 }, waitTime)
                 keepGoing = false 
                 let elementId
@@ -179,34 +180,6 @@ export default function DocumentContainer(props) {
     return (
         <Box>
             <Grid container>
-                {fullscreen !== "table" && 
-                    <Grid item xs={gridWidths[0]}>
-                        <Box sx={styles.gridContainer}>
-                            <Box sx={styles.containerActions}>
-                                <IconButton onClick={() => handleSetFullscreen("image")}>
-                                    { 
-                                        fullscreen === "image" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
-                                    }
-                                </IconButton>
-                            </Box>
-                            <Box id="image-box" sx={styles.imageBox}>
-                                
-                                {image !== undefined &&
-                                <div style={imageDivStyle}>
-                                    <ImageCropper 
-                                        image={image}
-                                        displayPoints={displayPoints}
-                                        disabled
-                                        fullscreen={fullscreen}
-                                    />
-                                </div>
-                                }
-                            </Box>
-                        </Box>
-                    </Grid>
-                }
-                
-                <Grid item xs={gridWidths[1]}></Grid>
                 {
                     fullscreen !== "image" && 
                     <Grid item xs={gridWidths[2]}>
@@ -230,6 +203,33 @@ export default function DocumentContainer(props) {
                                     displayKeyIndex={displayKeyIndex}
                                 />
                             }
+                        </Box>
+                    </Grid>
+                }
+                <Grid item xs={gridWidths[1]}></Grid>
+                {fullscreen !== "table" && 
+                    <Grid item xs={gridWidths[0]}>
+                        <Box sx={styles.gridContainer}>
+                            <Box sx={styles.containerActions}>
+                                <IconButton onClick={() => handleSetFullscreen("image")}>
+                                    { 
+                                        fullscreen === "image" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
+                                    }
+                                </IconButton>
+                            </Box>
+                            <Box id="image-box" sx={styles.imageBox}>
+                                
+                                {image !== undefined &&
+                                <div style={imageDivStyle}>
+                                    <ImageCropper 
+                                        image={image}
+                                        displayPoints={displayPoints}
+                                        disabled
+                                        fullscreen={fullscreen}
+                                    />
+                                </div>
+                                }
+                            </Box>
                         </Box>
                     </Grid>
                 }

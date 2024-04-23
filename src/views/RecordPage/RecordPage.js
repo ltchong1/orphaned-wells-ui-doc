@@ -195,14 +195,14 @@ export default function Record() {
                 upFunction={goToProject}
                 previousPages={previousPages}
             />
-            <Box sx={styles.navigationBox}>
+            {/* <Box sx={styles.navigationBox}>
                 <IconButton onClick={handleClickPrevious}>
                     <ArrowBackIcon/>
                 </IconButton>
                 <IconButton onClick={handleClickNext}>
                     <ArrowForwardIcon/>
                 </IconButton>
-            </Box>
+            </Box> */}
             <Box sx={styles.innerBox}>
                 <DocumentContainer
                     image={recordData.img_url}
