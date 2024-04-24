@@ -11,15 +11,15 @@ import { formatConfidence, useKeyDown } from '../../assets/helperFunctions';
 
 const styles = {
     imageBox: {
-        height: "65vh",
-        overflowX: "scroll"
+        height: "70vh",
+        overflowX: "scroll",
     },
     image: {
         height: "50vh"
     },
     fieldsTable: {
         width: "100%",
-        maxHeight: "65vh",
+        maxHeight: "70vh",
         backgroundColor: "white"
     },
     tableHead: {

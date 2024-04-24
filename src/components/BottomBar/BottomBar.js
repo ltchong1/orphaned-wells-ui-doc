@@ -13,6 +13,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 
 export default function Bottombar(props) {
+    const { onPreviousButtonClick,  onNextButtonClick, onReviewButtonClick } = props;
     const styles = {
         filled: {
             // backgroundColor: '#01678f',
@@ -42,17 +43,30 @@ export default function Bottombar(props) {
             <Grid container sx={{marginTop: '10px'}}>
                 <Grid item xs={6}>
                     <Box sx={{display: 'flex', justifyContent: 'flex-start', marginLeft:'10px'}}>
-                        <Button variant="outlined" startIcon={<KeyboardArrowLeftIcon />}> 
+                        <Button 
+                            variant="outlined" 
+                            startIcon={<KeyboardArrowLeftIcon/>}
+                            onClick={onPreviousButtonClick}
+                        > 
                             Previous
                         </Button>
                     </Box>
                 </Grid>
                 <Grid item xs={6}>
                     <Box sx={{display: 'flex', justifyContent: 'flex-end', marginRight:'10px'}}>
-                        <Button variant="outlined" endIcon={<KeyboardArrowRightIcon /> }> 
+                        <Button 
+                            variant="outlined" 
+                            endIcon={<KeyboardArrowRightIcon/>}
+                            onClick={onNextButtonClick}
+                        >
                             next
                         </Button>
-                        <Button sx={styles.filled} variant="contained" endIcon={<CheckCircleOutlineIcon /> }> 
+                        <Button 
+                            sx={styles.filled} 
+                            variant="contained" 
+                            endIcon={<CheckCircleOutlineIcon/>}
+                            onClick={onReviewButtonClick}
+                        > 
                             Mark as reviewed & next 
                         </Button>
                     </Box>

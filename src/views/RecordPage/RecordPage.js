@@ -196,14 +196,6 @@ export default function Record() {
                 upFunction={goToProject}
                 previousPages={previousPages}
             />
-            {/* <Box sx={styles.navigationBox}>
-                <IconButton onClick={handleClickPrevious}>
-                    <ArrowBackIcon/>
-                </IconButton>
-                <IconButton onClick={handleClickNext}>
-                    <ArrowForwardIcon/>
-                </IconButton>
-            </Box> */}
             <Box sx={styles.innerBox}>
                 <DocumentContainer
                     image={recordData.img_url}
@@ -212,15 +204,10 @@ export default function Record() {
                     attributesList={attributesList}
                 />
             </Box>
-            <Box sx={styles.navigationBoxBottom}>
-                <IconButton onClick={handleClickPrevious}>
-                    <ArrowBackIcon/>
-                </IconButton>
-                <IconButton onClick={handleClickNext}>
-                    <ArrowForwardIcon/>
-                </IconButton>
-            </Box>
-            <Bottombar/>
+            <Bottombar
+                onPreviousButtonClick={handleClickPrevious}
+                onNextButtonClick={handleClickNext}
+            />
             <PopupModal
                 open={openDeleteModal}
                 handleClose={() => setOpenDeleteModal(false)}
