@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
 import { Box, TextField, Collapse, Typography, IconButton } from '@mui/material';
+import { formatConfidence } from '../../assets/helperFunctions';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { formatConfidence } from '../../assets/helperFunctions';
-
+import EditIcon from '@mui/icons-material/Edit';
 
 const styles = {
     fieldsTable: {
@@ -92,12 +92,11 @@ function AttributeRow(props) {
 
     return (
     <>
-        <TableRow id={k}>
+        <TableRow id={k} sx={k === displayKey ? {backgroundColor: "#EDEDED"} : {}}>
             <TableCell sx={styles.fieldKey}>
                 
                 <span 
                     onClick={() => handleClickField(k, v.normalized_vertices)}
-                    style={k === displayKey ? {fontWeight:"bold"} : {}}
                 >
                     {k}
                 </span>
@@ -132,7 +131,17 @@ function AttributeRow(props) {
                             onFocus={(event) => event.target.select()}
                         />
                         :
-                        v.value
+                        // v.value
+                        <span>
+                            {v.value}&nbsp;
+                            {/* {k === displayKey && 
+                                <IconButton size="small">
+                                    <EditIcon/>
+                                </IconButton>
+                            } */}
+
+                        </span>
+
                     }
                 </TableCell>
             }
@@ -216,7 +225,6 @@ function SubattributeRow(props) {
     }
 
     const handleUpdateValue = (event) => {
-        // TODO: gotta update handlechange function to handle subattributes
         handleChangeValue(event, true, topLevelAttribute)
     }
 
