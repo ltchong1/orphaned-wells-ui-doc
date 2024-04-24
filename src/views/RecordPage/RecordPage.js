@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getRecordData, updateRecord, deleteRecord, getNextRecord, getPreviousRecord } from '../../services/app.service';
 import { callAPI, useKeyDown } from '../../assets/helperFunctions';
 import Subheader from '../../components/Subheader/Subheader';
+import Bottombar from '../../components/BottomBar/BottomBar';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -219,6 +220,7 @@ export default function Record() {
                     <ArrowForwardIcon/>
                 </IconButton>
             </Box>
+            <Bottombar/>
             <PopupModal
                 open={openDeleteModal}
                 handleClose={() => setOpenDeleteModal(false)}
