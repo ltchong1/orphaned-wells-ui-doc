@@ -24,6 +24,13 @@ const styles = {
     },
     subattributesTable: {
         backgroundColor: "#F8F8F8"
+    },
+    rowIconButton: {
+        padding: 0.5,
+        marginTop: -0.5
+    },
+    rowIcon: {
+        fontSize: "16px"
     }
 }
 
@@ -93,11 +100,9 @@ function AttributeRow(props) {
     return (
     <>
         <TableRow id={k} sx={k === displayKey ? {backgroundColor: "#EDEDED"} : {}}>
-            <TableCell sx={styles.fieldKey}>
+            <TableCell sx={styles.fieldKey} onClick={() => handleClickField(k, v.normalized_vertices)}>
                 
-                <span 
-                    onClick={() => handleClickField(k, v.normalized_vertices)}
-                >
+                <span>
                     {k}
                 </span>
                 {
@@ -119,7 +124,8 @@ function AttributeRow(props) {
                 </TableCell> 
                 
                 :
-                <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
+                // <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
+                <TableCell onKeyDown={handleKeyDown}>
                     {editMode ? 
                         <TextField 
                             autoFocus
@@ -134,11 +140,11 @@ function AttributeRow(props) {
                         // v.value
                         <span>
                             {v.value}&nbsp;
-                            {/* {k === displayKey && 
-                                <IconButton size="small">
-                                    <EditIcon/>
+                            {k === displayKey && 
+                                <IconButton sx={styles.rowIconButton} onClick={handleDoubleClick}>
+                                    <EditIcon sx={styles.rowIcon}/>
                                 </IconButton>
-                            } */}
+                            }
 
                         </span>
 
