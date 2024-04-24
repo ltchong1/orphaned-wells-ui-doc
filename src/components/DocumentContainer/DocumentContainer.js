@@ -74,7 +74,7 @@ export default function DocumentContainer(props) {
         }
         let keepGoing = true
         let i = 0;
-        while (keepGoing && i < 100) {
+        while (keepGoing && i < 200) {
             i+=1
             let tempKey = attributesList[tempIndex].key
             let tempVertices = attributesList[tempIndex].normalized_vertices
@@ -82,30 +82,25 @@ export default function DocumentContainer(props) {
                 let isSubattribute = attributesList[tempIndex].isSubattribute
                 let topLevelAttribute = attributesList[tempIndex].topLevelAttribute
                 handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute)
-
-                // scroll down to attribute. if it is a sub attribute, we may have to wait for the drop down to open
-                let scrollFactor = 5
-                let waitTime = 0
-                if (isSubattribute) waitTime = 150
-                setTimeout(function() {
-                    scrollToAttribute("table-container", (tempIndex / attributesList.length) * scrollFactor, isSubattribute)
-                }, waitTime)
                 keepGoing = false 
                 let elementId
                 if (isSubattribute) {
                     setForceOpenSubtable(topLevelAttribute)
                     elementId = `${topLevelAttribute}::${tempKey}`
-                } else elementId = tempKey
+                    // waitTime = 500
+                } 
+                else elementId = tempKey
                 let element = document.getElementById(elementId)
+                let waitTime = 0
+                let containerElement = document.getElementById("table-container")
                 if (element) {
-                    // element.scrollIntoView(true)
-                    element.scroll({
-                        top: 100,
-                        left: 100,
-                        behavior: "smooth",
-                    });
+                    if (isSubattribute) {
+                        setTimeout(function() {
+                            element.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
+                        }, waitTime)
+                    }
+                    else scrollIntoView(element, containerElement)
                 }
-                // else console.log(elementId,"is null")
             }
             else {
                 tempIndex+=1
@@ -154,15 +149,36 @@ export default function DocumentContainer(props) {
     const scrollToAttribute = (id, top) => {
         let imageContainerId = id
         let imageContainerElement = document.getElementById(imageContainerId)
-        
+        let scrollAmount = top * imageContainerElement.clientHeight
         if (imageContainerElement) {
             imageContainerElement.scrollTo({
-                top: top * imageContainerElement.clientHeight,
+                top: scrollAmount,
                 // left: coordinates[1],
                 behavior: "smooth",
                 });
         }
     }
+
+    function scrollIntoView(element, container) {
+        if (element && container) {
+            var containerTop = container.scrollTop;
+            var containerBottom = containerTop + container.clientHeight; 
+            var elemTop = element.offsetTop;
+            var elemBottom = elemTop + element.clientHeight;
+            if (elemTop < containerTop) {
+                container.scrollTo({
+                    top: elemTop,
+                    behavior: "smooth",
+                });
+            } else if (elemBottom > containerBottom) {
+                container.scrollTo({
+                    top: elemBottom - container.clientHeight,
+                    behavior: "smooth",
+                });
+            }
+        }
+        
+      }
 
 
     const handleSetFullscreen = (item) => {
@@ -309,7 +325,7 @@ function AttributeRow(props) {
 
     return (
     <>
-        <TableRow key={k} id={`${k}`}>
+        <TableRow id={k}>
             <TableCell sx={styles.fieldKey}>
                 
                 <span 
