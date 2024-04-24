@@ -22,6 +22,9 @@ const styles = {
     headerRow: {
         fontWeight: "bold"
     },
+    subattributesTable: {
+        backgroundColor: "#F8F8F8"
+    }
 }
 
 export default function AttributesTable(props) {
@@ -34,10 +37,7 @@ export default function AttributesTable(props) {
                     <TableRow >
                         <TableCell sx={styles.headerRow}>Field</TableCell>
                         <TableCell sx={styles.headerRow}>Value</TableCell>
-                        {
-                            fullscreen === "table" && 
-                            <TableCell sx={styles.headerRow}>Confidence</TableCell>
-                        }
+                        <TableCell sx={styles.headerRow}>Confidence</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -116,7 +116,7 @@ function AttributeRow(props) {
                 v.subattributes ? 
                 <TableCell>
 
-                    {formatSubattributesTogether(v.subattributes)}
+                    {/* {formatSubattributesTogether(v.subattributes)} */}
                 </TableCell> 
                 
                 :
@@ -137,10 +137,7 @@ function AttributeRow(props) {
                 </TableCell>
             }
             
-            {
-                fullscreen === "table" && 
-                <TableCell>{formatConfidence(v.confidence)}</TableCell>
-            }
+            <TableCell>{formatConfidence(v.confidence)}</TableCell>
         </TableRow>
         {
             v.subattributes &&
@@ -171,15 +168,12 @@ function SubattributesTable(props) {
                 <Typography variant="h6" gutterBottom component="div">
                     Properties
                 </Typography>
-                <Table size="small" aria-label="purchases">
+                <Table size="small" aria-label="purchases" sx={styles.subattributesTable}>
                     <TableHead>
                     <TableRow>
                         <TableCell sx={styles.headerRow}>Field</TableCell>
                         <TableCell sx={styles.headerRow}>Value</TableCell>
-                        {
-                            fullscreen === "table" && 
-                            <TableCell sx={styles.headerRow}>Confidence</TableCell>
-                        }
+                        <TableCell sx={styles.headerRow}>Confidence</TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
@@ -251,10 +245,7 @@ function SubattributeRow(props) {
                     v.value
                 }
             </TableCell>
-            {
-                fullscreen === "table" && 
-                <TableCell>{formatConfidence(v.confidence)}</TableCell>
-            }
+            <TableCell>{formatConfidence(v.confidence)}</TableCell>
         </TableRow>
     )
 }
