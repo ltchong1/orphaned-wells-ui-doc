@@ -42,6 +42,9 @@ const styles = {
         marginRight:'10px',
         // height: '40px'
     },
+    outerBox: {
+        paddingBottom: "45px"
+    },
 }
 
 
@@ -201,7 +204,7 @@ export default function DocumentContainer(props) {
     }
 
     return (
-        <Box>
+        <Box style={styles.outerBox}>
             <Grid container>
                 {
                     fullscreen !== "image" && 
