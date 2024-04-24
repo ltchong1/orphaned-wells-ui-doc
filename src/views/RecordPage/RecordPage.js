@@ -152,20 +152,31 @@ export default function Record() {
     }
 
     const handleClickNext = () => {
+        let body = {data: recordData, reviewed: false}
         callAPI(
-          getNextRecord,
-          [recordData],
-          handleSuccessNavigateRecord,
-          (e) => console.error("unable to go to next record: "+e)
+            getNextRecord,
+            [body],
+            handleSuccessNavigateRecord,
+            (e) => console.error("unable to go to next record: "+e)
         )
     }
 
     const handleClickPrevious = () => {
         callAPI(
-          getPreviousRecord,
-          [recordData],
-          handleSuccessNavigateRecord,
-          (e) => console.error("unable to go to next record: "+e)
+            getPreviousRecord,
+            [recordData],
+            handleSuccessNavigateRecord,
+            (e) => console.error("unable to go to next record: "+e)
+        )
+    }
+
+    const handleClickMarkReviewed = () => {
+        let body = {data: recordData, reviewed: true, review_status: "reviewed"}
+        callAPI(
+            getNextRecord,
+            [body],
+            handleSuccessNavigateRecord,
+            (e) => console.error("unable to go to mark record reviewed: "+e)
         )
     }
 
@@ -207,6 +218,7 @@ export default function Record() {
             <Bottombar
                 onPreviousButtonClick={handleClickPrevious}
                 onNextButtonClick={handleClickNext}
+                onReviewButtonClick={handleClickMarkReviewed}
             />
             <PopupModal
                 open={openDeleteModal}
