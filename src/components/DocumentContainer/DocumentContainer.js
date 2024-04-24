@@ -100,6 +100,13 @@ export default function DocumentContainer(props) {
                         }, waitTime)
                     }
                     else scrollIntoView(element, containerElement)
+                } else // element likely has not rendered yet. wait 250 milliseconds then try again
+                {
+                    waitTime = 250
+                    setTimeout(function() {
+                        element = document.getElementById(elementId)
+                        if (element) element.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
+                    }, waitTime)
                 }
             }
             else {
