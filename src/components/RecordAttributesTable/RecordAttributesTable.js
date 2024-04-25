@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { updateRecord } from '../../services/app.service';
+import { callAPI, useKeyDown } from '../../assets/helperFunctions';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
 import { Box, TextField, Collapse, Typography, IconButton } from '@mui/material';
 import { formatConfidence } from '../../assets/helperFunctions';
@@ -86,6 +88,12 @@ function AttributeRow(props) {
             e.preventDefault();
             setEditMode(false)
         } 
+        else if (e.key === "ArrowLeft") {
+            e.stopPropagation();
+        }
+        else if (e.key === "ArrowRight") {
+            e.stopPropagation();
+        }
     }
 
     const formatSubattributesTogether = (attr) => {
@@ -227,7 +235,20 @@ function SubattributeRow(props) {
         if (e.key === "Enter") {
             e.preventDefault();
             setEditMode(false)
+            // TODO: update this field
+            // callAPI(
+            //     updateRecord,
+            //     [params.id, {data: recordData, type: "attributes"}],
+            //     (data) => setWasEdited(false),
+            //     (e) => console.error('error updating record: ',e)
+            // )
         } 
+        else if (e.key === "ArrowLeft") {
+            e.stopPropagation();
+        }
+        else if (e.key === "ArrowRight") {
+            e.stopPropagation();
+        }
     }
 
     const handleUpdateValue = (event) => {
@@ -254,6 +275,7 @@ function SubattributeRow(props) {
                         defaultValue={v.value} 
                         onChange={handleUpdateValue} 
                         onFocus={(event) => event.target.select()}
+                        onKeyDown={handleKeyDown}
                     />
                     :
                     v.value

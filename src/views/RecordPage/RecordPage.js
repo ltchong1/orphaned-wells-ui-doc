@@ -120,6 +120,8 @@ export default function Record() {
             let tempSubattributes = {...tempAttribute["subattributes"]}
             let tempSubattribute = {...tempSubattributes[subattribute]}
             tempSubattribute.value = value
+            tempAttribute.edited = true
+            tempSubattribute.edited = true
             tempSubattributes[subattribute] = tempSubattribute
             tempAttribute["subattributes"] = tempSubattributes
         } else {
@@ -127,6 +129,7 @@ export default function Record() {
             let value = event.target.value
             tempAttribute = {...tempAttributes[attribute]}
             tempAttribute.value = value
+            tempAttribute.edited = true
         }
         tempAttributes[attribute] = tempAttribute
         tempRecordData.attributes = tempAttributes
