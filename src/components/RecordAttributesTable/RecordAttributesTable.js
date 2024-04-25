@@ -275,7 +275,6 @@ function SubattributeRow(props) {
                         defaultValue={v.value} 
                         onChange={handleUpdateValue} 
                         onFocus={(event) => event.target.select()}
-                        onKeyDown={handleKeyDown}
                     />
                     :
                     v.value
