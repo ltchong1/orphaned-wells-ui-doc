@@ -25,7 +25,8 @@ const styles = {
         fontWeight: "bold"
     },
     subattributesTable: {
-        backgroundColor: "#F8F8F8"
+        backgroundColor: "#FAFAFA",
+        // backgroundColor: "#F8F8F8"
     },
     rowIconButton: {
         padding: 0.5,
@@ -153,7 +154,6 @@ function AttributeRow(props) {
                                     <EditIcon sx={styles.rowIcon}/>
                                 </IconButton>
                             }
-
                         </span>
 
                     }
@@ -256,7 +256,7 @@ function SubattributeRow(props) {
     }
 
     return (
-        <TableRow key={k} id={`${topLevelAttribute}::${k}`}>
+        <TableRow key={k} id={`${topLevelAttribute}::${k}`} sx={k === displayKey ? {backgroundColor: "#EDEDED"} : {}}>
             <TableCell sx={styles.fieldKey} >
             <span 
                 onClick={() => handleClickField(k, v.normalized_vertices, true, topLevelAttribute)}
@@ -265,7 +265,7 @@ function SubattributeRow(props) {
                 {k}
             </span>
             </TableCell>
-            <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
+            <TableCell onKeyDown={handleKeyDown}>
                 {editMode ? 
                     <TextField 
                         autoFocus
@@ -277,7 +277,14 @@ function SubattributeRow(props) {
                         onFocus={(event) => event.target.select()}
                     />
                     :
-                    v.value
+                    <span>
+                    {v.value}&nbsp;
+                        {k === displayKey && 
+                            <IconButton sx={styles.rowIconButton} onClick={handleDoubleClick}>
+                                <EditIcon sx={styles.rowIcon}/>
+                            </IconButton>
+                        }
+                    </span>
                 }
             </TableCell>
             <TableCell>{formatConfidence(v.confidence)}</TableCell>
