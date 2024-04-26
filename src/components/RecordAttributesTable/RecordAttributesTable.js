@@ -42,7 +42,7 @@ export default function AttributesTable(props) {
 
     return (
         <TableContainer id="table-container" sx={styles.fieldsTable}>
-            <Table stickyHeader>
+            <Table stickyHeader size='small'>
                 <TableHead sx={styles.tableHead}>
                     <TableRow >
                         <TableCell sx={styles.headerRow}>Field</TableCell>
@@ -120,8 +120,9 @@ function AttributeRow(props) {
                         aria-label="expand row"
                         size="small"
                         onClick={() => setOpenSubtable(!openSubtable)}
+                        sx={styles.rowIconButton}
                     >
-                        {openSubtable ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                        {openSubtable ? <KeyboardArrowUpIcon sx={styles.rowIcon}/> : <KeyboardArrowDownIcon sx={styles.rowIcon}/>}
                     </IconButton>
                 }
             </TableCell>
