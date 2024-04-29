@@ -253,7 +253,10 @@ function SubattributeRow(props) {
     }
 
     return (
-        <TableRow key={k} id={`${topLevelAttribute}::${k}`} sx={k === displayKey ? {backgroundColor: "#EDEDED"} : {}}>
+        <TableRow 
+            key={k} 
+            id={`${topLevelAttribute}::${k}`} 
+            sx={(k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute) ? {backgroundColor: "#EDEDED"} : {}}>
             <TableCell sx={styles.fieldKey} >
             <span 
                 onClick={() => handleClickField(k, v.normalized_vertices, true, topLevelAttribute)}
@@ -276,7 +279,7 @@ function SubattributeRow(props) {
                     :
                     <span onDoubleClick={handleDoubleClick}>
                     {v.value}&nbsp;
-                        {k === displayKey && 
+                        {(k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute) && 
                             <IconButton sx={styles.rowIconButton} onClick={handleDoubleClick}>
                                 <EditIcon sx={styles.rowIcon}/>
                             </IconButton>
