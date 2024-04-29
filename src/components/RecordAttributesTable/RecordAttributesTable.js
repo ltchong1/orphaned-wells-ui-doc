@@ -134,8 +134,8 @@ function AttributeRow(props) {
                 </TableCell> 
                 
                 :
-                // <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
-                <TableCell onKeyDown={handleKeyDown}>
+                <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
+                {/* <TableCell onKeyDown={handleKeyDown}> */}
                     {editMode ? 
                         <TextField 
                             autoFocus
@@ -278,7 +278,7 @@ function SubattributeRow(props) {
                         onFocus={(event) => event.target.select()}
                     />
                     :
-                    <span>
+                    <span onDoubleClick={handleDoubleClick}>
                     {v.value}&nbsp;
                         {k === displayKey && 
                             <IconButton sx={styles.rowIconButton} onClick={handleDoubleClick}>
