@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import { Grid, Box, IconButton } from '@mui/material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
@@ -40,11 +41,19 @@ export default function DocumentContainer(props) {
     const [ width, setWidth ] = useState("100%")
     const [ height, setHeight ] = useState("auto")
     const [ forceOpenSubtable, setForceOpenSubtable ] = useState(null)
-
     const imageDivStyle={
         width: width,
         height: height,
     }
+    let params = useParams(); 
+
+    useEffect(() => {
+        setDisplayPoints(null)
+        setDisplayKey(null)
+        setDisplayKeyIndex(null)
+    },[params.id])
+
+    
 
     useKeyDown(() => {
         tabCallback();
