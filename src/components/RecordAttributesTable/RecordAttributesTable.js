@@ -38,7 +38,7 @@ const styles = {
 }
 
 export default function AttributesTable(props) {
-    const { attributes, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, attributesList, displayKeyIndex } = props
+    const { attributes, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, attributesList, displayKeyIndex, handleUpdateRecord } = props
 
     return (
         <TableContainer id="table-container" sx={styles.fieldsTable}>
@@ -63,6 +63,7 @@ export default function AttributesTable(props) {
                             forceOpenSubtable={forceOpenSubtable}
                             attributesList={attributesList}
                             displayKeyIndex={displayKeyIndex}
+                            handleUpdateRecord={handleUpdateRecord}
                         />
                     ))}
                 </TableBody>
@@ -72,7 +73,7 @@ export default function AttributesTable(props) {
 }
 
 function AttributeRow(props) { 
-    const { k, v, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, attributesList, displayKeyIndex } = props
+    const { k, v, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, attributesList, displayKeyIndex, handleUpdateRecord } = props
     const [ editMode, setEditMode ] = useState(false)
     const [ openSubtable, setOpenSubtable ] = useState(false)
 
@@ -88,6 +89,7 @@ function AttributeRow(props) {
         if (e.key === "Enter") {
             e.preventDefault();
             setEditMode(false)
+            handleUpdateRecord()
         } 
         else if (e.key === "ArrowLeft") {
             e.stopPropagation();
@@ -175,6 +177,7 @@ function AttributeRow(props) {
                 displayKey={displayKey}
                 attributesList={attributesList}
                 displayKeyIndex={displayKeyIndex}
+                handleUpdateRecord={handleUpdateRecord}
             />
         }
     </>
@@ -182,7 +185,7 @@ function AttributeRow(props) {
 }
 
 function SubattributesTable(props) {
-    const { attributes, handleClickField, handleChangeValue, open, topLevelAttribute, fullscreen, displayKey, attributesList, displayKeyIndex } = props
+    const { attributes, handleClickField, handleChangeValue, open, topLevelAttribute, fullscreen, displayKey, attributesList, displayKeyIndex, handleUpdateRecord } = props
 
     return (
         <TableRow>
@@ -213,6 +216,7 @@ function SubattributesTable(props) {
                             displayKey={displayKey}
                             attributesList={attributesList}
                             displayKeyIndex={displayKeyIndex}
+                            handleUpdateRecord={handleUpdateRecord}
                         />
                     ))}
                     </TableBody>
@@ -225,7 +229,7 @@ function SubattributesTable(props) {
 }
 
 function SubattributeRow(props) { 
-    const { k, v, handleClickField, handleChangeValue, topLevelAttribute, fullscreen, displayKey, attributesList, displayKeyIndex } = props
+    const { k, v, handleClickField, handleChangeValue, topLevelAttribute, fullscreen, displayKey, attributesList, displayKeyIndex, handleUpdateRecord } = props
     const [ editMode, setEditMode ] = useState(false)
 
     const handleDoubleClick = () => {
@@ -236,13 +240,7 @@ function SubattributeRow(props) {
         if (e.key === "Enter") {
             e.preventDefault();
             setEditMode(false)
-            // TODO: update this field
-            // callAPI(
-            //     updateRecord,
-            //     [params.id, {data: recordData, type: "attributes"}],
-            //     (data) => setWasEdited(false),
-            //     (e) => console.error('error updating record: ',e)
-            // )
+            handleUpdateRecord()
         } 
         else if (e.key === "ArrowLeft") {
             e.stopPropagation();

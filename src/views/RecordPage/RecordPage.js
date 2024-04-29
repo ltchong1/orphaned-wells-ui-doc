@@ -197,10 +197,9 @@ export default function Record() {
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={`${recordData.recordIndex !== undefined ? recordData.recordIndex : ""}. ${recordData.name !== undefined ? recordData.name : ""}`}
-                buttonName="Update Record"
-                // subtext={formatAttributes(projectData.attributes)}
-                handleClickButton={handleUpdateRecord}
-                disableButton={!wasEdited}
+                // buttonName="Update Record"
+                // handleClickButton={handleUpdateRecord}
+                // disableButton={!wasEdited}
                 actions={{
                     "Change name": () => setOpenUpdateNameModal(true),
                     "Delete record": () => setOpenDeleteModal(true)
@@ -214,6 +213,7 @@ export default function Record() {
                     attributes={recordData.attributes}
                     handleChangeValue={handleChangeValue}
                     attributesList={attributesList}
+                    handleUpdateRecord={handleUpdateRecord}
                 />
             </Box>
             <Bottombar

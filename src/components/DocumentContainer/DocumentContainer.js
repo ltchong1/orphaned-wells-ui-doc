@@ -31,7 +31,7 @@ const styles = {
 
 
 export default function DocumentContainer(props) {
-    const { image, attributes, handleChangeValue, attributesList } = props;
+    const { image, attributes, handleChangeValue, attributesList, handleUpdateRecord } = props;
     const [ displayPoints, setDisplayPoints ] = useState(null)
     const [ displayKey, setDisplayKey ] = useState(null)
     const [ displayKeyIndex, setDisplayKeyIndex ] = useState(null)
@@ -209,6 +209,7 @@ export default function DocumentContainer(props) {
                                     forceOpenSubtable={forceOpenSubtable}
                                     attributesList={attributesList}
                                     displayKeyIndex={displayKeyIndex}
+                                    handleUpdateRecord={handleUpdateRecord}
                                 />
                             }
                         </Box>
