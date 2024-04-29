@@ -1,6 +1,4 @@
 import { useState, useEffect } from 'react';
-import { updateRecord } from '../../services/app.service';
-import { callAPI, useKeyDown } from '../../assets/helperFunctions';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
 import { Box, TextField, Collapse, Typography, IconButton } from '@mui/material';
 import { formatConfidence } from '../../assets/helperFunctions';
