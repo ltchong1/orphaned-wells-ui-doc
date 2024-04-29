@@ -19,10 +19,11 @@ export default function Subheader(props) {
             fontSize: "15px"
         },
         box: {
-            paddingTop: 5,
-            paddingBottom: 5,
+            paddingTop: 1,
+            paddingBottom: 1,
             backgroundColor: "white",
-            width: "100%"
+            width: "100%",
+            boxShadow: 1
         },
         gridContainer: {
             margin: 0,

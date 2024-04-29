@@ -1,36 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
-import { Grid, Box, TextField, Collapse, Typography, IconButton } from '@mui/material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { useParams } from "react-router-dom";
+import { Grid, Box, IconButton } from '@mui/material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
-import LassoSelector from '../../components/LassoSelector/LassoSelector';
 import { ImageCropper } from '../ImageCropper/ImageCropper';
-import { formatConfidence, useKeyDown } from '../../assets/helperFunctions';
+import { useKeyDown } from '../../assets/helperFunctions';
+import AttributesTable from '../RecordAttributesTable/RecordAttributesTable';
 
 const styles = {
     imageBox: {
-        height: "90vh",
-        overflowX: "scroll"
+        height: "70vh",
+        overflowX: "scroll",
     },
     image: {
-        height: "75vh"
-    },
-    fieldsTable: {
-        width: "100%",
-        maxHeight: "90vh",
-        backgroundColor: "white"
-    },
-    tableHead: {
-        backgroundColor: "#EDF2FA",
-        fontWeight: "bold",
-    }, 
-    fieldKey: {
-        cursor: "pointer",
-    },
-    headerRow: {
-        fontWeight: "bold"
+        height: "50vh"
     },
     gridContainer: {
         backgroundColor: "white",
@@ -42,11 +25,14 @@ const styles = {
         marginRight:'10px',
         // height: '40px'
     },
+    outerBox: {
+        paddingBottom: "45px"
+    },
 }
 
 
 export default function DocumentContainer(props) {
-    const { image, attributes, handleChangeValue, attributesList } = props;
+    const { image, attributes, handleChangeValue, attributesList, handleUpdateRecord } = props;
     const [ displayPoints, setDisplayPoints ] = useState(null)
     const [ displayKey, setDisplayKey ] = useState(null)
     const [ displayKeyIndex, setDisplayKeyIndex ] = useState(null)
@@ -55,11 +41,19 @@ export default function DocumentContainer(props) {
     const [ width, setWidth ] = useState("100%")
     const [ height, setHeight ] = useState("auto")
     const [ forceOpenSubtable, setForceOpenSubtable ] = useState(null)
-
     const imageDivStyle={
         width: width,
         height: height,
     }
+    let params = useParams(); 
+
+    useEffect(() => {
+        setDisplayPoints(null)
+        setDisplayKey(null)
+        setDisplayKeyIndex(null)
+    },[params.id])
+
+    
 
     useKeyDown(() => {
         tabCallback();
@@ -74,7 +68,7 @@ export default function DocumentContainer(props) {
         }
         let keepGoing = true
         let i = 0;
-        while (keepGoing && i < 100) {
+        while (keepGoing && i < 200) {
             i+=1
             let tempKey = attributesList[tempIndex].key
             let tempVertices = attributesList[tempIndex].normalized_vertices
@@ -82,29 +76,32 @@ export default function DocumentContainer(props) {
                 let isSubattribute = attributesList[tempIndex].isSubattribute
                 let topLevelAttribute = attributesList[tempIndex].topLevelAttribute
                 handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute)
-
-                // scroll down to attribute. if it is a sub attribute, we may have to wait for the drop down to open
-                let waitTime = 0
-                if (isSubattribute) waitTime = 150
-                setTimeout(function() {
-                    scrollToAttribute("table-container", (tempIndex / attributesList.length) * 2, isSubattribute)
-                }, waitTime)
                 keepGoing = false 
                 let elementId
                 if (isSubattribute) {
                     setForceOpenSubtable(topLevelAttribute)
                     elementId = `${topLevelAttribute}::${tempKey}`
-                } else elementId = tempKey
+                    // waitTime = 500
+                } 
+                else elementId = tempKey
                 let element = document.getElementById(elementId)
+                let waitTime = 0
+                let containerElement = document.getElementById("table-container")
                 if (element) {
-                    // element.scrollIntoView(true)
-                    element.scroll({
-                        top: 100,
-                        left: 100,
-                        behavior: "smooth",
-                    });
+                    if (isSubattribute) {
+                        setTimeout(function() {
+                            element.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
+                        }, waitTime)
+                    }
+                    else scrollIntoView(element, containerElement)
+                } else // element likely has not rendered yet. wait 250 milliseconds then try again
+                {
+                    waitTime = 250
+                    setTimeout(function() {
+                        element = document.getElementById(elementId)
+                        if (element) element.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
+                    }, waitTime)
                 }
-                // else console.log(elementId,"is null")
             }
             else {
                 tempIndex+=1
@@ -153,15 +150,36 @@ export default function DocumentContainer(props) {
     const scrollToAttribute = (id, top) => {
         let imageContainerId = id
         let imageContainerElement = document.getElementById(imageContainerId)
-        
+        let scrollAmount = top * imageContainerElement.clientHeight
         if (imageContainerElement) {
             imageContainerElement.scrollTo({
-                top: top * imageContainerElement.clientHeight,
+                top: scrollAmount,
                 // left: coordinates[1],
                 behavior: "smooth",
                 });
         }
     }
+
+    function scrollIntoView(element, container) {
+        if (element && container) {
+            var containerTop = container.scrollTop;
+            var containerBottom = containerTop + container.clientHeight; 
+            var elemTop = element.offsetTop;
+            var elemBottom = elemTop + element.clientHeight;
+            if (elemTop < containerTop) {
+                container.scrollTo({
+                    top: elemTop,
+                    behavior: "smooth",
+                });
+            } else if (elemBottom > containerBottom) {
+                container.scrollTo({
+                    top: elemBottom - container.clientHeight,
+                    behavior: "smooth",
+                });
+            }
+        }
+        
+      }
 
 
     const handleSetFullscreen = (item) => {
@@ -177,8 +195,36 @@ export default function DocumentContainer(props) {
     }
 
     return (
-        <Box>
+        <Box style={styles.outerBox}>
             <Grid container>
+                {
+                    fullscreen !== "image" && 
+                    <Grid item xs={gridWidths[2]}>
+                        <Box sx={styles.gridContainer}>
+                            <Box sx={styles.containerActions}>
+                                <IconButton onClick={() => handleSetFullscreen("table")}>
+                                    { 
+                                        fullscreen === "table" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
+                                    }
+                                </IconButton>
+                            </Box>
+                            {attributes !== undefined && 
+                                <AttributesTable 
+                                    attributes={attributes}
+                                    handleClickField={handleClickField}
+                                    handleChangeValue={handleChangeValue}
+                                    fullscreen={fullscreen}
+                                    displayKey={displayKey}
+                                    forceOpenSubtable={forceOpenSubtable}
+                                    attributesList={attributesList}
+                                    displayKeyIndex={displayKeyIndex}
+                                    handleUpdateRecord={handleUpdateRecord}
+                                />
+                            }
+                        </Box>
+                    </Grid>
+                }
+                <Grid item xs={gridWidths[1]}></Grid>
                 {fullscreen !== "table" && 
                     <Grid item xs={gridWidths[0]}>
                         <Box sx={styles.gridContainer}>
@@ -206,272 +252,9 @@ export default function DocumentContainer(props) {
                     </Grid>
                 }
                 
-                <Grid item xs={gridWidths[1]}></Grid>
-                {
-                    fullscreen !== "image" && 
-                    <Grid item xs={gridWidths[2]}>
-                        <Box sx={styles.gridContainer}>
-                            <Box sx={styles.containerActions}>
-                                <IconButton onClick={() => handleSetFullscreen("table")}>
-                                    { 
-                                        fullscreen === "table" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
-                                    }
-                                </IconButton>
-                            </Box>
-                            {attributes !== undefined && 
-                                <AttributesTable 
-                                    attributes={attributes}
-                                    handleClickField={handleClickField}
-                                    handleChangeValue={handleChangeValue}
-                                    fullscreen={fullscreen}
-                                    displayKey={displayKey}
-                                    forceOpenSubtable={forceOpenSubtable}
-                                    attributesList={attributesList}
-                                    displayKeyIndex={displayKeyIndex}
-                                />
-                            }
-                        </Box>
-                    </Grid>
-                }
-                
             </Grid>
         </Box>
 
     );
 
-}
-
-function AttributesTable(props) {
-    const { attributes, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, attributesList, displayKeyIndex } = props
-
-    return (
-        <TableContainer id="table-container" sx={styles.fieldsTable}>
-            <Table stickyHeader>
-                <TableHead sx={styles.tableHead}>
-                    <TableRow >
-                        <TableCell sx={styles.headerRow}>Field</TableCell>
-                        <TableCell sx={styles.headerRow}>Value</TableCell>
-                        {
-                            fullscreen === "table" && 
-                            <TableCell sx={styles.headerRow}>Confidence</TableCell>
-                        }
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {Object.entries(attributes).map(([k, v]) => (
-                        <AttributeRow 
-                            key={k}
-                            k={k}
-                            v={v}
-                            handleClickField={handleClickField}
-                            handleChangeValue={handleChangeValue}
-                            fullscreen={fullscreen}
-                            displayKey={displayKey}
-                            forceOpenSubtable={forceOpenSubtable}
-                            attributesList={attributesList}
-                            displayKeyIndex={displayKeyIndex}
-                        />
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    )
-}
-
-function AttributeRow(props) { 
-    const { k, v, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, attributesList, displayKeyIndex } = props
-    const [ editMode, setEditMode ] = useState(false)
-    const [ openSubtable, setOpenSubtable ] = useState(false)
-
-    useEffect(() => {
-        if (forceOpenSubtable === k) setOpenSubtable(true)
-    }, [forceOpenSubtable])
-
-    const handleDoubleClick = () => {
-        setEditMode(true)
-    }
-
-    const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            setEditMode(false)
-        } 
-    }
-
-    const formatSubattributesTogether = (attr) => {
-        let total = ""
-        for (let key of Object.keys(attr)) {
-            let value = attr[key].value
-            total += value += " "
-        }
-        return total
-    }
-
-    return (
-    <>
-        <TableRow key={k} id={`${k}`}>
-            <TableCell sx={styles.fieldKey}>
-                
-                <span 
-                    onClick={() => handleClickField(k, v.normalized_vertices)}
-                    style={k === displayKey ? {fontWeight:"bold"} : {}}
-                >
-                    {k}
-                </span>
-                {
-                    v.subattributes &&
-                    <IconButton
-                        aria-label="expand row"
-                        size="small"
-                        onClick={() => setOpenSubtable(!openSubtable)}
-                    >
-                        {openSubtable ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                    </IconButton>
-                }
-            </TableCell>
-            {
-                v.subattributes ? 
-                <TableCell>
-
-                    {formatSubattributesTogether(v.subattributes)}
-                </TableCell> 
-                
-                :
-                <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
-                    {editMode ? 
-                        <TextField 
-                            autoFocus
-                            name={k}
-                            size="small" 
-                            // label={""} 
-                            defaultValue={v.value} 
-                            onChange={handleChangeValue} 
-                            onFocus={(event) => event.target.select()}
-                        />
-                        :
-                        v.value
-                    }
-                </TableCell>
-            }
-            
-            {
-                fullscreen === "table" && 
-                <TableCell>{formatConfidence(v.confidence)}</TableCell>
-            }
-        </TableRow>
-        {
-            v.subattributes &&
-            <SubattributesTable 
-                attributes={v.subattributes}
-                handleClickField={handleClickField}
-                handleChangeValue={handleChangeValue}
-                open={openSubtable}
-                topLevelAttribute={k}
-                fullscreen={fullscreen}
-                displayKey={displayKey}
-                attributesList={attributesList}
-                displayKeyIndex={displayKeyIndex}
-            />
-        }
-    </>
-    )
-}
-
-function SubattributesTable(props) {
-    const { attributes, handleClickField, handleChangeValue, open, topLevelAttribute, fullscreen, displayKey, attributesList, displayKeyIndex } = props
-
-    return (
-        <TableRow>
-            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-                <Box sx={{ margin: 1 }}>
-                <Typography variant="h6" gutterBottom component="div">
-                    Properties
-                </Typography>
-                <Table size="small" aria-label="purchases">
-                    <TableHead>
-                    <TableRow>
-                        <TableCell sx={styles.headerRow}>Field</TableCell>
-                        <TableCell sx={styles.headerRow}>Value</TableCell>
-                        {
-                            fullscreen === "table" && 
-                            <TableCell sx={styles.headerRow}>Confidence</TableCell>
-                        }
-                    </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {Object.entries(attributes).map(([k, v]) => (
-                        <SubattributeRow 
-                            key={k}
-                            k={k}
-                            v={v}
-                            handleClickField={handleClickField}
-                            handleChangeValue={handleChangeValue}
-                            topLevelAttribute={topLevelAttribute}
-                            fullscreen={fullscreen}
-                            displayKey={displayKey}
-                            attributesList={attributesList}
-                            displayKeyIndex={displayKeyIndex}
-                        />
-                    ))}
-                    </TableBody>
-                </Table>
-                </Box>
-            </Collapse>
-            </TableCell>
-        </TableRow>
-    )
-}
-
-function SubattributeRow(props) { 
-    const { k, v, handleClickField, handleChangeValue, topLevelAttribute, fullscreen, displayKey, attributesList, displayKeyIndex } = props
-    const [ editMode, setEditMode ] = useState(false)
-
-    const handleDoubleClick = () => {
-        setEditMode(true)
-    }
-
-    const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            setEditMode(false)
-        } 
-    }
-
-    const handleUpdateValue = (event) => {
-        // TODO: gotta update handlechange function to handle subattributes
-        handleChangeValue(event, true, topLevelAttribute)
-    }
-
-    return (
-        <TableRow key={k} id={`${topLevelAttribute}::${k}`}>
-            <TableCell sx={styles.fieldKey} >
-            <span 
-                onClick={() => handleClickField(k, v.normalized_vertices, true, topLevelAttribute)}
-                style={ (k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute) ? {fontWeight:"bold"} : {}}
-            >
-                {k}
-            </span>
-            </TableCell>
-            <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
-                {editMode ? 
-                    <TextField 
-                        autoFocus
-                        name={k}
-                        size="small" 
-                        // label={""} 
-                        defaultValue={v.value} 
-                        onChange={handleUpdateValue} 
-                        onFocus={(event) => event.target.select()}
-                    />
-                    :
-                    v.value
-                }
-            </TableCell>
-            {
-                fullscreen === "table" && 
-                <TableCell>{formatConfidence(v.confidence)}</TableCell>
-            }
-        </TableRow>
-    )
 }

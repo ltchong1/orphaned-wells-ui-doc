@@ -44,6 +44,20 @@ export default function PopupModal(props) {
         },
     }
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            e.stopPropagation();
+            handleSave()
+        } 
+        else if (e.key === "ArrowLeft") {
+            e.stopPropagation();
+        }
+        else if (e.key === "ArrowRight") {
+            e.stopPropagation();
+        }
+    }
+
     return (
         <Modal
             open={open}
@@ -76,6 +90,7 @@ export default function PopupModal(props) {
                     value={text}
                     onChange={handleEditText}
                     fullWidth
+                    onKeyDown={handleKeyDown}
                 />
             </Grid>
             <Grid item xs={8}></Grid>

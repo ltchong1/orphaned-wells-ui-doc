@@ -4,10 +4,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getRecordData, updateRecord, deleteRecord, getNextRecord, getPreviousRecord } from '../../services/app.service';
 import { callAPI, useKeyDown } from '../../assets/helperFunctions';
 import Subheader from '../../components/Subheader/Subheader';
+import Bottombar from '../../components/BottomBar/BottomBar';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 
 export default function Record() {
@@ -57,7 +56,6 @@ export default function Record() {
     const handleSuccessfulFetchRecord = (data) => {
         setRecordData(data)
         setRecordName(data.name)
-        // console.log(data)
         let tempPreviousPages = {
             "Projects": () => navigate("/projects", {replace: true}),
         }
@@ -121,6 +119,8 @@ export default function Record() {
             let tempSubattributes = {...tempAttribute["subattributes"]}
             let tempSubattribute = {...tempSubattributes[subattribute]}
             tempSubattribute.value = value
+            tempAttribute.edited = true
+            tempSubattribute.edited = true
             tempSubattributes[subattribute] = tempSubattribute
             tempAttribute["subattributes"] = tempSubattributes
         } else {
@@ -128,6 +128,7 @@ export default function Record() {
             let value = event.target.value
             tempAttribute = {...tempAttributes[attribute]}
             tempAttribute.value = value
+            tempAttribute.edited = true
         }
         tempAttributes[attribute] = tempAttribute
         tempRecordData.attributes = tempAttributes
@@ -151,20 +152,31 @@ export default function Record() {
     }
 
     const handleClickNext = () => {
+        let body = {data: recordData, reviewed: false}
         callAPI(
-          getNextRecord,
-          [recordData],
-          handleSuccessNavigateRecord,
-          (e) => console.error("unable to go to next record: "+e)
+            getNextRecord,
+            [body],
+            handleSuccessNavigateRecord,
+            (e) => console.error("unable to go to next record: "+e)
         )
     }
 
     const handleClickPrevious = () => {
         callAPI(
-          getPreviousRecord,
-          [recordData],
-          handleSuccessNavigateRecord,
-          (e) => console.error("unable to go to next record: "+e)
+            getPreviousRecord,
+            [recordData],
+            handleSuccessNavigateRecord,
+            (e) => console.error("unable to go to next record: "+e)
+        )
+    }
+
+    const handleClickMarkReviewed = () => {
+        let body = {data: recordData, reviewed: true, review_status: "reviewed"}
+        callAPI(
+            getNextRecord,
+            [body],
+            handleSuccessNavigateRecord,
+            (e) => console.error("unable to go to mark record reviewed: "+e)
         )
     }
 
@@ -184,10 +196,6 @@ export default function Record() {
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={`${recordData.recordIndex !== undefined ? recordData.recordIndex : ""}. ${recordData.name !== undefined ? recordData.name : ""}`}
-                buttonName="Update Record"
-                // subtext={formatAttributes(projectData.attributes)}
-                handleClickButton={handleUpdateRecord}
-                disableButton={!wasEdited}
                 actions={{
                     "Change name": () => setOpenUpdateNameModal(true),
                     "Delete record": () => setOpenDeleteModal(true)
@@ -195,30 +203,20 @@ export default function Record() {
                 upFunction={goToProject}
                 previousPages={previousPages}
             />
-            <Box sx={styles.navigationBox}>
-                <IconButton onClick={handleClickPrevious}>
-                    <ArrowBackIcon/>
-                </IconButton>
-                <IconButton onClick={handleClickNext}>
-                    <ArrowForwardIcon/>
-                </IconButton>
-            </Box>
             <Box sx={styles.innerBox}>
                 <DocumentContainer
                     image={recordData.img_url}
                     attributes={recordData.attributes}
                     handleChangeValue={handleChangeValue}
                     attributesList={attributesList}
+                    handleUpdateRecord={handleUpdateRecord}
                 />
             </Box>
-            <Box sx={styles.navigationBoxBottom}>
-                <IconButton onClick={handleClickPrevious}>
-                    <ArrowBackIcon/>
-                </IconButton>
-                <IconButton onClick={handleClickNext}>
-                    <ArrowForwardIcon/>
-                </IconButton>
-            </Box>
+            <Bottombar
+                onPreviousButtonClick={handleClickPrevious}
+                onNextButtonClick={handleClickNext}
+                onReviewButtonClick={handleClickMarkReviewed}
+            />
             <PopupModal
                 open={openDeleteModal}
                 handleClose={() => setOpenDeleteModal(false)}
