@@ -56,7 +56,6 @@ export default function Record() {
     const handleSuccessfulFetchRecord = (data) => {
         setRecordData(data)
         setRecordName(data.name)
-        // console.log(data)
         let tempPreviousPages = {
             "Projects": () => navigate("/projects", {replace: true}),
         }
@@ -197,9 +196,6 @@ export default function Record() {
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={`${recordData.recordIndex !== undefined ? recordData.recordIndex : ""}. ${recordData.name !== undefined ? recordData.name : ""}`}
-                // buttonName="Update Record"
-                // handleClickButton={handleUpdateRecord}
-                // disableButton={!wasEdited}
                 actions={{
                     "Change name": () => setOpenUpdateNameModal(true),
                     "Delete record": () => setOpenDeleteModal(true)
