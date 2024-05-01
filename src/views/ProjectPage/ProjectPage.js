@@ -141,10 +141,6 @@ export default function Project() {
                 buttonVariant='contained'
                 width={400}
             />
-            <AddContributors
-                open={openAddContributors}
-                onClose={() => setOpenAddContributors(false)}
-            />
             
         </Box>
     );
