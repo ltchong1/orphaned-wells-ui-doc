@@ -11,7 +11,7 @@ export default function UploadDocumentsModal(props) {
     const [ warningMessage, setWarningMessage ] = useState("")
     const [ file, setFile ] = useState(null)
     const maxFileSize = 10
-    const fileTypes = ["tiff", "tif", "pdf", "png", "jpg", "jpeg"];
+    const fileTypes = ["tiff", "tif", "pdf", "png", "jpg", "jpeg", "zip"];
 
    const styles = {
     modalStyle: {
