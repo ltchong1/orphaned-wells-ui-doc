@@ -185,7 +185,7 @@ export default function Record() {
     }, ["ArrowLeft"]);
 
     useKeyDown(() => {
-        handleClickNext();
+        handleClickMarkReviewed();
     }, ["ArrowRight"]);
 
     const handleSuccessNavigateRecord = (data) => {

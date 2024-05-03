@@ -99,7 +99,7 @@ export default function Header(props) {
             TabIndicatorProps={{style: {background:'#727272'}}}
           >
             <Tab label="Projects" {...a11yProps(0)} />
-            <Tab label="Records" {...a11yProps(1)} /> 
+            <Tab label="Records" {...a11yProps(1)} disabled/> 
             <Tab label="Users" {...a11yProps(2)} />
           </Tabs>
         </div>

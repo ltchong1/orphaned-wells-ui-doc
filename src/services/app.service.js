@@ -32,11 +32,11 @@ export const addProject = (data) => {
 }; 
 
 export const uploadDocument = (data, project_id) => {
-    return fetch(BACKEND_URL+'/upload_document/'+project_id, {
+    return fetch(BACKEND_URL+'/upload_document/'+project_id+'/'+localStorage.getItem("user_email"), {
         method: 'POST', 
         mode: 'cors',
         body: data,
-        headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
+        // headers: {"Authorization": "Bearer "+ localStorage.getItem("id_token")}
     });
 }
 
