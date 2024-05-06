@@ -69,6 +69,8 @@ export const callAPI = (apiFunc, apiParams, onSuccess, onError) => {
       .then((data)=> {
           if (response.status === 200) {
               onSuccess(data)
+          } else if (response.status === 303) {
+              onError(data, response.status)
           } else if (response.status === 401) {
 
               // try refresh token
