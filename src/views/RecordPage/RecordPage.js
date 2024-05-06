@@ -49,9 +49,23 @@ export default function Record() {
             getRecordData,
             [params.id],
             handleSuccessfulFetchRecord,
-            (e) => console.error('error getting record data: ',e)
+            handleFailedFetchRecord,
         )
     }, [params.id])
+
+    const handleFailedFetchRecord = (data, response_status) => {
+        if (response_status === 303) {
+            console.log("response status is 303")
+            console.log(data)
+            if (data.direction === "previous") {
+                handleClickPrevious(data.recordData, true)
+            } else {
+                handleClickNext(data.recordData, true)
+            }
+        }else {
+            console.error('error getting record data: ',data)
+        }
+    }
 
     const handleSuccessfulFetchRecord = (data) => {
         setRecordData(data)
@@ -93,7 +107,7 @@ export default function Record() {
             updateRecord,
             [params.id, {data: {name: recordName}, type: "name"}],
             (data) => window.location.reload(),
-            (e) => console.error('error on updating record name: ',e)
+            (e) => { console.error('error on updating record name: '); console.log(e)}
         )
     }
 
@@ -151,22 +165,28 @@ export default function Record() {
         navigate("/project/"+recordData.project_id, {replace: true})
     }
 
-    const handleClickNext = () => {
+    const handleClickNext = (incomingData, useIncomingData) => {
         let body = {data: recordData, reviewed: false}
+        if (useIncomingData) body.data = incomingData
         callAPI(
             getNextRecord,
             [body],
             handleSuccessNavigateRecord,
-            (e) => console.error("unable to go to next record: "+e)
+            handleFailedFetchRecord
+            // (e) => { console.error('unable to go to next record: '); console.log(e)}
         )
     }
 
-    const handleClickPrevious = () => {
+    const handleClickPrevious = (incomingData, useIncomingData) => {
+        let body
+        if (useIncomingData) body = incomingData
+        else body = recordData
         callAPI(
             getPreviousRecord,
-            [recordData],
+            [body],
             handleSuccessNavigateRecord,
-            (e) => console.error("unable to go to next record: "+e)
+            handleFailedFetchRecord
+            // (e) => { console.error('unable to go to previous record: '); console.log(e)}
         )
     }
 
