@@ -24,7 +24,6 @@ const styles = {
     },
     subattributesTable: {
         backgroundColor: "#FAFAFA",
-        // backgroundColor: "#F8F8F8"
     },
     rowIconButton: {
         padding: 0.5,
@@ -97,15 +96,6 @@ function AttributeRow(props) {
         }
     }
 
-    const formatSubattributesTogether = (attr) => {
-        let total = ""
-        for (let key of Object.keys(attr)) {
-            let value = attr[key].value
-            total += value += " "
-        }
-        return total
-    }
-
     return (
     <>
         <TableRow id={k} sx={k === displayKey ? {backgroundColor: "#EDEDED"} : {}}>
@@ -128,26 +118,20 @@ function AttributeRow(props) {
             </TableCell>
             {
                 v.subattributes ? 
-                <TableCell>
-
-                    {/* {formatSubattributesTogether(v.subattributes)} */}
-                </TableCell> 
+                <TableCell></TableCell> 
                 
                 :
                 <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
-                {/* <TableCell onKeyDown={handleKeyDown}> */}
                     {editMode ? 
                         <TextField 
                             autoFocus
                             name={k}
-                            size="small" 
-                            // label={""} 
+                            size="small"
                             defaultValue={v.value} 
                             onChange={handleChangeValue} 
                             onFocus={(event) => event.target.select()}
                         />
                         :
-                        // v.value
                         <span>
                             {v.value}&nbsp;
                             {k === displayKey && 
@@ -271,7 +255,6 @@ function SubattributeRow(props) {
                         autoFocus
                         name={k}
                         size="small" 
-                        // label={""} 
                         defaultValue={v.value} 
                         onChange={handleUpdateValue} 
                         onFocus={(event) => event.target.select()}
