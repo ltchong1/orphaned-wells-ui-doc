@@ -7,6 +7,7 @@ import Subheader from '../../components/Subheader/Subheader';
 import Bottombar from '../../components/BottomBar/BottomBar';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
+import ErrorBar from '../../components/ErrorBar/ErrorBar';
 
 
 export default function Record() {
@@ -17,6 +18,8 @@ export default function Record() {
     const [ openUpdateNameModal, setOpenUpdateNameModal ] = useState(false)
     const [ recordName, setRecordName ] = useState("")
     const [ previousPages, setPreviousPages ] = useState({"Projects": () => navigate("/projects", {replace: true}),})
+    const [ showErrorBar, setShowErrorBar ] = useState(false)
+    const [ errorMsg, setErrorMsg ] = useState("")
     let params = useParams(); 
     let navigate = useNavigate();
 
@@ -103,21 +106,38 @@ export default function Record() {
 
     const handleUpdateRecordName = () => {
         setOpenUpdateNameModal(false)
+        // TODO: handle 403 response when trying to update record
         callAPI(
             updateRecord,
             [params.id, {data: {name: recordName}, type: "name"}],
             (data) => window.location.reload(),
-            (e) => { console.error('error on updating record name: '); console.log(e)}
+            handleFailedUpdate
         )
     }
 
     const handleUpdateRecord = () => {
+        // TODO: handle 403 response when trying to update record
         callAPI(
             updateRecord,
             [params.id, {data: recordData, type: "attributes"}],
             (data) => setWasEdited(false),
-            (e) => console.error('error updating record: ',e)
+            handleFailedUpdate
         )
+    }
+
+    const handleFailedUpdate = (data, response_status) => {
+        if (response_status === 403) {
+            console.log("response status is 403")
+            console.log(data)
+            setShowErrorBar(true)
+            setErrorMsg(`Unable to update record: ${data.detail}. Returning to records list in 5 seconds.`)
+            setTimeout(() => {
+                goToProject()
+            }, 5000)
+
+        }else {
+            console.error('error updating record data: ',data)
+        }
     }
 
     const handleChangeValue = (event, isSubattribute, topLevelAttribute) => {
@@ -173,7 +193,6 @@ export default function Record() {
             [body],
             handleSuccessNavigateRecord,
             handleFailedFetchRecord
-            // (e) => { console.error('unable to go to next record: '); console.log(e)}
         )
     }
 
@@ -186,7 +205,6 @@ export default function Record() {
             [body],
             handleSuccessNavigateRecord,
             handleFailedFetchRecord
-            // (e) => { console.error('unable to go to previous record: '); console.log(e)}
         )
     }
 
@@ -260,6 +278,13 @@ export default function Record() {
                 buttonVariant='contained'
                 width={400}
             />
+            { showErrorBar && 
+                <ErrorBar
+                    errorMessage={errorMsg}
+                    setOpen={setShowErrorBar}
+                />
+            }
+            
         </Box>
     );
 }
