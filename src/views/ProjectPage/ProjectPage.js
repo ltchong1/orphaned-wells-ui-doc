@@ -6,7 +6,6 @@ import RecordsTable from '../../components/RecordsTable/RecordsTable';
 import Subheader from '../../components/Subheader/Subheader';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 import PopupModal from '../../components/PopupModal/PopupModal';
-import AddContributors from '../../components/AddContributors/AddContributors';
 import { callAPI } from '../../assets/helperFunctions';
 
 export default function Project() {
@@ -14,7 +13,6 @@ export default function Project() {
     const [ projectData, setProjectData ] = useState({attributes: []})
     const [ showDocumentModal, setShowDocumentModal ] = useState(false)
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
-    const [ openAddContributors, setOpenAddContributors ] = useState(false)
     const [ openUpdateNameModal, setOpenUpdateNameModal ] = useState(false)
     const [ projectName, setProjectName ] = useState("")
     let params = useParams(); 
@@ -99,7 +97,6 @@ export default function Project() {
                 handleClickButton={() => setShowDocumentModal(true)}
                 actions={
                     {
-                        // "Add contributors": () => setOpenAddContributors(true),
                         "Update project": handleUpdateProject, 
                         "Delete project": () => setOpenDeleteModal(true),
                     }

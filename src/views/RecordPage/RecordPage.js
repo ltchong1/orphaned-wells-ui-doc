@@ -106,7 +106,6 @@ export default function Record() {
 
     const handleUpdateRecordName = () => {
         setOpenUpdateNameModal(false)
-        // TODO: handle 403 response when trying to update record
         callAPI(
             updateRecord,
             [params.id, {data: {name: recordName}, type: "name"}],
@@ -116,7 +115,6 @@ export default function Record() {
     }
 
     const handleUpdateRecord = () => {
-        // TODO: handle 403 response when trying to update record
         callAPI(
             updateRecord,
             [params.id, {data: recordData, type: "attributes"}],
@@ -127,8 +125,6 @@ export default function Record() {
 
     const handleFailedUpdate = (data, response_status) => {
         if (response_status === 403) {
-            console.log("response status is 403")
-            console.log(data)
             setShowErrorBar(true)
             setErrorMsg(`Unable to update record: ${data.detail}. Returning to records list in 5 seconds.`)
             setTimeout(() => {
@@ -238,7 +234,6 @@ export default function Record() {
                     "Change name": () => setOpenUpdateNameModal(true),
                     "Delete record": () => setOpenDeleteModal(true)
                 }}
-                upFunction={goToProject}
                 previousPages={previousPages}
             />
             <Box sx={styles.innerBox}>

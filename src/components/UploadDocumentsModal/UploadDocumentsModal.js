@@ -74,28 +74,21 @@ export default function UploadDocumentsModal(props) {
             setShowWarning(false)
           }, 5000)
     } else {
-        // console.log('valid file entry')
         handleUploadDocument(file)
         setShowWarning(false)
         setShowModal(false)
     }
    }
 
-   const fileTypeError = () => {
+    const fileTypeError = () => {
         setWarningMessage("Unsupported file type")
         setShowWarning(true)
-        // setTimeout(function() {
-        //     setShowWarning(false)
-        //   }, 5000)
-   }
+    }
 
-   const fileSizeError = () => {
-    setWarningMessage("File too large")
-    setShowWarning(true)
-    // setTimeout(function() {
-    //     setShowWarning(false)
-    //   }, 5000)
-}
+    const fileSizeError = () => {
+        setWarningMessage("File too large")
+        setShowWarning(true)
+    }
 
    const fileUploaderContainer = () => {
     return (
@@ -136,7 +129,6 @@ export default function UploadDocumentsModal(props) {
 
    function DragDrop() {
     const handleChange = (file) => {
-        // console.log('setting file: '+file.name)
         setWarningMessage(null)
         setShowWarning(false)
         setFile(file);
@@ -173,10 +165,6 @@ export default function UploadDocumentsModal(props) {
                 <IconButton onClick={handleClose}><CloseIcon/></IconButton>
             </Box>
         </Grid>
-
-        {/* <Grid item xs={12}>
-            <p style={{color:"#666666"}}>Document file</p>
-        </Grid> */}
         <Grid item xs={12}>
             {DragDrop()}
         </Grid>

@@ -48,7 +48,6 @@ export default function ProjectsListPage() {
                 currentPage="Projects"
                 buttonName="New Project"
                 handleClickButton={handleClickNewProject}
-                // topLevel
             />
             <Box sx={styles.innerBox}>
                 {!unableToConnect ? 
