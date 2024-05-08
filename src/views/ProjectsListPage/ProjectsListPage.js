@@ -16,8 +16,6 @@ export default function ProjectsListPage() {
     },[])
 
     const handleSuccess = (data) => {
-        // console.log('projects data: ')
-        // console.log(data)
         setProjects(data)
     }
 
@@ -40,7 +38,6 @@ export default function ProjectsListPage() {
     const handleClickNewProject = () => {
         setShowNewProjectDialog(true)
     }
-
 
     return (
         <Box sx={styles.outerBox}>
