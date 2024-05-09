@@ -17,13 +17,11 @@ const styles = {
     },
     gridContainer: {
         backgroundColor: "white",
-        // pt: 1,
     },
     containerActions: {
         display: 'flex',
         justifyContent: 'flex-end',
         marginRight:'10px',
-        // height: '40px'
     },
     outerBox: {
         paddingBottom: "45px"
@@ -81,7 +79,6 @@ export default function DocumentContainer(props) {
                 if (isSubattribute) {
                     setForceOpenSubtable(topLevelAttribute)
                     elementId = `${topLevelAttribute}::${tempKey}`
-                    // waitTime = 500
                 } 
                 else elementId = tempKey
                 let element = document.getElementById(elementId)
@@ -142,7 +139,6 @@ export default function DocumentContainer(props) {
                 }
                 
             }
-            // scrollToAttribute("image-box", normalized_vertices[2][1] * 300)
             scrollToAttribute("image-box", normalized_vertices[2][1])
         }
     }
@@ -154,7 +150,6 @@ export default function DocumentContainer(props) {
         if (imageContainerElement) {
             imageContainerElement.scrollTo({
                 top: scrollAmount,
-                // left: coordinates[1],
                 behavior: "smooth",
                 });
         }

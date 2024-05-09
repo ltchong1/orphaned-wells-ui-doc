@@ -7,6 +7,7 @@ import Subheader from '../../components/Subheader/Subheader';
 import Bottombar from '../../components/BottomBar/BottomBar';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
+import ErrorBar from '../../components/ErrorBar/ErrorBar';
 
 
 export default function Record() {
@@ -17,6 +18,8 @@ export default function Record() {
     const [ openUpdateNameModal, setOpenUpdateNameModal ] = useState(false)
     const [ recordName, setRecordName ] = useState("")
     const [ previousPages, setPreviousPages ] = useState({"Projects": () => navigate("/projects", {replace: true}),})
+    const [ showErrorBar, setShowErrorBar ] = useState(false)
+    const [ errorMsg, setErrorMsg ] = useState("")
     let params = useParams(); 
     let navigate = useNavigate();
 
@@ -49,9 +52,23 @@ export default function Record() {
             getRecordData,
             [params.id],
             handleSuccessfulFetchRecord,
-            (e) => console.error('error getting record data: ',e)
+            handleFailedFetchRecord,
         )
     }, [params.id])
+
+    const handleFailedFetchRecord = (data, response_status) => {
+        if (response_status === 303) {
+            console.log("response status is 303")
+            console.log(data)
+            if (data.direction === "previous") {
+                handleClickPrevious(data.recordData, true)
+            } else {
+                handleClickNext(data.recordData, true)
+            }
+        }else {
+            console.error('error getting record data: ',data)
+        }
+    }
 
     const handleSuccessfulFetchRecord = (data) => {
         setRecordData(data)
@@ -93,7 +110,7 @@ export default function Record() {
             updateRecord,
             [params.id, {data: {name: recordName}, type: "name"}],
             (data) => window.location.reload(),
-            (e) => console.error('error on updating record name: ',e)
+            handleFailedUpdate
         )
     }
 
@@ -102,8 +119,21 @@ export default function Record() {
             updateRecord,
             [params.id, {data: recordData, type: "attributes"}],
             (data) => setWasEdited(false),
-            (e) => console.error('error updating record: ',e)
+            handleFailedUpdate
         )
+    }
+
+    const handleFailedUpdate = (data, response_status) => {
+        if (response_status === 403) {
+            setShowErrorBar(true)
+            setErrorMsg(`Unable to update record: ${data.detail}. Returning to records list in 5 seconds.`)
+            setTimeout(() => {
+                goToProject()
+            }, 5000)
+
+        }else {
+            console.error('error updating record data: ',data)
+        }
     }
 
     const handleChangeValue = (event, isSubattribute, topLevelAttribute) => {
@@ -151,22 +181,26 @@ export default function Record() {
         navigate("/project/"+recordData.project_id, {replace: true})
     }
 
-    const handleClickNext = () => {
+    const handleClickNext = (incomingData, useIncomingData) => {
         let body = {data: recordData, reviewed: false}
+        if (useIncomingData) body.data = incomingData
         callAPI(
             getNextRecord,
             [body],
             handleSuccessNavigateRecord,
-            (e) => console.error("unable to go to next record: "+e)
+            handleFailedFetchRecord
         )
     }
 
-    const handleClickPrevious = () => {
+    const handleClickPrevious = (incomingData, useIncomingData) => {
+        let body
+        if (useIncomingData) body = incomingData
+        else body = recordData
         callAPI(
             getPreviousRecord,
-            [recordData],
+            [body],
             handleSuccessNavigateRecord,
-            (e) => console.error("unable to go to next record: "+e)
+            handleFailedFetchRecord
         )
     }
 
@@ -200,7 +234,6 @@ export default function Record() {
                     "Change name": () => setOpenUpdateNameModal(true),
                     "Delete record": () => setOpenDeleteModal(true)
                 }}
-                upFunction={goToProject}
                 previousPages={previousPages}
             />
             <Box sx={styles.innerBox}>
@@ -240,6 +273,13 @@ export default function Record() {
                 buttonVariant='contained'
                 width={400}
             />
+            { showErrorBar && 
+                <ErrorBar
+                    errorMessage={errorMsg}
+                    setOpen={setShowErrorBar}
+                />
+            }
+            
         </Box>
     );
 }

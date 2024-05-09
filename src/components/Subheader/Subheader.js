@@ -7,7 +7,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 export default function Subheader(props) {
     let navigate = useNavigate();
-    const { currentPage, buttonName, subtext, handleClickButton, disableButton, upFunction, previousPages, actions, topLevel } = props;
+    const { currentPage, buttonName, subtext, handleClickButton, disableButton, previousPages, actions } = props;
     const [ showActions, setShowActions ] = useState(false)
     const [ anchorEl, setAnchorEl ] = useState(null);
     const styles = {
@@ -87,14 +87,6 @@ export default function Subheader(props) {
                                 </Fragment>
                             ))
                         }
-                        
-                        {/* {
-                            !topLevel && 
-                            <>
-                                <IconButton sx={styles.iconButton} onClick={upFunction}><MoreHorizIcon sx={styles.icon}/></IconButton> 
-                                /
-                            </>
-                        } */}
                         
                         <Button sx={styles.iconButton} size="small">{currentPage}</Button>
                     </div>
