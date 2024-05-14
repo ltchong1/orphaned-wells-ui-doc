@@ -58,8 +58,6 @@ export default function Record() {
 
     const handleFailedFetchRecord = (data, response_status) => {
         if (response_status === 303) {
-            console.log("response status is 303")
-            console.log(data)
             if (data.direction === "previous") {
                 handleClickPrevious(data.recordData, true)
             } else {
