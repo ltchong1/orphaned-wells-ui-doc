@@ -5,16 +5,17 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import PopupModal from '../PopupModal/PopupModal';
 
 
 export default function Bottombar(props) {
     const { onPreviousButtonClick,  onNextButtonClick, onReviewButtonClick } = props;
+    const [ openNotesModal, setOpenNotesModal ] = useState(false)
+    const [ recordNotes, setRecordNotes ] = useState("")
     const styles = {
         button: {
             marginX: 1,
@@ -27,6 +28,14 @@ export default function Bottombar(props) {
             height: '60px',
             zIndex: 2,
         }
+    }
+
+    const handleChangeRecordNotes = (event) => {
+        setRecordNotes(event.target.value)
+    }
+
+    const handleUpdateRecordNotes = () => {
+
     }
 
   return ( 
@@ -51,7 +60,7 @@ export default function Bottombar(props) {
                             sx={styles.button} 
                             variant="outlined" 
                             startIcon={<BorderColorOutlinedIcon/>}
-                            // onClick={onNextButtonClick}
+                            onClick={() => setOpenNotesModal(true)}
                         >
                             add notes
                         </Button>
@@ -74,6 +83,21 @@ export default function Bottombar(props) {
                     </Box>
                 </Grid>
             </Grid>
+            <PopupModal
+                input
+                open={openNotesModal}
+                handleClose={() => setOpenNotesModal(false)}
+                text={recordNotes}
+                textLabel='Notes'
+                handleEditText={handleChangeRecordNotes}
+                handleSave={handleUpdateRecordNotes}
+                buttonText='Save notes'
+                buttonColor='primary'
+                buttonVariant='contained'
+                width={600}
+                multiline
+                inputrows={4}
+            />
       </Paper>
     </Box>
   );
