@@ -9,22 +9,15 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 
 export default function Bottombar(props) {
     const { onPreviousButtonClick,  onNextButtonClick, onReviewButtonClick } = props;
     const styles = {
-        filled: {
-            // backgroundColor: '#01678f',
-            // '&:hover': {
-            //     backgroundColor: '#01678f',
-            //     opacity: 0.9
-            // },
-            marginLeft: 2
-        },
-        unfilled: {
-            color: '#595959'
+        button: {
+            marginX: 1,
         },
         paper: {
             position: 'fixed',
@@ -55,6 +48,15 @@ export default function Bottombar(props) {
                 <Grid item xs={6}>
                     <Box sx={{display: 'flex', justifyContent: 'flex-end', marginRight:'10px'}}>
                         <Button 
+                            sx={styles.button} 
+                            variant="outlined" 
+                            startIcon={<BorderColorOutlinedIcon/>}
+                            // onClick={onNextButtonClick}
+                        >
+                            add notes
+                        </Button>
+                        <Button 
+                            sx={styles.button} 
                             variant="outlined" 
                             endIcon={<KeyboardArrowRightIcon/>}
                             onClick={onNextButtonClick}
@@ -62,7 +64,7 @@ export default function Bottombar(props) {
                             next
                         </Button>
                         <Button 
-                            sx={styles.filled} 
+                            sx={styles.button} 
                             variant="contained" 
                             endIcon={<CheckCircleOutlineIcon/>}
                             onClick={onReviewButtonClick}
