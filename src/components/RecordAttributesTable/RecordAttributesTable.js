@@ -98,8 +98,8 @@ function AttributeRow(props) {
 
     return (
     <>
-        <TableRow id={k} sx={k === displayKey ? {backgroundColor: "#EDEDED"} : {}}>
-            <TableCell sx={styles.fieldKey} onClick={() => handleClickField(k, v.normalized_vertices)}>
+        <TableRow id={k} sx={k === displayKey ? {backgroundColor: "#EDEDED"} : {}} onClick={() => handleClickField(k, v.normalized_vertices)}>
+            <TableCell sx={styles.fieldKey}>
                 
                 <span>
                     {k}
@@ -121,7 +121,7 @@ function AttributeRow(props) {
                 <TableCell></TableCell> 
                 
                 :
-                <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown}>
+                <TableCell onDoubleClick={handleDoubleClick} onKeyDown={handleKeyDown} onClick={(e) => e.stopPropagation()}>
                     {editMode ? 
                         <TextField 
                             autoFocus
@@ -240,16 +240,17 @@ function SubattributeRow(props) {
         <TableRow 
             key={k} 
             id={`${topLevelAttribute}::${k}`} 
-            sx={(k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute) ? {backgroundColor: "#EDEDED"} : {}}>
+            sx={(k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute) ? {backgroundColor: "#EDEDED"} : {}}
+            onClick={() => handleClickField(k, v.normalized_vertices, true, topLevelAttribute)}
+        >
             <TableCell sx={styles.fieldKey} >
             <span 
-                onClick={() => handleClickField(k, v.normalized_vertices, true, topLevelAttribute)}
                 style={ (k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute) ? {fontWeight:"bold"} : {}}
             >
                 {k}
             </span>
             </TableCell>
-            <TableCell onKeyDown={handleKeyDown}>
+            <TableCell onKeyDown={handleKeyDown} onClick={(e) => e.stopPropagation()}>
                 {editMode ? 
                     <TextField 
                         autoFocus
