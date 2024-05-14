@@ -27,7 +27,9 @@ export default function PopupModal(props) {
         buttonTwoColor,
         buttonTwoText,
         inputText,
-        disableSubmit
+        disableSubmit,
+        multiline,
+        inputrows,
     } = props;
 
     const styles = {
@@ -45,12 +47,13 @@ export default function PopupModal(props) {
     }
 
     const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            e.stopPropagation();
-            handleSave()
-        } 
-        else if (e.key === "ArrowLeft") {
+        // if (e.key === "Enter") {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        //     handleSave()
+        // } 
+        // else 
+        if (e.key === "ArrowLeft") {
             e.stopPropagation();
         }
         else if (e.key === "ArrowRight") {
@@ -91,6 +94,8 @@ export default function PopupModal(props) {
                     onChange={handleEditText}
                     fullWidth
                     onKeyDown={handleKeyDown}
+                    multiline={multiline}
+                    rows={inputrows || 1}
                 />
             </Grid>
             <Grid item xs={8}></Grid>
@@ -127,6 +132,8 @@ export default function PopupModal(props) {
                                 label={textLabel}
                                 value={inputText}
                                 onChange={handleEditText}
+                                multiline={multiline}
+                                rows={inputrows || 1}
                                 fullWidth
                             />
                         </Grid>
