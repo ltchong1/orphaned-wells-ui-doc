@@ -9,6 +9,7 @@ import AdminPage from './views/AdminPage/AdminPage';
 import Header from './components/Header/Header'; 
 import { callAPI } from './assets/helperFunctions';
 import { checkAuth } from './services/app.service';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import './App.css';
 
 interface User {
@@ -17,6 +18,15 @@ interface User {
   picture: string,
   hd: string
 }
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#000",
+      contrastText: "#fff" //button text white instead of black
+    },
+  },
+});
 
 function App() {
   const [ authenticated, setAuthenticated ] = React.useState(false)
@@ -64,6 +74,7 @@ function App() {
   }
 
   return (
+    <ThemeProvider theme={theme}>
     <div className="App">
           <Header authenticated={authenticated}/>
           <Routes> 
@@ -97,6 +108,7 @@ function App() {
           />
           </Routes>
     </div>
+    </ThemeProvider>
   );
 }
 
