@@ -21,6 +21,10 @@ jobs:
       - name: Install packages
         run: |
             npm clean-install
+      
+      - name: Add .env file
+        run: |
+            echo REACT_APP_BACKEND_URL=\"${{ secrets.DEV_BACKEND_URL }}\" >> .env
 
       - name: Build frontend
         env:
