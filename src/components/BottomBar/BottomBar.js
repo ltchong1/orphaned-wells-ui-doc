@@ -1,5 +1,6 @@
 import React from 'react';
 import {useEffect, useState} from 'react';   
+import { useParams } from "react-router-dom";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,12 +11,18 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import PopupModal from '../PopupModal/PopupModal';
+import { updateRecord } from '../../services/app.service';
+import { callAPI } from '../../assets/helperFunctions';
 
 
 export default function Bottombar(props) {
-    const { onPreviousButtonClick,  onNextButtonClick, onReviewButtonClick } = props;
+    const { onPreviousButtonClick,  onNextButtonClick, onReviewButtonClick, notes } = props;
     const [ openNotesModal, setOpenNotesModal ] = useState(false)
     const [ recordNotes, setRecordNotes ] = useState("")
+    let params = useParams(); 
+    useEffect(() => {
+        setRecordNotes(notes)
+    },[notes, params.id])
     const styles = {
         button: {
             marginX: 1,
@@ -35,7 +42,17 @@ export default function Bottombar(props) {
     }
 
     const handleUpdateRecordNotes = () => {
+        callAPI(
+            updateRecord,
+            [params.id, {data: {"notes": recordNotes}, type: "notes"}],
+            (data) => setOpenNotesModal(false),
+            handleFailedUpdate
+        )
+    }
 
+    const handleFailedUpdate = (data) => {
+        console.log("unable to update notes")
+        console.error(data)
     }
 
   return ( 
