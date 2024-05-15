@@ -247,6 +247,7 @@ export default function Record() {
                 onPreviousButtonClick={handleClickPrevious}
                 onNextButtonClick={handleClickNext}
                 onReviewButtonClick={handleClickMarkReviewed}
+                notes={recordData.notes}
             />
             <PopupModal
                 open={openDeleteModal}

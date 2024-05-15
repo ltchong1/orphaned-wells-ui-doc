@@ -91,7 +91,7 @@ export default function Header(props) {
             <MenuItem onClick={handleNavigateHome}>Return to list page</MenuItem>
         </Menu>
         <div id="titlebar-name" style={{cursor:'pointer'}} onClick={handleNavigateHome}>
-          CATALOG
+          OGRRE
         </div>
         <div style={styles.tabPanel}>
           <Tabs value={tabValue} onChange={handleTabChange} aria-label="process tabs" centered 
