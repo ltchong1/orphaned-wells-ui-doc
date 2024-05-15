@@ -5,26 +5,20 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import PopupModal from '../PopupModal/PopupModal';
 
 
 export default function Bottombar(props) {
     const { onPreviousButtonClick,  onNextButtonClick, onReviewButtonClick } = props;
+    const [ openNotesModal, setOpenNotesModal ] = useState(false)
+    const [ recordNotes, setRecordNotes ] = useState("")
     const styles = {
-        filled: {
-            // backgroundColor: '#01678f',
-            // '&:hover': {
-            //     backgroundColor: '#01678f',
-            //     opacity: 0.9
-            // },
-            marginLeft: 2
-        },
-        unfilled: {
-            color: '#595959'
+        button: {
+            marginX: 1,
         },
         paper: {
             position: 'fixed',
@@ -34,6 +28,14 @@ export default function Bottombar(props) {
             height: '60px',
             zIndex: 2,
         }
+    }
+
+    const handleChangeRecordNotes = (event) => {
+        setRecordNotes(event.target.value)
+    }
+
+    const handleUpdateRecordNotes = () => {
+
     }
 
   return ( 
@@ -55,6 +57,15 @@ export default function Bottombar(props) {
                 <Grid item xs={6}>
                     <Box sx={{display: 'flex', justifyContent: 'flex-end', marginRight:'10px'}}>
                         <Button 
+                            sx={styles.button} 
+                            variant="outlined" 
+                            startIcon={<BorderColorOutlinedIcon/>}
+                            onClick={() => setOpenNotesModal(true)}
+                        >
+                            add notes
+                        </Button>
+                        <Button 
+                            sx={styles.button} 
                             variant="outlined" 
                             endIcon={<KeyboardArrowRightIcon/>}
                             onClick={onNextButtonClick}
@@ -62,7 +73,7 @@ export default function Bottombar(props) {
                             next
                         </Button>
                         <Button 
-                            sx={styles.filled} 
+                            sx={styles.button} 
                             variant="contained" 
                             endIcon={<CheckCircleOutlineIcon/>}
                             onClick={onReviewButtonClick}
@@ -72,6 +83,21 @@ export default function Bottombar(props) {
                     </Box>
                 </Grid>
             </Grid>
+            <PopupModal
+                input
+                open={openNotesModal}
+                handleClose={() => setOpenNotesModal(false)}
+                text={recordNotes}
+                textLabel='Notes'
+                handleEditText={handleChangeRecordNotes}
+                handleSave={handleUpdateRecordNotes}
+                buttonText='Save notes'
+                buttonColor='primary'
+                buttonVariant='contained'
+                width={600}
+                multiline
+                inputrows={4}
+            />
       </Paper>
     </Box>
   );
