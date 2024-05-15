@@ -1,3 +1,6 @@
+console.log("app.service.js: process.env is")
+console.log(process.env)
+
 let BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 
 export const getProjects = () => {
