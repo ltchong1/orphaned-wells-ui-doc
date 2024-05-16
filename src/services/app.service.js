@@ -1,5 +1,4 @@
-// let BACKEND_URL = "http://localhost:8001"
-let BACKEND_URL = "https://server.uow-carbon.org"
+let BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 
 export const getProjects = () => {
     return fetch(BACKEND_URL+'/get_projects', {

@@ -2,11 +2,11 @@ name: Deploy Frontend
 
 on:
   push:
-    branches: [main]
+    branches: [isgs]
 
 jobs:
 
-  dev-deploy:
+  isgs-production-deploy:
     if: github.repository == 'CATALOG-Historic-Records/orphaned-wells-ui'
     name: Deploy to Google App Engine
     runs-on: ubuntu-latest
@@ -22,7 +22,7 @@ jobs:
       
       - name: Add .env file
         run: |
-            echo REACT_APP_BACKEND_URL=\"${{ secrets.DEV_BACKEND_URL }}\" >> .env
+            echo REACT_APP_BACKEND_URL=\"${{ secrets.ISGS_BACKEND_URL }}\" >> .env
 
       - name: Build frontend
         env:
@@ -32,4 +32,4 @@ jobs:
 
       - name: Deploy
         run: |
-            gcloud app deploy
+            gcloud app deploy app-isgs.yml
