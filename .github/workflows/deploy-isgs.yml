@@ -30,6 +30,10 @@ jobs:
         run: |
             npm run build
 
+      - name: ls
+        run: |
+            ls -a
+
       - name: Deploy
         run: |
             gcloud app deploy app-isgs.yml
