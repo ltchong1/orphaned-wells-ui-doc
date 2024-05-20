@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
 import { Box, TextField, Collapse, Typography, IconButton } from '@mui/material';
-import { formatConfidence, useKeyDown } from '../../assets/helperFunctions';
+import { formatConfidence, useKeyDown, useOutsideClick } from '../../assets/helperFunctions';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
@@ -74,10 +74,34 @@ function AttributeRow(props) {
     const [ editMode, setEditMode ] = useState(false)
     const [ openSubtable, setOpenSubtable ] = useState(false)
 
+    useEffect(() => {
+        if (k !== displayKey) {
+            if (editMode) finishEditing()
+        }
+    },[displayKey])
+
+    const handleClickOutside = (tempEditMode) => {
+        if (displayKey === "AS_DRILLED_LATITUDE")
+        {
+            console.log("handle click outside")
+            console.log(tempEditMode)
+            console.log(editMode)
+            if (editMode)  {
+                finishEditing()
+            }
+        }
+        
+    }
+
+    const handleClickInside = (e) => {
+        e.stopPropagation()
+        handleClickField(k, v.normalized_vertices)
+    }
+
     useKeyDown(() => {
         if (k === displayKey) {
-            if (editMode) handleUpdateRecord()
-            setEditMode(!editMode)
+            if (editMode) finishEditing()
+            else setEditMode(true)
         }
     }, ["Enter"])
 
@@ -103,9 +127,16 @@ function AttributeRow(props) {
         handleDoubleClick()
     }
 
+    const finishEditing = () => {
+        handleUpdateRecord()
+        setEditMode(false)
+    }
+
+    // const ref = useOutsideClick(() => handleClickOutside(editMode));
+
     return (
     <>
-        <TableRow id={k} sx={k === displayKey ? {backgroundColor: "#EDEDED"} : {}} onClick={() => handleClickField(k, v.normalized_vertices)}>
+        <TableRow id={k} sx={k === displayKey ? {backgroundColor: "#EDEDED"} : {}} onClick={handleClickInside}>
             <TableCell sx={styles.fieldKey}>
                 
                 <span>
@@ -222,12 +253,29 @@ function SubattributeRow(props) {
     const { k, v, handleClickField, handleChangeValue, topLevelAttribute, fullscreen, displayKey, attributesList, displayKeyIndex, handleUpdateRecord } = props
     const [ editMode, setEditMode ] = useState(false)
 
+    useEffect(() => {
+        if (!(k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute)) {
+            if (editMode) finishEditing()
+        }
+    },[k, topLevelAttribute])
+
     useKeyDown(() => {
         if (k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute) {
-            if (editMode) handleUpdateRecord()
-            setEditMode(!editMode)
+            if (editMode) finishEditing()
+            else setEditMode(true)
         }
     }, ["Enter"])
+
+    const handleClickOutside = () => {
+        if (editMode)  {
+            finishEditing()
+        }
+    }
+
+    const handleClickInside = (e) => {
+        e.stopPropagation()
+        handleClickField(k, v.normalized_vertices, true, topLevelAttribute)
+    }
 
     const handleDoubleClick = () => {
         setEditMode(true)
@@ -251,12 +299,20 @@ function SubattributeRow(props) {
         handleDoubleClick()
     }
 
+    const finishEditing = () => {
+        handleUpdateRecord()
+        setEditMode(false)
+    }
+
+    // const ref = useOutsideClick(handleClickOutside);
+
     return (
         <TableRow 
+            // ref={ref}
             key={k} 
             id={`${topLevelAttribute}::${k}`} 
             sx={(k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute) ? {backgroundColor: "#EDEDED"} : {}}
-            onClick={() => handleClickField(k, v.normalized_vertices, true, topLevelAttribute)}
+            onClick={handleClickInside}
         >
             <TableCell sx={styles.fieldKey} >
             <span 
