@@ -36,6 +36,10 @@ const styles = {
 
 export default function AttributesTable(props) {
     const { attributes, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, attributesList, displayKeyIndex, handleUpdateRecord } = props
+    const handleClickOutside = () => {
+        handleClickField()
+    }
+    let ref = useOutsideClick(handleClickOutside);
 
     return (
         <TableContainer id="table-container" sx={styles.fieldsTable}>
@@ -47,7 +51,7 @@ export default function AttributesTable(props) {
                         <TableCell sx={styles.headerRow}>Confidence</TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody ref={ref}>
                     {Object.entries(attributes).map(([k, v]) => (
                         <AttributeRow 
                             key={k}
@@ -79,19 +83,6 @@ function AttributeRow(props) {
             if (editMode) finishEditing()
         }
     },[displayKey])
-
-    const handleClickOutside = (tempEditMode) => {
-        if (displayKey === "AS_DRILLED_LATITUDE")
-        {
-            console.log("handle click outside")
-            console.log(tempEditMode)
-            console.log(editMode)
-            if (editMode)  {
-                finishEditing()
-            }
-        }
-        
-    }
 
     const handleClickInside = (e) => {
         e.stopPropagation()
@@ -131,8 +122,6 @@ function AttributeRow(props) {
         handleUpdateRecord()
         setEditMode(false)
     }
-
-    // const ref = useOutsideClick(() => handleClickOutside(editMode));
 
     return (
     <>
@@ -257,7 +246,7 @@ function SubattributeRow(props) {
         if (!(k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute)) {
             if (editMode) finishEditing()
         }
-    },[k, topLevelAttribute])
+    },[displayKey, topLevelAttribute])
 
     useKeyDown(() => {
         if (k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute) {
@@ -265,12 +254,6 @@ function SubattributeRow(props) {
             else setEditMode(true)
         }
     }, ["Enter"])
-
-    const handleClickOutside = () => {
-        if (editMode)  {
-            finishEditing()
-        }
-    }
 
     const handleClickInside = (e) => {
         e.stopPropagation()
@@ -304,11 +287,8 @@ function SubattributeRow(props) {
         setEditMode(false)
     }
 
-    // const ref = useOutsideClick(handleClickOutside);
-
     return (
         <TableRow 
-            // ref={ref}
             key={k} 
             id={`${topLevelAttribute}::${k}`} 
             sx={(k === displayKey && topLevelAttribute === attributesList[displayKeyIndex].topLevelAttribute) ? {backgroundColor: "#EDEDED"} : {}}
