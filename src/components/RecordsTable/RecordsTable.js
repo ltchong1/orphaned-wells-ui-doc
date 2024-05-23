@@ -113,6 +113,10 @@ export default function RecordsTable(props) {
                 <IconButton>
                   <CheckCircleOutlineIcon sx={{color: "green"}}/>
                 </IconButton> :
+                row.status === "error" ? 
+                <IconButton>
+                  <ErrorIcon color="error"/>
+                </IconButton> :
                 null
               }
               {row.status}
