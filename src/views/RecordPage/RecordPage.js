@@ -212,13 +212,9 @@ export default function Record() {
         )
     }
 
-    useKeyDown(() => {
-        handleClickPrevious();
-    }, ["ArrowLeft"]);
+    useKeyDown("ArrowLeft", null, null, handleClickPrevious, null);
 
-    useKeyDown(() => {
-        handleClickMarkReviewed();
-    }, ["ArrowRight"]);
+    useKeyDown("ArrowRight", null, null, handleClickNext, handleClickMarkReviewed);
 
     const handleSuccessNavigateRecord = (data) => {
         navigate("/record/"+data._id, {replace: true})
