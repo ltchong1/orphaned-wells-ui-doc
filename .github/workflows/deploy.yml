@@ -22,9 +22,7 @@ jobs:
       
       - name: Add .env file
         run: |
-            echo REACT_APP_BACKEND_URL=\"${{ secrets.DEV_BACKEND_URL }}\" '\n' \
-            REACT_APP_STATE=colorado '\n' \
-            REACT_APP_ENVIRONMENT=isgs > .env
+          echo ${{ secrets.STAGING_ENV }} > .env
 
       - name: Build frontend
         env:
