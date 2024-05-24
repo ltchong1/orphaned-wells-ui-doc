@@ -6,8 +6,6 @@ import { processor_data } from '../../assets/processors';
 import { addProject } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 
-
-
 export default function NewProjectDialog(props) {
     const { open, onClose } = props;
     const [ projectName, setProjectName ] = useState("")
