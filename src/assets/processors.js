@@ -184,7 +184,7 @@ export const processor_data =
 
     illinois: [
         {
-            id: "",
+            id: "fa0d15e4e6966543",
             name: "IllinoisWellCompletion",
             displayName: "Illinois Well Completion",
             state: "IL",
