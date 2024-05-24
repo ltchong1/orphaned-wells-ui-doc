@@ -29,7 +29,6 @@ const theme = createTheme({
 });
 
 function App() {
-  console.log(process.env)
   const [ authenticated, setAuthenticated ] = React.useState(false)
   // const [ userCredentials, setUserCredentials ] = React.useState({})
   let navigate = useNavigate()
