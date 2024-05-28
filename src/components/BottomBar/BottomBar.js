@@ -55,7 +55,7 @@ export default function Bottombar(props) {
                             startIcon={<BorderColorOutlinedIcon/>}
                             onClick={() => setOpenNotesModal(true)}
                         >
-                            add notes
+                            notes
                         </Button>
                         <Button 
                             sx={styles.button} 
