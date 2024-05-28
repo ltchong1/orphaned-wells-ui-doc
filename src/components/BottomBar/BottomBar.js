@@ -1,6 +1,5 @@
 import React from 'react';
-import {useEffect, useState} from 'react';   
-import { useParams } from "react-router-dom";
+import {useState} from 'react';   
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,19 +9,12 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import PopupModal from '../PopupModal/PopupModal';
-import { updateRecord } from '../../services/app.service';
-import { callAPI } from '../../assets/helperFunctions';
+import Notes from '../Notes/Notes';
 
 
 export default function Bottombar(props) {
     const { onPreviousButtonClick,  onNextButtonClick, onReviewButtonClick, notes } = props;
     const [ openNotesModal, setOpenNotesModal ] = useState(false)
-    const [ recordNotes, setRecordNotes ] = useState("")
-    let params = useParams(); 
-    useEffect(() => {
-        setRecordNotes(notes)
-    },[notes, params.id])
     const styles = {
         button: {
             marginX: 1,
@@ -35,24 +27,6 @@ export default function Bottombar(props) {
             height: '60px',
             zIndex: 2,
         }
-    }
-
-    const handleChangeRecordNotes = (event) => {
-        setRecordNotes(event.target.value)
-    }
-
-    const handleUpdateRecordNotes = () => {
-        callAPI(
-            updateRecord,
-            [params.id, {data: {"notes": recordNotes}, type: "notes"}],
-            (data) => setOpenNotesModal(false),
-            handleFailedUpdate
-        )
-    }
-
-    const handleFailedUpdate = (data) => {
-        console.log("unable to update notes")
-        console.error(data)
     }
 
   return ( 
@@ -100,20 +74,10 @@ export default function Bottombar(props) {
                     </Box>
                 </Grid>
             </Grid>
-            <PopupModal
-                input
-                open={openNotesModal}
-                handleClose={() => setOpenNotesModal(false)}
-                text={recordNotes}
-                textLabel='Notes'
-                handleEditText={handleChangeRecordNotes}
-                handleSave={handleUpdateRecordNotes}
-                buttonText='Save notes'
-                buttonColor='primary'
-                buttonVariant='contained'
-                width={600}
-                multiline
-                inputrows={4}
+            <Notes
+                notes={notes}
+                openNotesModal={openNotesModal}
+                setOpenNotesModal={setOpenNotesModal}
             />
       </Paper>
     </Box>
