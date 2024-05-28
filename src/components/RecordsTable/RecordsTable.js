@@ -7,12 +7,14 @@ import ErrorIcon from '@mui/icons-material/Error';
 import CachedIcon from '@mui/icons-material/Cached';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import { downloadRecordsCSV } from '../../services/app.service';
 import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelectDialog';
 import { formatDate, callAPIWithBlobResponse, median, average, formatConfidence } from '../../assets/helperFunctions';
+import Notes from '../Notes/Notes';
 
 const TABLE_ATTRIBUTES = {
-  displayNames: ["Record Name", "Date Uploaded", "API Number", "Mean Confidence", "Lowest Confidence", "Digitization Status", "Review Status"],
+  displayNames: ["Record Name", "Date Uploaded", "API Number", "Mean Confidence", "Lowest Confidence", "Notes", "Digitization Status", "Review Status"],
   keyNames: ["name", "contributor", "dateCreated", "API_NUMBER", "confidence_median", "confidence_lowest", "status", "review_status"],
 }
 
@@ -21,6 +23,9 @@ export default function RecordsTable(props) {
   const { projectData, records } = props;
   const [ openColumnSelect, setOpenColumnSelect ] = useState(false)
   const [ attributes, setAttributes ] = useState([])
+  const [ showNotes, setShowNotes ] = useState(false)
+  const [ notesRecordId, setNotesRecordId ] = useState(null)
+  const [ notes, setNotes ] = useState(null)
 
   useEffect(() => {
       if (projectData) {
@@ -90,6 +95,19 @@ export default function RecordsTable(props) {
     }
   }
 
+  const handleClickNotes = (event, row) => {
+    event.stopPropagation();
+    setShowNotes(true)
+    setNotesRecordId(row._id)
+    setNotes(row.notes)
+  }
+
+  const handleCloseNotesModal = () => {
+    setShowNotes(false)
+    setNotesRecordId(null)
+    setNotes(null)
+  }
+
   const tableRow = (row, idx) => {
       return (
         <TableRow
@@ -103,6 +121,9 @@ export default function RecordsTable(props) {
             <TableCell align="right">{row.status === "digitized" ? getAPINumber(row) : null}</TableCell>
             <TableCell align="right">{row.status === "digitized" ? calculateAverageConfidence(row.attributes) : null}</TableCell>
             <TableCell align="right">{row.status === "digitized" ? calculateLowestConfidence(row.attributes) : null}</TableCell>
+            <TableCell align="right">
+              <IconButton sx={{color: "#F2DB6F"}} onClick={(e) => handleClickNotes(e, row)}><StickyNote2Icon/></IconButton>
+            </TableCell>
             <TableCell align="right">
               {
                 row.status === "processing" ? 
@@ -180,7 +201,12 @@ export default function RecordsTable(props) {
               project_settings={projectData.settings}
           />
           }
-      
+      <Notes
+        record_id={notesRecordId}
+        notes={notes}
+        open={showNotes}
+        onClose={handleCloseNotesModal}
+      />
     </TableContainer>
   );
 }
