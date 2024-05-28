@@ -1,16 +1,14 @@
 import { useEffect, Fragment, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box, Paper, IconButton } from '@mui/material'
-import DownloadIcon from '@mui/icons-material/Download';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ErrorIcon from '@mui/icons-material/Error';
 import CachedIcon from '@mui/icons-material/Cached';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
-import { downloadRecordsCSV } from '../../services/app.service';
 import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelectDialog';
-import { formatDate, callAPIWithBlobResponse, median, average, formatConfidence } from '../../assets/helperFunctions';
+import { formatDate, average, formatConfidence } from '../../assets/helperFunctions';
 import Notes from '../Notes/Notes';
 
 const TABLE_ATTRIBUTES = {
