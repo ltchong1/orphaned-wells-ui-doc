@@ -1,5 +1,6 @@
 import React from 'react';
-import {useState} from 'react';   
+import {useState} from 'react';
+import { useParams } from "react-router-dom";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,6 +14,7 @@ import Notes from '../Notes/Notes';
 
 
 export default function Bottombar(props) {
+    let params = useParams(); 
     const { onPreviousButtonClick,  onNextButtonClick, onReviewButtonClick, notes } = props;
     const [ openNotesModal, setOpenNotesModal ] = useState(false)
     const styles = {
@@ -75,9 +77,10 @@ export default function Bottombar(props) {
                 </Grid>
             </Grid>
             <Notes
+                record_id={params.id}
                 notes={notes}
-                openNotesModal={openNotesModal}
-                setOpenNotesModal={setOpenNotesModal}
+                open={openNotesModal}
+                onClose={() => setOpenNotesModal(false)}
             />
       </Paper>
     </Box>

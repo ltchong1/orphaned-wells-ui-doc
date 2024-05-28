@@ -1,17 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import { useParams } from "react-router-dom";
 import PopupModal from '../PopupModal/PopupModal';
 import { updateRecord } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 
 
 export default function Notes(props) {
-    const { notes, openNotesModal, setOpenNotesModal } = props;
+    const { record_id, notes, open, onClose } = props;
     const [ recordNotes, setRecordNotes ] = useState("")
-    let params = useParams(); 
     useEffect(() => {
         setRecordNotes(notes)
-    },[notes, params.id])
+    },[notes, record_id])
 
     const handleChangeRecordNotes = (event) => {
         setRecordNotes(event.target.value)
@@ -20,8 +18,8 @@ export default function Notes(props) {
     const handleUpdateRecordNotes = () => {
         callAPI(
             updateRecord,
-            [params.id, {data: {"notes": recordNotes}, type: "notes"}],
-            (data) => setOpenNotesModal(false),
+            [record_id, {data: {"notes": recordNotes}, type: "notes"}],
+            onClose(),
             handleFailedUpdate
         )
     }
@@ -29,13 +27,14 @@ export default function Notes(props) {
     const handleFailedUpdate = (data) => {
         console.log("unable to update notes")
         console.error(data)
+        onClose()
     }
 
   return ( 
     <PopupModal
         input
-        open={openNotesModal}
-        handleClose={() => setOpenNotesModal(false)}
+        open={open}
+        handleClose={onClose}
         text={recordNotes}
         textLabel='Notes'
         handleEditText={handleChangeRecordNotes}
