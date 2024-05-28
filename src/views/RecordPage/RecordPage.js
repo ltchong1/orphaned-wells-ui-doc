@@ -229,6 +229,7 @@ export default function Record() {
                     "Delete record": () => setOpenDeleteModal(true)
                 }}
                 previousPages={previousPages}
+                status={recordData.review_status}
             />
             <Box sx={styles.innerBox}>
                 <DocumentContainer
