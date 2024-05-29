@@ -233,10 +233,14 @@ export default function Record() {
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={`${recordData.recordIndex !== undefined ? recordData.recordIndex : ""}. ${recordData.name !== undefined ? recordData.name : ""}`}
-                actions={localStorage.getItem("role") && localStorage.getItem("role") === "10" && 
+                actions={(localStorage.getItem("role") && localStorage.getItem("role") === "10") ? 
                     {
-                        "Change name": () => setOpenUpdateNameModal(true),
+                        "Change record name": () => setOpenUpdateNameModal(true),
                         "Delete record": () => setOpenDeleteModal(true)
+                    }
+                    :
+                    {
+                        "Change record name": () => setOpenUpdateNameModal(true),
                     }
                 }
                 previousPages={previousPages}
