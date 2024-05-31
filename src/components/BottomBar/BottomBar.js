@@ -19,7 +19,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 
 export default function Bottombar(props) {
     let params = useParams(); 
-    const { onPreviousButtonClick,  onNextButtonClick, onReviewButtonClick, recordData, handleUpdateReviewStatus } = props;
+    const { onPreviousButtonClick,  onNextButtonClick, onReviewButtonClick, recordData, handleUpdateReviewStatus, promptResetRecord } = props;
     const [ openNotesModal, setOpenNotesModal ] = useState(false)
     const splitButtonOptions = {
         unreviewed: [
@@ -38,7 +38,7 @@ export default function Bottombar(props) {
         incomplete: [
             {
                 text: "Mark as unreviewed",
-                onClick: () => handleUpdateReviewStatus("unreviewed"),
+                onClick: promptResetRecord,
                 icon: <WarningIcon sx={{color: "#828282"}}/>,
                 selected: true
             },
@@ -51,7 +51,7 @@ export default function Bottombar(props) {
         defective: [
             {
                 text: "Mark as unreviewed",
-                onClick: () => handleUpdateReviewStatus("unreviewed"),
+                onClick: promptResetRecord,
                 icon: <WarningIcon sx={{color: "#828282"}}/>,
                 selected: true
             },
@@ -64,7 +64,7 @@ export default function Bottombar(props) {
         reviewed: [
             {
                 text: "Mark as unreviewed",
-                onClick: () => handleUpdateReviewStatus("unreviewed"),
+                onClick: promptResetRecord,
                 icon: <WarningIcon sx={{color: "#828282"}}/>,
             },
             {
