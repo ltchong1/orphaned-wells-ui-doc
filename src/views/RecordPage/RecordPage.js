@@ -116,9 +116,18 @@ export default function Record() {
         callAPI(
             updateRecord,
             [params.id, {data: recordData, type: "attributes"}],
-            (data) => setWasEdited(false),
+            handleSuccessfulAttributeUpdate,
             handleFailedUpdate
         )
+    }
+
+    const handleSuccessfulAttributeUpdate = (data) => {
+        setWasEdited(false)
+        let tempRecordData = {...recordData}
+        for (let key of Object.keys(data)) {
+            tempRecordData[key] = data[key]
+        }
+        setRecordData(tempRecordData)
     }
 
     const handleFailedUpdate = (data, response_status) => {
