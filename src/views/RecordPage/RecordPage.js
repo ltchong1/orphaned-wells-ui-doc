@@ -12,7 +12,8 @@ import ErrorBar from '../../components/ErrorBar/ErrorBar';
 
 export default function Record() {
     const [ recordData, setRecordData ] = useState({})
-    const [ attributesList, setAttributesList ] = useState([])
+    // const [ attributesList, setAttributesList ] = useState([])
+    const [ fullAttributesList, setFullAttributesList ] = useState([])
     const [ wasEdited, setWasEdited ] = useState(false)
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
     const [ openUpdateNameModal, setOpenUpdateNameModal ] = useState(false)
@@ -79,24 +80,39 @@ export default function Record() {
         setPreviousPages(tempPreviousPages)
 
         // convert attributes to list
-        let tempAttributesList = []
-        for (let attributeKey of Object.keys(data.attributes)) {
-            let attribute = data.attributes[attributeKey]
-            let attributeEntry = attribute
-            attributeEntry["key"] = attributeKey
-            tempAttributesList.push(attributeEntry)
+        // let tempAttributesList = []
+        // for (let attributeKey of Object.keys(data.attributes)) {
+        //     let attribute = data.attributes[attributeKey]
+        //     let attributeEntry = attribute
+        //     attributeEntry["key"] = attributeKey
+        //     tempAttributesList.push(attributeEntry)
+        //     if (attribute.subattributes) {
+        //         for (let sub_attributeKey of Object.keys(attribute.subattributes)) {
+        //             let sub_attribute = attribute.subattributes[sub_attributeKey]
+        //             let sub_attributeEntry = sub_attribute
+        //             sub_attributeEntry["key"] = sub_attributeKey
+        //             sub_attributeEntry["isSubattribute"] = true
+        //             sub_attributeEntry["topLevelAttribute"] = attributeKey
+        //             tempAttributesList.push(sub_attributeEntry)
+        //         }
+        //     }
+        // }
+
+        let tempFullAttributesList = []
+        for (let attribute of data.attributesList) {
+            tempFullAttributesList.push(attribute)
             if (attribute.subattributes) {
-                for (let sub_attributeKey of Object.keys(attribute.subattributes)) {
-                    let sub_attribute = attribute.subattributes[sub_attributeKey]
-                    let sub_attributeEntry = sub_attribute
-                    sub_attributeEntry["key"] = sub_attributeKey
-                    sub_attributeEntry["isSubattribute"] = true
-                    sub_attributeEntry["topLevelAttribute"] = attributeKey
-                    tempAttributesList.push(sub_attributeEntry)
+                let i = 0
+                for (let sub_attribute of attribute.subattributes) {
+                    sub_attribute["idx"] = i
+                    tempFullAttributesList.push(sub_attribute)
+                    i+=1
                 }
             }
         }
-        setAttributesList(tempAttributesList)
+        // setAttributesList(tempAttributesList)
+        console.log(tempFullAttributesList)
+        setFullAttributesList(tempFullAttributesList)
     }
 
     const handleChangeRecordName = (event) => {
@@ -272,8 +288,10 @@ export default function Record() {
                 <DocumentContainer
                     image={recordData.img_url}
                     attributes={recordData.attributes}
+                    attributesList={recordData.attributesList}
                     handleChangeValue={handleChangeValue}
-                    attributesList={attributesList}
+                    // attributesList={attributesList}
+                    fullAttributesList={fullAttributesList}
                     handleUpdateRecord={handleUpdateRecord}
                 />
             </Box>

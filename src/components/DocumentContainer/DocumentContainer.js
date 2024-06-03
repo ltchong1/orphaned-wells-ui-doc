@@ -30,10 +30,11 @@ const styles = {
 
 
 export default function DocumentContainer(props) {
-    const { image, attributes, handleChangeValue, attributesList, handleUpdateRecord } = props;
+    const { image, attributesList, fullAttributesList, handleChangeValue, handleUpdateRecord } = props;
     const [ displayPoints, setDisplayPoints ] = useState(null)
     const [ displayKey, setDisplayKey ] = useState(null)
     const [ displayKeyIndex, setDisplayKeyIndex ] = useState(null)
+    const [ displayKeySubattributeIndex, setDisplayKeySubattributeIndex ] = useState(null)
     const [ fullscreen, setFullscreen ] = useState(null)
     const [ gridWidths, setGridWidths ] = useState([5.9,0.2,5.9])
     const [ width, setWidth ] = useState("100%")
@@ -53,7 +54,7 @@ export default function DocumentContainer(props) {
 
     const tabCallback = () => {
         let tempIndex
-        if (displayKeyIndex === null || displayKeyIndex === attributesList.length - 1) {
+        if (displayKeyIndex === null || displayKeyIndex === fullAttributesList.length - 1) {
             tempIndex = 0
         } else {
             tempIndex = displayKeyIndex + 1
@@ -62,11 +63,12 @@ export default function DocumentContainer(props) {
         let i = 0;
         while (keepGoing && i < 200) {
             i+=1
-            let tempKey = attributesList[tempIndex].key
-            let tempVertices = attributesList[tempIndex].normalized_vertices
-            let isSubattribute = attributesList[tempIndex].isSubattribute
-            let topLevelAttribute = attributesList[tempIndex].topLevelAttribute
-            handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute)
+            let tempKey = fullAttributesList[tempIndex].key
+            let tempVertices = fullAttributesList[tempIndex].normalized_vertices
+            let isSubattribute = fullAttributesList[tempIndex].isSubattribute
+            let topLevelAttribute = fullAttributesList[tempIndex].topLevelAttribute
+            let subattributeIdx = fullAttributesList[tempIndex].idx
+            handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute, subattributeIdx, tempIndex)
             keepGoing = false 
             let elementId
             if (isSubattribute) {
@@ -99,7 +101,7 @@ export default function DocumentContainer(props) {
     const shiftTabCallback = () => {
         let tempIndex
         if (displayKeyIndex === null || displayKeyIndex === 0) {
-            tempIndex = attributesList.length - 1
+            tempIndex = fullAttributesList.length - 1
         } else {
             tempIndex = displayKeyIndex -1
         }
@@ -107,11 +109,12 @@ export default function DocumentContainer(props) {
         let i = 0;
         while (keepGoing && i < 200) {
             i+=1
-            let tempKey = attributesList[tempIndex].key
-            let tempVertices = attributesList[tempIndex].normalized_vertices
-            let isSubattribute = attributesList[tempIndex].isSubattribute
-            let topLevelAttribute = attributesList[tempIndex].topLevelAttribute
-            handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute)
+            let tempKey = fullAttributesList[tempIndex].key
+            let tempVertices = fullAttributesList[tempIndex].normalized_vertices
+            let isSubattribute = fullAttributesList[tempIndex].isSubattribute
+            let topLevelAttribute = fullAttributesList[tempIndex].topLevelAttribute
+            let subattributeIdx = fullAttributesList[tempIndex].idx
+            handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute, subattributeIdx, tempIndex)
             keepGoing = false 
             let elementId
             if (isSubattribute) {
@@ -145,8 +148,8 @@ export default function DocumentContainer(props) {
     useKeyDown("ArrowUp", shiftTabCallback, null, null, null);
     useKeyDown("ArrowDown", tabCallback, null, null, null);
 
-    const handleClickField = (key, normalized_vertices, isSubattribute, topLevelAttribute) => {
-        if(key === displayKey || !key) {
+    const handleClickField = (key, normalized_vertices, isSubattribute, topLevelAttribute, subattributeIdx, newIdx) => {
+        if((!isSubattribute && key === displayKey) || !key || (isSubattribute && key === displayKey && subattributeIdx === displayKeySubattributeIndex)) {
             setDisplayPoints(null)
             setDisplayKey(null)
             setDisplayKeyIndex(null)
@@ -158,15 +161,21 @@ export default function DocumentContainer(props) {
             // set display key index
             let keepGoing = true
             let i = -1
-            while (keepGoing && i < attributesList.length) {
+            while (keepGoing && i < fullAttributesList.length) {
                 i++
-                let tempAttr = attributesList[i]
+                let tempAttr = fullAttributesList[i]
                 if (key === tempAttr.key) {
-                    if (!isSubattribute) {
+                    if (newIdx) {
+                        setDisplayKeyIndex(newIdx)
+                        keepGoing = false
+                        if (isSubattribute) setDisplayKeySubattributeIndex(subattributeIdx)
+                    }
+                    else if (!isSubattribute) {
                         setDisplayKeyIndex(i)
                         keepGoing = false
-                    } else if(isSubattribute && topLevelAttribute === tempAttr.topLevelAttribute) {
+                    } else if(isSubattribute && topLevelAttribute === tempAttr.topLevelAttribute && i !== displayKeyIndex) {
                         setDisplayKeyIndex(i)
+                        setDisplayKeySubattributeIndex(subattributeIdx)
                         keepGoing = false
                     }
                 }
@@ -245,16 +254,18 @@ export default function DocumentContainer(props) {
                                     }
                                 </IconButton>
                             </Box>
-                            {attributes !== undefined && 
+                            {attributesList !== undefined && 
                                 <AttributesTable 
-                                    attributes={attributes}
+                                    // attributes={attributes}
+                                    attributesList={attributesList}
                                     handleClickField={handleClickField}
                                     handleChangeValue={handleChangeValue}
                                     fullscreen={fullscreen}
                                     displayKey={displayKey}
                                     forceOpenSubtable={forceOpenSubtable}
-                                    attributesList={attributesList}
+                                    fullAttributesList={fullAttributesList}
                                     displayKeyIndex={displayKeyIndex}
+                                    displayKeySubattributeIndex={displayKeySubattributeIndex}
                                     handleUpdateRecord={handleUpdateRecord}
                                 />
                             }
