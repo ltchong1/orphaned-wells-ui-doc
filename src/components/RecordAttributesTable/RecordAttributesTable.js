@@ -163,7 +163,7 @@ function AttributeRow(props) {
                             name={k}
                             size="small"
                             defaultValue={v.value} 
-                            onChange={handleChangeValue} 
+                            onChange={(e) => handleChangeValue(e, v.idx)} 
                             onFocus={(event) => event.target.select()}
                         />
                         :
@@ -290,7 +290,7 @@ function SubattributeRow(props) {
     }
 
     const handleUpdateValue = (event) => {
-        handleChangeValue(event, true, topLevelAttribute)
+        handleChangeValue(event, fullAttributesList[displayKeyIndex].idx, true, v.sub_idx, topLevelAttribute)
     }
 
     const handleClickEditIcon = (e) => {

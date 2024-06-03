@@ -67,7 +67,7 @@ export default function DocumentContainer(props) {
             let tempVertices = fullAttributesList[tempIndex].normalized_vertices
             let isSubattribute = fullAttributesList[tempIndex].isSubattribute
             let topLevelAttribute = fullAttributesList[tempIndex].topLevelAttribute
-            let subattributeIdx = fullAttributesList[tempIndex].idx
+            let subattributeIdx = fullAttributesList[tempIndex].sub_idx
             handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute, subattributeIdx, tempIndex)
             keepGoing = false 
             let elementId
@@ -113,7 +113,7 @@ export default function DocumentContainer(props) {
             let tempVertices = fullAttributesList[tempIndex].normalized_vertices
             let isSubattribute = fullAttributesList[tempIndex].isSubattribute
             let topLevelAttribute = fullAttributesList[tempIndex].topLevelAttribute
-            let subattributeIdx = fullAttributesList[tempIndex].idx
+            let subattributeIdx = fullAttributesList[tempIndex].sub_idx
             handleClickField(tempKey, tempVertices, isSubattribute, topLevelAttribute, subattributeIdx, tempIndex)
             keepGoing = false 
             let elementId
