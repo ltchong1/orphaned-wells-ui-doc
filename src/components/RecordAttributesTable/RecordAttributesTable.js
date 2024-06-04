@@ -35,7 +35,16 @@ const styles = {
 }
 
 export default function AttributesTable(props) {
-    const { attributesList, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, fullAttributesList, displayKeyIndex, displayKeySubattributeIndex, handleUpdateRecord } = props
+    const { 
+        attributesList,
+        handleClickField,
+        handleChangeValue,
+        fullscreen,
+        forceOpenSubtable,
+        displayKeyIndex,
+        displayKeySubattributeIndex,
+        handleUpdateRecord 
+    } = props
     const handleClickOutside = () => {
         handleClickField()
     }
@@ -57,12 +66,11 @@ export default function AttributesTable(props) {
                             key={v.key+" "+idx}
                             k={v.key}
                             v={v}
+                            idx={idx}
                             handleClickField={handleClickField}
                             handleChangeValue={handleChangeValue}
                             fullscreen={fullscreen}
-                            displayKey={displayKey}
                             forceOpenSubtable={forceOpenSubtable}
-                            fullAttributesList={fullAttributesList}
                             displayKeyIndex={displayKeyIndex}
                             displayKeySubattributeIndex={displayKeySubattributeIndex}
                             handleUpdateRecord={handleUpdateRecord}
@@ -75,30 +83,45 @@ export default function AttributesTable(props) {
 }
 
 function AttributeRow(props) { 
-    const { k, v, handleClickField, handleChangeValue, fullscreen, displayKey, forceOpenSubtable, fullAttributesList, displayKeyIndex, displayKeySubattributeIndex, handleUpdateRecord } = props
+    const { 
+        k, 
+        v, 
+        idx, 
+        handleClickField, 
+        handleChangeValue, 
+        fullscreen, 
+        forceOpenSubtable,
+        displayKeyIndex, 
+        displayKeySubattributeIndex, 
+        handleUpdateRecord 
+    } = props
     const [ editMode, setEditMode ] = useState(false)
     const [ openSubtable, setOpenSubtable ] = useState(false)
+    const [ isSelected, setIsSelected ] = useState(false)
 
     useEffect(() => {
-        if (k !== displayKey) {
+        // console.log("useeffect, displayKeyIndex === ")
+        if (idx === displayKeyIndex && (displayKeySubattributeIndex === null || displayKeySubattributeIndex === undefined)) setIsSelected(true)
+        else  {
+            setIsSelected(false)
             if (editMode) finishEditing()
         }
-    },[displayKey])
+    },[displayKeyIndex, displayKeySubattributeIndex])
 
     const handleClickInside = (e) => {
         e.stopPropagation()
-        handleClickField(k, v.normalized_vertices)
+        handleClickField(k, v.normalized_vertices, idx)
     }
 
     useKeyDown("Enter", () => {
-        if (k === displayKey) {
+        if (isSelected) {
             if (editMode) finishEditing()
             else setEditMode(true)
         }
     }, null, null, null)
 
     useKeyDown("Escape", () => {
-        if (k === displayKey) {
+        if (isSelected) {
             if (editMode) finishEditing()
         }
     }, null, null, null)
@@ -132,7 +155,7 @@ function AttributeRow(props) {
 
     return (
     <>
-        <TableRow id={k} sx={k === displayKey ? {backgroundColor: "#EDEDED"} : {}} onClick={handleClickInside}>
+        <TableRow id={k} sx={isSelected ? {backgroundColor: "#EDEDED"} : {}} onClick={handleClickInside}>
             <TableCell sx={styles.fieldKey}>
                 
                 <span>
@@ -169,7 +192,7 @@ function AttributeRow(props) {
                         :
                         <span>
                             {v.value}&nbsp;
-                            {k === displayKey && 
+                            {isSelected && 
                                 <IconButton sx={styles.rowIconButton} onClick={handleClickEditIcon}>
                                     <EditIcon sx={styles.rowIcon}/>
                                 </IconButton>
@@ -189,13 +212,11 @@ function AttributeRow(props) {
                 handleClickField={handleClickField}
                 handleChangeValue={handleChangeValue}
                 open={openSubtable}
-                topLevelAttribute={k}
                 fullscreen={fullscreen}
-                displayKey={displayKey}
-                fullAttributesList={fullAttributesList}
                 displayKeyIndex={displayKeyIndex}
                 handleUpdateRecord={handleUpdateRecord}
                 displayKeySubattributeIndex={displayKeySubattributeIndex}
+                topLevelIdx={idx}
             />
         }
     </>
@@ -203,7 +224,17 @@ function AttributeRow(props) {
 }
 
 function SubattributesTable(props) {
-    const { attributesList, handleClickField, handleChangeValue, open, topLevelAttribute, fullscreen, displayKey, fullAttributesList, displayKeyIndex, displayKeySubattributeIndex, handleUpdateRecord } = props
+    const { 
+        attributesList,
+        handleClickField,
+        handleChangeValue,
+        open,
+        topLevelIdx,
+        fullscreen,
+        displayKeyIndex,
+        displayKeySubattributeIndex,
+        handleUpdateRecord
+    } = props
 
     return (
         <TableRow>
@@ -229,14 +260,12 @@ function SubattributesTable(props) {
                             v={v}
                             handleClickField={handleClickField}
                             handleChangeValue={handleChangeValue}
-                            topLevelAttribute={topLevelAttribute}
                             fullscreen={fullscreen}
-                            displayKey={displayKey}
-                            fullAttributesList={fullAttributesList}
                             displayKeyIndex={displayKeyIndex}
                             handleUpdateRecord={handleUpdateRecord}
                             displayKeySubattributeIndex={displayKeySubattributeIndex}
                             idx={idx}
+                            topLevelIdx={topLevelIdx}
                         />
                     ))}
                     </TableBody>
@@ -249,31 +278,46 @@ function SubattributesTable(props) {
 }
 
 function SubattributeRow(props) { 
-    const { k, v, handleClickField, handleChangeValue, topLevelAttribute, fullscreen, displayKey, fullAttributesList, displayKeyIndex, displayKeySubattributeIndex, handleUpdateRecord, idx } = props
+    const { 
+        k, 
+        v,
+        handleClickField,
+        handleChangeValue,
+        topLevelIdx,
+        fullscreen,
+        displayKeyIndex,
+        displayKeySubattributeIndex,
+        handleUpdateRecord,
+        idx
+    } = props
     const [ editMode, setEditMode ] = useState(false)
+    const [ isSelected, setIsSelected ] = useState(false)
 
     useEffect(() => {
-        if (!(k === displayKey && topLevelAttribute === fullAttributesList[displayKeyIndex].topLevelAttribute && idx===displayKeySubattributeIndex)) {
+        if (displayKeyIndex === topLevelIdx && idx===displayKeySubattributeIndex) {
+            setIsSelected(true)
+        } else {
+            setIsSelected(false)
             if (editMode) finishEditing()
         }
-    },[displayKey, topLevelAttribute])
+    },[displayKeyIndex, topLevelIdx, displayKeySubattributeIndex])
 
     useKeyDown("Enter", () => {
-        if (k === displayKey && topLevelAttribute === fullAttributesList[displayKeyIndex].topLevelAttribute && idx===displayKeySubattributeIndex) {
+        if (isSelected) {
             if (editMode) finishEditing()
             else setEditMode(true)
         }
     }, null, null, null)
 
     useKeyDown("Escape", () => {
-        if (k === displayKey && topLevelAttribute === fullAttributesList[displayKeyIndex].topLevelAttribute && idx===displayKeySubattributeIndex) {
+        if (isSelected) {
             if (editMode) finishEditing()
         }
     }, null, null, null)
 
     const handleClickInside = (e) => {
         e.stopPropagation()
-        handleClickField(k, v.normalized_vertices, true, topLevelAttribute, idx)
+        handleClickField(k, v.normalized_vertices, topLevelIdx, true, idx)
     }
 
     const handleDoubleClick = () => {
@@ -290,7 +334,7 @@ function SubattributeRow(props) {
     }
 
     const handleUpdateValue = (event) => {
-        handleChangeValue(event, fullAttributesList[displayKeyIndex].idx, true, v.sub_idx, topLevelAttribute)
+        handleChangeValue(event, topLevelIdx, true, idx)
     }
 
     const handleClickEditIcon = (e) => {
@@ -306,13 +350,13 @@ function SubattributeRow(props) {
     return (
         <TableRow 
             key={k} 
-            id={`${topLevelAttribute}::${k}`} 
-            sx={(k === displayKey && topLevelAttribute === fullAttributesList[displayKeyIndex].topLevelAttribute && idx===displayKeySubattributeIndex) ? {backgroundColor: "#EDEDED"} : {}}
+            id={`${displayKeyIndex}::${displayKeySubattributeIndex}`} 
+            sx={isSelected ? {backgroundColor: "#EDEDED"} : {}}
             onClick={handleClickInside}
         >
             <TableCell sx={styles.fieldKey} >
             <span 
-                style={ (k === displayKey && topLevelAttribute === fullAttributesList[displayKeyIndex].topLevelAttribute && idx===displayKeySubattributeIndex) ? {fontWeight:"bold"} : {}}
+                style={isSelected ? {fontWeight:"bold"} : {}}
             >
                 {k}
             </span>
@@ -331,7 +375,7 @@ function SubattributeRow(props) {
                     :
                     <span>
                     {v.value}&nbsp;
-                        {(k === displayKey && topLevelAttribute === fullAttributesList[displayKeyIndex].topLevelAttribute && idx===displayKeySubattributeIndex) && 
+                        {isSelected && 
                             <IconButton sx={styles.rowIconButton} onClick={handleClickEditIcon}>
                                 <EditIcon sx={styles.rowIcon}/>
                             </IconButton>
