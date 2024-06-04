@@ -101,7 +101,7 @@ export default function DocumentContainer(props) {
 
         let topLevelAttribute = attributesList[tempIndex].key
         if (isSubattribute) {
-            setForceOpenSubtable(topLevelAttribute)
+            setForceOpenSubtable(tempIndex)
             elementId = `${tempIndex}::${tempSubIndex}`
         } 
         else elementId = `${tempKey}::${tempIndex}`
@@ -136,9 +136,6 @@ export default function DocumentContainer(props) {
             tempSubIndex = null
         } 
         else if (attributesList[displayKeyIndex].subattributes) {
-            // check if subattribute idx has not been set -> set it
-            // check if subattribute idx has reached the max -> reset it, increment primary index (unless we reached the max there)
-            // otherwise set subattribute idx to 0
             if (displayKeySubattributeIndex === null || displayKeySubattributeIndex === undefined) {
                 tempSubIndex = attributesList[displayKeyIndex].subattributes.length-1
                 tempIndex = displayKeyIndex
@@ -174,7 +171,7 @@ export default function DocumentContainer(props) {
 
         let topLevelAttribute = attributesList[tempIndex].key
         if (isSubattribute) {
-            setForceOpenSubtable(topLevelAttribute)
+            setForceOpenSubtable(tempIndex)
             elementId = `${tempIndex}::${tempSubIndex}`
         } 
         else elementId = `${tempKey}::${tempIndex}`

@@ -127,7 +127,7 @@ function AttributeRow(props) {
     }, null, null, null)
 
     useEffect(() => {
-        if (forceOpenSubtable === k) setOpenSubtable(true)
+        if (forceOpenSubtable === idx) setOpenSubtable(true)
     }, [forceOpenSubtable])
 
     const handleDoubleClick = () => {
