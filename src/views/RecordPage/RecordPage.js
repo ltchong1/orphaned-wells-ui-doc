@@ -142,7 +142,7 @@ export default function Record() {
         }
     }
 
-    const handleChangeValue = (event, topLevelIndex, isSubattribute, subIndex, topLevelAttribute) => {
+    const handleChangeValue = (event, topLevelIndex, isSubattribute, subIndex) => {
         let tempRecordData = {...recordData}
         let tempAttributesList = {...tempRecordData.attributesList}
         let tempAttribute

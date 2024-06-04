@@ -186,7 +186,7 @@ function AttributeRow(props) {
                             name={k}
                             size="small"
                             defaultValue={v.value} 
-                            onChange={(e) => handleChangeValue(e, v.idx)} 
+                            onChange={(e) => handleChangeValue(e, idx)} 
                             onFocus={(event) => event.target.select()}
                         />
                         :
