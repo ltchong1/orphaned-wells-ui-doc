@@ -52,10 +52,6 @@ export default function DocumentContainer(props) {
         setDisplayKeyIndex(null)
     },[params.id])
 
-    useEffect(( ) => {
-        console.log("displayKeySubattributeIndex: "+displayKeySubattributeIndex)
-    }, [displayKeySubattributeIndex])
-
     const tabCallback = () => {
         let tempIndex
         let tempSubIndex
@@ -108,7 +104,7 @@ export default function DocumentContainer(props) {
             setForceOpenSubtable(topLevelAttribute)
             elementId = `${tempIndex}::${tempSubIndex}`
         } 
-        else elementId = tempKey
+        else elementId = `${tempKey}::${tempIndex}`
         let element = document.getElementById(elementId)
         let waitTime = 0
         let containerElement = document.getElementById("table-container")
@@ -181,7 +177,7 @@ export default function DocumentContainer(props) {
             setForceOpenSubtable(topLevelAttribute)
             elementId = `${tempIndex}::${tempSubIndex}`
         } 
-        else elementId = tempKey
+        else elementId = `${tempKey}::${tempIndex}`
         let element = document.getElementById(elementId)
         let waitTime = 0
         let containerElement = document.getElementById("table-container")

@@ -155,7 +155,7 @@ function AttributeRow(props) {
 
     return (
     <>
-        <TableRow id={k} sx={isSelected ? {backgroundColor: "#EDEDED"} : {}} onClick={handleClickInside}>
+        <TableRow id={`${k}::${idx}`} sx={isSelected ? {backgroundColor: "#EDEDED"} : {}} onClick={handleClickInside}>
             <TableCell sx={styles.fieldKey}>
                 
                 <span>
@@ -350,7 +350,7 @@ function SubattributeRow(props) {
     return (
         <TableRow 
             key={k} 
-            id={`${displayKeyIndex}::${displayKeySubattributeIndex}`} 
+            id={`${topLevelIdx}::${idx}`} 
             sx={isSelected ? {backgroundColor: "#EDEDED"} : {}}
             onClick={handleClickInside}
         >
