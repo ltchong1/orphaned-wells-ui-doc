@@ -32,7 +32,7 @@ export const formatConfidence = (value) => {
   return `${percentageValue} %`
 }
 
-export const useKeyDown = (key, singleKeyCallback, shiftKeyCallback, controlKeyCallback, shiftAndControlKeyCallback) => {
+export const useKeyDown = (key, singleKeyCallback, shiftKeyCallback, controlKeyCallback, shiftAndControlKeyCallback, keepDefaultBehavior) => {
   /*
     hook for adding a callback function on a key down
     has options for:
@@ -46,7 +46,7 @@ export const useKeyDown = (key, singleKeyCallback, shiftKeyCallback, controlKeyC
     // event.ctrlKey - pressed Control key on Linux or Windows
     const wasKeyPressed = event.key === key;
     if (wasKeyPressed) {
-      event.preventDefault();
+      if(!keepDefaultBehavior) event.preventDefault();
       if ((event.metaKey || event.ctrlKey) && event.shiftKey && shiftAndControlKeyCallback) {
         shiftAndControlKeyCallback()
       }

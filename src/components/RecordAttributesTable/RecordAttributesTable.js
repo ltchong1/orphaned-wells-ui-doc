@@ -118,7 +118,7 @@ function AttributeRow(props) {
             if (editMode) finishEditing()
             else setEditMode(true)
         }
-    }, null, null, null)
+    }, null, null, null, true)
 
     useKeyDown("Escape", () => {
         if (isSelected) {
@@ -307,7 +307,7 @@ function SubattributeRow(props) {
             if (editMode) finishEditing()
             else setEditMode(true)
         }
-    }, null, null, null)
+    }, null, null, null, true)
 
     useKeyDown("Escape", () => {
         if (isSelected) {
