@@ -43,39 +43,41 @@ export default function AttributesTable(props) {
         forceOpenSubtable,
         displayKeyIndex,
         displayKeySubattributeIndex,
-        handleUpdateRecord 
+        handleUpdateRecord,
     } = props
-
-    useEffect(() => {
-        if (attributesList.length > 0) sortAttributes()
-    }, [attributesList])
 
     const handleClickOutside = () => {
         handleClickField()
     }
     let ref = useOutsideClick(handleClickOutside);
 
-    const sortAttributes = () => {
-        attributesList.sort(function(a, b) {
-            // check if coordinates are known
-            // place fields without coordinates below those with coordinates
-            if (!b.normalized_vertices && !a.normalized_vertices) return 0
-            else if(!b.normalized_vertices) return -1
-            else if(!a.normalized_vertices) return 1
-            
-            // compare y coordinate
-            let keyA = round(a.normalized_vertices[0][1], 2)
-            let keyB = round(b.normalized_vertices[0][1], 2)
-            if (keyA < keyB) return -1;
-            if (keyA > keyB) return 1;
-            else { // y coordinates are the same; compare x coordinates
-                let keyA = a.normalized_vertices[0][0]
-                let keyB = b.normalized_vertices[0][0]
+    const sortAttributes = (sortBy) => {
+        // TODO:
+        // need to use a placeholder list for attributes list (probably send this down from the top level)
+        // update the placeholder list, but need to keep track of the original indexes
+        if (sortBy === "coordinates") {
+            let tempAttributesList = [...attributesList]
+            tempAttributesList.sort(function(a, b) {
+                // check if coordinates are known
+                // place fields without coordinates below those with coordinates
+                if (!b.normalized_vertices && !a.normalized_vertices) return 0
+                else if(!b.normalized_vertices) return -1
+                else if(!a.normalized_vertices) return 1
+                
+                // compare y coordinate
+                let keyA = round(a.normalized_vertices[0][1], 2)
+                let keyB = round(b.normalized_vertices[0][1], 2)
                 if (keyA < keyB) return -1;
                 if (keyA > keyB) return 1;
-                else return 0
-            }
-        });
+                else { // y coordinates are the same; compare x coordinates
+                    let keyA = a.normalized_vertices[0][0]
+                    let keyB = b.normalized_vertices[0][0]
+                    if (keyA < keyB) return -1;
+                    if (keyA > keyB) return 1;
+                    else return 0
+                }
+            });
+        }
     }
 
     return (
