@@ -317,7 +317,7 @@ export const processor_data =
                 {name: "WELL_NAME_AND_NO", data_type: "plain_text", occurrence: "required_once"}
                 // {name: "Workover", data_type: "checkbox", occurrence: "optional_once"}
             ],
-            documentType: "Well Completion Report type A",
+            documentType: "Well Completion Report generic",
         },
         {
             id: "10aa396edc8a5178",
