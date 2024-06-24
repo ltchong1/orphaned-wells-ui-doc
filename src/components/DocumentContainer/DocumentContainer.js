@@ -30,7 +30,7 @@ const styles = {
 
 
 export default function DocumentContainer(props) {
-    const { image, attributesList, handleChangeValue, handleUpdateRecord } = props;
+    const { imageFiles, image, attributesList, handleChangeValue, handleUpdateRecord, setImgIndex } = props;
     const [ displayPoints, setDisplayPoints ] = useState(null)
     const [ displayKey, setDisplayKey ] = useState(null)
     const [ displayKeyIndex, setDisplayKeyIndex ] = useState(null)
@@ -45,6 +45,23 @@ export default function DocumentContainer(props) {
         height: height,
     }
     let params = useParams(); 
+
+    useEffect(() => {
+        if (displayKeyIndex && displayKeySubattributeIndex) {
+            // console.log(attributesList[displayKeyIndex].subattributes[displayKeySubattributeIndex])
+            let newImgIdx = attributesList[displayKeyIndex].subattributes[displayKeySubattributeIndex].page
+            if (newImgIdx !== undefined && newImgIdx !== null) setImgIndex(newImgIdx)
+        } 
+        else if (displayKeyIndex) {
+            // console.log(attributesList[displayKeyIndex])
+            let newImgIdx = attributesList[displayKeyIndex].page
+            if (newImgIdx !== undefined && newImgIdx !== null) setImgIndex(newImgIdx)
+        }
+        else {
+            setImgIndex(0)
+        }
+        
+    },[displayKeyIndex, displayKeySubattributeIndex])
 
     useEffect(() => {
         setDisplayPoints(null)
