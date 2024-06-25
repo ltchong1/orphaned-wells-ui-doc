@@ -368,6 +368,7 @@ export default function DocumentContainer(props) {
                                         <ImageCropper 
                                             image={imageFile}
                                             imageIdx={idx}
+                                            highlightedImageIdxIndex={imgIndex}
                                             displayPoints={displayPoints}
                                             disabled
                                             fullscreen={fullscreen}
