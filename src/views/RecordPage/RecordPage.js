@@ -12,7 +12,6 @@ import ErrorBar from '../../components/ErrorBar/ErrorBar';
 
 export default function Record() {
     const [ recordData, setRecordData ] = useState({})
-    const [ imgIndex, setImgIndex ] = useState(0)
     const [ fullAttributesList, setFullAttributesList ] = useState([])
     const [ wasEdited, setWasEdited ] = useState(false)
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
@@ -265,14 +264,12 @@ export default function Record() {
             />
             <Box sx={styles.innerBox}>
                 <DocumentContainer
-                    image={recordData.img_urls ? recordData.img_urls[imgIndex] : null}
                     imageFiles={recordData.img_urls}
                     attributesList={recordData.attributesList}
                     handleChangeValue={handleChangeValue}
                     // attributesList={attributesList}
                     fullAttributesList={fullAttributesList}
                     handleUpdateRecord={handleUpdateRecord}
-                    setImgIndex={setImgIndex}
                 />
             </Box>
             <Bottombar
