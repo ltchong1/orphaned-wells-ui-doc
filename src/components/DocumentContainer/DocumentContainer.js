@@ -276,8 +276,8 @@ export default function DocumentContainer(props) {
         let imageContainerElement = document.getElementById(imageContainerId)
         let imageElement = document.getElementById(heightId)
         let scrollAmount = top * imageElement.clientHeight * imageFiles.length
-        // we're scrolling this amount from the top, so subtract 50 to ensure highlighted box isnt cut off
-        scrollAmount -= 50
+        // we're scrolling this amount from the top, so subtract 100 to ensure highlighted box isnt cut off
+        scrollAmount -=100
         if (imageContainerElement) {
             imageContainerElement.scrollTo({
                     top: scrollAmount,
