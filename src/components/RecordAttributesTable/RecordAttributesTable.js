@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
-import { Box, TextField, Collapse, Typography, IconButton } from '@mui/material';
+import { Box, TextField, Collapse, Typography, IconButton, Badge } from '@mui/material';
 import { formatConfidence, useKeyDown, useOutsideClick, round } from '../../assets/helperFunctions';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -233,7 +233,41 @@ function AttributeRow(props) {
                 </TableCell>
             }
             
-            <TableCell>{formatConfidence(v.confidence)}</TableCell>
+            <TableCell align="right">
+                {
+                    v.edited ? 
+                    <p>
+                        <Badge 
+                            color="blue" 
+                            variant="dot"
+                            sx={{
+                            "& .MuiBadge-badge": {
+                                color: "#2196F3",
+                                backgroundColor: "#2196F3"
+                            }
+                            }}
+                            
+                        /> 
+                        &nbsp; Edited
+                    </p> :
+                    v.confidence ? formatConfidence(v.confidence) :
+                    <p style={{color:"#9E0101"}}>
+                        <Badge 
+                            color="blue" 
+                            variant="dot"
+                            sx={{
+                            "& .MuiBadge-badge": {
+                                color: "#9E0101",
+                                backgroundColor: "#9E0101"
+                            }
+                            }}
+                            
+                        /> 
+                        &nbsp; Not found
+                    </p>
+                    
+                }
+            </TableCell>
         </TableRow>
         {
             v.subattributes &&
