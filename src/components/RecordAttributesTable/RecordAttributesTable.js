@@ -236,7 +236,7 @@ function AttributeRow(props) {
             <TableCell align="right">
                 {
                     v.edited ? 
-                    <p>
+                    <p style={{padding:0, margin:0}}>
                         <Badge 
                             color="blue" 
                             variant="dot"
@@ -250,8 +250,12 @@ function AttributeRow(props) {
                         /> 
                         &nbsp; Edited
                     </p> :
-                    v.confidence ? formatConfidence(v.confidence) :
-                    <p style={{color:"#9E0101"}}>
+                    v.confidence ? 
+                    <p style={{padding:0, margin:0}}>
+                        {formatConfidence(v.confidence)}
+                    </p>
+                     :
+                    <p style={{padding:0, margin:0}}>
                         <Badge 
                             color="blue" 
                             variant="dot"
