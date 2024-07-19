@@ -248,7 +248,7 @@ function AttributeRow(props) {
                 {/* 
                     case 1: attribute has been edited: show 'edited'
                     case 2: attribute has not been found (no confidence): show 'not found'
-                    case 3: attribute has is found and not edited
+                    case 3: attribute was found and not edited
                         a: attribute has no value: show confidence in red
                         b: attribute has low confidence: show confidence in red
                         c: else: show confidence in black
