@@ -31,8 +31,19 @@ const styles = {
     },
     rowIcon: {
         fontSize: "16px"
+    },
+    flaggedConfidence: {
+        padding:0,
+        margin:0,
+        color: "#9E0101",
+    },
+    unflaggedConfidence: {
+        padding:0,
+        margin:0,
     }
 }
+
+const LOW_CONFIDENCE = 0.01
 
 export default function AttributesTable(props) {
     const { 
@@ -234,6 +245,14 @@ function AttributeRow(props) {
             }
             
             <TableCell align="right">
+                {/* 
+                    case 1: attribute has been edited: show 'edited'
+                    case 2: attribute has not been found (no confidence): show 'not found'
+                    case 3: attribute has is found and not edited
+                        a: attribute has no value: show confidence in red
+                        b: attribute has low confidence: show confidence in red
+                        c: else: show confidence in black
+                */}
                 {
                     v.edited ? 
                     <p style={{padding:0, margin:0}}>
@@ -250,12 +269,8 @@ function AttributeRow(props) {
                         /> 
                         &nbsp; Edited
                     </p> :
-                    v.confidence ? 
-                    <p style={{padding:0, margin:0}}>
-                        {formatConfidence(v.confidence)}
-                    </p>
-                     :
-                    <p style={{padding:0, margin:0}}>
+                     (v.confidence === null) ? 
+                     <p style={{padding:0, margin:0}}>
                         <Badge 
                             color="blue" 
                             variant="dot"
@@ -269,7 +284,16 @@ function AttributeRow(props) {
                         /> 
                         &nbsp; Not found
                     </p>
-                    
+                      :
+                      <p 
+                        style={
+                            (v.value === "" || v.confidence < LOW_CONFIDENCE) ? 
+                            styles.flaggedConfidence :
+                            styles.unflaggedConfidence
+                        }
+                    >
+                        {formatConfidence(v.confidence)}
+                    </p>
                 }
             </TableCell>
         </TableRow>
