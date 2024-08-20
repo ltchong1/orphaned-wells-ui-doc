@@ -143,7 +143,6 @@ export default function RecordsTable(props) {
 
   const handleChangeRowsPerPage = (event) => {
     let newSize = parseInt(event.target.value)
-    if (newSize === -1) newSize = 10000
     setPageSize(newSize)
   }
 
