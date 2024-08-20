@@ -143,6 +143,7 @@ export default function RecordsTable(props) {
 
   const handleChangeRowsPerPage = (event) => {
     let newSize = parseInt(event.target.value)
+    if (newSize === -1) newSize = 10000
     setPageSize(newSize)
   }
 
@@ -238,7 +239,7 @@ export default function RecordsTable(props) {
         <TableFooter>
           <TableRow>
             <TablePagination
-              rowsPerPageOptions={[10, 25, 50, 100]}
+              rowsPerPageOptions={[10, 25, 50, 100, { label: 'All', value: -1 }]}
               colSpan={3}
               count={recordCount}
               rowsPerPage={pageSize}
