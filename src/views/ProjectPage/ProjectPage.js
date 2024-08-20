@@ -15,6 +15,11 @@ export default function Project() {
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
     const [ openUpdateNameModal, setOpenUpdateNameModal ] = useState(false)
     const [ projectName, setProjectName ] = useState("")
+    const [ currentPage, setCurrentPage ] = useState(0)
+    const [ pageSize, setPageSize ] = useState(5)
+    const [ sortBy, setSortBy ] = useState('dateCreated')
+    const [ sortAscending, setSortAscending ] = useState(1)
+    const [ filterBy, setFilterBy ] = useState({})
     let params = useParams(); 
     let navigate = useNavigate();
 
@@ -23,9 +28,11 @@ export default function Project() {
     }, [params.id])
 
     const loadData = () => {
+        let sort = [sortBy, sortAscending]
+        let args = [params.id, currentPage, pageSize, sort, filterBy]
         callAPI(
             getProjectData,
-            [params.id],
+            args,
             handleSuccess,
             (e) => {console.error('error getting project data: ',e)}
         )
