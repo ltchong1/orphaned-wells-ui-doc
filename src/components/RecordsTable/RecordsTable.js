@@ -1,14 +1,19 @@
 import { useEffect, Fragment, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Box, Paper, IconButton } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, TablePagination } from '@mui/material'
+import { Button, Box, Paper, IconButton } from '@mui/material'
+import { useTheme } from '@mui/material/styles';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ErrorIcon from '@mui/icons-material/Error';
 import CachedIcon from '@mui/icons-material/Cached';
-import CancelIcon from '@mui/icons-material/Cancel';
 import WarningIcon from '@mui/icons-material/Warning';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import LastPageIcon from '@mui/icons-material/LastPage';
 import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelectDialog';
 import { formatDate, average, formatConfidence } from '../../assets/helperFunctions';
 import Notes from '../Notes/Notes';
@@ -20,7 +25,18 @@ const TABLE_ATTRIBUTES = {
 
 export default function RecordsTable(props) {
   let navigate = useNavigate()
-  const { projectData, records, setRecords } = props;
+  const { 
+    projectData, 
+    records, 
+    setRecords, 
+    pageSize,
+    currentPage,
+    sortBy,
+    filterBy,
+    recordCount,
+    setPageSize,
+    setCurrentPage
+  } = props;
   const [ openColumnSelect, setOpenColumnSelect ] = useState(false)
   const [ attributes, setAttributes ] = useState([])
   const [ showNotes, setShowNotes ] = useState(false)
@@ -121,6 +137,15 @@ export default function RecordsTable(props) {
     }
   }
 
+  const handleChangePage = (newPage) => {
+    setCurrentPage(newPage)
+  }
+
+  const handleChangeRowsPerPage = (event) => {
+    let newSize = parseInt(event.target.value)
+    setPageSize(newSize)
+  }
+
   const tableRow = (row, idx) => {
       return (
         <TableRow
@@ -209,6 +234,29 @@ export default function RecordsTable(props) {
             
           ))}
         </TableBody>
+
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 50, 100]}
+              colSpan={3}
+              count={recordCount}
+              rowsPerPage={pageSize}
+              page={currentPage}
+              slotProps={{
+                select: {
+                  inputProps: {
+                    'aria-label': 'rows per page',
+                  },
+                  native: true,
+                },
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
       </Table>
           { projectData && 
             <ColumnSelectDialog
@@ -227,5 +275,59 @@ export default function RecordsTable(props) {
         onClose={handleCloseNotesModal}
       />
     </TableContainer>
+  );
+}
+
+function TablePaginationActions(props) {
+  const theme = useTheme();
+  const { count, page, rowsPerPage, onPageChange } = props;
+
+  const handleFirstPageButtonClick = (event) => {
+    onPageChange(0);
+  };
+
+  const handleBackButtonClick = (event) => {
+    onPageChange(page - 1);
+  };
+
+  const handleNextButtonClick = (event) => {
+    onPageChange(page + 1);
+  };
+
+  const handleLastPageButtonClick = (event) => {
+    onPageChange(Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
+
+  return (
+    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+      <IconButton
+        onClick={handleFirstPageButtonClick}
+        disabled={page === 0}
+        aria-label="first page"
+      >
+        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+      </IconButton>
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+      </IconButton>
+      <IconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="next page"
+      >
+        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+      </IconButton>
+      <IconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label="last page"
+      >
+        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+      </IconButton>
+    </Box>
   );
 }
