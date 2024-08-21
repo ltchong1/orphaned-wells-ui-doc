@@ -132,6 +132,7 @@ export default function Project() {
                     recordCount={recordCount}
                     setPageSize={setPageSize}
                     setCurrentPage={setCurrentPage}
+                    setFilterBy={setFilterBy}
                 />
             </Box>
             { showDocumentModal && 

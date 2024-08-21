@@ -36,25 +36,28 @@ export default function RecordsTable(props) {
     filterBy,
     recordCount,
     setPageSize,
-    setCurrentPage
+    setCurrentPage,
+    setFilterBy
   } = props;
   const [ openColumnSelect, setOpenColumnSelect ] = useState(false)
   const [ attributes, setAttributes ] = useState([])
   const [ showNotes, setShowNotes ] = useState(false)
   const [ notesRecordId, setNotesRecordId ] = useState(null)
   const [ notes, setNotes ] = useState(null)
-  const filterOptions = [
-    {
-      key: "review_status",
-      displayName: "Review Status",
-      options: [
-        { name: "reviewed", checked: true },
-        { name: "unreviewed", checked: true },
-        { name: "incomplete", checked: true },
-        { name: "defective", checked: true },
-      ]
-    },
-  ]
+  const [ filterOptions, setFilterOptions ] = useState(
+    [
+      {
+        key: "review_status",
+        displayName: "Review Status",
+        options: [
+          { name: "reviewed", checked: true },
+          { name: "unreviewed", checked: true },
+          { name: "incomplete", checked: true },
+          { name: "defective", checked: true },
+        ]
+      },
+    ]
+  )
 
   useEffect(() => {
       if (projectData) {
@@ -157,8 +160,32 @@ export default function RecordsTable(props) {
     }
   }
 
-  const handleFilterOption = (filter, option) => {
-    console.log("selected "+ filter + ":" + option)
+  const handleFilterOption = (filterName, optionName) => {
+    // console.log("selected "+ filterName + ":" + optionName)
+
+    // update checkboxes
+    let tempFilterOptions = [...filterOptions]
+    let filter = tempFilterOptions.find((element) => element.key === filterName);
+    let options = filter.options
+    let option = options.find((element) => element.name === optionName)
+    option.checked = !option.checked
+    setFilterOptions(tempFilterOptions)
+
+    // update filtering. if all options are checked, remove filter entirely
+    let allOptionsTrue = true
+    let tempFilterBy = {...filterBy}
+    let currentFilter = tempFilterBy.filterName;
+    if (currentFilter === undefined) currentFilter = { "$in": []}
+    for (let each of options) {
+      if (each.checked) currentFilter["$in"].push(each.name)
+      else allOptionsTrue = false
+    }
+    if (allOptionsTrue) {
+      delete tempFilterBy[filterName]
+    } else {
+      tempFilterBy[filterName] = currentFilter
+    }
+    setFilterBy(tempFilterBy)
   }
 
   const handleChangePage = (newPage) => {
