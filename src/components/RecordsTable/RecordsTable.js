@@ -1,7 +1,7 @@
 import { useEffect, Fragment, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, TablePagination } from '@mui/material'
-import { Button, Box, Paper, IconButton } from '@mui/material'
+import { Button, Box, Paper, IconButton, Grid } from '@mui/material'
 import { useTheme } from '@mui/material/styles';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -17,6 +17,7 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelectDialog';
 import { formatDate, average, formatConfidence } from '../../assets/helperFunctions';
 import Notes from '../Notes/Notes';
+import TableFilters from '../TableFilters/TableFilters';
 
 const TABLE_ATTRIBUTES = {
   displayNames: ["Record Name", "Date Uploaded", "API Number", "Mean Confidence", "Lowest Confidence", "Notes", "Digitization Status", "Review Status"],
@@ -42,6 +43,18 @@ export default function RecordsTable(props) {
   const [ showNotes, setShowNotes ] = useState(false)
   const [ notesRecordId, setNotesRecordId ] = useState(null)
   const [ notes, setNotes ] = useState(null)
+  const filterOptions = [
+    {
+      key: "review_status",
+      displayName: "Review Status",
+      options: [
+        { name: "reviewed", checked: true },
+        { name: "unreviewed", checked: true },
+        { name: "incomplete", checked: true },
+        { name: "defective", checked: true },
+      ]
+    },
+  ]
 
   useEffect(() => {
       if (projectData) {
@@ -62,10 +75,17 @@ export default function RecordsTable(props) {
       },
     },
     topSection: {
-      display: 'flex', 
-      justifyContent: 'flex-end', 
       marginTop: 2, 
-      marginRight: 2
+      marginRight: 2,
+      paddingX: 3,
+    },
+    topSectionLeft: {
+      display: "flex",
+      justifyContent: "flex-start",
+    },
+    topSectionRight: {
+      display: "flex",
+      justifyContent: "flex-end",
     },
     headerCell: {
       fontWeight: "bold"
@@ -135,6 +155,10 @@ export default function RecordsTable(props) {
       }
 
     }
+  }
+
+  const handleFilterOption = (filter, option) => {
+    console.log("selected "+ filter + ":" + option)
   }
 
   const handleChangePage = (newPage) => {
@@ -207,12 +231,20 @@ export default function RecordsTable(props) {
   return (
     <TableContainer component={Paper}>
       <Box sx={styles.topSection}>
-        {/* <Button variant="contained" onClick={handleDownloadCSV} startIcon={<DownloadIcon/>}> */}
-        {projectData && 
-          <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<IosShareIcon/>}>
-            Export Project
-        </Button>
-        }
+        <Grid container>
+          <Grid item sx={styles.topSectionLeft} xs={6}>
+            <TableFilters filterOptions={filterOptions} handleSelectFilter={handleFilterOption}/>
+          </Grid>
+          <Grid item sx={styles.topSectionRight} xs={6}>
+            {projectData && 
+              <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<IosShareIcon/>}>
+                Export Project
+              </Button>
+            }
+          </Grid>
+        </Grid>
+        
+        
         
       </Box>
       <Table sx={{ minWidth: 650, marginTop: 1 }} aria-label="records table" size="small">
