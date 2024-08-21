@@ -161,8 +161,6 @@ export default function RecordsTable(props) {
   }
 
   const handleFilterOption = (filterName, optionName) => {
-    // console.log("selected "+ filterName + ":" + optionName)
-
     // update checkboxes
     let tempFilterOptions = [...filterOptions]
     let filter = tempFilterOptions.find((element) => element.key === filterName);
