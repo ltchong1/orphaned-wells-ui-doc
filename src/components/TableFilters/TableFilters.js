@@ -193,8 +193,7 @@ function TableFilter(props) {
 
     const styles = {
         menuContainer: {
-            maxWidth: "75vw",
-            minWidth: '25vw'
+            width: "50vw",
         },
         filterTitle: {
             fontWeight: "bold",
@@ -203,38 +202,20 @@ function TableFilter(props) {
         },
     }
 
-    const handleChangeOperator = (e) => {
-        let newOperator = e.target.value
-        updateCurrentFilters(idx, 'operator', newOperator)
-    }
-
-    const handleChangeFilter = (e) => {
-        let newFilter = e.target.value;
-        updateCurrentFilters(idx, 'filter', newFilter)
-    }
-
     const handleUpdateCheckbox = (name) => {
         updateCurrentFilters(idx, 'value', name)
     }
 
-    const handleUpdateString = (e) => {
-        updateCurrentFilters(idx, 'value', e.target.value)
-    }
-
-    const handleUpdateDate = (e) => {
-        updateCurrentFilters(idx, 'value', e.target.value)
+    const handleChange = (e, field) => {
+        updateCurrentFilters(idx, field, e.target.value)
     }
 
     return (    
-        <Grid sx={styles.menuContainer} container px={2} spacing={5}>
-            <Grid item xs={0.5} >
-                <Box sx={{display: 'flex', justifyContent: 'flex-start'}}>
-                    <IconButton onClick={() => removeFilter(idx)}>
-                        <CloseIcon/>
-                    </IconButton>
-                </Box>
-            </Grid>
-            <Grid item xs={3.7}>
+        <Grid sx={styles.menuContainer} container px={2} spacing={2}>
+            <Grid item xs={4} sx={{display: 'flex', justifyContent: 'flex-start'}}>
+                <IconButton sx={{mr: 1}} onClick={() => removeFilter(idx)}>
+                    <CloseIcon/>
+                </IconButton>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel id="column-select-label">Column</InputLabel>
                     <Select
@@ -242,7 +223,7 @@ function TableFilter(props) {
                         id="column-select"
                         value={thisFilter.key}
                         label="Column"
-                        onChange={handleChangeFilter}
+                        onChange={(e) => handleChange(e, 'filter')}
                     >
                         {Object.entries(FILTER_OPTIONS).map(([key, filter])=> (
                             <MenuItem key={key} value={key}>{filter.displayName}</MenuItem>
@@ -251,7 +232,7 @@ function TableFilter(props) {
                 </FormControl>
             </Grid>
             
-            <Grid item xs={3.7}>
+            <Grid item xs={2}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel id="operator-select-label">Operator</InputLabel>
                     <Select
@@ -259,7 +240,7 @@ function TableFilter(props) {
                         id="operator-select"
                         value={operator}
                         label="Operator"
-                        onChange={handleChangeOperator}
+                        onChange={(e) => handleChange(e, 'operator')}
                     > 
                         {
                             thisFilter.type === 'checkbox' ? 
@@ -284,7 +265,7 @@ function TableFilter(props) {
                 </FormControl>
             </Grid>
 
-            <Grid item xs={3.7}>
+            <Grid item xs={6}>
                 {
                     thisFilter.type === 'checkbox' ? 
                     <FormControl variant="standard" fullWidth>
@@ -293,8 +274,7 @@ function TableFilter(props) {
                             labelId="values-checkbox-label"
                             id="values-checkbox"
                             multiple
-                            value={[thisFilter.selectedOptions]}
-                            // onChange={handleChange}
+                            value={thisFilter.selectedOptions}
                             label="Values"
                             renderValue={(selected) => selected.join(', ')}
                         >
@@ -320,8 +300,9 @@ function TableFilter(props) {
                             id="string-value" 
                             label="Value" 
                             variant="standard"
-                            onChange={handleUpdateString}
+                            onChange={(e) => handleChange(e, 'value')}
                             value={thisFilter.value}
+                            fullWidth
                         />
                     </Box> :
                     thisFilter.type === 'date' &&
@@ -329,8 +310,12 @@ function TableFilter(props) {
                         inputProps={{
                             "step": 1,
                         }}
+                        InputLabelProps={{ shrink: true }} 
                         type="date"
-                        onChange={handleUpdateDate}
+                        label="Date" 
+                        variant="standard"
+                        onChange={(e) => handleChange(e, 'value')}
+                        // fullWidth
                     />
                 }
                 
