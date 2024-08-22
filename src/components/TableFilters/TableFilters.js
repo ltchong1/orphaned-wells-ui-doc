@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Menu, MenuItem, Checkbox, Box, TextField, Select, FormControl, InputLabel, Grid, OutlinedInput, ListItemText } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 
 export default function TableFilters(props) {
     const { filterOptions, handleSelectFilter } = props;
@@ -107,8 +109,8 @@ export default function TableFilters(props) {
                     </Grid>
 
                     <Grid item xs={12} sx={{display: 'flex', justifyContent: 'space-between'}}>
-                        <Button>+ New Filter</Button>
-                        <Button>Remove All</Button>
+                        <Button startIcon={<AddIcon/>}>New Filter</Button>
+                        <Button startIcon={<DeleteIcon/>}>Remove All</Button>
                     </Grid>
                 </Grid>
 
