@@ -226,11 +226,13 @@ function TableFilter(props) {
     }
 
     return (    
-        <Grid sx={styles.menuContainer} container px={5} spacing={5}>
-            <Grid item xs={0.5} sx={{display: 'flex', justifyContent: 'flex-start'}}>
-                <IconButton onClick={() => removeFilter(idx)}>
-                    <CloseIcon/>
-                </IconButton>
+        <Grid sx={styles.menuContainer} container px={2} spacing={5}>
+            <Grid item xs={0.5} >
+                <Box sx={{display: 'flex', justifyContent: 'flex-start'}}>
+                    <IconButton onClick={() => removeFilter(idx)}>
+                        <CloseIcon/>
+                    </IconButton>
+                </Box>
             </Grid>
             <Grid item xs={3.7}>
                 <FormControl variant="standard" fullWidth>
