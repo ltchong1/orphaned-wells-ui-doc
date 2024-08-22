@@ -67,6 +67,11 @@ export default function TableFilters(props) {
     const styles = {
         tableFilter: {
             paddingBottom: 2,
+        },
+        box: {
+            width: '50vw',
+            display: 'flex',
+            justifyContent: 'space-between'
         }
     }
     const [anchorFilterMenu, setAnchorFilterMenu] = useState(null);
@@ -150,7 +155,7 @@ export default function TableFilters(props) {
                         'aria-labelledby': 'filter-button',
                     }}
                 >
-                    <Box p={2} sx={{display: 'flex', justifyContent: 'space-between'}}>
+                    <Box p={2} sx={styles.box}>
                         <Button onClick={addNewFilter} startIcon={<AddIcon/>}>New Filter</Button>
                         <Button onClick={removeAllFilters} startIcon={<DeleteIcon/>}>Remove All</Button>
                     </Box>
@@ -193,7 +198,7 @@ function TableFilter(props) {
 
     const styles = {
         menuContainer: {
-            width: "50vw",
+            // width: "50vw",
         },
         filterTitle: {
             fontWeight: "bold",
