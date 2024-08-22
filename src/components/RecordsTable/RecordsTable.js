@@ -49,12 +49,14 @@ export default function RecordsTable(props) {
       {
         key: "review_status",
         displayName: "Review Status",
+        type: "checkbox",
         options: [
           { name: "reviewed", checked: true },
           { name: "unreviewed", checked: true },
           { name: "incomplete", checked: true },
           { name: "defective", checked: true },
-        ]
+        ],
+        selectedOptions: ["reviewed", "unreviewed", "incomplete", "defective"]
       },
     ]
   )
@@ -167,6 +169,11 @@ export default function RecordsTable(props) {
     let options = filter.options
     let option = options.find((element) => element.name === optionName)
     option.checked = !option.checked
+    let selectedOptions = filter.selectedOptions
+    let idx = selectedOptions.indexOf(optionName)
+    if (idx === -1) selectedOptions.push(optionName)
+    else selectedOptions.splice(idx, 1)
+
     setFilterOptions(tempFilterOptions)
 
     // update filtering. if all options are checked, remove filter entirely
@@ -183,6 +190,7 @@ export default function RecordsTable(props) {
     } else {
       tempFilterBy[filterName] = currentFilter
     }
+
     setFilterBy(tempFilterBy)
   }
 
