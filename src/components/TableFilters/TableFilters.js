@@ -6,64 +6,11 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import { FILTER_OPTIONS } from '../../assets/filterOptions';
 
-// const FILTER_OPTIONS = [
-//       {
-//         key: "review_status",
-//         displayName: "Review Status",
-//         type: "checkbox",
-//         options: [
-//           { name: "reviewed", checked: true },
-//           { name: "unreviewed", checked: true },
-//           { name: "incomplete", checked: true },
-//           { name: "defective", checked: true },
-//         ],
-//         selectedOptions: ["reviewed", "unreviewed", "incomplete", "defective"]
-//       },
-//       {
-//         key: "name",
-//         displayName: "Record Name",
-//         type: "string",
-//       },
-//       {
-//         key: "dateCreated",
-//         displayName: "Date Uploaded",
-//         type: "date",
-//       },
-// ]
-
-const FILTER_OPTIONS = {
-    review_status: {
-        key: 'review_status',
-        displayName: "Review Status",   
-        type: "checkbox",
-        operator: 'equals',
-        options: [
-            { name: "reviewed", checked: true },
-            { name: "unreviewed", checked: true },
-            { name: "incomplete", checked: true },
-            { name: "defective", checked: true },
-        ],
-        selectedOptions: ["reviewed", "unreviewed", "incomplete", "defective"]
-    },
-    name: {
-      key: "name",
-      displayName: "Record Name",
-      type: "string",
-      operator: 'equals',
-      value: ''
-    },
-    dateCreated: {
-      key: "dateCreated",
-      displayName: "Date Uploaded",
-      type: "date",
-      operator: 'is',
-      value: ''
-    }
-}
 
 export default function TableFilters(props) {
-    const { applyFilters } = props;
+    const { applyFilters, appliedFilters } = props;
     const styles = {
         tableFilter: {
             paddingBottom: 2,
@@ -129,8 +76,40 @@ export default function TableFilters(props) {
     }
 
     const handleApplyFilters = () => {
-        console.log('applying filters')
-        console.log(currentFilters)
+        // reformat filters to pymongo style
+        let filterBy = {}
+        for (let filter of currentFilters) {
+            if (filter.type === 'checkbox') {
+                let allOptionsTrue = true
+                let currentFilter = { "$in": []}
+                for (let each of filter.options) {
+                    if (each.checked) currentFilter["$in"].push(each.name)
+                    else allOptionsTrue = false
+                }
+                if (!allOptionsTrue) { // if all options are checked, no need to add the filter
+                    filterBy[filter.key] = currentFilter
+                }
+            }
+            else if (filter.type === 'date') {
+                let date_value = filter.value
+                let date_start = Math.floor(new Date(date_value).getTime() / 1000)
+                let date_end = date_start+(24*3600)
+                if (filter.operator === 'is') {
+                    filterBy[filter.key] = { "$gte": date_start, "$lt": date_end}
+                } else if (filter.operator === 'before') {
+                    filterBy[filter.key] = { "$lt": date_start}
+                } else if (filter.operator === 'after') {
+                    filterBy[filter.key] = { "$gt": date_end}
+                }
+                
+            }
+            else if (filter.type === 'string') {
+                if (filter.operator === 'equals') filterBy[filter.key] = filter.value
+                else if (filter.operator === 'contains') filterBy[filter.key] = {"$regex": filter.value}
+            }
+        }
+        console.log(filterBy)
+        applyFilters(filterBy, currentFilters)
     }
 
     return (
@@ -141,9 +120,9 @@ export default function TableFilters(props) {
             aria-haspopup="true"
             aria-expanded={openFilterMenu ? 'true' : undefined}
             onClick={handleOpenFilters}
-            endIcon={<FilterListIcon/>}
+            startIcon={<FilterListIcon/>}
         >
-            Filters
+            Filters {appliedFilters.length > 0 && '('+appliedFilters.length+')'}
         </Button>
         {
                 <Menu
@@ -179,7 +158,7 @@ export default function TableFilters(props) {
                         <Button 
                             onClick={handleApplyFilters} 
                             variant='contained'
-                            disabled={currentFilters.length === 0}
+                            // disabled={currentFilters.length === 0}
                         >
                             Apply Filters
                         </Button>
@@ -320,6 +299,7 @@ function TableFilter(props) {
                         label="Date" 
                         variant="standard"
                         onChange={(e) => handleChange(e, 'value')}
+                        value={thisFilter.value}
                         // fullWidth
                     />
                 }

@@ -44,35 +44,7 @@ export default function RecordsTable(props) {
   const [ showNotes, setShowNotes ] = useState(false)
   const [ notesRecordId, setNotesRecordId ] = useState(null)
   const [ notes, setNotes ] = useState(null)
-  const [ selectedFilters, setSelectedFilters ] = useState([])
-  const [ filterOptions, setFilterOptions ] = useState(
-    [
-      {
-        key: "review_status",
-        displayName: "Review Status",
-        type: "checkbox",
-        options: [
-          { name: "reviewed", checked: true },
-          { name: "unreviewed", checked: true },
-          { name: "incomplete", checked: true },
-          { name: "defective", checked: true },
-        ],
-        selectedOptions: ["reviewed", "unreviewed", "incomplete", "defective"]
-      },
-      {
-        key: "name",
-        displayName: "Record Name",
-        value: '',
-        type: "string",
-      },
-      {
-        key: "dateCreated",
-        displayName: "Date Uploaded",
-        value: '',
-        type: "date",
-      },
-    ]
-  )
+  const [ appliedFilters, setAppliedFilters ] = useState([])
 
   useEffect(() => {
       if (projectData) {
@@ -175,43 +147,11 @@ export default function RecordsTable(props) {
     }
   }
 
-  const handleApplyFilters = (newFilters) => {
-    console.log('applying filters: ')
-    console.log(newFilters)
-    setSelectedFilters(newFilters)
+  const handleApplyFilters = (newFilters, appliedFilters) => {
+    setAppliedFilters(appliedFilters)
+    setFilterBy(newFilters)
   }
 
-  const handleFilterOption = (filterName, optionName) => {
-    // update checkboxes
-    let tempFilterOptions = [...filterOptions]
-    let filter = tempFilterOptions.find((element) => element.key === filterName);
-    let options = filter.options
-    let option = options.find((element) => element.name === optionName)
-    option.checked = !option.checked
-    let selectedOptions = filter.selectedOptions
-    let idx = selectedOptions.indexOf(optionName)
-    if (idx === -1) selectedOptions.push(optionName)
-    else selectedOptions.splice(idx, 1)
-
-    setFilterOptions(tempFilterOptions)
-
-    // update filtering. if all options are checked, remove filter entirely
-    let allOptionsTrue = true
-    let tempFilterBy = {...filterBy}
-    let currentFilter = tempFilterBy.filterName;
-    if (currentFilter === undefined) currentFilter = { "$in": []}
-    for (let each of options) {
-      if (each.checked) currentFilter["$in"].push(each.name)
-      else allOptionsTrue = false
-    }
-    if (allOptionsTrue) {
-      delete tempFilterBy[filterName]
-    } else {
-      tempFilterBy[filterName] = currentFilter
-    }
-
-    setFilterBy(tempFilterBy)
-  }
 
   const handleChangePage = (newPage) => {
     setCurrentPage(newPage)
@@ -285,7 +225,7 @@ export default function RecordsTable(props) {
       <Box sx={styles.topSection}>
         <Grid container>
           <Grid item sx={styles.topSectionLeft} xs={6}>
-            <TableFilters filterOptions={filterOptions} applyFilters={handleApplyFilters}/>
+            <TableFilters applyFilters={handleApplyFilters} appliedFilters={appliedFilters}/>
           </Grid>
           <Grid item sx={styles.topSectionRight} xs={6}>
             {projectData && 
