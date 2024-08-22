@@ -53,29 +53,34 @@ export default function TableFilters(props) {
             Filters
         </Button>
         {
-            <Menu
-                id="filter-menu"
-                anchorEl={anchorFilterMenu}
-                open={openFilterMenu}
-                onClose={handleClose}
-                MenuListProps={{
-                    'aria-labelledby': 'filter-button',
-                }}
-            >
-                {
-                    currentFilters.map((filter, idx) => (
-                        <TableFilter
-                            key={idx}
-                            filterOptions={filterOptions}
-                            handleSelectFilter={handleSelectFilter}
-                            updateCurrentFilters={updateCurrentFilters}
-                            filterIndex={filter.filterIndex}
-                            operator={filter.operator}
-                            idx={idx}
-                        />
-                    ))
-                }
-            </Menu>
+                <Menu
+                    id="filter-menu"
+                    anchorEl={anchorFilterMenu}
+                    open={openFilterMenu}
+                    onClose={handleClose}
+                    MenuListProps={{
+                        'aria-labelledby': 'filter-button',
+                    }}
+                >
+                    {
+                        currentFilters.map((filter, idx) => (
+                            <TableFilter
+                                key={idx}
+                                filterOptions={filterOptions}
+                                handleSelectFilter={handleSelectFilter}
+                                updateCurrentFilters={updateCurrentFilters}
+                                filterIndex={filter.filterIndex}
+                                operator={filter.operator}
+                                idx={idx}
+                            />
+                        ))
+                    }
+                    <Box p={2} sx={{display: 'flex', justifyContent: 'space-between'}}>
+                        <Button startIcon={<AddIcon/>}>New Filter</Button>
+                        <Button startIcon={<DeleteIcon/>}>Remove All</Button>
+                    </Box>
+                </Menu>
+
         }
         
         </div>
@@ -208,11 +213,6 @@ function TableFilter(props) {
                     />
                 }
                 
-            </Grid>
-
-            <Grid item xs={12} sx={{display: 'flex', justifyContent: 'space-between'}}>
-                <Button startIcon={<AddIcon/>}>New Filter</Button>
-                <Button startIcon={<DeleteIcon/>}>Remove All</Button>
             </Grid>
         </Grid>
     );
