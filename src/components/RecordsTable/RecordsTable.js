@@ -58,6 +58,18 @@ export default function RecordsTable(props) {
         ],
         selectedOptions: ["reviewed", "unreviewed", "incomplete", "defective"]
       },
+      {
+        key: "name",
+        displayName: "Record Name",
+        value: '',
+        type: "string",
+      },
+      {
+        key: "dateCreated",
+        displayName: "Date Uploaded",
+        value: '',
+        type: "date",
+      },
     ]
   )
 
