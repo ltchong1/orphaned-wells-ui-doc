@@ -44,6 +44,7 @@ export default function RecordsTable(props) {
   const [ showNotes, setShowNotes ] = useState(false)
   const [ notesRecordId, setNotesRecordId ] = useState(null)
   const [ notes, setNotes ] = useState(null)
+  const [ selectedFilters, setSelectedFilters ] = useState([])
   const [ filterOptions, setFilterOptions ] = useState(
     [
       {
@@ -174,6 +175,12 @@ export default function RecordsTable(props) {
     }
   }
 
+  const handleApplyFilters = (newFilters) => {
+    console.log('applying filters: ')
+    console.log(newFilters)
+    setSelectedFilters(newFilters)
+  }
+
   const handleFilterOption = (filterName, optionName) => {
     // update checkboxes
     let tempFilterOptions = [...filterOptions]
@@ -278,7 +285,7 @@ export default function RecordsTable(props) {
       <Box sx={styles.topSection}>
         <Grid container>
           <Grid item sx={styles.topSectionLeft} xs={6}>
-            <TableFilters filterOptions={filterOptions} handleSelectFilter={handleFilterOption}/>
+            <TableFilters filterOptions={filterOptions} applyFilters={handleApplyFilters}/>
           </Grid>
           <Grid item sx={styles.topSectionRight} xs={6}>
             {projectData && 

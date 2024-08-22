@@ -1,20 +1,76 @@
 import React, { useState } from 'react';
-import { Button, Menu, MenuItem, Checkbox, Box, TextField } from '@mui/material';
+import { Button, Menu, MenuItem, Checkbox, Box, TextField, IconButton } from '@mui/material';
 import { Select, FormControl, InputLabel, Grid, OutlinedInput, ListItemText } from '@mui/material';
 // import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+
+// const FILTER_OPTIONS = [
+//       {
+//         key: "review_status",
+//         displayName: "Review Status",
+//         type: "checkbox",
+//         options: [
+//           { name: "reviewed", checked: true },
+//           { name: "unreviewed", checked: true },
+//           { name: "incomplete", checked: true },
+//           { name: "defective", checked: true },
+//         ],
+//         selectedOptions: ["reviewed", "unreviewed", "incomplete", "defective"]
+//       },
+//       {
+//         key: "name",
+//         displayName: "Record Name",
+//         type: "string",
+//       },
+//       {
+//         key: "dateCreated",
+//         displayName: "Date Uploaded",
+//         type: "date",
+//       },
+// ]
+
+const FILTER_OPTIONS = {
+    review_status: {
+        key: 'review_status',
+        displayName: "Review Status",   
+        type: "checkbox",
+        operator: 'equals',
+        options: [
+            { name: "reviewed", checked: true },
+            { name: "unreviewed", checked: true },
+            { name: "incomplete", checked: true },
+            { name: "defective", checked: true },
+        ],
+        selectedOptions: ["reviewed", "unreviewed", "incomplete", "defective"]
+    },
+    name: {
+      key: "name",
+      displayName: "Record Name",
+      type: "string",
+      operator: 'equals',
+      value: ''
+    },
+    dateCreated: {
+      key: "dateCreated",
+      displayName: "Date Uploaded",
+      type: "date",
+      operator: 'is',
+      value: ''
+    }
+}
 
 export default function TableFilters(props) {
-    const { filterOptions, handleSelectFilter } = props;
-    const [anchorFilterMenu, setAnchorFilterMenu] = useState(null);
-    const [ currentFilters, setCurrentFilters ] = useState([
-        {
-            filterIndex: 0,
-            operator: 'equals'
+    const { applyFilters } = props;
+    const styles = {
+        tableFilter: {
+            paddingBottom: 2,
         }
-    ])
+    }
+    const [anchorFilterMenu, setAnchorFilterMenu] = useState(null);
+    const [ currentFilters, setCurrentFilters ] = useState([])
     const openFilterMenu = Boolean(anchorFilterMenu);
 
     const handleOpenFilters = (event) => {
@@ -27,17 +83,49 @@ export default function TableFilters(props) {
     const updateCurrentFilters = (idx, field, newValue) => {
         let tempFilters = [...currentFilters]
         let tempFilter = {...tempFilters[idx]}
-        tempFilter[field] = newValue
-        if (field === 'filterIndex') {
-            if (filterOptions[newValue].type === 'date')  {
-                tempFilter['operator'] = 'is'
-            }
-            else { 
-                tempFilter['operator'] = 'equals'
+        if (field === 'filter') {
+            let updatedValue = structuredClone(FILTER_OPTIONS[newValue])
+            tempFilter=updatedValue
+            
+        } else if (field === 'operator') {
+            tempFilter['operator'] = newValue
+        } else if (field === 'value') {
+            if (tempFilter.type === 'checkbox') {
+                let options = tempFilter.options
+                let option = options.find((element) => element.name === newValue)
+                option.checked = !option.checked
+                let selectedOptions = tempFilter.selectedOptions
+                let idx = selectedOptions.indexOf(newValue)
+                if (idx === -1) selectedOptions.push(newValue)
+                else selectedOptions.splice(idx, 1)
+            } else {
+                tempFilter['value'] = newValue
             }
         }
+
         tempFilters[idx] = tempFilter
         setCurrentFilters(tempFilters)
+    }
+
+    const addNewFilter = () => {
+        let tempFilters = [...currentFilters]
+        tempFilters.push(structuredClone(FILTER_OPTIONS['review_status']))
+        setCurrentFilters(tempFilters)
+    }
+
+    const removeFilter = (idx) => {
+        let tempFilters = [...currentFilters]
+        tempFilters.splice(idx, 1)
+        setCurrentFilters(tempFilters)
+    }
+
+    const removeAllFilters = () => {
+        setCurrentFilters([])
+    }
+
+    const handleApplyFilters = () => {
+        console.log('applying filters')
+        console.log(currentFilters)
     }
 
     return (
@@ -62,22 +150,34 @@ export default function TableFilters(props) {
                         'aria-labelledby': 'filter-button',
                     }}
                 >
+                    <Box p={2} sx={{display: 'flex', justifyContent: 'space-between'}}>
+                        <Button onClick={addNewFilter} startIcon={<AddIcon/>}>New Filter</Button>
+                        <Button onClick={removeAllFilters} startIcon={<DeleteIcon/>}>Remove All</Button>
+                    </Box>
                     {
                         currentFilters.map((filter, idx) => (
-                            <TableFilter
-                                key={idx}
-                                filterOptions={filterOptions}
-                                handleSelectFilter={handleSelectFilter}
-                                updateCurrentFilters={updateCurrentFilters}
-                                filterIndex={filter.filterIndex}
-                                operator={filter.operator}
-                                idx={idx}
-                            />
+                            <Box key={idx} sx={styles.tableFilter}>
+                                <TableFilter
+                                    thisFilter={currentFilters[idx]}
+                                    updateCurrentFilters={updateCurrentFilters}
+                                    filterIndex={filter.filterIndex}
+                                    operator={filter.operator}
+                                    idx={idx}
+                                    removeFilter={removeFilter}
+                                />
+                            </Box>
+                            
                         ))
                     }
-                    <Box p={2} sx={{display: 'flex', justifyContent: 'space-between'}}>
-                        <Button startIcon={<AddIcon/>}>New Filter</Button>
-                        <Button startIcon={<DeleteIcon/>}>Remove All</Button>
+                    
+                    <Box sx={{display: 'flex', justifyContent: 'space-around', paddingBottom: 2}}>
+                        <Button 
+                            onClick={handleApplyFilters} 
+                            variant='contained'
+                            disabled={currentFilters.length === 0}
+                        >
+                            Apply Filters
+                        </Button>
                     </Box>
                 </Menu>
 
@@ -89,7 +189,7 @@ export default function TableFilters(props) {
 
 
 function TableFilter(props) {
-    const { filterOptions, handleSelectFilter, updateCurrentFilters, filterIndex, operator, idx } = props;
+    const { thisFilter, updateCurrentFilters, operator, idx, removeFilter } = props;
 
     const styles = {
         menuContainer: {
@@ -108,31 +208,48 @@ function TableFilter(props) {
         updateCurrentFilters(idx, 'operator', newOperator)
     }
 
-    const handleChangeFilterIndex = (e) => {
-        let newFilterIndex = e.target.value;
-        updateCurrentFilters(idx, 'filterIndex', newFilterIndex)
+    const handleChangeFilter = (e) => {
+        let newFilter = e.target.value;
+        updateCurrentFilters(idx, 'filter', newFilter)
+    }
+
+    const handleUpdateCheckbox = (name) => {
+        updateCurrentFilters(idx, 'value', name)
+    }
+
+    const handleUpdateString = (e) => {
+        updateCurrentFilters(idx, 'value', e.target.value)
+    }
+
+    const handleUpdateDate = (e) => {
+        updateCurrentFilters(idx, 'value', e.target.value)
     }
 
     return (    
         <Grid sx={styles.menuContainer} container px={5} spacing={5}>
-            <Grid item xs={4}>
+            <Grid item xs={0.5} sx={{display: 'flex', justifyContent: 'flex-start'}}>
+                <IconButton onClick={() => removeFilter(idx)}>
+                    <CloseIcon/>
+                </IconButton>
+            </Grid>
+            <Grid item xs={3.7}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel id="column-select-label">Column</InputLabel>
                     <Select
                         labelId="column-select-label"
                         id="column-select"
-                        value={filterIndex}
+                        value={thisFilter.key}
                         label="Column"
-                        onChange={handleChangeFilterIndex}
+                        onChange={handleChangeFilter}
                     >
-                        {filterOptions.map((filter, idx)=> (
-                            <MenuItem key={idx} value={idx}>{filter.displayName}</MenuItem>
+                        {Object.entries(FILTER_OPTIONS).map(([key, filter])=> (
+                            <MenuItem key={key} value={key}>{filter.displayName}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
             </Grid>
             
-            <Grid item xs={4}>
+            <Grid item xs={3.7}>
                 <FormControl variant="standard" fullWidth>
                     <InputLabel id="operator-select-label">Operator</InputLabel>
                     <Select
@@ -143,18 +260,18 @@ function TableFilter(props) {
                         onChange={handleChangeOperator}
                     > 
                         {
-                            filterOptions[filterIndex].type === 'checkbox' ? 
+                            thisFilter.type === 'checkbox' ? 
                             [
                                 <MenuItem key={'checkbox1'} value={"equals"}>Equals</MenuItem>
                             ]
                             :
-                            filterOptions[filterIndex].type === 'string' ? 
+                            thisFilter.type === 'string' ? 
                             [
                                 <MenuItem key={'string1'} value={"equals"}>Equals</MenuItem>,
                                 <MenuItem key={'string2'} value={"contains"}>Contains</MenuItem>
                             ]
                             : 
-                            filterOptions[filterIndex].type === 'date' &&
+                            thisFilter.type === 'date' &&
                             [
                                 <MenuItem key={'date1'} value={"is"}>Is</MenuItem>,
                                 <MenuItem key={'date2'} value={"before"}>Is Before</MenuItem>,
@@ -165,25 +282,25 @@ function TableFilter(props) {
                 </FormControl>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={3.7}>
                 {
-                    filterOptions[filterIndex].type === 'checkbox' ? 
+                    thisFilter.type === 'checkbox' ? 
                     <FormControl variant="standard" fullWidth>
                         <InputLabel id="values-checkbox-label">Values</InputLabel>
                         <Select
                             labelId="values-checkbox-label"
                             id="values-checkbox"
                             multiple
-                            value={[filterOptions[filterIndex].selectedOptions]}
+                            value={[thisFilter.selectedOptions]}
                             // onChange={handleChange}
                             label="Values"
                             renderValue={(selected) => selected.join(', ')}
                         >
-                        {filterOptions[filterIndex].options.map((option) => (
+                        {thisFilter.options.map((option) => (
                             <MenuItem 
                                 key={option.name} 
-                                value={option.name} 
-                                onClick={() => handleSelectFilter(filterOptions[filterIndex].key, option.name)}
+                                value={option.name}
+                                onClick={() => handleUpdateCheckbox(option.name)}
                             >
                                 <Checkbox checked={option.checked} />
                                 <ListItemText primary={option.name} />
@@ -191,7 +308,7 @@ function TableFilter(props) {
                         ))}
                         </Select>
                     </FormControl> :
-                    filterOptions[filterIndex].type === 'string' ?
+                    thisFilter.type === 'string' ?
                     <Box
                         component="form"
                         noValidate
@@ -200,16 +317,18 @@ function TableFilter(props) {
                         <TextField 
                             id="string-value" 
                             label="Value" 
-                            variant="standard" 
-                            value={filterOptions[filterIndex].value}
+                            variant="standard"
+                            onChange={handleUpdateString}
+                            value={thisFilter.value}
                         />
                     </Box> :
-                    filterOptions[filterIndex].type === 'date' &&
+                    thisFilter.type === 'date' &&
                     <TextField 
                         inputProps={{
                             "step": 1,
                         }}
                         type="date"
+                        onChange={handleUpdateDate}
                     />
                 }
                 
