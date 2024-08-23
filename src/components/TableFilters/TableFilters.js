@@ -81,15 +81,16 @@ export default function TableFilters(props) {
         // reformat filters to pymongo style
         let filterBy = {}
         for (let filter of currentFilters) {
+            let nextFilter;
             if (filter.type === 'checkbox') {
                 let allOptionsTrue = true
-                let currentFilter = { "$in": []}
+                nextFilter = { "$in": []}
                 for (let each of filter.options) {
-                    if (each.checked) currentFilter["$in"].push(each.name)
+                    if (each.checked) nextFilter["$in"].push(each.name)
                     else allOptionsTrue = false
                 }
-                if (!allOptionsTrue) { // if all options are checked, no need to add the filter
-                    filterBy[filter.key] = currentFilter
+                if (allOptionsTrue) { // if all options are checked, no need to add the filter
+                    nextFilter = {}
                 }
             }
             else if (filter.type === 'date') {
@@ -97,17 +98,23 @@ export default function TableFilters(props) {
                 let date_start = Math.floor(new Date(date_value).getTime() / 1000)
                 let date_end = date_start+(24*3600)
                 if (filter.operator === 'is') {
-                    filterBy[filter.key] = { "$gte": date_start, "$lt": date_end}
+                    nextFilter = { "$gte": date_start, "$lt": date_end}
                 } else if (filter.operator === 'before') {
-                    filterBy[filter.key] = { "$lt": date_start}
+                    nextFilter = { "$lt": date_start}
                 } else if (filter.operator === 'after') {
-                    filterBy[filter.key] = { "$gt": date_end}
+                    nextFilter = { "$gt": date_end}
                 }
                 
             }
             else if (filter.type === 'string') {
-                if (filter.operator === 'equals') filterBy[filter.key] = filter.value
-                else if (filter.operator === 'contains') filterBy[filter.key] = {"$regex": filter.value}
+                if (filter.operator === 'equals') nextFilter = filter.value
+                else if (filter.operator === 'contains') nextFilter = {"$regex": filter.value}
+            }
+
+            if (Object.keys(filterBy).includes(filter.key)) { // merge them
+                filterBy[filter.key] = {...filterBy[filter.key], ...nextFilter}
+            } else { // add key
+                filterBy[filter.key] = nextFilter;
             }
         }
         console.log(filterBy)
