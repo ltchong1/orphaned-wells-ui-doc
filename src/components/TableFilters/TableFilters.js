@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Menu, MenuItem, Checkbox, Box, TextField, IconButton } from '@mui/material';
-import { Select, FormControl, InputLabel, Grid, OutlinedInput, ListItemText } from '@mui/material';
+import { Select, FormControl, InputLabel, Grid, ListItemText, Badge } from '@mui/material';
 // import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -129,9 +129,13 @@ export default function TableFilters(props) {
             aria-haspopup="true"
             aria-expanded={openFilterMenu ? 'true' : undefined}
             onClick={handleOpenFilters}
-            startIcon={<FilterListIcon/>}
+            startIcon={
+                <Badge badgeContent={appliedFilters.length} color="primary">
+                    <FilterListIcon/>
+                </Badge>
+            }
         >
-            Filters {appliedFilters.length > 0 && '('+appliedFilters.length+')'}
+            Filters
         </Button>
         {
                 <Draggable handle="#filter-menu">
@@ -297,7 +301,7 @@ function TableFilter(props) {
                             variant="standard"
                             onChange={(e) => handleChange(e, 'value')}
                             value={thisFilter.value}
-                            fullWidth
+                            // fullWidth
                         />
                     </Box> :
                     thisFilter.type === 'date' &&
