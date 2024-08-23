@@ -1,6 +1,6 @@
 import { useEffect, Fragment, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, TablePagination } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, TablePagination, Icon } from '@mui/material'
 import { Button, Box, Paper, IconButton, Grid } from '@mui/material'
 import { useTheme } from '@mui/material/styles';
 import IosShareIcon from '@mui/icons-material/IosShare';
@@ -13,6 +13,8 @@ import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelectDialog';
 import { formatDate, average, formatConfidence } from '../../assets/helperFunctions';
@@ -21,8 +23,10 @@ import TableFilters from '../TableFilters/TableFilters';
 
 const TABLE_ATTRIBUTES = {
   displayNames: ["Record Name", "Date Uploaded", "API Number", "Mean Confidence", "Lowest Confidence", "Notes", "Digitization Status", "Review Status"],
-  keyNames: ["name", "contributor", "dateCreated", "API_NUMBER", "confidence_median", "confidence_lowest", "status", "review_status"],
+  keyNames: ["name", "dateCreated", "API_NUMBER", "confidence_median", "confidence_lowest", "notes", "status", "review_status"],
 }
+
+const SORTABLE_COLUMNS = ["name", "dateCreated", "status", "review_status"]
 
 export default function RecordsTable(props) {
   let navigate = useNavigate()
@@ -33,10 +37,13 @@ export default function RecordsTable(props) {
     pageSize,
     currentPage,
     sortBy,
+    sortAscending,
     recordCount,
     setPageSize,
     setCurrentPage,
-    setFilterBy
+    setFilterBy,
+    setSortBy,
+    setSortAscending
   } = props;
   const [ openColumnSelect, setOpenColumnSelect ] = useState(false)
   const [ attributes, setAttributes ] = useState([])
@@ -161,6 +168,23 @@ export default function RecordsTable(props) {
     setPageSize(newSize)
   }
 
+  const handleSort = (key) => {
+    if (SORTABLE_COLUMNS.includes(key)) {
+      if (sortBy === key) setSortAscending(sortAscending * -1)
+        else {
+          setSortBy(key)
+          setSortAscending(1)
+        }
+    }
+    
+  }
+
+  const getParagraphStyle = (key) => {
+    let paragraphStyle = {margin: 0}
+    if (SORTABLE_COLUMNS.includes(key)) paragraphStyle['cursor'] = 'pointer'
+    return paragraphStyle
+  }
+
   const tableRow = (row, idx) => {
       return (
         <TableRow
@@ -244,7 +268,22 @@ export default function RecordsTable(props) {
             <TableCell></TableCell>
             {
                 TABLE_ATTRIBUTES.displayNames.map((attribute, idx) => (
-                    <TableCell sx={styles.headerCell} key={idx} align={idx > 0 ? "right" : "left"}>{attribute}</TableCell>
+                    <TableCell sx={styles.headerCell} key={idx} align={idx > 0 ? "right" : "left"}>
+                      <p style={getParagraphStyle(TABLE_ATTRIBUTES.keyNames[idx])} onClick={() => handleSort(TABLE_ATTRIBUTES.keyNames[idx])}>
+                        
+                        {TABLE_ATTRIBUTES.keyNames[idx] === sortBy &&
+                          <IconButton onClick={() => setSortAscending(sortAscending * -1)}>
+                            {
+                              sortAscending === 1 ? 
+                                <KeyboardArrowUpIcon /> :
+                              sortAscending === -1 &&
+                                <KeyboardArrowDownIcon />
+                            }
+                          </IconButton>
+                        }
+                        {attribute}
+                      </p>
+                    </TableCell>
                 ))
             }
           </TableRow>

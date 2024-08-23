@@ -137,6 +137,8 @@ export default function Project() {
                     setPageSize={setPageSize}
                     setCurrentPage={setCurrentPage}
                     setFilterBy={setFilterBy}
+                    setSortBy={setSortBy}
+                    setSortAscending={setSortAscending}
                 />
             </Box>
             { showDocumentModal && 
