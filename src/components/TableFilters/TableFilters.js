@@ -6,6 +6,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import Draggable from 'react-draggable';
 import { FILTER_OPTIONS } from '../../assets/filterOptions';
 
 
@@ -126,6 +127,7 @@ export default function TableFilters(props) {
             Filters {appliedFilters.length > 0 && '('+appliedFilters.length+')'}
         </Button>
         {
+                <Draggable handle="#filter-menu">
                 <Menu
                     id="filter-menu"
                     anchorEl={anchorFilterMenu}
@@ -165,6 +167,7 @@ export default function TableFilters(props) {
                         </Button>
                     </Box>
                 </Menu>
+                </Draggable>
 
         }
         
