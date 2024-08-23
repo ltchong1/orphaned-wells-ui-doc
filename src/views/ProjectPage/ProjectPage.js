@@ -132,7 +132,7 @@ export default function Project() {
                     pageSize={pageSize}
                     currentPage={currentPage}
                     sortBy={sortBy}
-                    filterBy={filterBy}
+                    sortAscending={sortAscending}
                     recordCount={recordCount}
                     setPageSize={setPageSize}
                     setCurrentPage={setCurrentPage}

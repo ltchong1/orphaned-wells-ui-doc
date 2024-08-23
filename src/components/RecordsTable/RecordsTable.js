@@ -33,7 +33,6 @@ export default function RecordsTable(props) {
     pageSize,
     currentPage,
     sortBy,
-    filterBy,
     recordCount,
     setPageSize,
     setCurrentPage,
@@ -171,7 +170,7 @@ export default function RecordsTable(props) {
             <TableCell align="right">{row.recordIndex}.</TableCell>
             <TableCell>{row.name}</TableCell>
             {/* <TableCell>{row.contributor.name}</TableCell> */}
-            <TableCell>{formatDate(row.dateCreated)}</TableCell>
+            <TableCell align="right">{formatDate(row.dateCreated)}</TableCell>
             <TableCell align="right">{row.status === "digitized" ? getAPINumber(row) : null}</TableCell>
             <TableCell align="right">{row.status === "digitized" ? calculateAverageConfidence(row.attributesList) : null}</TableCell>
             <TableCell align="right">{row.status === "digitized" ? calculateLowestConfidence(row.attributesList) : null}</TableCell>
@@ -245,7 +244,7 @@ export default function RecordsTable(props) {
             <TableCell></TableCell>
             {
                 TABLE_ATTRIBUTES.displayNames.map((attribute, idx) => (
-                    <TableCell sx={styles.headerCell} key={idx} align={idx > 1 ? "right" : "left"}>{attribute}</TableCell>
+                    <TableCell sx={styles.headerCell} key={idx} align={idx > 0 ? "right" : "left"}>{attribute}</TableCell>
                 ))
             }
           </TableRow>
