@@ -6,6 +6,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import Draggable from 'react-draggable';
 import { FILTER_OPTIONS } from '../../assets/filterOptions';
 
@@ -150,7 +151,7 @@ export default function TableFilters(props) {
                 >
                     <Box p={2} sx={styles.box}>
                         <Button onClick={addNewFilter} startIcon={<AddIcon/>}>New Filter</Button>
-                        <Button onClick={removeAllFilters} startIcon={<DeleteIcon/>}>Remove All</Button>
+                        <Button onClick={removeAllFilters} startIcon={<RefreshIcon/>}>Reset Filters</Button>
                     </Box>
                     {
                         currentFilters.map((filter, idx) => (
