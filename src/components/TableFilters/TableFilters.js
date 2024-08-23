@@ -117,8 +117,8 @@ export default function TableFilters(props) {
                 filterBy[filter.key] = nextFilter;
             }
         }
-        console.log(filterBy)
         applyFilters(filterBy, currentFilters)
+        handleClose()
     }
 
     return (

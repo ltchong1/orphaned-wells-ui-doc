@@ -28,6 +28,10 @@ export default function Project() {
         loadData()
     }, [params.id, pageSize, currentPage, sortBy, sortAscending, filterBy])
 
+    useEffect(() => {
+        setCurrentPage(0)
+    }, [sortBy, sortAscending, filterBy])
+
     const loadData = () => {
         let sort = [sortBy, sortAscending]
         let args = [params.id, currentPage, pageSize, sort, filterBy]
