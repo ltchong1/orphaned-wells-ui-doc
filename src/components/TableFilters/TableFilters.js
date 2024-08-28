@@ -8,6 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import Draggable from 'react-draggable';
+import ApprovalIcon from '@mui/icons-material/Approval';
 import { FILTER_OPTIONS } from '../../assets/filterOptions';
 
 
@@ -20,7 +21,14 @@ export default function TableFilters(props) {
         box: {
             width: '50vw',
             display: 'flex',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            paddingTop: 5
+        },
+        closeIcon: {
+            position: 'absolute',
+            right: 0,
+            top: 8,
+            mb: 2,
         }
     }
     const [anchorFilterMenu, setAnchorFilterMenu] = useState(null);
@@ -149,6 +157,13 @@ export default function TableFilters(props) {
                         'aria-labelledby': 'filter-button',
                     }}
                 >
+                    <IconButton
+                        aria-label="close"
+                        onClick={() => handleClose()}
+                        sx={styles.closeIcon}
+                        >
+                        <CloseIcon />
+                    </IconButton>
                     <Box p={2} sx={styles.box}>
                         <Button onClick={addNewFilter} startIcon={<AddIcon/>}>New Filter</Button>
                         <Button onClick={removeAllFilters} startIcon={<RefreshIcon/>}>Reset Filters</Button>
@@ -173,7 +188,7 @@ export default function TableFilters(props) {
                         <Button 
                             onClick={handleApplyFilters} 
                             variant='contained'
-                            // disabled={currentFilters.length === 0}
+                            startIcon={<ApprovalIcon/>}
                         >
                             Apply Filters
                         </Button>
