@@ -20,6 +20,7 @@ import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelect
 import { formatDate, average, formatConfidence } from '../../assets/helperFunctions';
 import Notes from '../Notes/Notes';
 import TableFilters from '../TableFilters/TableFilters';
+import { convertFiltersToMongoFormat } from '../../assets/helperFunctions';
 
 const TABLE_ATTRIBUTES = {
   displayNames: ["Record Name", "Date Uploaded", "API Number", "Mean Confidence", "Lowest Confidence", "Notes", "Digitization Status", "Review Status"],
@@ -153,7 +154,8 @@ export default function RecordsTable(props) {
     }
   }
 
-  const handleApplyFilters = (newFilters, appliedFilters) => {
+  const handleApplyFilters = (appliedFilters) => {
+    let newFilters = convertFiltersToMongoFormat(appliedFilters)
     setAppliedFilters(appliedFilters)
     setFilterBy(newFilters)
   }
