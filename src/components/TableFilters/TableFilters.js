@@ -83,7 +83,7 @@ export default function TableFilters(props) {
 
     const removeAllFilters = () => {
         setCurrentFilters([])
-        applyFilters({}, [])
+        applyFilters([])
     }
 
     const handleApplyFilters = () => {
