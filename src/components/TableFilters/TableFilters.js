@@ -32,7 +32,7 @@ export default function TableFilters(props) {
         }
     }
     const [anchorFilterMenu, setAnchorFilterMenu] = useState(null);
-    const [ currentFilters, setCurrentFilters ] = useState([])
+    const [ currentFilters, setCurrentFilters ] = useState(appliedFilters)
     const openFilterMenu = Boolean(anchorFilterMenu);
 
     const handleOpenFilters = (event) => {

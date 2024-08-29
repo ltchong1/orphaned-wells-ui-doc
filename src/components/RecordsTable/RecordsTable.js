@@ -20,7 +20,6 @@ import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelect
 import { formatDate, average, formatConfidence } from '../../assets/helperFunctions';
 import Notes from '../Notes/Notes';
 import TableFilters from '../TableFilters/TableFilters';
-import { convertFiltersToMongoFormat } from '../../assets/helperFunctions';
 
 const TABLE_ATTRIBUTES = {
   displayNames: ["Record Name", "Date Uploaded", "API Number", "Mean Confidence", "Lowest Confidence", "Notes", "Digitization Status", "Review Status"],
@@ -42,7 +41,8 @@ export default function RecordsTable(props) {
     recordCount,
     setPageSize,
     setCurrentPage,
-    setFilterBy,
+    appliedFilters,
+    setAppliedFilters,
     setSortBy,
     setSortAscending
   } = props;
@@ -51,7 +51,7 @@ export default function RecordsTable(props) {
   const [ showNotes, setShowNotes ] = useState(false)
   const [ notesRecordId, setNotesRecordId ] = useState(null)
   const [ notes, setNotes ] = useState(null)
-  const [ appliedFilters, setAppliedFilters ] = useState([])
+  // const [ appliedFilters, setAppliedFilters ] = useState([])
 
   useEffect(() => {
       if (projectData) {
@@ -155,9 +155,7 @@ export default function RecordsTable(props) {
   }
 
   const handleApplyFilters = (appliedFilters) => {
-    let newFilters = convertFiltersToMongoFormat(appliedFilters)
     setAppliedFilters(appliedFilters)
-    setFilterBy(newFilters)
   }
 
 

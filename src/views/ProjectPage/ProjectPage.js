@@ -7,6 +7,7 @@ import Subheader from '../../components/Subheader/Subheader';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import { callAPI } from '../../assets/helperFunctions';
+import { convertFiltersToMongoFormat } from '../../assets/helperFunctions';
 
 export default function Project() {
     const [ records, setRecords ] = useState([])
@@ -20,7 +21,7 @@ export default function Project() {
     const [ pageSize, setPageSize ] = useState(100)
     const [ sortBy, setSortBy ] = useState('dateCreated')
     const [ sortAscending, setSortAscending ] = useState(1)
-    const [ filterBy, setFilterBy ] = useState({})
+    const [ filterBy, setFilterBy ] = useState([])
     let params = useParams(); 
     let navigate = useNavigate();
 
@@ -34,7 +35,7 @@ export default function Project() {
 
     const loadData = () => {
         let sort = [sortBy, sortAscending]
-        let args = [params.id, currentPage, pageSize, sort, filterBy]
+        let args = [params.id, currentPage, pageSize, sort, convertFiltersToMongoFormat(filterBy)]
         callAPI(
             getProjectData,
             args,
@@ -136,7 +137,8 @@ export default function Project() {
                     recordCount={recordCount}
                     setPageSize={setPageSize}
                     setCurrentPage={setCurrentPage}
-                    setFilterBy={setFilterBy}
+                    appliedFilters={filterBy}
+                    setAppliedFilters={setFilterBy}
                     setSortBy={setSortBy}
                     setSortAscending={setSortAscending}
                 />
