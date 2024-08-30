@@ -1,9 +1,26 @@
 import { useNavigate } from "react-router-dom";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { formatDate } from '../../assets/helperFunctions';
+import { FC } from 'react';
 
-export default function ProjectsListTable(props) {
-  let navigate = useNavigate()
+interface Project {
+  id_: string;
+  name: string;
+  description: string;
+  documentType: string;
+  state: string;
+  creator: {
+    name: string;
+  };
+  dateCreated: number;
+}
+
+interface ProjectsListTableProps {
+  projects: Project[];
+}
+
+const ProjectsListTable: FC<ProjectsListTableProps> = (props) => {
+  const navigate = useNavigate();
   const { projects } = props;
 
   const styles = {
@@ -18,8 +35,8 @@ export default function ProjectsListTable(props) {
     }
   }
 
-  const handleClickProject = (project_id) => {
-    navigate("/project/" + project_id)
+  const handleClickProject = (project_id: string): void => {
+    navigate("/project/" + project_id);
   }
   
   return (
@@ -27,15 +44,15 @@ export default function ProjectsListTable(props) {
       <Table sx={{ minWidth: 650 }} aria-label="projects table">
         <TableHead>
           <TableRow>
-            {["Project Name", "Description", "Document Type", "Locations", "Creator", "Date"].map((value)=>(
+            {["Project Name", "Description", "Document Type", "Locations", "Creator", "Date"].map((value: string) => (
               <TableCell sx={styles.headerRow} key={value}>{value}</TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {projects.map((row, idx) => (
+          {projects.map((row: Project, idx: number) => (
             <TableRow
-              key={row.name+ " " + idx}
+              key={row.name + " " + idx}
               sx={styles.projectRow}
               onClick={() => handleClickProject(row.id_)}
             >
@@ -54,3 +71,5 @@ export default function ProjectsListTable(props) {
     </TableContainer>
   );
 }
+
+export default ProjectsListTable;
