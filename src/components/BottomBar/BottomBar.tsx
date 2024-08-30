@@ -16,8 +16,15 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import WarningIcon from '@mui/icons-material/Warning';
 
 interface RecordData {
-  review_status: string;
-  notes: string;
+  _id: string;
+  name: string;
+  project_id: string;
+  project_name: string;
+  attributesList: Array<any>;
+  img_urls: Array<string>;
+  recordIndex?: number;
+  review_status?: string;
+  notes?: string;
 }
 
 interface BottombarProps {

@@ -9,7 +9,7 @@ interface SubheaderProps {
     buttonName?: string;
     status?: string;
     subtext?: string;
-    handleClickButton: () => void;
+    handleClickButton?: () => void;
     disableButton?: boolean;
     previousPages?: Record<string, () => void>;
     actions?: Record<string, () => void>;

@@ -10,7 +10,7 @@ import AttributesTable from '../RecordAttributesTable/RecordAttributesTable';
 interface DocumentContainerProps {
     imageFiles: string[];
     attributesList: any[];
-    handleChangeValue: (value: any) => void;
+    handleChangeValue: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => void;
     handleUpdateRecord: () => void;
 }
 
