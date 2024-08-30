@@ -7,7 +7,7 @@ interface PopupModalProps {
     open: boolean;
     handleClose: () => void;
     textLabel: string;
-    text: string;
+    text: string | null | undefined;
     handleEditText: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handleSave: () => void;
     buttonVariant: 'text' | 'outlined' | 'contained';

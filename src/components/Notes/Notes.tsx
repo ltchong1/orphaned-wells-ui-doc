@@ -4,15 +4,15 @@ import { updateRecord } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 
 interface NotesProps {
-    record_id: string | undefined;
-    notes: string;
+    record_id: string | undefined | null;
+    notes: string | null | undefined;
     open: boolean;
-    onClose: (recordId?: string, notes?: string) => void;
+    onClose: (recordId?: NotesProps["record_id"], notes?: NotesProps["notes"]) => void;
 }
 
 const Notes: FC<NotesProps> = (props) => {
     const { record_id, notes, open, onClose } = props;
-    const [recordNotes, setRecordNotes] = useState<string>("");
+    const [recordNotes, setRecordNotes] = useState<string | null | undefined>("");
 
     useEffect(() => {
         setRecordNotes(notes);
