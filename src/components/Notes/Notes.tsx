@@ -4,7 +4,7 @@ import { updateRecord } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 
 interface NotesProps {
-    record_id: string;
+    record_id: string | undefined;
     notes: string;
     open: boolean;
     onClose: (recordId?: string, notes?: string) => void;
