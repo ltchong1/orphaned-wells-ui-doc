@@ -6,7 +6,6 @@ interface PopupModalProps {
     width?: number;
     open: boolean;
     handleClose: () => void;
-    input?: boolean;
     textLabel: string;
     text: string;
     handleEditText: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -14,16 +13,17 @@ interface PopupModalProps {
     buttonVariant: 'text' | 'outlined' | 'contained';
     buttonColor: "inherit" | "primary" | "secondary" | "error" | "info" | "success" | "warning";
     buttonText: string;
-    showError: boolean;
-    errorText: string;
+    input?: boolean;
+    showError?: boolean;
+    errorText?: string;
     iconOne?: React.ReactNode;
     iconTwo?: React.ReactNode;
-    hasTwoButtons: boolean;
+    hasTwoButtons?: boolean;
     handleButtonTwoClick?: () => void;
-    buttonTwoVariant: 'text' | 'outlined' | 'contained';
-    buttonTwoColor: "inherit" | "primary" | "secondary" | "error" | "info" | "success" | "warning";
-    buttonTwoText: string;
-    disableSubmit: boolean;
+    buttonTwoVariant?: 'text' | 'outlined' | 'contained';
+    buttonTwoColor?: "inherit" | "primary" | "secondary" | "error" | "info" | "success" | "warning";
+    buttonTwoText?: string;
+    disableSubmit?: boolean;
     multiline?: boolean;
     inputrows?: number;
 }
