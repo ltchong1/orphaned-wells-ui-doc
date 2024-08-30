@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FC } from 'react';
 import { Box } from '@mui/material';
 import Subheader from '../../components/Subheader/Subheader';
 import ProjectsListTable from '../../components/ProjectsListTable/ProjectsListTable';
@@ -6,23 +6,23 @@ import NewProjectDialog from '../../components/NewProjectDialog/NewProjectDialog
 import { getProjects } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 
-export default function ProjectsListPage() {
-    const [ projects, setProjects ] = useState([])
-    const [ unableToConnect, setUnableToConnect ]  = useState(false)
-    const [ showNewProjectDialog, setShowNewProjectDialog ] = useState(false)
+const ProjectsListPage: FC = () => {
+    const [projects, setProjects] = useState<any[]>([]);
+    const [unableToConnect, setUnableToConnect] = useState<boolean>(false);
+    const [showNewProjectDialog, setShowNewProjectDialog] = useState<boolean>(false);
 
-    useEffect(()=> {
-        callAPI(getProjects, [], handleSuccess, handleError)
-    },[])
+    useEffect(() => {
+        callAPI(getProjects, [], handleSuccess, handleError);
+    }, []);
 
-    const handleSuccess = (data) => {
-        setProjects(data)
-    }
+    const handleSuccess = (data: any) => {
+        setProjects(data);
+    };
 
-    const handleError = (e) => {
-        console.error(e)
-        setUnableToConnect(true)
-    }
+    const handleError = (e: Error) => {
+        console.error(e);
+        setUnableToConnect(true);
+    };
 
     const styles = {
         outerBox: {
@@ -30,14 +30,14 @@ export default function ProjectsListPage() {
             height: "100vh"
         },
         innerBox: {
-            paddingY:5,
-            paddingX:5,
+            paddingY: 5,
+            paddingX: 5,
         },
-    }
+    };
 
     const handleClickNewProject = () => {
-        setShowNewProjectDialog(true)
-    }
+        setShowNewProjectDialog(true);
+    };
 
     return (
         <Box sx={styles.outerBox}>
@@ -48,15 +48,14 @@ export default function ProjectsListPage() {
             />
             <Box sx={styles.innerBox}>
                 {!unableToConnect ? 
-                    <ProjectsListTable projects={projects}/>
+                    <ProjectsListTable projects={projects} />
                 :
                     <h1>Unable to connect to backend. Please make sure that backend server is up and running.</h1>
                 }
-                <NewProjectDialog open={showNewProjectDialog} onClose={() => setShowNewProjectDialog(false)}/>
+                <NewProjectDialog open={showNewProjectDialog} onClose={() => setShowNewProjectDialog(false)} />
             </Box>
-            
         </Box>
-        
     );
+};
 
-}
+export default ProjectsListPage;
