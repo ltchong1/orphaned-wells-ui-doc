@@ -6,9 +6,9 @@ interface PopupModalProps {
     width?: number;
     open: boolean;
     handleClose: () => void;
-    textLabel: string;
+    textLabel?: string;
     text: string | null | undefined;
-    handleEditText: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleEditText?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handleSave: () => void;
     buttonVariant: 'text' | 'outlined' | 'contained';
     buttonColor: "inherit" | "primary" | "secondary" | "error" | "info" | "success" | "warning";
