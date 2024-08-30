@@ -23,7 +23,6 @@ interface PopupModalProps {
     buttonTwoVariant: 'text' | 'outlined' | 'contained';
     buttonTwoColor: "inherit" | "primary" | "secondary" | "error" | "info" | "success" | "warning";
     buttonTwoText: string;
-    inputText?: string;
     disableSubmit: boolean;
     multiline?: boolean;
     inputrows?: number;
@@ -51,7 +50,6 @@ const PopupModal: FC<PopupModalProps> = (props) => {
         buttonTwoVariant,
         buttonTwoColor,
         buttonTwoText,
-        inputText,
         disableSubmit,
         multiline,
         inputrows,
