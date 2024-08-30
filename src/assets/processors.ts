@@ -1,4 +1,32 @@
-export const processor_data = 
+interface Processor {
+  id: string;
+  processor_id: string;
+  name: string;
+  displayName: string;
+  state: string;
+  img: string;
+  attributes: Attribute[];
+  documentType: string;
+}
+
+interface Attribute {
+  name: string;
+  data_type: string;
+  occurrence: string;
+  subattributes?: SubAttribute[];
+  grouping?: string;
+  enabled?: string;
+}
+
+interface SubAttribute {
+  name: string;
+  data_type: string;
+  occurrence: string;
+  grouping?: string;
+  enabled?: string;
+}
+
+export const processor_data: { [key: string]: Processor[] } = 
 {
     colorado:
     [
