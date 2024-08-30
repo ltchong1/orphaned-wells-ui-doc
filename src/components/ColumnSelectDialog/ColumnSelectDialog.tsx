@@ -1,0 +1,204 @@
+import { useEffect, useState } from 'react';
+import { Box, FormLabel, FormControl, IconButton, FormGroup, FormControlLabel, RadioGroup, Grid } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, Button, Checkbox, Radio } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { callAPIWithBlobResponse } from '../../assets/helperFunctions';
+import { downloadRecords } from '../../services/app.service';
+
+interface ColumnSelectDialogProps {
+    open: boolean;
+    onClose: () => void;
+    columns: string[];
+    project_id: string;
+    project_name: string;
+    project_settings?: {
+        exportColumns?: string[];
+    };
+}
+
+const ColumnSelectDialog: React.FC<ColumnSelectDialogProps> = (props) => {
+    const { open, onClose, columns, project_id, project_name, project_settings } = props;
+
+    const [selectedColumns, setSelectedColumns] = useState<string[]>([...columns]);
+    const [exportType, setExportType] = useState<string>("csv");
+    const dialogHeight: string = '85vh';
+    const dialogWidth: string = '60vw';
+
+    useEffect(() => {
+        if (project_settings && project_settings.exportColumns) {
+            setSelectedColumns([...project_settings.exportColumns]);
+        } else {
+            setSelectedColumns([...columns]);
+        }
+    }, [columns]);
+
+    const styles = {
+        dialogPaper: {
+            minHeight: dialogHeight,
+            maxHeight: dialogHeight,
+            minWidth: dialogWidth,
+            maxWidth: dialogWidth,
+        },
+        projectName: {
+            marginBottom: 2
+        },
+        processorGridItem: {
+            paddingX: 1
+        },
+        processorImageBox: {
+            display: "flex",
+            justifyContent: "center",
+            cursor: "pointer",
+        },
+        processorImage: {
+            maxHeight: "20vh"
+        }
+    };
+
+    const handleClose = (): void => {
+        onClose();
+    };
+
+    const handleExport = (): void => {
+        const body = {
+            exportType: exportType,
+            columns: selectedColumns
+        };
+        callAPIWithBlobResponse(
+            downloadRecords,
+            [project_id, body],
+            handleSuccessfulExport,
+            (e: Error) => console.error("unable to download csv: " + e)
+        );
+    };
+
+    const handleSuccessfulExport = (data: Blob): void => {
+        onClose();
+        const href = window.URL.createObjectURL(data);
+        const link = document.createElement('a');
+        link.href = href;
+        link.setAttribute('download', `${project_name}_records.${exportType}`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    return (
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            scroll={"paper"}
+            aria-labelledby="export-dialog"
+            aria-describedby="export-dialog-description"
+            PaperProps={{
+                sx: styles.dialogPaper
+            }}
+        >
+            <DialogTitle id="export-dialog-title">Export Project</DialogTitle>
+            <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                    position: 'absolute',
+                    right: 0,
+                    top: 8,
+                }}
+            >
+                <CloseIcon />
+            </IconButton>
+            <DialogContent dividers={true}>
+                <DialogContentText
+                    id="scroll-dialog-description"
+                    tabIndex={-1}
+                    aria-labelledby="export-dialog-content-text"
+                    component={'span'}
+                >
+                    <CheckboxesGroup
+                        columns={columns}
+                        selected={selectedColumns}
+                        setSelected={setSelectedColumns}
+                        exportType={exportType}
+                        setExportType={setExportType}
+                    />
+                </DialogContentText>
+                <Button
+                    variant="contained"
+                    sx={{
+                        position: 'absolute',
+                        right: 10,
+                        bottom: 10,
+                    }}
+                    onClick={handleExport}
+                >
+                    Export
+                </Button>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+interface CheckboxesGroupProps {
+    columns: string[];
+    selected: string[];
+    setSelected: (selected: string[]) => void;
+    exportType: string;
+    setExportType: (exportType: string) => void;
+}
+
+const CheckboxesGroup: React.FC<CheckboxesGroupProps> = (props) => {
+    const { columns, selected, setSelected, exportType, setExportType } = props;
+
+    useEffect(() => {
+    }, [columns]);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        const isSelected: boolean = event.target.checked;
+        const attr: string = event.target.name;
+        const tempSelected: string[] = [...selected];
+        if (isSelected) {
+            tempSelected.push(attr);
+        } else {
+            const index: number = tempSelected.indexOf(attr);
+            if (index > -1) {
+                tempSelected.splice(index, 1);
+            }
+        }
+        setSelected(tempSelected);
+    };
+
+    return (
+        <Box sx={{ display: 'flex' }}>
+            <FormControl sx={{ m: 3 }} component="fieldset" variant="standard" required>
+                <FormLabel component="legend" id="export-type-label">Export Type</FormLabel>
+                <RadioGroup
+                    row
+                    name="export-type"
+                    sx={{ paddingBottom: 5 }}
+                    value={exportType}
+                    onChange={(event) => setExportType(event.target.value)}
+                >
+                    <FormControlLabel value="csv" control={<Radio />} label="CSV" />
+                    <FormControlLabel value="json" control={<Radio />} label="JSON" />
+                </RadioGroup>
+
+                <FormLabel component="legend">Select attributes to export</FormLabel>
+                <FormGroup row>
+                    <Grid container>
+                        {columns.map((column: string, colIdx: number) => (
+                            <Grid key={`${colIdx}_${column}`} item xs={6}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox checked={selected.includes(column)} onChange={handleChange} name={column} />
+                                    }
+                                    label={column}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </FormGroup>
+            </FormControl>
+        </Box>
+    );
+};
+
+export default ColumnSelectDialog;
