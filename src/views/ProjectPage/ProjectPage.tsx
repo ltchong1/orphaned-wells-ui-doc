@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
 import { getProjectData, uploadDocument, deleteProject, updateProject } from '../../services/app.service';
@@ -9,53 +9,56 @@ import PopupModal from '../../components/PopupModal/PopupModal';
 import { callAPI } from '../../assets/helperFunctions';
 import { convertFiltersToMongoFormat } from '../../assets/helperFunctions';
 
-export default function Project() {
-    let params = useParams(); 
-    let navigate = useNavigate();
-    const [ records, setRecords ] = useState([])
-    const [ projectData, setProjectData ] = useState({attributes: [], id_: params.id})
-    const [ showDocumentModal, setShowDocumentModal ] = useState(false)
-    const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
-    const [ openUpdateNameModal, setOpenUpdateNameModal ] = useState(false)
-    const [ projectName, setProjectName ] = useState("")
-    const [ recordCount, setRecordCount ] = useState(0)
-    const [ currentPage, setCurrentPage ] = useState(0)
-    const [ pageSize, setPageSize ] = useState(100)
-    const [ sortBy, setSortBy ] = useState('dateCreated')
-    const [ sortAscending, setSortAscending ] = useState(1)
-    const [ filterBy, setFilterBy ] = useState(
-        localStorage.getItem("appliedFilters") ? 
-        (
-            JSON.parse(localStorage.getItem("appliedFilters"))[params.id] || []
-        ) : 
-        []
-    )
+interface ProjectData {
+    attributes: any[];
+    id_?: string;
+    name: string;
+    settings: any;
+}
+
+const Project: FC = () => {
+    const params = useParams<{ id: string }>(); 
+    const navigate = useNavigate();
+    const [records, setRecords] = useState<any[]>([]);
+    const [projectData, setProjectData] = useState<ProjectData>({ attributes: [], id_: params.id, name: "", settings: {} });
+    const [showDocumentModal, setShowDocumentModal] = useState<boolean>(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+    const [openUpdateNameModal, setOpenUpdateNameModal] = useState<boolean>(false);
+    const [projectName, setProjectName] = useState<string>("");
+    const [recordCount, setRecordCount] = useState<number>(0);
+    const [currentPage, setCurrentPage] = useState<number>(0);
+    const [pageSize, setPageSize] = useState<number>(100);
+    const [sortBy, setSortBy] = useState<string>('dateCreated');
+    const [sortAscending, setSortAscending] = useState<number>(1);
+    const [filterBy, setFilterBy] = useState<any[]>(
+            JSON.parse(localStorage.getItem("appliedFilters") || '{}')[params.id || ""] || []
+    );
 
     useEffect(() => {
-        loadData()
-    }, [params.id, pageSize, currentPage, sortBy, sortAscending, filterBy])
+        loadData();
+    }, [params.id, pageSize, currentPage, sortBy, sortAscending, filterBy]);
 
     useEffect(() => {
-        setCurrentPage(0)
-    }, [sortBy, sortAscending, filterBy])
+        setCurrentPage(0);
+    }, [sortBy, sortAscending, filterBy]);
 
-    const loadData = () => {
-        let sort = [sortBy, sortAscending]
-        let args = [params.id, currentPage, pageSize, sort, convertFiltersToMongoFormat(filterBy)]
+    const loadData = (): void => {
+        const sort: [string, number] = [sortBy, sortAscending];
+        const args: [string, number, number, [string, number], any] = [params.id || "", currentPage, pageSize, sort, convertFiltersToMongoFormat(filterBy)];
         callAPI(
             getProjectData,
             args,
             handleSuccess,
-            (e) => {console.error('error getting project data: ',e)}
-        )
-    }
+            (e: Error) => { console.error('error getting project data: ', e); }
+        );
+    };
 
-    const handleSuccess = (data) => {
-        setRecords(data.records)
-        setProjectData(data.project_data)
-        setProjectName(data.project_data.name)
-        setRecordCount(data.record_count)
-    }
+    const handleSuccess = (data: { records: any[], project_data: ProjectData, record_count: number }): void => {
+        setRecords(data.records);
+        setProjectData(data.project_data);
+        setProjectName(data.project_data.name);
+        setRecordCount(data.record_count);
+    };
 
     const styles = {
         outerBox: {
@@ -63,55 +66,55 @@ export default function Project() {
             height: "100vh"
         },
         innerBox: {
-            paddingY:5,
-            paddingX:5,
+            paddingY: 5,
+            paddingX: 5,
         },
-    }
+    };
 
-    const handleUploadDocument = (file) => {
+    const handleUploadDocument = (file: File): void => {
         const formData = new FormData();
         formData.append('file', file, file.name);
         callAPI(
             uploadDocument,
             [formData, projectData.id_],
             handleSuccessfulDocumentUpload,
-            (e) => {console.error('error on file upload: ',e)}
-        )
-    }
+            (e: Error) => { console.error('error on file upload: ', e); }
+        );
+    };
 
-    const handleSuccessfulDocumentUpload = () => {
-        setTimeout(function() {
-            window.location.reload()
-          }, 500)
-    }
+    const handleSuccessfulDocumentUpload = (): void => {
+        setTimeout(() => {
+            window.location.reload();
+        }, 500);
+    };
 
-    const handleUpdateProject = () => {
-        setOpenUpdateNameModal(true)
-    }
+    const handleUpdateProject = (): void => {
+        setOpenUpdateNameModal(true);
+    };
 
-    const handleDeleteProject = () => {
-        setOpenDeleteModal(false)
+    const handleDeleteProject = (): void => {
+        setOpenDeleteModal(false);
         callAPI(
             deleteProject,
             [projectData.id_],
-            (data) => navigate("/projects", {replace: true}),
-            (e) => {console.error('error on deleting project: ',e)}
-        )
-    }
+            (data: any) => navigate("/projects", { replace: true }),
+            (e: Error) => { console.error('error on deleting project: ', e); }
+        );
+    };
 
-    const handleChangeProjectName = (event) => {
-        setProjectName(event.target.value)
-    }
+    const handleChangeProjectName = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        setProjectName(event.target.value);
+    };
 
-    const handleUpdateProjectName = () => {
-        setOpenUpdateNameModal(false)
+    const handleUpdateProjectName = (): void => {
+        setOpenUpdateNameModal(false);
         callAPI(
             updateProject,
-            [params.id, {name: projectName}],
-            (data) => window.location.reload(),
-            (e) => console.error('error on updating project name: ',e)
-        )
-    }
+            [params.id, { name: projectName }],
+            (data: any) => window.location.reload(),
+            (e: Error) => console.error('error on updating project name: ', e)
+        );
+    };
 
     return (
         <Box sx={styles.outerBox}>
@@ -129,7 +132,7 @@ export default function Project() {
                         "Change project name": handleUpdateProject, 
                     }
                 }
-                previousPages={{"Projects": () => navigate("/projects", {replace: true})}}
+                previousPages={{ "Projects": () => navigate("/projects", { replace: true }) }}
             />
             <Box sx={styles.innerBox}>
                 <RecordsTable
@@ -149,7 +152,7 @@ export default function Project() {
                     setSortAscending={setSortAscending}
                 />
             </Box>
-            { showDocumentModal && 
+            {showDocumentModal && 
                 <UploadDocumentsModal 
                     setShowModal={setShowDocumentModal}
                     handleUploadDocument={handleUploadDocument}
@@ -178,7 +181,8 @@ export default function Project() {
                 buttonVariant='contained'
                 width={400}
             />
-            
         </Box>
     );
-}
+};
+
+export default Project;

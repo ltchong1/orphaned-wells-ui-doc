@@ -33,7 +33,7 @@ interface Record {
 }
 
 interface RecordsTableProps {
-  projectData: { id_: string; attributes: Array<{ name: string }>; name: string; settings: any };
+  projectData: { id_?: string; attributes?: Array<{ name: string }>; name?: string; settings?: any };
   records: Record[];
   setRecords: (records: Record[]) => void;
   pageSize: number;
@@ -84,7 +84,7 @@ const RecordsTable: FC<RecordsTableProps> = (props) => {
   useEffect(() => {
       if (projectData) {
         let tempColumns: string[] = [];
-        for (let each of projectData.attributes) {
+        for (let each of projectData.attributes || []) {
           tempColumns.push(each.name);
         }
         setAttributes(tempColumns);
@@ -184,7 +184,7 @@ const RecordsTable: FC<RecordsTableProps> = (props) => {
     let currentAppliedFilters = localStorage.getItem("appliedFilters");
     if (currentAppliedFilters === null) newAppliedFilters = {};
     else newAppliedFilters = JSON.parse(currentAppliedFilters);
-    newAppliedFilters[projectData.id_] = appliedFilters;
+    newAppliedFilters[projectData.id_ || ""] = appliedFilters;
     localStorage.setItem("appliedFilters", JSON.stringify(newAppliedFilters));
   }
 
@@ -349,8 +349,8 @@ const RecordsTable: FC<RecordsTableProps> = (props) => {
           open={openColumnSelect}
           onClose={() => setOpenColumnSelect(false)}
           columns={attributes}
-          project_id={projectData.id_}
-          project_name={projectData.name}
+          project_id={projectData.id_ || ""}
+          project_name={projectData.name || ""}
           project_settings={projectData.settings}
         />
       }
