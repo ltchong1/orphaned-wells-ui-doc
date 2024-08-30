@@ -79,7 +79,7 @@ function App() {
     <ThemeProvider theme={theme}>
     <div className="App">
           {!window.location.hash.includes("login") && 
-            <Header authenticated={authenticated}/>
+            <Header/>
           }
           
           <Routes> 
