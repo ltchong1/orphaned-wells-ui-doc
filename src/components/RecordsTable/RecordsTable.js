@@ -41,7 +41,8 @@ export default function RecordsTable(props) {
     recordCount,
     setPageSize,
     setCurrentPage,
-    setFilterBy,
+    appliedFilters,
+    setAppliedFilters,
     setSortBy,
     setSortAscending
   } = props;
@@ -50,7 +51,7 @@ export default function RecordsTable(props) {
   const [ showNotes, setShowNotes ] = useState(false)
   const [ notesRecordId, setNotesRecordId ] = useState(null)
   const [ notes, setNotes ] = useState(null)
-  const [ appliedFilters, setAppliedFilters ] = useState([])
+  // const [ appliedFilters, setAppliedFilters ] = useState([])
 
   useEffect(() => {
       if (projectData) {
@@ -153,9 +154,17 @@ export default function RecordsTable(props) {
     }
   }
 
-  const handleApplyFilters = (newFilters, appliedFilters) => {
+  const handleApplyFilters = (appliedFilters) => {
     setAppliedFilters(appliedFilters)
-    setFilterBy(newFilters)
+
+    // save filters in localstorage
+    let currentAppliedFilters = localStorage.getItem("appliedFilters")
+    if (currentAppliedFilters === null) currentAppliedFilters={}
+    else currentAppliedFilters = JSON.parse(currentAppliedFilters)
+    currentAppliedFilters[projectData.id_] = appliedFilters
+    console.log("setting applied filters to ")
+    console.log(currentAppliedFilters)
+    localStorage.setItem("appliedFilters", JSON.stringify(currentAppliedFilters))
   }
 
 

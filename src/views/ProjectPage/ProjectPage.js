@@ -7,10 +7,13 @@ import Subheader from '../../components/Subheader/Subheader';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import { callAPI } from '../../assets/helperFunctions';
+import { convertFiltersToMongoFormat } from '../../assets/helperFunctions';
 
 export default function Project() {
+    let params = useParams(); 
+    let navigate = useNavigate();
     const [ records, setRecords ] = useState([])
-    const [ projectData, setProjectData ] = useState({attributes: []})
+    const [ projectData, setProjectData ] = useState({attributes: [], id_: params.id})
     const [ showDocumentModal, setShowDocumentModal ] = useState(false)
     const [ openDeleteModal, setOpenDeleteModal ] = useState(false)
     const [ openUpdateNameModal, setOpenUpdateNameModal ] = useState(false)
@@ -20,9 +23,13 @@ export default function Project() {
     const [ pageSize, setPageSize ] = useState(100)
     const [ sortBy, setSortBy ] = useState('dateCreated')
     const [ sortAscending, setSortAscending ] = useState(1)
-    const [ filterBy, setFilterBy ] = useState({})
-    let params = useParams(); 
-    let navigate = useNavigate();
+    const [ filterBy, setFilterBy ] = useState(
+        localStorage.getItem("appliedFilters") ? 
+        (
+            JSON.parse(localStorage.getItem("appliedFilters"))[params.id] || []
+        ) : 
+        []
+    )
 
     useEffect(() => {
         loadData()
@@ -34,7 +41,7 @@ export default function Project() {
 
     const loadData = () => {
         let sort = [sortBy, sortAscending]
-        let args = [params.id, currentPage, pageSize, sort, filterBy]
+        let args = [params.id, currentPage, pageSize, sort, convertFiltersToMongoFormat(filterBy)]
         callAPI(
             getProjectData,
             args,
@@ -136,7 +143,8 @@ export default function Project() {
                     recordCount={recordCount}
                     setPageSize={setPageSize}
                     setCurrentPage={setCurrentPage}
-                    setFilterBy={setFilterBy}
+                    appliedFilters={filterBy}
+                    setAppliedFilters={setFilterBy}
                     setSortBy={setSortBy}
                     setSortAscending={setSortAscending}
                 />
