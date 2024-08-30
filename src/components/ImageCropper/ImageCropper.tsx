@@ -14,9 +14,9 @@ const DRAG_HANDLES: string[] = [
 
 interface ImageCropperProps {
     image: string;
-    displayPoints: number[][];
+    displayPoints: number[][] | null;
     disabled: boolean;
-    fullscreen: boolean;
+    fullscreen: string | null;
     imageIdx: number;
     highlightedImageIdxIndex: number;
 }

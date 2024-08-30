@@ -50,15 +50,15 @@ interface Attribute {
     value: string;
     confidence: number | null;
     edited?: boolean;
-    normalized_vertices?: number[][];
+    normalized_vertices: number[][] | null;
     subattributes?: Attribute[];
 }
 
 interface AttributesTableProps {
     attributesList: Attribute[];
-    handleClickField: (key: string, vertices?: number[][], index?: number) => void;
+    handleClickField: (key: string, vertices: number[][] | null, index: number, isSubattribute: boolean, subattributeIdx: number | null) => void;
     handleChangeValue: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => void;
-    fullscreen: boolean;
+    fullscreen: string | null;
     forceOpenSubtable: number | null;
     displayKeyIndex: number;
     displayKeySubattributeIndex: number | null;
@@ -78,32 +78,9 @@ const AttributesTable: FC<AttributesTableProps> = (props) => {
     } = props;
 
     const handleClickOutside = () => {
-        handleClickField('');
+        handleClickField('', null, -1, false, null);
     }
     const ref = useOutsideClick(handleClickOutside);
-
-    const sortAttributes = (sortBy: string): void => {
-        if (sortBy === "coordinates") {
-            let tempAttributesList: Attribute[] = [...attributesList];
-            tempAttributesList.sort((a, b) => {
-                if (!b.normalized_vertices && !a.normalized_vertices) return 0;
-                else if (!b.normalized_vertices) return -1;
-                else if (!a.normalized_vertices) return 1;
-
-                let keyA: number = round(a.normalized_vertices[0][1], 2);
-                let keyB: number = round(b.normalized_vertices[0][1], 2);
-                if (keyA < keyB) return -1;
-                if (keyA > keyB) return 1;
-                else {
-                    let keyA: number = a.normalized_vertices[0][0];
-                    let keyB: number = b.normalized_vertices[0][0];
-                    if (keyA < keyB) return -1;
-                    if (keyA > keyB) return 1;
-                    else return 0;
-                }
-            });
-        }
-    }
 
     return (
         <TableContainer id="table-container" sx={styles.fieldsTable}>
@@ -141,9 +118,9 @@ interface AttributeRowProps {
     k: string;
     v: Attribute;
     idx: number;
-    handleClickField: (key: string, vertices?: number[][], index?: number) => void;
+    handleClickField: AttributesTableProps["handleClickField"];
     handleChangeValue: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => void;
-    fullscreen: boolean;
+    fullscreen: string | null;
     forceOpenSubtable: number | null;
     displayKeyIndex: number;
     displayKeySubattributeIndex: number | null;
@@ -178,7 +155,7 @@ const AttributeRow: FC<AttributeRowProps> = (props) => {
 
     const handleClickInside = (e: React.MouseEvent<HTMLTableRowElement>) => {
         e.stopPropagation();
-        handleClickField(k, v.normalized_vertices, idx);
+        handleClickField(k, v.normalized_vertices, idx, false, null);
     }
 
     useKeyDown("Enter", () => {
@@ -328,11 +305,11 @@ const AttributeRow: FC<AttributeRowProps> = (props) => {
 
 interface SubattributesTableProps {
     attributesList: Attribute[];
-    handleClickField: (key: string, vertices?: number[][], index?: number) => void;
+    handleClickField: AttributesTableProps["handleClickField"];
     handleChangeValue: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void;
     open: boolean;
     topLevelIdx: number;
-    fullscreen: boolean;
+    fullscreen: string | null;
     displayKeyIndex: number;
     displayKeySubattributeIndex: number | null;
     handleUpdateRecord: () => void;
@@ -395,10 +372,10 @@ const SubattributesTable: FC<SubattributesTableProps> = (props) => {
 interface SubattributeRowProps {
     k: string;
     v: Attribute;
-    handleClickField: (key: string, vertices?: number[][], topLevelIdx?: number, isSubattribute?: boolean, subIdx?: number) => void;
+    handleClickField: AttributesTableProps["handleClickField"];
     handleChangeValue: (event: React.ChangeEvent<HTMLInputElement>, topLevelIdx: number, isSubattribute: boolean, subIdx: number) => void;
     topLevelIdx: number;
-    fullscreen: boolean;
+    fullscreen: string | null;
     displayKeyIndex: number;
     displayKeySubattributeIndex: number | null;
     handleUpdateRecord: () => void;
