@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
 import { Box, TextField, Collapse, Typography, IconButton, Badge } from '@mui/material';
 import { formatConfidence, useKeyDown, useOutsideClick, round } from '../../assets/helperFunctions';
@@ -6,7 +6,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
 
-const styles = {
+const styles: { [key: string]: React.CSSProperties } = {
     fieldsTable: {
         width: "100%",
         maxHeight: "70vh",
@@ -33,19 +33,39 @@ const styles = {
         fontSize: "16px"
     },
     flaggedConfidence: {
-        padding:0,
-        margin:0,
+        padding: 0,
+        margin: 0,
         color: "#9E0101",
     },
     unflaggedConfidence: {
-        padding:0,
-        margin:0,
+        padding: 0,
+        margin: 0,
     }
 }
 
-const LOW_CONFIDENCE = 0.01
+const LOW_CONFIDENCE: number = 0.01;
 
-export default function AttributesTable(props) {
+interface Attribute {
+    key: string;
+    value: string;
+    confidence: number | null;
+    edited?: boolean;
+    normalized_vertices?: number[][];
+    subattributes?: Attribute[];
+}
+
+interface AttributesTableProps {
+    attributesList: Attribute[];
+    handleClickField: (key: string, vertices?: number[][], index?: number) => void;
+    handleChangeValue: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => void;
+    fullscreen: boolean;
+    forceOpenSubtable: number | null;
+    displayKeyIndex: number;
+    displayKeySubattributeIndex: number | null;
+    handleUpdateRecord: () => void;
+}
+
+const AttributesTable: FC<AttributesTableProps> = (props) => {
     const { 
         attributesList,
         handleClickField,
@@ -55,37 +75,31 @@ export default function AttributesTable(props) {
         displayKeyIndex,
         displayKeySubattributeIndex,
         handleUpdateRecord,
-    } = props
+    } = props;
 
     const handleClickOutside = () => {
-        handleClickField()
+        handleClickField('');
     }
-    let ref = useOutsideClick(handleClickOutside);
+    const ref = useOutsideClick(handleClickOutside);
 
-    const sortAttributes = (sortBy) => {
-        // TODO:
-        // need to use a placeholder list for attributes list (probably send this down from the top level)
-        // update the placeholder list, but need to keep track of the original indexes
+    const sortAttributes = (sortBy: string): void => {
         if (sortBy === "coordinates") {
-            let tempAttributesList = [...attributesList]
-            tempAttributesList.sort(function(a, b) {
-                // check if coordinates are known
-                // place fields without coordinates below those with coordinates
-                if (!b.normalized_vertices && !a.normalized_vertices) return 0
-                else if(!b.normalized_vertices) return -1
-                else if(!a.normalized_vertices) return 1
-                
-                // compare y coordinate
-                let keyA = round(a.normalized_vertices[0][1], 2)
-                let keyB = round(b.normalized_vertices[0][1], 2)
+            let tempAttributesList: Attribute[] = [...attributesList];
+            tempAttributesList.sort((a, b) => {
+                if (!b.normalized_vertices && !a.normalized_vertices) return 0;
+                else if (!b.normalized_vertices) return -1;
+                else if (!a.normalized_vertices) return 1;
+
+                let keyA: number = round(a.normalized_vertices[0][1], 2);
+                let keyB: number = round(b.normalized_vertices[0][1], 2);
                 if (keyA < keyB) return -1;
                 if (keyA > keyB) return 1;
-                else { // y coordinates are the same; compare x coordinates
-                    let keyA = a.normalized_vertices[0][0]
-                    let keyB = b.normalized_vertices[0][0]
+                else {
+                    let keyA: number = a.normalized_vertices[0][0];
+                    let keyB: number = b.normalized_vertices[0][0];
                     if (keyA < keyB) return -1;
                     if (keyA > keyB) return 1;
-                    else return 0
+                    else return 0;
                 }
             });
         }
@@ -95,16 +109,16 @@ export default function AttributesTable(props) {
         <TableContainer id="table-container" sx={styles.fieldsTable}>
             <Table stickyHeader size='small'>
                 <TableHead sx={styles.tableHead}>
-                    <TableRow >
+                    <TableRow>
                         <TableCell sx={styles.headerRow}>Field</TableCell>
                         <TableCell sx={styles.headerRow}>Value</TableCell>
                         <TableCell sx={styles.headerRow}>Confidence</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody ref={ref}>
-                    {attributesList.map((v, idx) => (
+                    {attributesList.map((v: Attribute, idx: number) => (
                         <AttributeRow 
-                            key={v.key+" "+idx}
+                            key={`${v.key} ${idx}`}
                             k={v.key}
                             v={v}
                             idx={idx}
@@ -123,7 +137,20 @@ export default function AttributesTable(props) {
     )
 }
 
-function AttributeRow(props) { 
+interface AttributeRowProps {
+    k: string;
+    v: Attribute;
+    idx: number;
+    handleClickField: (key: string, vertices?: number[][], index?: number) => void;
+    handleChangeValue: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => void;
+    fullscreen: boolean;
+    forceOpenSubtable: number | null;
+    displayKeyIndex: number;
+    displayKeySubattributeIndex: number | null;
+    handleUpdateRecord: () => void;
+}
+
+const AttributeRow: FC<AttributeRowProps> = (props) => { 
     const { 
         k, 
         v, 
@@ -135,47 +162,47 @@ function AttributeRow(props) {
         displayKeyIndex, 
         displayKeySubattributeIndex, 
         handleUpdateRecord 
-    } = props
-    const [ editMode, setEditMode ] = useState(false)
-    const [ openSubtable, setOpenSubtable ] = useState(false)
-    const [ isSelected, setIsSelected ] = useState(false)
+    } = props;
+    
+    const [ editMode, setEditMode ] = useState<boolean>(false);
+    const [ openSubtable, setOpenSubtable ] = useState<boolean>(false);
+    const [ isSelected, setIsSelected ] = useState<boolean>(false);
 
     useEffect(() => {
-        // console.log("useeffect, displayKeyIndex === ")
-        if (idx === displayKeyIndex && (displayKeySubattributeIndex === null || displayKeySubattributeIndex === undefined)) setIsSelected(true)
+        if (idx === displayKeyIndex && (displayKeySubattributeIndex === null || displayKeySubattributeIndex === undefined)) setIsSelected(true);
         else  {
-            setIsSelected(false)
-            if (editMode) finishEditing()
+            setIsSelected(false);
+            if (editMode) finishEditing();
         }
-    },[displayKeyIndex, displayKeySubattributeIndex])
+    }, [displayKeyIndex, displayKeySubattributeIndex]);
 
-    const handleClickInside = (e) => {
-        e.stopPropagation()
-        handleClickField(k, v.normalized_vertices, idx)
+    const handleClickInside = (e: React.MouseEvent<HTMLTableRowElement>) => {
+        e.stopPropagation();
+        handleClickField(k, v.normalized_vertices, idx);
     }
 
     useKeyDown("Enter", () => {
         if (isSelected) {
-            if (editMode) finishEditing()
-            else setEditMode(true)
+            if (editMode) finishEditing();
+            else setEditMode(true);
         }
-    }, null, null, null, true)
+    }, undefined, undefined, undefined, true);
 
     useKeyDown("Escape", () => {
         if (isSelected) {
-            if (editMode) finishEditing()
+            if (editMode) finishEditing();
         }
-    }, null, null, null)
+    }, undefined, undefined, undefined);
 
     useEffect(() => {
-        if (forceOpenSubtable === idx) setOpenSubtable(true)
-    }, [forceOpenSubtable])
+        if (forceOpenSubtable === idx) setOpenSubtable(true);
+    }, [forceOpenSubtable]);
 
     const handleDoubleClick = () => {
-        setEditMode(true)
+        setEditMode(true);
     }
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTableCellElement>) => {
         if (e.key === "ArrowLeft") {
             e.stopPropagation();
         }
@@ -184,21 +211,20 @@ function AttributeRow(props) {
         }
     }
 
-    const handleClickEditIcon = (e) => {
-        e.stopPropagation()
-        handleDoubleClick()
+    const handleClickEditIcon = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        handleDoubleClick();
     }
 
     const finishEditing = () => {
-        handleUpdateRecord()
-        setEditMode(false)
+        handleUpdateRecord();
+        setEditMode(false);
     }
 
     return (
     <>
         <TableRow id={`${k}::${idx}`} sx={isSelected ? {backgroundColor: "#EDEDED"} : {}} onClick={handleClickInside}>
             <TableCell sx={styles.fieldKey}>
-                
                 <span>
                     {k}
                 </span>
@@ -217,7 +243,6 @@ function AttributeRow(props) {
             {
                 v.subattributes ? 
                 <TableCell></TableCell> 
-                
                 :
                 <TableCell onKeyDown={handleKeyDown}>
                     {editMode ? 
@@ -239,25 +264,14 @@ function AttributeRow(props) {
                                 </IconButton>
                             }
                         </span>
-
                     }
                 </TableCell>
             }
-            
             <TableCell align="right">
-                {/* 
-                    case 1: attribute has been edited: show 'edited'
-                    case 2: attribute has not been found (no confidence): show 'not found'
-                    case 3: attribute was found and not edited
-                        a: attribute has no value: show confidence in red
-                        b: attribute has low confidence: show confidence in red
-                        c: else: show confidence in black
-                */}
                 {
                     v.edited ? 
                     <p style={{padding:0, margin:0}}>
-                        <Badge 
-                            color="blue" 
+                        <Badge
                             variant="dot"
                             sx={{
                             "& .MuiBadge-badge": {
@@ -265,14 +279,12 @@ function AttributeRow(props) {
                                 backgroundColor: "#2196F3"
                             }
                             }}
-                            
                         /> 
                         &nbsp; Edited
                     </p> :
                      (v.confidence === null) ? 
                      <p style={{padding:0, margin:0}}>
-                        <Badge 
-                            color="blue" 
+                        <Badge
                             variant="dot"
                             sx={{
                             "& .MuiBadge-badge": {
@@ -280,7 +292,6 @@ function AttributeRow(props) {
                                 backgroundColor: "#9E0101"
                             }
                             }}
-                            
                         /> 
                         &nbsp; Not found
                     </p>
@@ -315,7 +326,19 @@ function AttributeRow(props) {
     )
 }
 
-function SubattributesTable(props) {
+interface SubattributesTableProps {
+    attributesList: Attribute[];
+    handleClickField: (key: string, vertices?: number[][], index?: number) => void;
+    handleChangeValue: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void;
+    open: boolean;
+    topLevelIdx: number;
+    fullscreen: boolean;
+    displayKeyIndex: number;
+    displayKeySubattributeIndex: number | null;
+    handleUpdateRecord: () => void;
+}
+
+const SubattributesTable: FC<SubattributesTableProps> = (props) => {
     const { 
         attributesList,
         handleClickField,
@@ -326,7 +349,7 @@ function SubattributesTable(props) {
         displayKeyIndex,
         displayKeySubattributeIndex,
         handleUpdateRecord
-    } = props
+    } = props;
 
     return (
         <TableRow>
@@ -345,9 +368,9 @@ function SubattributesTable(props) {
                     </TableRow>
                     </TableHead>
                     <TableBody>
-                    {attributesList.map(( v, idx ) => (
+                    {attributesList.map((v: Attribute, idx: number) => (
                         <SubattributeRow 
-                            key={v.key+ " "+idx}
+                            key={`${v.key} ${idx}`}
                             k={v.key}
                             v={v}
                             handleClickField={handleClickField}
@@ -369,7 +392,20 @@ function SubattributesTable(props) {
     )
 }
 
-function SubattributeRow(props) { 
+interface SubattributeRowProps {
+    k: string;
+    v: Attribute;
+    handleClickField: (key: string, vertices?: number[][], topLevelIdx?: number, isSubattribute?: boolean, subIdx?: number) => void;
+    handleChangeValue: (event: React.ChangeEvent<HTMLInputElement>, topLevelIdx: number, isSubattribute: boolean, subIdx: number) => void;
+    topLevelIdx: number;
+    fullscreen: boolean;
+    displayKeyIndex: number;
+    displayKeySubattributeIndex: number | null;
+    handleUpdateRecord: () => void;
+    idx: number;
+}
+
+const SubattributeRow: FC<SubattributeRowProps> = (props) => { 
     const { 
         k, 
         v,
@@ -381,42 +417,43 @@ function SubattributeRow(props) {
         displayKeySubattributeIndex,
         handleUpdateRecord,
         idx
-    } = props
-    const [ editMode, setEditMode ] = useState(false)
-    const [ isSelected, setIsSelected ] = useState(false)
+    } = props;
+
+    const [ editMode, setEditMode ] = useState<boolean>(false);
+    const [ isSelected, setIsSelected ] = useState<boolean>(false);
 
     useEffect(() => {
-        if (displayKeyIndex === topLevelIdx && idx===displayKeySubattributeIndex) {
-            setIsSelected(true)
+        if (displayKeyIndex === topLevelIdx && idx === displayKeySubattributeIndex) {
+            setIsSelected(true);
         } else {
-            setIsSelected(false)
-            if (editMode) finishEditing()
+            setIsSelected(false);
+            if (editMode) finishEditing();
         }
-    },[displayKeyIndex, topLevelIdx, displayKeySubattributeIndex])
+    }, [displayKeyIndex, topLevelIdx, displayKeySubattributeIndex]);
 
     useKeyDown("Enter", () => {
         if (isSelected) {
-            if (editMode) finishEditing()
-            else setEditMode(true)
+            if (editMode) finishEditing();
+            else setEditMode(true);
         }
-    }, null, null, null, true)
+    }, undefined, undefined, undefined, true);
 
     useKeyDown("Escape", () => {
         if (isSelected) {
-            if (editMode) finishEditing()
+            if (editMode) finishEditing();
         }
-    }, null, null, null)
+    }, undefined, undefined, undefined);
 
-    const handleClickInside = (e) => {
-        e.stopPropagation()
-        handleClickField(k, v.normalized_vertices, topLevelIdx, true, idx)
+    const handleClickInside = (e: React.MouseEvent<HTMLTableRowElement>) => {
+        e.stopPropagation();
+        handleClickField(k, v.normalized_vertices, topLevelIdx, true, idx);
     }
 
     const handleDoubleClick = () => {
-        setEditMode(true)
+        setEditMode(true);
     }
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTableCellElement>) => {
         if (e.key === "ArrowLeft") {
             e.stopPropagation();
         }
@@ -425,18 +462,18 @@ function SubattributeRow(props) {
         }
     }
 
-    const handleUpdateValue = (event) => {
-        handleChangeValue(event, topLevelIdx, true, idx)
+    const handleUpdateValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+        handleChangeValue(event, topLevelIdx, true, idx);
     }
 
-    const handleClickEditIcon = (e) => {
-        e.stopPropagation()
-        handleDoubleClick()
+    const handleClickEditIcon = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+        handleDoubleClick();
     }
 
     const finishEditing = () => {
-        handleUpdateRecord()
-        setEditMode(false)
+        handleUpdateRecord();
+        setEditMode(false);
     }
 
     return (
@@ -446,14 +483,12 @@ function SubattributeRow(props) {
             sx={isSelected ? {backgroundColor: "#EDEDED"} : {}}
             onClick={handleClickInside}
         >
-            <TableCell sx={styles.fieldKey} >
-            <span 
-                style={isSelected ? {fontWeight:"bold"} : {}}
-            >
-                {k}
-            </span>
+            <TableCell sx={styles.fieldKey}>
+                <span style={isSelected ? {fontWeight:"bold"} : {}}>
+                    {k}
+                </span>
             </TableCell>
-            <TableCell onKeyDown={handleKeyDown} >
+            <TableCell onKeyDown={handleKeyDown}>
                 {editMode ? 
                     <TextField 
                         onClick={(e) => e.stopPropagation()}
@@ -466,7 +501,7 @@ function SubattributeRow(props) {
                     />
                     :
                     <span>
-                    {v.value}&nbsp;
+                        {v.value}&nbsp;
                         {isSelected && 
                             <IconButton sx={styles.rowIconButton} onClick={handleClickEditIcon}>
                                 <EditIcon sx={styles.rowIcon}/>
@@ -479,3 +514,5 @@ function SubattributeRow(props) {
         </TableRow>
     )
 }
+
+export default AttributesTable;

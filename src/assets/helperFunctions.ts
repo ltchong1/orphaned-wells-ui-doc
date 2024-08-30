@@ -79,8 +79,8 @@ export const useKeyDown = (
   }, [onKeyDown]);
 };
 
-export const useOutsideClick = (callback: () => void): React.RefObject<HTMLDivElement> => {
-  const ref = useRef<HTMLDivElement>(null);
+export const useOutsideClick = (callback: () => void): React.RefObject<HTMLTableSectionElement> => {
+  const ref = useRef<HTMLTableSectionElement>(null);
 
   useEffect(() => {
     const handleClick = (event: MouseEvent): void => {
