@@ -3,17 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, Grid, IconButton, Box, Menu, MenuItem, Chip } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-
-interface SubheaderProps {
-    currentPage: string;
-    buttonName?: string;
-    status?: string;
-    subtext?: string;
-    handleClickButton?: () => void;
-    disableButton?: boolean;
-    previousPages?: Record<string, () => void>;
-    actions?: Record<string, () => void>;
-}
+import { SubheaderProps } from '../../types';
 
 const Subheader: FC<SubheaderProps> = (props) => {
     const navigate = useNavigate();

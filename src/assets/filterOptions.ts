@@ -1,13 +1,7 @@
+import { FilterOption } from "../types";
+
 export const FILTER_OPTIONS: {
-  [key: string]: {
-      key: string;
-      displayName: string;
-      type: string;
-      operator: string;
-      options?: { name: string; checked: boolean }[];
-      selectedOptions?: string[];
-      value?: string;
-  };
+  [key: string]: FilterOption;
 } = {
   review_status: {
       key: 'review_status',

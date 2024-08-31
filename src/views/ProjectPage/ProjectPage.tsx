@@ -8,13 +8,7 @@ import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDo
 import PopupModal from '../../components/PopupModal/PopupModal';
 import { callAPI } from '../../assets/helperFunctions';
 import { convertFiltersToMongoFormat } from '../../assets/helperFunctions';
-
-interface ProjectData {
-    attributes: any[];
-    id_?: string;
-    name: string;
-    settings: any;
-}
+import { ProjectData } from '../../types';
 
 const Project: FC = () => {
     const params = useParams<{ id: string }>(); 

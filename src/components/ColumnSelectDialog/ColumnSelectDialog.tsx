@@ -4,17 +4,7 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, Button, Checkbox
 import CloseIcon from '@mui/icons-material/Close';
 import { callAPIWithBlobResponse } from '../../assets/helperFunctions';
 import { downloadRecords } from '../../services/app.service';
-
-interface ColumnSelectDialogProps {
-    open: boolean;
-    onClose: () => void;
-    columns: string[];
-    project_id: string;
-    project_name: string;
-    project_settings?: {
-        exportColumns?: string[];
-    };
-}
+import { ColumnSelectDialogProps, CheckboxesGroupProps } from '../../types';
 
 const ColumnSelectDialog: React.FC<ColumnSelectDialogProps> = (props) => {
     const { open, onClose, columns, project_id, project_name, project_settings } = props;
@@ -136,14 +126,6 @@ const ColumnSelectDialog: React.FC<ColumnSelectDialogProps> = (props) => {
         </Dialog>
     );
 };
-
-interface CheckboxesGroupProps {
-    columns: string[];
-    selected: string[];
-    setSelected: (selected: string[]) => void;
-    exportType: string;
-    setExportType: (exportType: string) => void;
-}
 
 const CheckboxesGroup: React.FC<CheckboxesGroupProps> = (props) => {
     const { columns, selected, setSelected, exportType, setExportType } = props;

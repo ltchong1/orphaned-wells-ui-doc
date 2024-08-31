@@ -5,6 +5,7 @@ import { formatConfidence, useKeyDown, useOutsideClick, round } from '../../asse
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
+import { Attribute, RecordAttributesTableProps } from '../../types';
 
 const styles: { [key: string]: React.CSSProperties } = {
     fieldsTable: {
@@ -45,24 +46,9 @@ const styles: { [key: string]: React.CSSProperties } = {
 
 const LOW_CONFIDENCE: number = 0.01;
 
-interface Attribute {
-    key: string;
-    value: string;
-    confidence: number | null;
-    edited?: boolean;
-    normalized_vertices: number[][] | null;
-    subattributes?: Attribute[];
-}
-
-interface AttributesTableProps {
+interface AttributesTableProps extends RecordAttributesTableProps {
     attributesList: Attribute[];
-    handleClickField: (key: string, vertices: number[][] | null, index: number, isSubattribute: boolean, subattributeIdx: number | null) => void;
-    handleChangeValue: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => void;
-    fullscreen: string | null;
     forceOpenSubtable: number | null;
-    displayKeyIndex: number;
-    displayKeySubattributeIndex: number | null;
-    handleUpdateRecord: () => void;
 }
 
 const AttributesTable: FC<AttributesTableProps> = (props) => {
@@ -114,18 +100,13 @@ const AttributesTable: FC<AttributesTableProps> = (props) => {
     )
 }
 
-interface AttributeRowProps {
+interface AttributeRowProps extends RecordAttributesTableProps {
     k: string;
     v: Attribute;
     idx: number;
-    handleClickField: AttributesTableProps["handleClickField"];
-    handleChangeValue: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => void;
-    fullscreen: string | null;
     forceOpenSubtable: number | null;
-    displayKeyIndex: number;
-    displayKeySubattributeIndex: number | null;
-    handleUpdateRecord: () => void;
 }
+
 
 const AttributeRow: FC<AttributeRowProps> = (props) => { 
     const { 
@@ -303,16 +284,10 @@ const AttributeRow: FC<AttributeRowProps> = (props) => {
     )
 }
 
-interface SubattributesTableProps {
+interface SubattributesTableProps extends RecordAttributesTableProps {
     attributesList: Attribute[];
-    handleClickField: AttributesTableProps["handleClickField"];
-    handleChangeValue: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void;
     open: boolean;
     topLevelIdx: number;
-    fullscreen: string | null;
-    displayKeyIndex: number;
-    displayKeySubattributeIndex: number | null;
-    handleUpdateRecord: () => void;
 }
 
 const SubattributesTable: FC<SubattributesTableProps> = (props) => {
@@ -369,16 +344,10 @@ const SubattributesTable: FC<SubattributesTableProps> = (props) => {
     )
 }
 
-interface SubattributeRowProps {
+interface SubattributeRowProps extends RecordAttributesTableProps {
     k: string;
     v: Attribute;
-    handleClickField: AttributesTableProps["handleClickField"];
-    handleChangeValue: (event: React.ChangeEvent<HTMLInputElement>, topLevelIdx: number, isSubattribute: boolean, subIdx: number) => void;
     topLevelIdx: number;
-    fullscreen: string | null;
-    displayKeyIndex: number;
-    displayKeySubattributeIndex: number | null;
-    handleUpdateRecord: () => void;
     idx: number;
 }
 

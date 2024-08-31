@@ -23,7 +23,7 @@ export const formatDate = (timestamp: number | null): string | null => {
     const year: number = date.getFullYear();
     const formattedDate: string = `${month + 1}/${day}/${year}`;
     return formattedDate;
-  } else return timestamp;
+  } else return String(timestamp);
 }
 
 export const median = (numbers: number[]): number => {

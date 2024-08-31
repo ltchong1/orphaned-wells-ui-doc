@@ -3,11 +3,7 @@ import { Grid, Box, Modal, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { FileUploader } from "react-drag-drop-files";
-
-interface UploadDocumentsModalProps {
-    setShowModal: (show: boolean) => void;
-    handleUploadDocument: (file: File) => void;
-}
+import { UploadDocumentsModalProps } from '../../types';
 
 const UploadDocumentsModal: FC<UploadDocumentsModalProps> = (props) => {
     const { setShowModal, handleUploadDocument } = props;

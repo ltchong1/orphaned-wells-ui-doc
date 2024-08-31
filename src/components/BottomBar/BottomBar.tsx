@@ -14,27 +14,7 @@ import SplitButton from '../SplitButton/SplitButton';
 import ErrorIcon from '@mui/icons-material/Error';
 import CancelIcon from '@mui/icons-material/Cancel';
 import WarningIcon from '@mui/icons-material/Warning';
-
-interface RecordData {
-  _id: string;
-  name: string;
-  project_id: string;
-  project_name: string;
-  attributesList: Array<any>;
-  img_urls: Array<string>;
-  recordIndex?: number;
-  review_status?: string;
-  notes?: string;
-}
-
-interface BottombarProps {
-  recordData: RecordData;
-  onPreviousButtonClick: () => void;
-  onNextButtonClick: () => void;
-  onReviewButtonClick: () => void;
-  handleUpdateReviewStatus: (status: string) => void;
-  promptResetRecord: () => void;
-}
+import { BottombarProps } from '../../types';
 
 const Bottombar: FC<BottombarProps> = (props) => {
   let params = useParams<{ id: string }>(); 

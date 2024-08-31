@@ -11,14 +11,7 @@ import { callAPI } from './assets/helperFunctions';
 import { checkAuth } from './services/app.service';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import './App.css';
-
-interface User {
-  email: string,
-  name: string,
-  picture: string,
-  hd: string,
-  role: number
-}
+import { User } from './types';
 
 const theme = createTheme({
   palette: {

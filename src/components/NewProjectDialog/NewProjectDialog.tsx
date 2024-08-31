@@ -4,19 +4,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import { processor_data } from '../../assets/processors';
 import { addProject } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
+import { Processor } from '../../types';
 
 interface NewProjectDialogProps {
     open: boolean;
     onClose: () => void;
-}
-
-interface Processor {
-    id: string;
-    displayName: string;
-    img: string;
-    documentType: string;
-    state: string;
-    attributes: any;
 }
 
 const NewProjectDialog: FC<NewProjectDialogProps> = (props) => {

@@ -8,19 +8,7 @@ import Bottombar from '../../components/BottomBar/BottomBar';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
-
-interface RecordData {
-    _id: string;
-    name: string;
-    project_id: string;
-    project_name: string;
-    attributesList: Array<any>;
-    img_urls: Array<string>;
-    recordIndex?: number;
-    review_status?: string;
-    notes?: string;
-    
-}
+import { RecordData, handleChangeValueSignature } from '../../types';
 
 interface PreviousPages {
     [key: string]: () => void;
@@ -155,7 +143,7 @@ const Record: FC = () => {
         }
     }
 
-    const handleChangeValue = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
+    const handleChangeValue: handleChangeValueSignature = (event, topLevelIndex, isSubattribute, subIndex) => {
         let tempRecordData = { ...recordData };
         let tempAttributesList = [...tempRecordData.attributesList];
         let tempAttribute: any;

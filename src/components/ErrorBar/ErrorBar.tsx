@@ -1,14 +1,7 @@
 import React, { FC } from 'react'; 
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
-
-interface ErrorBarProps {
-  setOpen: (open: boolean) => void;
-  duration?: number;
-  margin?: boolean;
-  severity?: "error" | "warning" | "info" | "success";
-  errorMessage: string;
-}
+import { ErrorBarProps } from '../../types';
 
 const ErrorBar: FC<ErrorBarProps> = (props) => {
 

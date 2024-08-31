@@ -9,20 +9,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import Draggable from 'react-draggable';
 import ApprovalIcon from '@mui/icons-material/Approval';
 import { FILTER_OPTIONS } from '../../assets/filterOptions';
-
-interface FilterOption {
-    key: string;
-    operator: string;
-    type: string;
-    value?: string;
-    options?: Array<{ name: string; checked: boolean }>;
-    selectedOptions?: string[];
-}
-
-interface TableFiltersProps {
-    applyFilters: (filters: FilterOption[]) => void;
-    appliedFilters: FilterOption[];
-}
+import { FilterOption, TableFiltersProps } from '../../types';
 
 const TableFilters: React.FC<TableFiltersProps> = (props) => {
     const { applyFilters, appliedFilters } = props;

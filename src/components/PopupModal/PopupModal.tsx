@@ -1,32 +1,8 @@
 import { Fragment, FC } from 'react';
 import { Grid, Button, Modal, TextField, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { PopupModalProps } from '../../types';
 
-interface PopupModalProps {
-    width?: number;
-    open: boolean;
-    handleClose: () => void;
-    textLabel?: string;
-    text: string | null | undefined;
-    handleEditText?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    handleSave: () => void;
-    buttonVariant: 'text' | 'outlined' | 'contained';
-    buttonColor: "inherit" | "primary" | "secondary" | "error" | "info" | "success" | "warning";
-    buttonText: string;
-    input?: boolean;
-    showError?: boolean;
-    errorText?: string;
-    iconOne?: React.ReactNode;
-    iconTwo?: React.ReactNode;
-    hasTwoButtons?: boolean;
-    handleButtonTwoClick?: () => void;
-    buttonTwoVariant?: 'text' | 'outlined' | 'contained';
-    buttonTwoColor?: "inherit" | "primary" | "secondary" | "error" | "info" | "success" | "warning";
-    buttonTwoText?: string;
-    disableSubmit?: boolean;
-    multiline?: boolean;
-    inputrows?: number;
-}
 
 const PopupModal: FC<PopupModalProps> = (props) => {
     const { 

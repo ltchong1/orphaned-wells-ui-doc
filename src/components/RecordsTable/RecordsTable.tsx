@@ -20,34 +20,8 @@ import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelect
 import { formatDate, average, formatConfidence } from '../../assets/helperFunctions';
 import Notes from '../Notes/Notes';
 import TableFilters from '../TableFilters/TableFilters';
-
-interface Record {
-  _id: string;
-  recordIndex: number;
-  name: string;
-  dateCreated: number;
-  status: string;
-  review_status: string;
-  attributesList: Array<{ confidence?: number; key: string; value: string }>;
-  notes?: string | null;
-}
-
-interface RecordsTableProps {
-  projectData: { id_?: string; attributes?: Array<{ name: string }>; name?: string; settings?: any };
-  records: Record[];
-  setRecords: (records: Record[]) => void;
-  pageSize: number;
-  currentPage: number;
-  sortBy: string;
-  sortAscending: number;
-  recordCount: number;
-  setPageSize: (size: number) => void;
-  setCurrentPage: (page: number) => void;
-  appliedFilters: any;
-  setAppliedFilters: (filters: any) => void;
-  setSortBy: (sortBy: string) => void;
-  setSortAscending: (ascending: number) => void;
-}
+import { RecordData } from '../../types';
+import { RecordsTableProps } from '../../types';
 
 const TABLE_ATTRIBUTES = {
   displayNames: ["Record Name", "Date Uploaded", "API Number", "Mean Confidence", "Lowest Confidence", "Notes", "Digitization Status", "Review Status"],
@@ -142,7 +116,7 @@ const RecordsTable: FC<RecordsTableProps> = (props) => {
     return formatConfidence(lowestConfidence);
   }
 
-  const getAPINumber = (record: Record): string => {
+  const getAPINumber = (record: RecordData): string => {
     try {
       for (let attr of record.attributesList) {
         if (attr.key === "API_NUMBER")  {
@@ -155,7 +129,7 @@ const RecordsTable: FC<RecordsTableProps> = (props) => {
     }
   }
 
-  const handleClickNotes = (event: React.MouseEvent<HTMLButtonElement>, row: Record) => {
+  const handleClickNotes = (event: React.MouseEvent<HTMLButtonElement>, row: RecordData) => {
     event.stopPropagation();
     setShowNotes(true);
     setNotesRecordId(row._id);
@@ -213,7 +187,7 @@ const RecordsTable: FC<RecordsTableProps> = (props) => {
     return paragraphStyle;
   }
 
-  const tableRow = (row: Record, idx: number) => {
+  const tableRow = (row: RecordData, idx: number) => {
     return (
       <TableRow
         sx={styles.projectRow}

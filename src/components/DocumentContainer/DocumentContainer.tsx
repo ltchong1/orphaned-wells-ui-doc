@@ -6,13 +6,7 @@ import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import { ImageCropper } from '../ImageCropper/ImageCropper';
 import { useKeyDown } from '../../assets/helperFunctions';
 import AttributesTable from '../RecordAttributesTable/RecordAttributesTable';
-
-interface DocumentContainerProps {
-    imageFiles: string[];
-    attributesList: any[];
-    handleChangeValue: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => void;
-    handleUpdateRecord: () => void;
-}
+import { DocumentContainerProps } from '../../types';
 
 const styles = {
     imageBox: {

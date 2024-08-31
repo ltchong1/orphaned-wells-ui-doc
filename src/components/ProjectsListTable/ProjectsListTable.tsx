@@ -2,18 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { formatDate } from '../../assets/helperFunctions';
 import { FC } from 'react';
-
-interface Project {
-  id_: string;
-  name: string;
-  description: string;
-  documentType: string;
-  state: string;
-  creator: {
-    name: string;
-  };
-  dateCreated: number;
-}
+import { Project } from "../../types";
 
 interface ProjectsListTableProps {
   projects: Project[];
