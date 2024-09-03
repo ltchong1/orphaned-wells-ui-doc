@@ -14,7 +14,7 @@ const Project: FC = () => {
     const params = useParams<{ id: string }>(); 
     const navigate = useNavigate();
     const [records, setRecords] = useState<any[]>([]);
-    const [projectData, setProjectData] = useState<ProjectData>({ attributes: [], id_: params.id, name: "", settings: {} });
+    const [projectData, setProjectData] = useState<ProjectData>({ attributes: [], id_: params.id || "", name: "", settings: {} });
     const [showDocumentModal, setShowDocumentModal] = useState<boolean>(false);
     const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState<boolean>(false);
@@ -48,6 +48,8 @@ const Project: FC = () => {
     };
 
     const handleSuccess = (data: { records: any[], project_data: ProjectData, record_count: number }): void => {
+        console.log("project data: ")
+        console.log(data.project_data)
         setRecords(data.records);
         setProjectData(data.project_data);
         setProjectName(data.project_data.name);

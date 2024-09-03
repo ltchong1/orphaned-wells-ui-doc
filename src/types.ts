@@ -16,23 +16,18 @@ export interface RecordData {
 }
 
 export interface ProjectData {
-    attributes: any[];
-    id_?: string;
-    name: string;
-    settings: any;
-}
-
-export interface Project {
     id_: string;
+    attributes: any[];
     name: string;
-    description: string;
-    documentType: string;
-    state: string;
-    creator: {
-      name: string;
-      email: string;
+    settings?: any;
+    description?: string;
+    documentType?: string;
+    state?: string;
+    creator?: {
+      name?: string;
+      email?: string;
     };
-    dateCreated: number;
+    dateCreated?: number;
 }
 
 export interface Attribute {

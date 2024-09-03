@@ -2,10 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { formatDate } from '../../assets/helperFunctions';
 import { FC } from 'react';
-import { Project } from "../../types";
+import { ProjectData } from "../../types";
 
 interface ProjectsListTableProps {
-  projects: Project[];
+  projects: ProjectData[];
 }
 
 const ProjectsListTable: FC<ProjectsListTableProps> = (props) => {
@@ -39,7 +39,7 @@ const ProjectsListTable: FC<ProjectsListTableProps> = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {projects.map((row: Project, idx: number) => (
+          {projects.map((row: ProjectData, idx: number) => (
             <TableRow
               key={row.name + " " + idx}
               sx={styles.projectRow}
@@ -51,8 +51,8 @@ const ProjectsListTable: FC<ProjectsListTableProps> = (props) => {
               <TableCell>{row.description}</TableCell>
               <TableCell>{row.documentType}</TableCell>
               <TableCell>{row.state}</TableCell>
-              <TableCell>{row.creator.name}</TableCell>
-              <TableCell>{formatDate(row.dateCreated)}</TableCell>
+              <TableCell>{row.creator?.name || ""}</TableCell>
+              <TableCell>{formatDate(row.dateCreated || null)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
