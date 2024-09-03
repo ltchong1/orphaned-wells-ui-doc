@@ -36,9 +36,29 @@ const mockProjects = [
     }
 ]
 
-test('test records table', () => {
+const mockFunction = (): void => {}
 
-    render( <HashRouter> <RecordsTable projectData={mockProjects[0]} records={[]} recordCount={10} page={0} appliedFilters={[]}/> </HashRouter> )
+test('test records table', (): void => {
+
+    render( 
+        <HashRouter> 
+            <RecordsTable 
+                projectData={mockProjects[0]}
+                records={[]}
+                pageSize={25}
+                currentPage={0}
+                recordCount={10}
+                appliedFilters={[]}
+                sortBy={"dateAscending"}
+                sortAscending={1}
+                setRecords={mockFunction}
+                setSortBy={mockFunction}
+                setPageSize={mockFunction}
+                setCurrentPage={mockFunction}
+                setAppliedFilters={mockFunction}
+                setSortAscending={mockFunction}
+            /> 
+        </HashRouter> )
 
     //test for component elements
     screen.getByRole('table', {  name: /records table/i});

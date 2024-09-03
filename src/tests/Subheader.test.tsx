@@ -3,9 +3,9 @@ import Subheader from "../components/Subheader/Subheader"
 import { HashRouter } from "react-router-dom";
 
 
-test('test Subheader', () => {
+test('test Subheader', (): void => {
 
-    render( <HashRouter><Subheader buttonName="New Project"/> </HashRouter>)
+    render( <HashRouter><Subheader currentPage={""} buttonName="New Project"/> </HashRouter>)
 
     //test for component elements
     

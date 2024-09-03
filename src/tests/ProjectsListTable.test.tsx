@@ -13,7 +13,8 @@ const mockProjects = [
         },
         "history": [
             ""
-        ]
+        ],
+        "attributes": []
     },
     {
         "id_": "65a168bcaf3fee6e0acd2120",
@@ -25,13 +26,14 @@ const mockProjects = [
         },
         "history": [
             ""
-        ]
+        ],
+        "attributes": []
     }
 ]
 
-test('test project list table', () => {
+test('test project list table', (): void => {
 
-    render( <HashRouter> <ProjectsListTable projects={mockProjects}/> </HashRouter> )
+    render( <HashRouter> <ProjectsListTable projects={mockProjects}/> </HashRouter> );
 
     //test for component elements
     screen.getByRole('table', {  name: /projects table/i});
@@ -39,4 +41,5 @@ test('test project list table', () => {
     screen.getByRole('columnheader', {  name: /description/i});
     screen.getByRole('columnheader', {  name: /locations/i});
     screen.getByRole('columnheader', {  name: /date/i});
-})
+});
+
