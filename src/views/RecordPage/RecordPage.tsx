@@ -16,8 +16,6 @@ interface PreviousPages {
 
 const Record = () => {
     const [recordData, setRecordData] = useState<RecordData>({} as RecordData);
-    const [fullAttributesList, setFullAttributesList] = useState<Array<any>>([]);
-    const [wasEdited, setWasEdited] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [recordName, setRecordName] = useState("");
@@ -81,24 +79,6 @@ const Record = () => {
         };
         tempPreviousPages[data.project_name] = () => navigate("/project/" + data.project_id, { replace: true });
         setPreviousPages(tempPreviousPages);
-
-        let tempFullAttributesList: Array<any> = [];
-        let topLevelIndex = 0;
-        for (let attribute of data.attributesList) {
-            attribute["idx"] = topLevelIndex;
-            tempFullAttributesList.push(attribute);
-            if (attribute.subattributes) {
-                let i = 0;
-                for (let sub_attribute of attribute.subattributes) {
-                    sub_attribute["idx"] = topLevelIndex;
-                    sub_attribute["sub_idx"] = i;
-                    tempFullAttributesList.push(sub_attribute);
-                    i += 1;
-                }
-            }
-            topLevelIndex += 1;
-        }
-        setFullAttributesList(tempFullAttributesList);
     }
 
     const handleChangeRecordName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,7 +105,6 @@ const Record = () => {
     }
 
     const handleSuccessfulAttributeUpdate = (data: RecordData) => {
-        setWasEdited(false);
         let tempRecordData = { ...recordData } as RecordData;
         tempRecordData["attributesList"] = data["attributesList"]
         setRecordData(tempRecordData);
@@ -165,7 +144,6 @@ const Record = () => {
         tempAttributesList[topLevelIndex] = tempAttribute;
         tempRecordData.attributesList = tempAttributesList;
         setRecordData(tempRecordData);
-        setWasEdited(true);
     }
 
     const handleDeleteRecord = () => {

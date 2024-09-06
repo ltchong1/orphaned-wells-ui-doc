@@ -32,7 +32,6 @@ const styles = {
 const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, handleUpdateRecord }: DocumentContainerProps) => {
     const [imgIndex, setImgIndex] = useState(0);
     const [displayPoints, setDisplayPoints] = useState<number[][] | null>(null);
-    const [displayKey, setDisplayKey] = useState<string | null>(null);
     const [displayKeyIndex, setDisplayKeyIndex] = useState(-1);
     const [displayKeySubattributeIndex, setDisplayKeySubattributeIndex] = useState<number | null>(null);
     const [fullscreen, setFullscreen] = useState<string | null>(null);
@@ -77,7 +76,6 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
 
     useEffect(() => {
         setDisplayPoints(null);
-        setDisplayKey(null);
         setDisplayKeyIndex(-1);
     }, [params.id]);
 
@@ -226,11 +224,9 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
     const handleClickField = (key: string, normalized_vertices: number[][] | null, primaryIndex: number, isSubattribute: boolean, subattributeIdx: number | null) => {
         if (!key || (!isSubattribute && primaryIndex === displayKeyIndex) || (isSubattribute && primaryIndex === displayKeyIndex && subattributeIdx === displayKeySubattributeIndex)) {
             setDisplayPoints(null);
-            setDisplayKey(null);
             setDisplayKeyIndex(-1);
         }
         else {
-            setDisplayKey(key);
             setDisplayKeyIndex(primaryIndex);
             setDisplayKeySubattributeIndex(subattributeIdx);
             if (normalized_vertices !== null && normalized_vertices !== undefined) {
