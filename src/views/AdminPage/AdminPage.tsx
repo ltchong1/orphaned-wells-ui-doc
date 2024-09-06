@@ -1,6 +1,6 @@
-import { useState, useEffect, FC } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { Select, MenuItem, FormControl, IconButton, Tooltip, FormHelperText, InputLabel } from '@mui/material';
+import { Select, MenuItem, FormControl, IconButton, Tooltip, InputLabel } from '@mui/material';
 import Subheader from '../../components/Subheader/Subheader';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
@@ -15,17 +15,17 @@ const ROLES: { [key: string]: string } = {
     10: "admin"
 }
 
-const AdminPage: FC = () => {
+const AdminPage = () => {
     const [users, setUsers] = useState<any[]>([]);
-    const [unableToConnect, setUnableToConnect] = useState<boolean>(false);
-    const [showNewUserModal, setShowNewUserModal] = useState<boolean>(false);
-    const [showApproveUserModal, setShowApproveUserModal] = useState<boolean>(false);
-    const [showDeleteUserModal, setShowDeleteUserModal] = useState<boolean>(false);
+    const [unableToConnect, setUnableToConnect] = useState(false);
+    const [showNewUserModal, setShowNewUserModal] = useState(false);
+    const [showApproveUserModal, setShowApproveUserModal] = useState(false);
+    const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState<string | null>(null);
-    const [newUser, setNewUser] = useState<string>("");
-    const [disableSubmitNewUserButton, setDisableSubmitNewUserButton] = useState<boolean>(true);
-    const [showError, setShowError] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>("");
+    const [newUser, setNewUser] = useState("");
+    const [disableSubmitNewUserButton, setDisableSubmitNewUserButton] = useState(true);
+    const [showError, setShowError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const styles = {
         outerBox: {
@@ -46,38 +46,38 @@ const AdminPage: FC = () => {
         setDisableSubmitNewUserButton(!emailIsValid(newUser));
     }, [newUser]);
 
-    const emailIsValid = (email: string): boolean => {
+    const emailIsValid = (email: string) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    const handleAuthSuccess = (data: any[]): void => {
+    const handleAuthSuccess = (data: any[]) => {
         setUsers(data);
     }
 
-    const handleAuthError = (e: any): void => {
+    const handleAuthError = (e: any) => {
         console.error(e);
         setUnableToConnect(true);
     }
 
-    const handleApproveUser = (): void => {
+    const handleApproveUser = () => {
         callAPI(approveUser, [selectedUser], handleSuccess, (e) => handleUserError("unable to approve user", e));
     }
 
-    const handleAddUser = (): void => {
+    const handleAddUser = () => {
         callAPI(addUser, [newUser], handleSuccess, (e) => handleUserError("unable to add user", e));
     }
 
-    const handleDeleteUser = (): void => {
+    const handleDeleteUser = () => {
         callAPI(deleteUser, [selectedUser], handleSuccess, (e) => handleUserError("unable to delete user", e));
     }
 
-    const handleSuccess = (): void => {
+    const handleSuccess = () => {
         setTimeout(() => {
             window.location.reload();
         }, 500);
     }
 
-    const handleClose = (): void => {
+    const handleClose = () => {
         setShowApproveUserModal(false);
         setSelectedUser(null);
         setShowNewUserModal(false);
@@ -85,7 +85,7 @@ const AdminPage: FC = () => {
         setShowDeleteUserModal(false);
     }
 
-    const handleUserError = (message: string, e: any): void => {
+    const handleUserError = (message: string, e: any) => {
         console.error(e.detail);
         setShowError(true);
         setErrorMessage(e.detail);
@@ -158,9 +158,8 @@ interface UsersTableProps {
     setShowDeleteUserModal: (show: boolean) => void;
 }
 
-const UsersTable: FC<UsersTableProps> = (props) => {
-    const [tableRole, setTableRole] = useState<number>(-1);
-    const { users, setSelectedUser, setShowApproveUserModal, setShowDeleteUserModal } = props;
+const UsersTable = ({ users, setSelectedUser, setShowApproveUserModal, setShowDeleteUserModal }: UsersTableProps) => {
+    const [tableRole, setTableRole] = useState(-1);
 
     const styles = {
         headerRow: {
@@ -173,12 +172,12 @@ const UsersTable: FC<UsersTableProps> = (props) => {
         }
     }
 
-    const handleSelectUser = (user: any): void => {
+    const handleSelectUser = (user: any) => {
         setShowApproveUserModal(true);
         setSelectedUser(user.email);
     }
 
-    const handleDeleteUser = (user: any): void => {
+    const handleDeleteUser = (user: any) => {
         setShowDeleteUserModal(true);
         setSelectedUser(user.email);
     }
@@ -229,8 +228,7 @@ interface RoleDropdownProps {
     handleSelectRole: (role: number) => void;
 }
 
-const RoleDropdown: FC<RoleDropdownProps> = (props) => {
-    const { role, handleSelectRole } = props;
+const RoleDropdown = ({ role, handleSelectRole }: RoleDropdownProps) => {
 
     return (
         <FormControl sx={{ width: 200, pb: 3 }}>

@@ -1,16 +1,16 @@
-import { useState, FC } from 'react';   
+import { useState } from 'react';   
 import { Grid, Box, Modal, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { FileUploader } from "react-drag-drop-files";
 import { UploadDocumentsModalProps } from '../../types';
 
-const UploadDocumentsModal: FC<UploadDocumentsModalProps> = (props) => {
+const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     const { setShowModal, handleUploadDocument } = props;
-    const [ showWarning, setShowWarning ] = useState<boolean>(false);
-    const [ warningMessage, setWarningMessage ] = useState<string>("");
+    const [ showWarning, setShowWarning ] = useState(false);
+    const [ warningMessage, setWarningMessage ] = useState("");
     const [ file, setFile ] = useState<File | null>(null);
-    const maxFileSize: number = 10;
+    const maxFileSize = 10;
     const fileTypes: string[] = ["tiff", "tif", "pdf", "png", "jpg", "jpeg", "zip"];
 
     const styles = {
@@ -59,11 +59,11 @@ const UploadDocumentsModal: FC<UploadDocumentsModalProps> = (props) => {
         },
     };
 
-    const handleClose = (): void => {
+    const handleClose = () => {
         setShowModal(false);
     };
 
-    const handleClickUpload = (): void => {
+    const handleClickUpload = () => {
         if (file === null) {
             setWarningMessage("Please upload a valid file");
             setShowWarning(true);
@@ -77,17 +77,17 @@ const UploadDocumentsModal: FC<UploadDocumentsModalProps> = (props) => {
         }
     };
 
-    const fileTypeError = (): void => {
+    const fileTypeError = () => {
         setWarningMessage("Unsupported file type");
         setShowWarning(true);
     };
 
-    const fileSizeError = (): void => {
+    const fileSizeError = () => {
         setWarningMessage("File too large");
         setShowWarning(true);
     };
 
-    const fileUploaderContainer = (): JSX.Element => {
+    const fileUploaderContainer = () => {
         return (
             <Box sx={styles.fileUploaderBox}>
                 <Box sx={styles.uploadContainerBox}>
@@ -124,8 +124,8 @@ const UploadDocumentsModal: FC<UploadDocumentsModalProps> = (props) => {
         );
     };
 
-    const DragDrop = (): JSX.Element => {
-        const handleChange = (file: File): void => {
+    const DragDrop = () => {
+        const handleChange = (file: File) => {
             setWarningMessage("");
             setShowWarning(false);
             setFile(file);

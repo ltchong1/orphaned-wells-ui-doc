@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
 import { getProjectData, uploadDocument, deleteProject, updateProject } from '../../services/app.service';
@@ -10,20 +10,20 @@ import { callAPI } from '../../assets/helperFunctions';
 import { convertFiltersToMongoFormat } from '../../assets/helperFunctions';
 import { ProjectData } from '../../types';
 
-const Project: FC = () => {
+const Project = () => {
     const params = useParams<{ id: string }>(); 
     const navigate = useNavigate();
     const [records, setRecords] = useState<any[]>([]);
     const [projectData, setProjectData] = useState<ProjectData>({ attributes: [], id_: params.id || "", name: "", settings: {} });
-    const [showDocumentModal, setShowDocumentModal] = useState<boolean>(false);
-    const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-    const [openUpdateNameModal, setOpenUpdateNameModal] = useState<boolean>(false);
-    const [projectName, setProjectName] = useState<string>("");
-    const [recordCount, setRecordCount] = useState<number>(0);
-    const [currentPage, setCurrentPage] = useState<number>(0);
-    const [pageSize, setPageSize] = useState<number>(100);
-    const [sortBy, setSortBy] = useState<string>('dateCreated');
-    const [sortAscending, setSortAscending] = useState<number>(1);
+    const [showDocumentModal, setShowDocumentModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
+    const [projectName, setProjectName] = useState("");
+    const [recordCount, setRecordCount] = useState(0);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pageSize, setPageSize] = useState(100);
+    const [sortBy, setSortBy] = useState('dateCreated');
+    const [sortAscending, setSortAscending] = useState(1);
     const [filterBy, setFilterBy] = useState<any[]>(
             JSON.parse(localStorage.getItem("appliedFilters") || '{}')[params.id || ""] || []
     );
@@ -36,7 +36,7 @@ const Project: FC = () => {
         setCurrentPage(0);
     }, [sortBy, sortAscending, filterBy]);
 
-    const loadData = (): void => {
+    const loadData = () => {
         const sort: [string, number] = [sortBy, sortAscending];
         const args: [string, number, number, [string, number], any] = [params.id || "", currentPage, pageSize, sort, convertFiltersToMongoFormat(filterBy)];
         callAPI(
@@ -47,9 +47,7 @@ const Project: FC = () => {
         );
     };
 
-    const handleSuccess = (data: { records: any[], project_data: ProjectData, record_count: number }): void => {
-        console.log("project data: ")
-        console.log(data.project_data)
+    const handleSuccess = (data: { records: any[], project_data: ProjectData, record_count: number }) => {
         setRecords(data.records);
         setProjectData(data.project_data);
         setProjectName(data.project_data.name);
@@ -67,7 +65,7 @@ const Project: FC = () => {
         },
     };
 
-    const handleUploadDocument = (file: File): void => {
+    const handleUploadDocument = (file: File) => {
         const formData = new FormData();
         formData.append('file', file, file.name);
         callAPI(
@@ -78,17 +76,17 @@ const Project: FC = () => {
         );
     };
 
-    const handleSuccessfulDocumentUpload = (): void => {
+    const handleSuccessfulDocumentUpload = () => {
         setTimeout(() => {
             window.location.reload();
         }, 500);
     };
 
-    const handleUpdateProject = (): void => {
+    const handleUpdateProject = () => {
         setOpenUpdateNameModal(true);
     };
 
-    const handleDeleteProject = (): void => {
+    const handleDeleteProject = () => {
         setOpenDeleteModal(false);
         callAPI(
             deleteProject,
@@ -98,11 +96,11 @@ const Project: FC = () => {
         );
     };
 
-    const handleChangeProjectName = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    const handleChangeProjectName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setProjectName(event.target.value);
     };
 
-    const handleUpdateProjectName = (): void => {
+    const handleUpdateProjectName = () => {
         setOpenUpdateNameModal(false);
         callAPI(
             updateProject,

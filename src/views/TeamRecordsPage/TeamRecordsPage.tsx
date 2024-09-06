@@ -1,11 +1,11 @@
-import { useState, useEffect, FC } from 'react';
+import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { getTeamRecords } from '../../services/app.service';
 import Subheader from '../../components/Subheader/Subheader';
 import { callAPI } from '../../assets/helperFunctions';
 import { RecordData } from '../../types';
 
-const TeamRecordsPage: FC = () => {
+const TeamRecordsPage = () => {
     const [records, setRecords] = useState<RecordData[]>([]);
 
     useEffect(() => {

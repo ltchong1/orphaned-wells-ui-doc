@@ -1,17 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { formatDate } from '../../assets/helperFunctions';
-import { FC } from 'react';
 import { ProjectData } from "../../types";
 
 interface ProjectsListTableProps {
   projects: ProjectData[];
 }
 
-const ProjectsListTable: FC<ProjectsListTableProps> = (props) => {
+const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
   const navigate = useNavigate();
-  const { projects } = props;
-
   const styles = {
     headerRow: {
       fontWeight: "bold"
@@ -24,7 +21,7 @@ const ProjectsListTable: FC<ProjectsListTableProps> = (props) => {
     }
   }
 
-  const handleClickProject = (project_id: string): void => {
+  const handleClickProject = (project_id: string) => {
     navigate("/project/" + project_id);
   }
   

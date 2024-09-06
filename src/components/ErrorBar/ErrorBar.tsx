@@ -1,11 +1,10 @@
-import React, { FC } from 'react'; 
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import { ErrorBarProps } from '../../types';
 
-const ErrorBar: FC<ErrorBarProps> = (props) => {
+const ErrorBar = (props: ErrorBarProps) => {
 
-    const handleErrorClose = (): void => {
+    const handleErrorClose = () => {
         props.setOpen(false);
     }
 

@@ -1,14 +1,14 @@
-let BACKEND_URL: string = process.env.REACT_APP_BACKEND_URL as string;
+let BACKEND_URL = process.env.REACT_APP_BACKEND_URL as string;
 
-export const getProjects = (): Promise<Response> => {
+export const getProjects = () => {
     return fetch(BACKEND_URL + '/get_projects', {
         mode: 'cors',
         headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
     });
 };
 
-export const getProjectData = (project_id: string, page: number, records_per_page: number, sort: string, filter: string): Promise<Response> => {
-    let route: string = BACKEND_URL + '/get_project/' + project_id + '?page=' + page + '&records_per_page=' + records_per_page;
+export const getProjectData = (project_id: string, page: number, records_per_page: number, sort: string, filter: string) => {
+    let route = BACKEND_URL + '/get_project/' + project_id + '?page=' + page + '&records_per_page=' + records_per_page;
     let data: { sort: string; filter: string } = {
         sort: sort,
         filter: filter
@@ -21,14 +21,14 @@ export const getProjectData = (project_id: string, page: number, records_per_pag
     });
 };
 
-export const getTeamRecords = (): Promise<Response> => {
+export const getTeamRecords = () => {
     return fetch(BACKEND_URL + '/get_team_records', {
         mode: 'cors',
         headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
     });
 };
 
-export const addProject = (data: any): Promise<Response> => {
+export const addProject = (data: any) => {
     return fetch(BACKEND_URL + '/add_project', {
         method: 'POST',
         mode: 'cors',
@@ -37,7 +37,7 @@ export const addProject = (data: any): Promise<Response> => {
     });
 };
 
-export const uploadDocument = (data: FormData, project_id: string): Promise<Response> => {
+export const uploadDocument = (data: FormData, project_id: string)  => {
     return fetch(BACKEND_URL + '/upload_document/' + project_id + '/' + localStorage.getItem("user_email"), {
         method: 'POST',
         mode: 'cors',
@@ -45,21 +45,21 @@ export const uploadDocument = (data: FormData, project_id: string): Promise<Resp
     });
 };
 
-export const getRecordData = (record_id: string): Promise<Response> => {
+export const getRecordData = (record_id: string) => {
     return fetch(BACKEND_URL + '/get_record/' + record_id, {
         mode: 'cors',
         headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
     });
 };
 
-export const downloadRecordsCSV = (project_id: string): Promise<Response> => {
+export const downloadRecordsCSV = (project_id: string) => {
     return fetch(BACKEND_URL + '/download_records/' + project_id, {
         mode: 'cors',
         headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
     });
 };
 
-export const downloadRecords = (project_id: string, data: any): Promise<Response> => {
+export const downloadRecords = (project_id: string, data: any) => {
     return fetch(BACKEND_URL + '/download_records/' + project_id, {
         method: 'POST',
         mode: 'cors',
@@ -68,7 +68,7 @@ export const downloadRecords = (project_id: string, data: any): Promise<Response
     });
 };
 
-export const updateProject = (project_id: string, data: any): Promise<Response> => {
+export const updateProject = (project_id: string, data: any) => {
     return fetch(BACKEND_URL + '/update_project/' + project_id, {
         method: 'POST',
         mode: 'cors',
@@ -77,7 +77,7 @@ export const updateProject = (project_id: string, data: any): Promise<Response> 
     });
 };
 
-export const updateRecord = (record_id: string, data: any): Promise<Response> => {
+export const updateRecord = (record_id: string, data: any) => {
     return fetch(BACKEND_URL + '/update_record/' + record_id, {
         method: 'POST',
         mode: 'cors',
@@ -86,7 +86,7 @@ export const updateRecord = (record_id: string, data: any): Promise<Response> =>
     });
 };
 
-export const deleteProject = (project_id: string): Promise<Response> => {
+export const deleteProject = (project_id: string) => {
     return fetch(BACKEND_URL + '/delete_project/' + project_id, {
         method: 'POST',
         mode: 'cors',
@@ -94,7 +94,7 @@ export const deleteProject = (project_id: string): Promise<Response> => {
     });
 };
 
-export const deleteRecord = (record_id: string): Promise<Response> => {
+export const deleteRecord = (record_id: string) => {
     return fetch(BACKEND_URL + '/delete_record/' + record_id, {
         method: 'POST',
         mode: 'cors',
@@ -102,7 +102,7 @@ export const deleteRecord = (record_id: string): Promise<Response> => {
     });
 };
 
-export const authLogin = (code: any): Promise<Response> => {
+export const authLogin = (code: any) => {
     return fetch(BACKEND_URL + '/auth_login', {
         method: 'POST',
         mode: 'cors',
@@ -111,7 +111,7 @@ export const authLogin = (code: any): Promise<Response> => {
     });
 };
 
-export const checkAuth = (idtoken: any): Promise<Response> => {
+export const checkAuth = (idtoken: any) => {
     return fetch(BACKEND_URL + '/check_auth', {
         method: 'POST',
         mode: 'cors',
@@ -120,7 +120,7 @@ export const checkAuth = (idtoken: any): Promise<Response> => {
     });
 };
 
-export const refreshAuth = (): Promise<Response> => {
+export const refreshAuth = () => {
     return fetch(BACKEND_URL + '/auth_refresh', {
         method: 'POST',
         mode: 'cors',
@@ -129,7 +129,7 @@ export const refreshAuth = (): Promise<Response> => {
     });
 };
 
-export const getUsers = (role: string, data: any): Promise<Response> => {
+export const getUsers = (role: string, data: any) => {
     return fetch(BACKEND_URL + '/get_users/' + role, {
         method: 'POST',
         mode: 'cors',
@@ -138,7 +138,7 @@ export const getUsers = (role: string, data: any): Promise<Response> => {
     });
 };
 
-export const approveUser = (email: string): Promise<Response> => {
+export const approveUser = (email: string) => {
     return fetch(BACKEND_URL + '/approve_user/' + email, {
         method: 'POST',
         mode: 'cors',
@@ -146,7 +146,7 @@ export const approveUser = (email: string): Promise<Response> => {
     });
 };
 
-export const addUser = (email: string): Promise<Response> => {
+export const addUser = (email: string) => {
     return fetch(BACKEND_URL + '/add_user/' + email, {
         method: 'POST',
         mode: 'cors',
@@ -154,7 +154,7 @@ export const addUser = (email: string): Promise<Response> => {
     });
 };
 
-export const deleteUser = (email: string): Promise<Response> => {
+export const deleteUser = (email: string) => {
     return fetch(BACKEND_URL + '/delete_user/' + email, {
         method: 'POST',
         mode: 'cors',
@@ -162,7 +162,7 @@ export const deleteUser = (email: string): Promise<Response> => {
     });
 };
 
-export const revokeToken = (): Promise<Response> => {
+export const revokeToken = () => {
     return fetch(BACKEND_URL + '/logout', {
         method: 'POST',
         mode: 'cors',
@@ -171,7 +171,7 @@ export const revokeToken = (): Promise<Response> => {
     });
 };
 
-export const getNextRecord = (data: any): Promise<Response> => {
+export const getNextRecord = (data: any) => {
     return fetch(BACKEND_URL + '/get_next_record', {
         method: 'POST',
         mode: 'cors',
@@ -180,7 +180,7 @@ export const getNextRecord = (data: any): Promise<Response> => {
     });
 };
 
-export const getPreviousRecord = (data: any): Promise<Response> => {
+export const getPreviousRecord = (data: any) => {
     return fetch(BACKEND_URL + '/get_previous_record', {
         method: 'POST',
         mode: 'cors',
@@ -189,7 +189,7 @@ export const getPreviousRecord = (data: any): Promise<Response> => {
     });
 };
 
-export const addContributors = (project_id: string, data: any): Promise<Response> => {
+export const addContributors = (project_id: string, data: any) => {
     return fetch(BACKEND_URL + '/add_contributors/' + project_id, {
         method: 'POST',
         mode: 'cors',

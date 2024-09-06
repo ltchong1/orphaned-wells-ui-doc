@@ -1,5 +1,5 @@
-import React, { FC, useState, useEffect } from 'react';
-import { Box, IconButton } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
 import { getRecordData, updateRecord, deleteRecord, getNextRecord, getPreviousRecord } from '../../services/app.service';
 import { callAPI, useKeyDown } from '../../assets/helperFunctions';
@@ -14,17 +14,17 @@ interface PreviousPages {
     [key: string]: () => void;
 }
 
-const Record: FC = () => {
+const Record = () => {
     const [recordData, setRecordData] = useState<RecordData>({} as RecordData);
     const [fullAttributesList, setFullAttributesList] = useState<Array<any>>([]);
-    const [wasEdited, setWasEdited] = useState<boolean>(false);
-    const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-    const [openUpdateNameModal, setOpenUpdateNameModal] = useState<boolean>(false);
-    const [recordName, setRecordName] = useState<string>("");
+    const [wasEdited, setWasEdited] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
+    const [recordName, setRecordName] = useState("");
     const [previousPages, setPreviousPages] = useState<PreviousPages>({ "Projects": () => navigate("/projects", { replace: true }) });
-    const [showErrorBar, setShowErrorBar] = useState<boolean>(false);
-    const [errorMsg, setErrorMsg] = useState<string>("");
-    const [showResetPrompt, setShowResetPrompt] = useState<boolean>(false);
+    const [showErrorBar, setShowErrorBar] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
+    const [showResetPrompt, setShowResetPrompt] = useState(false);
     const params = useParams<{ id: string }>();
     const navigate = useNavigate();
 

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from "react-router-dom";
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -16,10 +16,10 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import WarningIcon from '@mui/icons-material/Warning';
 import { BottombarProps } from '../../types';
 
-const Bottombar: FC<BottombarProps> = (props) => {
-  let params = useParams<{ id: string }>(); 
+const Bottombar = (props: BottombarProps) => {
+  let params = useParams(); 
   const { recordData, onPreviousButtonClick, onNextButtonClick, onReviewButtonClick, handleUpdateReviewStatus, promptResetRecord } = props;
-  const [openNotesModal, setOpenNotesModal] = useState<boolean>(false);
+  const [openNotesModal, setOpenNotesModal] = useState(false);
   
   const splitButtonOptions: Record<string, Array<{ text: string; onClick: () => void; icon: JSX.Element; selected?: boolean }>> = {
     unreviewed: [

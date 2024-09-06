@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Box, TextField, IconButton, Grid, Button, Tooltip, Dialog, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { processor_data } from '../../assets/processors';
@@ -11,14 +11,13 @@ interface NewProjectDialogProps {
     onClose: () => void;
 }
 
-const NewProjectDialog: FC<NewProjectDialogProps> = (props) => {
-    const { open, onClose } = props;
-    const [projectName, setProjectName] = useState<string>("");
-    const [projectDescription, setProjectDescription] = useState<string>("");
+const NewProjectDialog = ({ open, onClose }: NewProjectDialogProps) => {
+    const [projectName, setProjectName] = useState("");
+    const [projectDescription, setProjectDescription] = useState("");
     const [selectedProcessor, setSelectedProcessor] = useState<{ processorId: string | null; idx?: number }>({ processorId: null });
-    const [disableCreateButton, setDisableCreateButton] = useState<boolean>(true);
-    const dialogHeight: string = '85vh';
-    const dialogWidth: string = '60vw';
+    const [disableCreateButton, setDisableCreateButton] = useState(true);
+    const dialogHeight = '85vh';
+    const dialogWidth = '60vw';
     const processors: Processor[] = processor_data[process.env.REACT_APP_STATE || "illinois"];
 
     const descriptionElementRef = useRef<HTMLDivElement | null>(null);
@@ -66,11 +65,11 @@ const NewProjectDialog: FC<NewProjectDialogProps> = (props) => {
         }
     };
 
-    const handleClose = (): void => {
+    const handleClose = () => {
         onClose();
     };
 
-    const handleSelectProcessor = (processorId: string, idx: number): void => {
+    const handleSelectProcessor = (processorId: string, idx: number) => {
         if (selectedProcessor.processorId === processorId) setSelectedProcessor({ processorId: null });
         else {
             setSelectedProcessor({ processorId: processorId, idx: idx });
@@ -85,7 +84,7 @@ const NewProjectDialog: FC<NewProjectDialogProps> = (props) => {
         return styling;
     };
 
-    const handleCreateProject = (): void => {
+    const handleCreateProject = () => {
         let body = {
             name: projectName,
             description: projectDescription,
@@ -103,7 +102,7 @@ const NewProjectDialog: FC<NewProjectDialogProps> = (props) => {
         );
     };
 
-    const handleSuccessfulProjectCreation = (): void => {
+    const handleSuccessfulProjectCreation = () => {
         setTimeout(() => {
             window.location.reload();
         }, 500);

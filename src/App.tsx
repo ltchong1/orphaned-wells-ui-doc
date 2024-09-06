@@ -24,14 +24,11 @@ const theme = createTheme({
 
 function App() {
   const [ authenticated, setAuthenticated ] = React.useState(false)
-  // const [ userCredentials, setUserCredentials ] = React.useState({})
   let navigate = useNavigate()
 
   React.useEffect(() => {
     let id_token = localStorage.getItem("id_token")
-    // localStorage.clear()
     if (id_token !== null) {
-      // setUserCredentials({id_token: id_token})
       checkAuthentication(id_token)
     } else {
       navigate("/login")

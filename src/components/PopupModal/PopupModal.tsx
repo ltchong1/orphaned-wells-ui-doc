@@ -1,10 +1,9 @@
-import { Fragment, FC } from 'react';
 import { Grid, Button, Modal, TextField, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { PopupModalProps } from '../../types';
 
 
-const PopupModal: FC<PopupModalProps> = (props) => {
+const PopupModal = (props: PopupModalProps) => {
     const { 
         width,
         open,

@@ -1,4 +1,4 @@
-import { useState, useEffect, FC } from 'react';
+import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import Subheader from '../../components/Subheader/Subheader';
 import ProjectsListTable from '../../components/ProjectsListTable/ProjectsListTable';
@@ -6,10 +6,10 @@ import NewProjectDialog from '../../components/NewProjectDialog/NewProjectDialog
 import { getProjects } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 
-const ProjectsListPage: FC = () => {
+const ProjectsListPage = () => {
     const [projects, setProjects] = useState<any[]>([]);
-    const [unableToConnect, setUnableToConnect] = useState<boolean>(false);
-    const [showNewProjectDialog, setShowNewProjectDialog] = useState<boolean>(false);
+    const [unableToConnect, setUnableToConnect] = useState(false);
+    const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
 
     useEffect(() => {
         callAPI(getProjects, [], handleSuccess, handleError);

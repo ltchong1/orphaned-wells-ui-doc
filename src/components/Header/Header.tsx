@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { Menu, MenuItem, IconButton, Avatar, Tabs, Tab } from '@mui/material';
 import { logout } from '../../assets/helperFunctions';
 
-const Header: React.FC= (props) => {
+const Header = (props: any) => {
   const navigate = useNavigate();
   const [anchorAr, setAnchorAr] = useState<null | HTMLElement>(null);
-  const [profileActions, setProfileActions] = useState<boolean>(false);
-  const [tabValue, setTabValue] = useState<number>(0);
+  const [profileActions, setProfileActions] = useState(false);
+  const [tabValue, setTabValue] = useState(0);
 
   const styles = {
     iconLeft: {
@@ -51,16 +51,16 @@ const Header: React.FC= (props) => {
     }
   }, [props]);
 
-  const handleNavigateHome = (): void => {
+  const handleNavigateHome = () => {
     navigate("/", { replace: true });
   }
 
-  const handleShowProfileActions = (event: React.MouseEvent<HTMLElement>): void => {
+  const handleShowProfileActions = (event: React.MouseEvent<HTMLElement>) => {
     setProfileActions(!profileActions);
     setAnchorAr(event.currentTarget);
   }
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number): void => {
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
     if (newValue !== tabValue) {
       let newLocation: string;

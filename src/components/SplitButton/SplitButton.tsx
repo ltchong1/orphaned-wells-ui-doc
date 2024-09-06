@@ -13,26 +13,25 @@ interface SplitButtonProps {
     options: Option[];
 }
 
-const SplitButton: React.FC<SplitButtonProps> = (props) => {
-    const { options } = props;
-    const [open, setOpen] = React.useState<boolean>(false);
+const SplitButton = ({ options }: SplitButtonProps) => {
+    const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef<HTMLDivElement>(null);
-    const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
+    const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-    const handleClick = (): void => {
+    const handleClick = () => {
         options[selectedIndex].onClick();
     };
 
-    const handleMenuItemClick = (index: number): void => {
+    const handleMenuItemClick = (index: number) => {
         setSelectedIndex(index);
         setOpen(false);
     };
 
-    const handleToggle = (): void => {
+    const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
     };
 
-    const handleClose = (event: MouseEvent | TouchEvent): void => {
+    const handleClose = (event: MouseEvent | TouchEvent) => {
         if (anchorRef.current && anchorRef.current.contains(event.target as Node)) {
             return;
         }

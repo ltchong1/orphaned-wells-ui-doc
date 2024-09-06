@@ -1,14 +1,14 @@
-import React, { FC, useState, Fragment, MouseEvent } from 'react';
+import { useState, Fragment, MouseEvent } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Button, Grid, IconButton, Box, Menu, MenuItem, Chip } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { SubheaderProps } from '../../types';
 
-const Subheader: FC<SubheaderProps> = (props) => {
+const Subheader = (props: SubheaderProps) => {
     const navigate = useNavigate();
     const { currentPage, buttonName, status, subtext, handleClickButton, disableButton, previousPages, actions } = props;
-    const [showActions, setShowActions] = useState<boolean>(false);
+    const [showActions, setShowActions] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const styles = {
         iconButton: {
@@ -57,16 +57,16 @@ const Subheader: FC<SubheaderProps> = (props) => {
         }
     }
 
-    const handleNavigate = (path: string): void => {
+    const handleNavigate = (path: string) => {
         navigate(path, { replace: true });
     }
 
-    const handleShowActions = (event: MouseEvent<HTMLElement>): void => {
+    const handleShowActions = (event: MouseEvent<HTMLElement>) => {
         setShowActions(!showActions);
         setAnchorEl(event.currentTarget);
     }
 
-    const handleSelectAction = (action_func: () => void): void => {
+    const handleSelectAction = (action_func: Function) => {
         setShowActions(false);
         action_func();
     }

@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
 import { Box, TextField, Collapse, Typography, IconButton, Badge } from '@mui/material';
 import { formatConfidence, useKeyDown, useOutsideClick, round } from '../../assets/helperFunctions';
@@ -51,7 +51,7 @@ interface AttributesTableProps extends RecordAttributesTableProps {
     forceOpenSubtable: number | null;
 }
 
-const AttributesTable: FC<AttributesTableProps> = (props) => {
+const AttributesTable = (props: AttributesTableProps) => {
     const { 
         attributesList,
         handleClickField,
@@ -108,7 +108,7 @@ interface AttributeRowProps extends RecordAttributesTableProps {
 }
 
 
-const AttributeRow: FC<AttributeRowProps> = (props) => { 
+const AttributeRow = (props: AttributeRowProps) => { 
     const { 
         k, 
         v, 
@@ -122,9 +122,9 @@ const AttributeRow: FC<AttributeRowProps> = (props) => {
         handleUpdateRecord 
     } = props;
     
-    const [ editMode, setEditMode ] = useState<boolean>(false);
-    const [ openSubtable, setOpenSubtable ] = useState<boolean>(false);
-    const [ isSelected, setIsSelected ] = useState<boolean>(false);
+    const [ editMode, setEditMode ] = useState(false);
+    const [ openSubtable, setOpenSubtable ] = useState(false);
+    const [ isSelected, setIsSelected ] = useState(false);
 
     useEffect(() => {
         if (idx === displayKeyIndex && (displayKeySubattributeIndex === null || displayKeySubattributeIndex === undefined)) setIsSelected(true);
@@ -290,7 +290,7 @@ interface SubattributesTableProps extends RecordAttributesTableProps {
     topLevelIdx: number;
 }
 
-const SubattributesTable: FC<SubattributesTableProps> = (props) => {
+const SubattributesTable = (props: SubattributesTableProps) => {
     const { 
         attributesList,
         handleClickField,
@@ -351,7 +351,7 @@ interface SubattributeRowProps extends RecordAttributesTableProps {
     idx: number;
 }
 
-const SubattributeRow: FC<SubattributeRowProps> = (props) => { 
+const SubattributeRow = (props: SubattributeRowProps) => { 
     const { 
         k, 
         v,
@@ -365,8 +365,8 @@ const SubattributeRow: FC<SubattributeRowProps> = (props) => {
         idx
     } = props;
 
-    const [ editMode, setEditMode ] = useState<boolean>(false);
-    const [ isSelected, setIsSelected ] = useState<boolean>(false);
+    const [ editMode, setEditMode ] = useState(false);
+    const [ isSelected, setIsSelected ] = useState(false);
 
     useEffect(() => {
         if (displayKeyIndex === topLevelIdx && idx === displayKeySubattributeIndex) {

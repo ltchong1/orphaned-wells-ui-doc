@@ -1,4 +1,4 @@
-import { useEffect, useState, FC } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Typography, Modal } from '@mui/material';
 import { useGoogleLogin } from '@react-oauth/google';
@@ -10,9 +10,9 @@ interface LoginPageProps {
     authenticated: boolean;
 }
 
-const LoginPage: FC<LoginPageProps> = (props) => {
+const LoginPage = (props: LoginPageProps) => {
     const { handleSuccessfulAuthentication, authenticated } = props;
-    const [showUnauthorizedMessage, setShowUnauthorizedMessage] = useState<boolean>(false);
+    const [showUnauthorizedMessage, setShowUnauthorizedMessage] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {

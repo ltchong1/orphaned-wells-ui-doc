@@ -1,4 +1,4 @@
-import { useState, useEffect, FC } from 'react';
+import { useState, useEffect } from 'react';
 import ReactCrop, { Crop } from 'react-image-crop';
 
 const DRAG_HANDLES: string[] = [
@@ -21,13 +21,13 @@ interface ImageCropperProps {
     highlightedImageIdxIndex: number;
 }
 
-export const ImageCropper: FC<ImageCropperProps> = (props) => {
+export const ImageCropper = (props: ImageCropperProps) => {
     const { image, displayPoints, disabled, fullscreen, imageIdx, highlightedImageIdxIndex } = props;
     const [crop, setCrop] = useState<Crop | undefined>(undefined);
-    const [zoom, setZoom] = useState<number>(1);
+    const [zoom, setZoom] = useState(1);
     const [imageDimensions, setImageDimensions] = useState<number[]>([]);
-    const [width, setWidth] = useState<string>("100%");
-    const [height, setHeight] = useState<string>("100%");
+    const [width, setWidth] = useState("100%");
+    const [height, setHeight] = useState("100%");
 
     const styles = {
         imageDiv: {

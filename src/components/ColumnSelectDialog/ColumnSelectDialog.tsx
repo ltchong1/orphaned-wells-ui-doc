@@ -6,13 +6,13 @@ import { callAPIWithBlobResponse } from '../../assets/helperFunctions';
 import { downloadRecords } from '../../services/app.service';
 import { ColumnSelectDialogProps, CheckboxesGroupProps } from '../../types';
 
-const ColumnSelectDialog: React.FC<ColumnSelectDialogProps> = (props) => {
+const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
     const { open, onClose, columns, project_id, project_name, project_settings } = props;
 
     const [selectedColumns, setSelectedColumns] = useState<string[]>([...columns]);
-    const [exportType, setExportType] = useState<string>("csv");
-    const dialogHeight: string = '85vh';
-    const dialogWidth: string = '60vw';
+    const [exportType, setExportType] = useState("csv");
+    const dialogHeight = '85vh';
+    const dialogWidth = '60vw';
 
     useEffect(() => {
         if (project_settings && project_settings.exportColumns) {
@@ -45,11 +45,11 @@ const ColumnSelectDialog: React.FC<ColumnSelectDialogProps> = (props) => {
         }
     };
 
-    const handleClose = (): void => {
+    const handleClose = () => {
         onClose();
     };
 
-    const handleExport = (): void => {
+    const handleExport = () => {
         const body = {
             exportType: exportType,
             columns: selectedColumns
@@ -62,7 +62,7 @@ const ColumnSelectDialog: React.FC<ColumnSelectDialogProps> = (props) => {
         );
     };
 
-    const handleSuccessfulExport = (data: Blob): void => {
+    const handleSuccessfulExport = (data: Blob) => {
         onClose();
         const href = window.URL.createObjectURL(data);
         const link = document.createElement('a');
@@ -127,20 +127,20 @@ const ColumnSelectDialog: React.FC<ColumnSelectDialogProps> = (props) => {
     );
 };
 
-const CheckboxesGroup: React.FC<CheckboxesGroupProps> = (props) => {
+const CheckboxesGroup = (props: CheckboxesGroupProps) => {
     const { columns, selected, setSelected, exportType, setExportType } = props;
 
     useEffect(() => {
     }, [columns]);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        const isSelected: boolean = event.target.checked;
-        const attr: string = event.target.name;
-        const tempSelected: string[] = [...selected];
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const isSelected = event.target.checked;
+        const attr = event.target.name;
+        const tempSelected = [...selected];
         if (isSelected) {
             tempSelected.push(attr);
         } else {
-            const index: number = tempSelected.indexOf(attr);
+            const index = tempSelected.indexOf(attr);
             if (index > -1) {
                 tempSelected.splice(index, 1);
             }

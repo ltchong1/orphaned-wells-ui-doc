@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { Grid, Box, IconButton } from '@mui/material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
@@ -29,24 +29,23 @@ const styles = {
     },
 }
 
-const DocumentContainer: FC<DocumentContainerProps> = (props) => {
-    const { imageFiles, attributesList, handleChangeValue, handleUpdateRecord } = props;
-    const [imgIndex, setImgIndex] = useState<number>(0);
+const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, handleUpdateRecord }: DocumentContainerProps) => {
+    const [imgIndex, setImgIndex] = useState(0);
     const [displayPoints, setDisplayPoints] = useState<number[][] | null>(null);
     const [displayKey, setDisplayKey] = useState<string | null>(null);
-    const [displayKeyIndex, setDisplayKeyIndex] = useState<number>(-1);
+    const [displayKeyIndex, setDisplayKeyIndex] = useState(-1);
     const [displayKeySubattributeIndex, setDisplayKeySubattributeIndex] = useState<number | null>(null);
     const [fullscreen, setFullscreen] = useState<string | null>(null);
     const [gridWidths, setGridWidths] = useState<number[]>([5.9, 0.2, 5.9]);
-    const [width, setWidth] = useState<string>("100%");
-    const [height, setHeight] = useState<string>("auto");
+    const [width, setWidth] = useState("100%");
+    const [height, setHeight] = useState("auto");
     const [forceOpenSubtable, setForceOpenSubtable] = useState<number | null>(null);
-    const [imageHeight, setImageHeight] = useState<number>(0);
+    const [imageHeight, setImageHeight] = useState(0);
     const imageDivStyle = {
         width: width,
         height: height,
     }
-    const params = useParams<{ id: string }>(); 
+    const params = useParams(); 
 
     useEffect(() => {
         if (displayKeyIndex !== -1 && displayKeySubattributeIndex !== null) {

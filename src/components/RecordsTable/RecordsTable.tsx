@@ -1,4 +1,4 @@
-import React, { FC, useEffect, Fragment, useState } from 'react';
+import React, { useEffect, Fragment, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, TablePagination, Icon } from '@mui/material';
 import { Button, Box, Paper, IconButton, Grid } from '@mui/material';
@@ -30,7 +30,7 @@ const TABLE_ATTRIBUTES = {
 
 const SORTABLE_COLUMNS = ["name", "dateCreated", "status", "review_status"]
 
-const RecordsTable: FC<RecordsTableProps> = (props) => {
+const RecordsTable = (props: RecordsTableProps) => {
   let navigate = useNavigate();
   const { 
     projectData, 
@@ -49,9 +49,9 @@ const RecordsTable: FC<RecordsTableProps> = (props) => {
     setSortAscending
   } = props;
 
-  const [ openColumnSelect, setOpenColumnSelect ] = useState<boolean>(false);
+  const [ openColumnSelect, setOpenColumnSelect ] = useState(false);
   const [ attributes, setAttributes ] = useState<string[]>([]);
-  const [ showNotes, setShowNotes ] = useState<boolean>(false);
+  const [ showNotes, setShowNotes ] = useState(false);
   const [ notesRecordId, setNotesRecordId ] = useState<string | null | undefined>(null);
   const [ notes, setNotes ] = useState<string | null | undefined>(null);
 
@@ -94,7 +94,7 @@ const RecordsTable: FC<RecordsTableProps> = (props) => {
     navigate("/record/" + record_id);
   }
 
-  const calculateAverageConfidence = (attributes: Array<{ confidence?: number }>): string | null => {
+  const calculateAverageConfidence = (attributes: Array<{ confidence?: number }>) => {
     let confidences: number[] = [];
     try {
       for (let attr of attributes) {
@@ -106,8 +106,8 @@ const RecordsTable: FC<RecordsTableProps> = (props) => {
     }
   }
 
-  const calculateLowestConfidence = (attributes: Array<{ confidence?: number }>): string => {
-    let lowestConfidence: number = 1;
+  const calculateLowestConfidence = (attributes: Array<{ confidence?: number }>) => {
+    let lowestConfidence = 1;
     for (let attr of attributes) {
       if (attr.confidence && attr.confidence < lowestConfidence) {
         lowestConfidence = attr.confidence;
@@ -116,7 +116,7 @@ const RecordsTable: FC<RecordsTableProps> = (props) => {
     return formatConfidence(lowestConfidence);
   }
 
-  const getAPINumber = (record: RecordData): string => {
+  const getAPINumber = (record: RecordData) => {
     try {
       for (let attr of record.attributesList) {
         if (attr.key === "API_NUMBER")  {
@@ -338,7 +338,7 @@ const RecordsTable: FC<RecordsTableProps> = (props) => {
   );
 }
 
-const TablePaginationActions: FC<any> = (props) => {
+const TablePaginationActions = (props: any) => {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
 

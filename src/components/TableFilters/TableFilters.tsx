@@ -2,7 +2,6 @@ import React, { useState, MouseEvent } from 'react';
 import { Button, Menu, MenuItem, Checkbox, Box, TextField, IconButton } from '@mui/material';
 import { Select, FormControl, InputLabel, Grid, ListItemText, Badge, SelectChangeEvent } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -11,8 +10,7 @@ import ApprovalIcon from '@mui/icons-material/Approval';
 import { FILTER_OPTIONS } from '../../assets/filterOptions';
 import { FilterOption, TableFiltersProps } from '../../types';
 
-const TableFilters: React.FC<TableFiltersProps> = (props) => {
-    const { applyFilters, appliedFilters } = props;
+const TableFilters = ({ applyFilters, appliedFilters }: TableFiltersProps) => {
     const styles = {
         tableFilter: {
             paddingBottom: 2,
@@ -165,7 +163,7 @@ interface TableFilterProps {
     removeFilter: (idx: number) => void;
 }
 
-const TableFilter: React.FC<TableFilterProps> = (props) => {
+const TableFilter = (props: TableFilterProps) => {
     const { thisFilter, updateCurrentFilters, operator, idx, removeFilter } = props;
 
     const styles = {

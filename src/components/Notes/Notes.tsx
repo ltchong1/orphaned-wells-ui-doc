@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PopupModal from '../PopupModal/PopupModal';
 import { updateRecord } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
@@ -10,19 +10,18 @@ interface NotesProps {
     onClose: (recordId?: NotesProps["record_id"], notes?: NotesProps["notes"]) => void;
 }
 
-const Notes: FC<NotesProps> = (props) => {
-    const { record_id, notes, open, onClose } = props;
+const Notes = ({ record_id, notes, open, onClose }: NotesProps) => {
     const [recordNotes, setRecordNotes] = useState<string | null | undefined>("");
 
     useEffect(() => {
         setRecordNotes(notes);
     }, [notes, record_id]);
 
-    const handleChangeRecordNotes = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>): void => {
+    const handleChangeRecordNotes = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setRecordNotes(event.target.value);
     }
 
-    const handleUpdateRecordNotes = (): void => {
+    const handleUpdateRecordNotes = () => {
         callAPI(
             updateRecord,
             [record_id, { data: { "notes": recordNotes }, type: "notes" }],
@@ -31,7 +30,7 @@ const Notes: FC<NotesProps> = (props) => {
         );
     }
 
-    const handleFailedUpdate = (data: any): void => {
+    const handleFailedUpdate = (data: any) => {
         console.log("unable to update notes");
         console.error(data);
         onClose();
