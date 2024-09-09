@@ -62,25 +62,26 @@ const Record = () => {
 
     const handleFailedFetchRecord = (data: any, response_status?: number) => {
         if (response_status === 303) {
-            handleSuccessfulFetchRecord(data.recordData, true)
+            handleSuccessfulFetchRecord(data, true)
         } else {
             console.error('error getting record data: ', data);
         }
     }
 
-    const handleSuccessfulFetchRecord = (data: RecordData, lock_record?: boolean) => {
+    const handleSuccessfulFetchRecord = (data: any, lock_record?: boolean) => {
+        let newRecordData = data.recordData;
         if (lock_record) {
             setLocked(true)
         }
         else {
             setLocked(false)
         }
-        setRecordData(data);
-        setRecordName(data.name);
+        setRecordData(newRecordData);
+        setRecordName(newRecordData.name);
         let tempPreviousPages: PreviousPages = {
             "Projects": () => navigate("/projects", { replace: true }),
         };
-        tempPreviousPages[data.project_name] = () => navigate("/project/" + data.project_id, { replace: true });
+        tempPreviousPages[newRecordData.project_name] = () => navigate("/project/" + newRecordData.project_id, { replace: true });
         setPreviousPages(tempPreviousPages);
     }
 
@@ -109,7 +110,7 @@ const Record = () => {
         );
     }
 
-    const handleSuccessfulAttributeUpdate = (data: RecordData) => {
+    const handleSuccessfulAttributeUpdate = (data: any) => {
         let tempRecordData = { ...recordData } as RecordData;
         tempRecordData["attributesList"] = data["attributesList"]
         setRecordData(tempRecordData);
@@ -172,8 +173,8 @@ const Record = () => {
         callAPI(
             getNextRecord,
             [body],
-            handleSuccessNavigateRecord,
-            handleFailedFetchRecord
+            navigateToRecord,
+            navigateToRecord
         );
     }
 
@@ -182,8 +183,8 @@ const Record = () => {
         callAPI(
             getPreviousRecord,
             [body],
-            handleSuccessNavigateRecord,
-            handleFailedFetchRecord
+            navigateToRecord,
+            navigateToRecord
         );
     }
 
@@ -192,7 +193,7 @@ const Record = () => {
         callAPI(
             getNextRecord,
             [body],
-            handleSuccessNavigateRecord,
+            navigateToRecord,
             (e) => console.error("unable to go to mark record reviewed: " + e)
         );
     }
@@ -200,8 +201,12 @@ const Record = () => {
     useKeyDown("ArrowLeft", undefined, undefined, handleClickPrevious, undefined);
     useKeyDown("ArrowRight", undefined, undefined, handleClickNext, handleClickMarkReviewed);
 
-    const handleSuccessNavigateRecord = (data: any) => {
-        window.location.href = "/#/record/" + data._id;
+    const navigateToRecord = (data: any) => {
+        let record_data = data.recordData;
+        let newUrl = "/#/record/" + record_data._id;
+        console.log("navigating to ");
+        console.log(newUrl);
+        window.location.href = newUrl;
     }
 
     const promptResetRecord = () => {
