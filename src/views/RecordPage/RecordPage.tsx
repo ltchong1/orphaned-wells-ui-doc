@@ -62,18 +62,19 @@ const Record = () => {
 
     const handleFailedFetchRecord = (data: any, response_status?: number) => {
         if (response_status === 303) {
-            setLocked(true)
-            // if (data.direction === "previous") {
-            //     handleClickPrevious(data.recordData, true);
-            // } else {
-            //     handleClickNext(data.recordData, true);
-            // }
+            handleSuccessfulFetchRecord(data.recordData, true)
         } else {
             console.error('error getting record data: ', data);
         }
     }
 
-    const handleSuccessfulFetchRecord = (data: RecordData) => {
+    const handleSuccessfulFetchRecord = (data: RecordData, lock_record?: boolean) => {
+        if (lock_record) {
+            setLocked(true)
+        }
+        else {
+            setLocked(false)
+        }
         setRecordData(data);
         setRecordName(data.name);
         let tempPreviousPages: PreviousPages = {
@@ -200,7 +201,7 @@ const Record = () => {
     useKeyDown("ArrowRight", undefined, undefined, handleClickNext, handleClickMarkReviewed);
 
     const handleSuccessNavigateRecord = (data: any) => {
-        navigate("/record/" + data._id, { replace: true });
+        window.location.href = "/#/record/" + data._id;
     }
 
     const promptResetRecord = () => {
