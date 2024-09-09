@@ -78,6 +78,7 @@ export interface RecordAttributesTableProps {
     displayKeyIndex: number;
     displayKeySubattributeIndex: number | null;
     handleUpdateRecord: () => void;
+    locked?: boolean;
 }
 
 export interface RecordsTableProps {
@@ -132,6 +133,7 @@ export interface SubheaderProps {
     disableButton?: boolean;
     previousPages?: Record<string, () => void>;
     actions?: Record<string, () => void>;
+    locked?: boolean;
 }
 
 export interface TableFiltersProps {
@@ -151,6 +153,7 @@ export interface BottombarProps {
     onReviewButtonClick: () => void;
     handleUpdateReviewStatus: (status: string) => void;
     promptResetRecord: () => void;
+    locked?: boolean;
 }
 
 export interface DocumentContainerProps {
@@ -158,6 +161,7 @@ export interface DocumentContainerProps {
     attributesList: any[];
     handleChangeValue: handleChangeValueSignature;
     handleUpdateRecord: () => void;
+    locked?: boolean;
 }
 
 export interface ColumnSelectDialogProps {

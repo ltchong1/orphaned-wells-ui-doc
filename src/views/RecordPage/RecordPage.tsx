@@ -23,6 +23,7 @@ const Record = () => {
     const [showErrorBar, setShowErrorBar] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [showResetPrompt, setShowResetPrompt] = useState(false);
+    const [locked, setLocked] = useState(false)
     const params = useParams<{ id: string }>();
     const navigate = useNavigate();
 
@@ -61,11 +62,12 @@ const Record = () => {
 
     const handleFailedFetchRecord = (data: any, response_status?: number) => {
         if (response_status === 303) {
-            if (data.direction === "previous") {
-                handleClickPrevious(data.recordData, true);
-            } else {
-                handleClickNext(data.recordData, true);
-            }
+            setLocked(true)
+            // if (data.direction === "previous") {
+            //     handleClickPrevious(data.recordData, true);
+            // } else {
+            //     handleClickNext(data.recordData, true);
+            // }
         } else {
             console.error('error getting record data: ', data);
         }
@@ -86,6 +88,7 @@ const Record = () => {
     }
 
     const handleUpdateRecordName = () => {
+        if (locked) return
         setOpenUpdateNameModal(false);
         callAPI(
             updateRecord,
@@ -96,6 +99,7 @@ const Record = () => {
     }
 
     const handleUpdateRecord = () => {
+        if (locked) return
         callAPI(
             updateRecord,
             [params.id, { data: recordData, type: "attributesList" }],
@@ -123,6 +127,7 @@ const Record = () => {
     }
 
     const handleChangeValue: handleChangeValueSignature = (event, topLevelIndex, isSubattribute, subIndex) => {
+        if (locked) return
         let tempRecordData = { ...recordData };
         let tempAttributesList = [...tempRecordData.attributesList];
         let tempAttribute: any;
@@ -233,6 +238,7 @@ const Record = () => {
                 }
                 previousPages={previousPages}
                 status={recordData.review_status}
+                locked={locked}
             />
             <Box sx={styles.innerBox}>
                 <DocumentContainer
@@ -240,6 +246,7 @@ const Record = () => {
                     attributesList={recordData.attributesList}
                     handleChangeValue={handleChangeValue}
                     handleUpdateRecord={handleUpdateRecord}
+                    locked={locked}
                 />
             </Box>
             <Bottombar
@@ -249,6 +256,7 @@ const Record = () => {
                 recordData={recordData}
                 handleUpdateReviewStatus={handleUpdateReviewStatus}
                 promptResetRecord={promptResetRecord}
+                locked={locked}
             />
             <PopupModal
                 open={openDeleteModal}
