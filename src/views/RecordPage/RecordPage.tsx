@@ -204,8 +204,6 @@ const Record = () => {
     const navigateToRecord = (data: any) => {
         let record_data = data.recordData;
         let newUrl = "/#/record/" + record_data._id;
-        console.log("navigating to ");
-        console.log(newUrl);
         window.location.href = newUrl;
     }
 
