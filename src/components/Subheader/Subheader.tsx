@@ -95,7 +95,7 @@ const Subheader = (props: SubheaderProps) => {
                         {currentPage}&nbsp;
                         {actions &&
                             <>
-                                <IconButton onClick={handleShowActions}><MoreHorizIcon sx={styles.icon} /></IconButton>
+                                <IconButton onClick={handleShowActions} disabled={locked}><MoreHorizIcon sx={styles.icon} /></IconButton>
                                 <Menu
                                     id="actions"
                                     anchorEl={anchorEl}
