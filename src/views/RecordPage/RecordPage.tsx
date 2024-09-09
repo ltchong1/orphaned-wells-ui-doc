@@ -71,9 +71,13 @@ const Record = () => {
     const handleSuccessfulFetchRecord = (data: any, lock_record?: boolean) => {
         let newRecordData = data.recordData;
         if (lock_record) {
+            setShowErrorBar(true)
+            setErrorMsg("This record is currently being reviewed by a team member.")
             setLocked(true)
         }
         else {
+            setShowErrorBar(false)
+            setErrorMsg("")
             setLocked(false)
         }
         setRecordData(newRecordData);
@@ -303,6 +307,8 @@ const Record = () => {
                 <ErrorBar
                     errorMessage={errorMsg}
                     setOpen={setShowErrorBar}
+                    duration={1200000}
+                    margin
                 />
             }
         </Box>
