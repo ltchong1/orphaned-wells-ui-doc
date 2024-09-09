@@ -194,7 +194,7 @@ const Record = () => {
             getNextRecord,
             [body],
             navigateToRecord,
-            (e) => console.error("unable to go to mark record reviewed: " + e)
+            navigateToRecord
         );
     }
 
@@ -203,8 +203,12 @@ const Record = () => {
 
     const navigateToRecord = (data: any) => {
         let record_data = data.recordData;
-        let newUrl = "/#/record/" + record_data._id;
-        window.location.href = newUrl;
+        if (record_data?._id) {
+            let newUrl = "/#/record/" + record_data._id;
+            window.location.href = newUrl;
+        } else {
+            console.error("error redirecting")
+        }
     }
 
     const promptResetRecord = () => {
