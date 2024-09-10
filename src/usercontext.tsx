@@ -14,7 +14,7 @@ export const useUserContext = () => {
   return useContext(AuthContext);
 };
 
-export const UserContext = ({ children }: any) => {
+export const UserContextProvider = ({ children }: any) => {
   const location = useLocation();
   const [user, setUser] = useState<any>(null);
   const [username, setUsername] = useState<string | null>(null);
@@ -22,7 +22,7 @@ export const UserContext = ({ children }: any) => {
   const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
-      setUser(JSON.parse(localStorage.getItem('user_info') || ''))
+      setUser(JSON.parse(localStorage.getItem('user_info') || '{}'))
       setUsername(localStorage.getItem('user_name'));
       setUserPhoto(localStorage.getItem('user_picture'));
       setUserRole(localStorage.getItem('role'));

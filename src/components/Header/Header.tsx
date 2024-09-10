@@ -52,7 +52,6 @@ const Header = (props: any) => {
     } else {
       setTabValue(0);
     }
-    console.log(user)
   }, [props]);
 
   const handleNavigateHome = () => {
