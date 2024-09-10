@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
-import { getRecordData, updateRecord, deleteRecord, getNextRecord, getPreviousRecord } from '../../services/app.service';
+import { getRecordData, updateRecord, deleteRecord } from '../../services/app.service';
 import { callAPI, useKeyDown } from '../../assets/helperFunctions';
 import Subheader from '../../components/Subheader/Subheader';
 import Bottombar from '../../components/BottomBar/BottomBar';
@@ -180,13 +180,8 @@ const Record = () => {
     }
 
     const handleClickMarkReviewed = () => {
-        let body = { data: recordData, reviewed: true, review_status: "reviewed" };
-        callAPI(
-            getNextRecord,
-            [body],
-            navigateToRecord,
-            navigateToRecord
-        );
+        handleUpdateReviewStatus("reviewed")
+        navigateToRecord({recordData: {_id: recordData.next_id}})
     }
 
     useKeyDown("ArrowLeft", undefined, undefined, handleClickPrevious, undefined);
