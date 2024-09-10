@@ -8,7 +8,7 @@ import { useUserContext } from '../../usercontext';
 
 const Header = (props: any) => {
   const navigate = useNavigate();
-  const { username, userPhoto, userRole} = useUserContext();
+  const { user, username, userPhoto, userRole} = useUserContext();
   const [anchorAr, setAnchorAr] = useState<null | HTMLElement>(null);
   const [profileActions, setProfileActions] = useState(false);
   const [tabValue, setTabValue] = useState(0);
@@ -52,6 +52,7 @@ const Header = (props: any) => {
     } else {
       setTabValue(0);
     }
+    console.log(user)
   }, [props]);
 
   const handleNavigateHome = () => {
