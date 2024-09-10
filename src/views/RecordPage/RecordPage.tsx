@@ -171,25 +171,12 @@ const Record = () => {
         navigate("/project/" + recordData.project_id, { replace: true });
     }
 
-    const handleClickNext = (incomingData?: any, useIncomingData?: boolean) => {
-        let body = { data: recordData, reviewed: false };
-        if (useIncomingData) body.data = incomingData;
-        callAPI(
-            getNextRecord,
-            [body],
-            navigateToRecord,
-            navigateToRecord
-        );
+    const handleClickNext = () => {
+        navigateToRecord({recordData: {_id: recordData.next_id}})
     }
 
-    const handleClickPrevious = (incomingData?: any, useIncomingData?: boolean) => {
-        let body = useIncomingData ? incomingData : recordData;
-        callAPI(
-            getPreviousRecord,
-            [body],
-            navigateToRecord,
-            navigateToRecord
-        );
+    const handleClickPrevious = () => {
+        navigateToRecord({recordData: {_id: recordData.previous_id}})
     }
 
     const handleClickMarkReviewed = () => {

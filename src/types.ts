@@ -13,6 +13,8 @@ export interface RecordData {
     notes?: string | null;
     dateCreated: number;
     status: string;
+    previous_id?: string;
+    next_id?: string;
 }
 
 export interface ProjectData {
