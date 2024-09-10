@@ -8,10 +8,10 @@ interface UserContextObject {
   userRole: string | null;
 }
 
-const AuthContext = createContext({} as UserContextObject);
+const UserContext = createContext({} as UserContextObject);
 
 export const useUserContext = () => {
-  return useContext(AuthContext);
+  return useContext(UserContext);
 };
 
 export const UserContextProvider = ({ children }: any) => {
@@ -37,8 +37,8 @@ export const UserContextProvider = ({ children }: any) => {
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <UserContext.Provider value={value}>
       {children}
-    </AuthContext.Provider>
+    </UserContext.Provider>
   );
 };
