@@ -67,7 +67,8 @@ export interface User {
     name: string,
     picture: string,
     hd: string,
-    role: number
+    role: number,
+    user_info?: any
   }
 
 /*

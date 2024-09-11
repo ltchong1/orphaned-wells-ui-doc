@@ -180,6 +180,7 @@ const Record = () => {
     }
 
     const handleClickMarkReviewed = () => {
+        if (locked) return
         handleUpdateReviewStatus("reviewed")
         navigateToRecord({recordData: {_id: recordData.next_id}})
     }
