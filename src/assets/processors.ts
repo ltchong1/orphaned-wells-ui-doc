@@ -2659,6 +2659,486 @@ export const processor_data: { [key: string]: Processor[] } =
           ,
           documentType: "Drilling Report Type A",
     },
+    {
+      id: "dea734185d2763e7",
+      processor_id: "dea734185d2763e7",
+      name: "IL_InspectorCasingCement_B",
+      displayName: "Inspectors Casing and Cement Version B",
+      state: "IL",
+      img: "./img/IL_InspectorCasingCement_B.png",
+      attributes:[
+        {
+          "name": "Backside_Of_Casing_From",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Backside_Of_Casing_To",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Catcher_To_Surface",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Cementing_Co_Signature",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Cementing_Co_Signature_Date",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Cementing_Company_City_State",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Cementing_Company_Name",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Comments_By_Inspector",
+          "data_type": "plain_text",
+          "occurrence": "optional_multiple",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Conversion",
+          "data_type": "checkbox",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "County",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Date_Of_Inspection",
+          "data_type": "datetime",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Deepening",
+          "data_type": "checkbox",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Details_Of_Plugback",
+          "data_type": "plain_text",
+          "occurrence": "optional_multiple",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "DOPH",
+          "data_type": "checkbox",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Drilling_Contractor_City_State",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Drilling_Contractor_Name",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Hole_Size",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Intermediate_Liner_Hole_Size",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Intermediate_Liner_Sacks_Cement",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Intermediate_Liner_Setting_Depth",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Intermediate_Liner_Size",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Intermediate_Liner_Top_Determined_By",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Intermediate_Liner_Top_Of_Cement",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Location",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Manager_Authorization",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Manager_Authorization_Date",
+          "data_type": "datetime",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Mine_String_Hole_Size",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Mine_String_Sacks_Cement",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Mine_String_Setting_Depth",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Mine_String_Size",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Mine_String_Top_Determined_By",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Mine_String_Top_Of_Cement",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "New_Well",
+          "data_type": "checkbox",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Number_Of_Sacks_Squeeze_Job",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Number_Of_Shots",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Number_Of_Shots_From",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Number_Of_Shots_To",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Operator",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Operator_Signature",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Operator_Signature_Date",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Permit_No",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Permittee_No",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Plugback",
+          "data_type": "checkbox",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Plugback_From",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Plugback_To",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Production_Hole_Size",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Production_Sacks_Cement",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Production_Setting_Depth",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Production_Size",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Production_Top_Determined_By",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Production_Top_Of_Cement",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Range",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Reference_No",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Seat_To_Mine_Floor",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Section",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Size_Of_Mine_String",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Surface_Hole_Size",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Surface_Sacks_Cement",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Surface_Setting_Depth",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Surface_Size",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Surface_Top_Determined_By",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Surface_Top_Of_Cement",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Total_Depth_Of_Well",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Township",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Well_Inspector",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "no"
+        },
+        {
+          "name": "Well_Inspector_Date",
+          "data_type": "datetime",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        },
+        {
+          "name": "Well_Name",
+          "data_type": "plain_text",
+          "occurrence": "optional_once",
+          "grouping": "",
+          "enabled": "yes"
+        }
+      ],
+      documentType: "Inspectors Casing and Cement Report Type B”",
+    },
     ],
 }
 
