@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Box, TextField, IconButton, Grid, Button, Tooltip, Dialog, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { processor_data } from '../../assets/processors';
 import { addProject, getProcessors } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 import { Processor } from '../../types';
@@ -111,6 +110,7 @@ const NewProjectDialog = ({ open, onClose }: NewProjectDialogProps) => {
             description: projectDescription,
             state: processors[selectedProcessor.idx!].state,
             history: [],
+            documentType: processors[selectedProcessor.idx!].documentType,
             processorId: processors[selectedProcessor.idx!].id,
         };
         callAPI(
