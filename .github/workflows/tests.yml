@@ -66,4 +66,4 @@ jobs:
             echo GOOGLE_REFRESH_TOKEN=${{ secrets.GOOGLE_REFRESH_TOKEN }} >> .env
 
       - name: run E2E tests
-        run: npm test
+        run: npx cypress run
