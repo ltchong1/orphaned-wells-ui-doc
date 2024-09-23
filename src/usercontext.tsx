@@ -17,15 +17,21 @@ export const useUserContext = () => {
 export const UserContextProvider = ({ children }: any) => {
   const location = useLocation();
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true)
   const [username, setUsername] = useState<string | undefined>(undefined);
   const [userPhoto, setUserPhoto] = useState<string | undefined>(undefined);
   const [userRole, setUserRole] = useState<string | undefined>(undefined);
 
   useEffect(() => {
+    if (localStorage.getItem('user_info')){
       setUser(JSON.parse(localStorage.getItem('user_info') || '{}'))
       setUsername(localStorage.getItem('user_name') || undefined);
       setUserPhoto(localStorage.getItem('user_picture') || undefined);
       setUserRole(localStorage.getItem('role') || undefined);
+      setLoading(false)
+    } else {
+      // console.log("still loading")
+    }
   },[location]);
 
 
@@ -38,7 +44,7 @@ export const UserContextProvider = ({ children }: any) => {
 
   return (
     <UserContext.Provider value={value}>
-      {children}
+      {!loading && children}
     </UserContext.Provider>
   );
 };
