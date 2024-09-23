@@ -38,9 +38,32 @@ jobs:
       - name: Install JS dependencies
         run: |
           npm clean-install
-          
-    #   - name: run frontend
-    #     run: npm start & sleep 30
 
       - name: run component tests
+        run: npm test
+
+      - name: run frontend
+        run: npm start & sleep 30
+
+      - name: Add backend url to .env file
+        run: |
+            echo REACT_APP_BACKEND_URL=${{ secrets.DEV_BACKEND_URL }} >> .env
+
+      - name: Add state to .env file
+        run: |
+            echo REACT_APP_STATE=illinois >> .env
+
+      - name: Add Google client id to .env file
+        run: |
+            echo REACT_APP_GOOGLE_CLIENTID=${{ secrets.GOOGLE_CLIENTID }} >> .env
+
+      - name: Add Google client secret to .env file
+        run: |
+            echo REACT_APP_GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
+
+      - name: Add Google refresh token to .env file
+        run: |
+            echo GOOGLE_REFRESH_TOKEN=${{ secrets.GOOGLE_REFRESH_TOKEN }} >> .env
+
+      - name: run E2E tests
         run: npm test
