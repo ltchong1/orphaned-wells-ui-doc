@@ -7,21 +7,19 @@ on:
 
 jobs:
   frontend-tests:
-    name: Frontend testing (${{ matrix.os }})
-
-    runs-on: ${{ matrix.os-version }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - linux
-          - win64
-        include:
-          - os: linux
-            os-version: ubuntu-latest
-          - os: win64
-            os-version: windows-latest
+    name: Frontend testing (ubuntu-latest)
+    runs-on: ubuntu-latest
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     os:
+    #       - linux
+    #       - win64
+    #     include:
+    #       - os: linux
+    #         os-version: ubuntu-latest
+    #       - os: win64
+    #         os-version: windows-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -67,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-            name: cypress_results-${{ matrix.os }}
+            name: cypress_results-ubuntu-latest
             path: |
               electron/ui/cypress/screenshots/
               electron/ui/cypress/videos/
