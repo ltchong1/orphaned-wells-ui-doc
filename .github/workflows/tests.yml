@@ -5,11 +5,6 @@ on:
     pull_request:
         branches: [main]
 
-defaults:
-  run:
-    # -l: use login shell (required when using Conda)
-    shell: bash -l {0}
-
 jobs:
   frontend-tests:
     name: Frontend testing (${{ matrix.os }})
