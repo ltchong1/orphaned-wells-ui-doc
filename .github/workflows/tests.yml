@@ -1,5 +1,4 @@
 name: App Tests
-
 on:
     push:
         branches: [main]
@@ -11,12 +10,9 @@ defaults:
     # -l: use login shell (required when using Conda)
     shell: bash -l {0}
 
-env:
-  PYTEST_ADDOPTS: --color=yes
-
 jobs:
-  component-tests:
-    name: Component testing (${{ matrix.os }})
+  frontend-tests:
+    name: Frontend testing (${{ matrix.os }})
 
     runs-on: ${{ matrix.os-version }}
 
