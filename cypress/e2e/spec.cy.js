@@ -21,7 +21,7 @@ describe('End to end testing', () => {
       name: /users/i
     }).should('be.visible')
 
-    cy.screenshot('successfully loaded homepage')
+    cy.screenshot('homepage')
 
     // navigate to project page
     cy.findByRole('rowheader', {
@@ -36,7 +36,17 @@ describe('End to end testing', () => {
       name: /record name/i
     }).should('be.visible')
 
-    cy.screenshot('successfully loaded project page')
+    cy.screenshot('project page')
+
+    // click record
+    cy.get('.MuiTableRow-root').eq(1).click();
+    
+    // test that record page loaded correctly
+    cy.findByRole('columnheader', {
+      name: /field/i
+    }).should('be.visible')
+
+    cy.screenshot('record page')
   })
 
   it('tests create new project', () => {
