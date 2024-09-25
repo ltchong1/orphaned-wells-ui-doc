@@ -85,10 +85,51 @@ describe('End to end testing', () => {
     cy.get('#testproject_table_row').should('be.visible')
     cy.screenshot('end test create new project')
 
-
   })
 
   it('tests delete project', () => {
+    // load homepage
+    cy.visit('/');
+    cy.wait(1000);
+    cy.screenshot('loaded homepage')
+
+    // get starting length of projects table and work from there
+    cy.get('.project_row').its('length').then((project_amt) => {
+
+      cy.log("project_amt: ")
+      cy.log(project_amt)
+
+      // click on last created project (should be named test project)
+      cy.get('#testproject_table_row').click();
+      cy.wait(2000)
+      cy.screenshot('navigated to project')
+
+      // click dropdown and select delete project
+      cy.get('#options-button').click();
+      cy.wait(1000)
+      cy.screenshot('clicked dropdown')
+      cy.findByRole('menuitem', {
+        name: /delete project/i
+      }).click()
+      cy.wait(1000)
+      cy.screenshot('clicked delete')
+      
+      // click confirmation delete button
+      cy.findByRole('button', {
+        name: /delete/i
+      }).click()
+      // cy.get('#popup-primary-button').click()
+      cy.wait(3000)
+
+      // confirm that we are back on homepage and that there is 1 less project
+      cy.findByRole('button', {
+        name: /new project/i
+      }).should('be.visible')
+      cy.get('.project_row').should('have.length', project_amt - 1)
+      cy.screenshot('end test delete project')
+      
+   });
+
     
   })
 
