@@ -89,7 +89,15 @@ const PopupModal = (props: PopupModalProps) => {
                 </Grid>
                 <Grid item xs={8}></Grid>
                 <Grid item xs={4}>
-                    <Button onClick={handleSave} variant={buttonVariant} color={buttonColor} disabled={disableSubmit}>{buttonText}</Button>
+                    <Button 
+                        onClick={handleSave} 
+                        variant={buttonVariant} 
+                        color={buttonColor} 
+                        disabled={disableSubmit}
+                        id="popup-primary-button"
+                    >
+                        {buttonText}
+                    </Button>
                 </Grid>
             </Grid>
             :
