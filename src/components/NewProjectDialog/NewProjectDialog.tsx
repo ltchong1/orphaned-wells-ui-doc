@@ -167,6 +167,7 @@ const NewProjectDialog = ({ open, onClose }: NewProjectDialogProps) => {
                                 value={projectName}
                                 onChange={(event) => setProjectName(event.target.value)}
                                 sx={styles.projectName}
+                                id="project-name-textbox"
                             />
                             <TextField
                                 fullWidth
