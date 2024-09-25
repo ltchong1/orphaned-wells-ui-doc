@@ -200,7 +200,7 @@ const NewProjectDialog = ({ open, onClose }: NewProjectDialogProps) => {
                                         </p>
                                         <Box sx={styles.processorImageBox} onClick={() => handleSelectProcessor(processorData.id, idx)}>
                                             <Tooltip title={processorData.documentType}>
-                                                <img src={processorData.img} style={getImageStyle(processorData.id)} />
+                                                <img id={`processor_${idx}`} src={processorData.img} style={getImageStyle(processorData.id)} />
                                             </Tooltip>
                                         </Box>
                                     </Grid>
