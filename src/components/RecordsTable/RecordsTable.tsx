@@ -193,6 +193,7 @@ const RecordsTable = (props: RecordsTableProps) => {
         sx={styles.projectRow}
         onClick={() => handleClickRecord(row._id)}
         key={row._id}
+        id={row.name+"_record_row"}
       >
         <TableCell align="right">{row.recordIndex}.</TableCell>
         <TableCell>{row.name}</TableCell>
