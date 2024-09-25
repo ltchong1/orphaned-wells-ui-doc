@@ -50,7 +50,42 @@ describe('End to end testing', () => {
   })
 
   it('tests create new project', () => {
+    // load homepage
+    cy.visit('/');
+    cy.wait(1000);
+    cy.screenshot('loaded homepage')
+
+    // click new project button
+    cy.findByRole('button', {
+      name: /new project/i
+    }).click()
+    cy.wait(1000)
+    cy.screenshot('clicked new project')
     
+    // enter project name: test project
+    cy.enter_text('id', 'project-name-textbox', 'test project')
+
+    // click first processor available
+    cy.get('#processor_0').click()
+    cy.screenshot('entered project name and selected processor')
+
+    // click create project button and wait for API response
+    cy.intercept({
+      method: 'POST',
+      url: Cypress.env('backendURL')+'/**',
+    }).as('createProject');
+
+    cy.findByRole('button', {
+      name: /create project/i
+    }).click();
+
+    cy.wait('@createProject', {timeout: 10000});
+
+    // click first processor available
+    cy.get('#testproject_table_row').should('be.visible')
+    cy.screenshot('end test create new project')
+
+
   })
 
   it('tests delete project', () => {
