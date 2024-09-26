@@ -13,7 +13,8 @@
         "attributes": [
             "attribute 1"
         ],
-        "processor_id": "test_id"
+        "processor_id": "test_id",
+        "processorId": "test_id"
     },
     {
         "id_": "65a168bcaf3fee6e0acd2120",
@@ -30,6 +31,7 @@
             "attribute 1",
             "attribute 2"
         ],
-        "processor_id": "test_id"
+        "processor_id": "test_id",
+        "processorId": "test_id"
     }
 ]

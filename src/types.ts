@@ -22,6 +22,7 @@ export interface ProjectData {
     attributes: any[];
     name: string;
     processor_id: string;
+    processorId: string;
     settings?: any;
     description?: string;
     documentType?: string;

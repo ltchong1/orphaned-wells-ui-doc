@@ -14,8 +14,7 @@ const Project = () => {
     const params = useParams<{ id: string }>(); 
     const navigate = useNavigate();
     const [records, setRecords] = useState<any[]>([]);
-    const [projectData, setProjectData] = useState<ProjectData>(
-        { attributes: [], id_: params.id || "", name: "", settings: {}, processor_id: "" });
+    const [projectData, setProjectData] = useState<ProjectData>({ } as ProjectData);
     const [showDocumentModal, setShowDocumentModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
@@ -36,6 +35,7 @@ const Project = () => {
     useEffect(() => {
         setCurrentPage(0);
     }, [sortBy, sortAscending, filterBy]);
+
 
     const loadData = () => {
         const sort: [string, number] = [sortBy, sortAscending];
