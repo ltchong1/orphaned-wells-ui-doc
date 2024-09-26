@@ -41,6 +41,8 @@ const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
               key={row.name + " " + idx}
               sx={styles.projectRow}
               onClick={() => handleClickProject(row.id_)}
+              id={row.name.replaceAll(" ", "")+"_project_row"}
+              className="project_row"
             >
               <TableCell component="th" scope="row">
                 {row.name}
