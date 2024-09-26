@@ -131,7 +131,7 @@ describe('End to end testing', () => {
    });
   })
 
-  it('tests edit field, review status change', () => {
+  it('tests edit field, review status updates, mark as unreviewed', () => {
     // click on record
     cy.visit('/#/record/665dc43463bca3e588d279b9');
     cy.wait(2000)
@@ -174,10 +174,6 @@ describe('End to end testing', () => {
     cy.get('#review_status_chip').contains('unreviewed')
     cy.screenshot('review status is unreviewed')
 
-  })
-
-  it('mark record as unreviewed', () => {
-    
   })
 
   it('tests export data', () => {
