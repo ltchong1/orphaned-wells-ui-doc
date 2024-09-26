@@ -34,6 +34,7 @@ export interface ProjectData {
 }
 
 export interface Attribute {
+    name: string;
     key: string;
     value: string;
     confidence: number | null;
@@ -48,7 +49,7 @@ export interface Processor {
     img: string;
     documentType: string;
     state: string;
-    attributes: Attribute;
+    attributes: Attribute[];
     processor_id: string;
     name: string;
 }
