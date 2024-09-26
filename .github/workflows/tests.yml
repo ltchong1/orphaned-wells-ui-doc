@@ -1,7 +1,9 @@
 name: App Tests
 on:
     push:
-
+defaults:
+  run:
+    shell: bash -l {0}
 jobs:
   frontend-tests:
     name: Frontend testing (${{ matrix.os }})
@@ -64,5 +66,5 @@ jobs:
         with:
             name: cypress_results-${{ matrix.os }}
             path: |
-              electron/ui/cypress/screenshots/
-              electron/ui/cypress/videos/
+              cypress/screenshots/
+              cypress/videos/
