@@ -46,7 +46,8 @@ const RecordsTable = (props: RecordsTableProps) => {
     appliedFilters,
     setAppliedFilters,
     setSortBy,
-    setSortAscending
+    setSortAscending,
+    handleUpdateProject
   } = props;
 
   const [ openColumnSelect, setOpenColumnSelect ] = useState(false);
@@ -313,6 +314,7 @@ const RecordsTable = (props: RecordsTableProps) => {
           open={openColumnSelect}
           onClose={() => setOpenColumnSelect(false)}
           projectData={projectData}
+          handleUpdateProject={handleUpdateProject}
         />
       }
       <Notes

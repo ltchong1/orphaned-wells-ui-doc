@@ -24,6 +24,7 @@ test('test records table', (): void => {
                 setCurrentPage={mockFunction}
                 setAppliedFilters={mockFunction}
                 setSortAscending={mockFunction}
+                handleUpdateProject={mockFunction}
             /> 
         </HashRouter> )
 
