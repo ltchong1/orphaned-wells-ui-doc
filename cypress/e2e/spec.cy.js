@@ -7,11 +7,6 @@ describe('End to end testing', () => {
     cy.visit('/');
     cy.wait(1000);
     cy.screenshot('loaded homepage')
-    
-    // test that correct user is logged in
-    // cy.findByRole('button', {
-    //   name: /michael p/i
-    // }).should('be.visible')
 
     // test that privileges are working
     cy.findByRole('button', {
