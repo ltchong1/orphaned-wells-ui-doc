@@ -1,9 +1,6 @@
 name: App Tests
 on:
     push:
-        branches: [add-testing]
-    pull_request:
-        branches: [main]
 
 jobs:
   frontend-tests:
