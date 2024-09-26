@@ -48,7 +48,7 @@ export interface Processor {
     img: string;
     documentType: string;
     state: string;
-    attributes: any;
+    attributes: Attribute;
     processor_id: string;
     name: string;
 }
