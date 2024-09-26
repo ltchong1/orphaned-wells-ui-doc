@@ -12,11 +12,8 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - linux
           - win64
         include:
-          - os: linux
-            os-version: ubuntu-latest
           - os: win64
             os-version: windows-latest
 
