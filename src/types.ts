@@ -101,6 +101,7 @@ export interface RecordsTableProps {
     setAppliedFilters: (filters: any) => void;
     setSortBy: (sortBy: string) => void;
     setSortAscending: (ascending: number) => void;
+    handleUpdateProject: (update: any) => void;
 }
 
 export interface PopupModalProps {
@@ -173,6 +174,7 @@ export interface ColumnSelectDialogProps {
     open: boolean;
     onClose: () => void;
     projectData: ProjectData;
+    handleUpdateProject: (update: any) => void;
 }
 
 export interface CheckboxesGroupProps {
