@@ -150,6 +150,7 @@ const Subheader = (props: SubheaderProps) => {
                                         undefined
                                 }}
                                 label={status}
+                                id="review_status_chip"
                             />
                         }
                     </Box>
