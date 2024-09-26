@@ -14,7 +14,8 @@ const Project = () => {
     const params = useParams<{ id: string }>(); 
     const navigate = useNavigate();
     const [records, setRecords] = useState<any[]>([]);
-    const [projectData, setProjectData] = useState<ProjectData>({ attributes: [], id_: params.id || "", name: "", settings: {} });
+    const [projectData, setProjectData] = useState<ProjectData>(
+        { attributes: [], id_: params.id || "", name: "", settings: {}, processor_id: "" });
     const [showDocumentModal, setShowDocumentModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);

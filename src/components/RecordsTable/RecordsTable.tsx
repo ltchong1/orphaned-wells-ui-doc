@@ -50,20 +50,9 @@ const RecordsTable = (props: RecordsTableProps) => {
   } = props;
 
   const [ openColumnSelect, setOpenColumnSelect ] = useState(false);
-  const [ attributes, setAttributes ] = useState<string[]>([]);
   const [ showNotes, setShowNotes ] = useState(false);
   const [ notesRecordId, setNotesRecordId ] = useState<string | null | undefined>(null);
   const [ notes, setNotes ] = useState<string | null | undefined>(null);
-
-  useEffect(() => {
-      if (projectData) {
-        let tempColumns: string[] = [];
-        for (let each of projectData.attributes || []) {
-          tempColumns.push(each.name);
-        }
-        setAttributes(tempColumns);
-      }
-  }, [projectData]);
 
   const styles = {
     projectRow: {
@@ -323,10 +312,7 @@ const RecordsTable = (props: RecordsTableProps) => {
         <ColumnSelectDialog
           open={openColumnSelect}
           onClose={() => setOpenColumnSelect(false)}
-          columns={attributes}
-          project_id={projectData.id_ || ""}
-          project_name={projectData.name || ""}
-          project_settings={projectData.settings}
+          projectData={projectData}
         />
       }
       <Notes

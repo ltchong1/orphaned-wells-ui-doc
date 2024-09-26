@@ -21,6 +21,7 @@ export interface ProjectData {
     id_: string;
     attributes: any[];
     name: string;
+    processor_id: string;
     settings?: any;
     description?: string;
     documentType?: string;
@@ -170,12 +171,7 @@ export interface DocumentContainerProps {
 export interface ColumnSelectDialogProps {
     open: boolean;
     onClose: () => void;
-    columns: string[];
-    project_id: string;
-    project_name: string;
-    project_settings?: {
-        exportColumns?: string[];
-    };
+    projectData: ProjectData;
 }
 
 export interface CheckboxesGroupProps {
