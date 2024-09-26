@@ -7,7 +7,7 @@ import { downloadRecords, getProcessorData } from '../../services/app.service';
 import { ColumnSelectDialogProps, CheckboxesGroupProps, Processor } from '../../types';
 
 const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
-    const { open, onClose, projectData } = props;
+    const { open, onClose, projectData, handleUpdateProject } = props;
 
     const [columns, setColumns] = useState<string[]>([]);
     const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
@@ -90,6 +90,16 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+
+        // update project settings to include selected columns
+        let settings;
+        if (projectData.settings)  {
+            settings = projectData.settings
+            settings["exportColumns"] = selectedColumns
+        } else {
+            settings = {exportColumns: selectedColumns}
+        }
+        handleUpdateProject({"settings": settings})
     };
 
     return (
