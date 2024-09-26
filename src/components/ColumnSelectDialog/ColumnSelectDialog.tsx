@@ -148,6 +148,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
                         bottom: 10,
                     }}
                     onClick={handleExport}
+                    id='export-button'
                 >
                     Export
                 </Button>
