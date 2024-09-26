@@ -14,8 +14,8 @@ export const getProcessors = (state: string) => {
     });
 };
 
-export const getProcessorData = (processor_id: string) => {
-    return fetch(BACKEND_URL + '/get_processor_data/'+processor_id, {
+export const getProcessorData = (google_id: string) => {
+    return fetch(BACKEND_URL + '/get_processor_data/'+google_id, {
         mode: 'cors',
         headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
     });

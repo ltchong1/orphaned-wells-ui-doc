@@ -19,7 +19,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         if (open) {
             callAPI(
                 getProcessorData,
-                [projectData.processor_id],
+                [projectData.processorId],
                 setDefaultColumns,
                 (e: Error) => console.error("unable to get processor data: " + e)
             );
