@@ -148,7 +148,7 @@ const RecordsTable = (props: RecordsTableProps) => {
     let currentAppliedFilters = localStorage.getItem("appliedFilters");
     if (currentAppliedFilters === null) newAppliedFilters = {};
     else newAppliedFilters = JSON.parse(currentAppliedFilters);
-    newAppliedFilters[projectData.id_ || ""] = appliedFilters;
+    newAppliedFilters[projectData._id || ""] = appliedFilters;
     localStorage.setItem("appliedFilters", JSON.stringify(newAppliedFilters));
   }
 
