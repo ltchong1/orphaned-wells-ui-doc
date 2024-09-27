@@ -18,7 +18,7 @@ export interface RecordData {
 }
 
 export interface ProjectData {
-    id_: string;
+    _id: string;
     attributes: any[];
     name: string;
     processor_id: string;

@@ -75,7 +75,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         };
         callAPIWithBlobResponse(
             downloadRecords,
-            [projectData.id_, body],
+            [projectData._id, body],
             handleSuccessfulExport,
             (e: Error) => console.error("unable to download csv: " + e)
         );

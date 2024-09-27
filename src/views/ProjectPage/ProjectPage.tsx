@@ -71,7 +71,7 @@ const Project = () => {
         formData.append('file', file, file.name);
         callAPI(
             uploadDocument,
-            [formData, projectData.id_],
+            [formData, projectData._id],
             handleSuccessfulDocumentUpload,
             (e: Error) => { console.error('error on file upload: ', e); }
         );
@@ -91,7 +91,7 @@ const Project = () => {
         setOpenDeleteModal(false);
         callAPI(
             deleteProject,
-            [projectData.id_],
+            [projectData._id],
             (data: any) => navigate("/projects", { replace: true }),
             (e: Error) => { console.error('error on deleting project: ', e); }
         );

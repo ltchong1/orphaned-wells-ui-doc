@@ -1,6 +1,6 @@
 [
     {
-        "id_": "65a1682caf3fee6e0acd211f",
+        "_id": "65a1682caf3fee6e0acd211f",
         "name": "Test Project",
         "description": "This is a Colorado project",
         "state": "CO",
@@ -17,7 +17,7 @@
         "processorId": "test_id"
     },
     {
-        "id_": "65a168bcaf3fee6e0acd2120",
+        "_id": "65a168bcaf3fee6e0acd2120",
         "name": "Test Project 2",
         "description": "This is a California project",
         "state": "CA",
