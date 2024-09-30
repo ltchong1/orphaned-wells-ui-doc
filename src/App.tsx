@@ -2,9 +2,8 @@ import React from 'react';
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import LoginPage from './views/LoginPage/LoginPage';
 import ProjectsListPage from './views/ProjectsListPage/ProjectsListPage';
-// import Project from './views/ProjectPage/ProjectPage';
+import Project from './views/ProjectPage/ProjectPage';
 import RecordGroup from './views/RecordGroupPage/RecordGroupPage';
-import RecordGroupsListPage from './views/RecordGroupsListPage/RecordGroupsListPage';
 import Record from './views/RecordPage/RecordPage';
 import TeamRecordsPage from './views/TeamRecordsPage/TeamRecordsPage';
 import AdminPage from './views/AdminPage/AdminPage';
@@ -84,10 +83,10 @@ function App() {
               path="record/:id" 
               element={<Record />}
           />
-          {/* <Route 
+          <Route 
               path="project/:id" 
               element={<Project />}
-          /> */}
+          />
           <Route 
               path="record_group/:id" 
               element={<RecordGroup />}
@@ -99,10 +98,6 @@ function App() {
           <Route 
               path="projects" 
               element={<ProjectsListPage/>} 
-          />
-          <Route 
-              path="project/:id" 
-              element={<RecordGroupsListPage/>} 
           />
           <Route
               path="users" 

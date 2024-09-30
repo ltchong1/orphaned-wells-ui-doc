@@ -8,11 +8,12 @@ import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDo
 import PopupModal from '../../components/PopupModal/PopupModal';
 import { callAPI } from '../../assets/helperFunctions';
 import { convertFiltersToMongoFormat } from '../../assets/helperFunctions';
-import { RecordGroup } from '../../types';
+import { RecordGroup, ProjectData } from '../../types';
 
 const RecordGroupPage = () => {
     const params = useParams<{ id: string }>(); 
     const navigate = useNavigate();
+    const [project, setProject] = useState({} as ProjectData)
     const [records, setRecords] = useState<any[]>([]);
     const [recordGroup, setRecordGroup] = useState<RecordGroup>({ } as RecordGroup);
     const [showDocumentModal, setShowDocumentModal] = useState(false);
@@ -24,6 +25,7 @@ const RecordGroupPage = () => {
     const [pageSize, setPageSize] = useState(100);
     const [sortBy, setSortBy] = useState('dateCreated');
     const [sortAscending, setSortAscending] = useState(1);
+    const [navigation, setNavigation] = useState({})
     const [filterBy, setFilterBy] = useState<any[]>(
             JSON.parse(localStorage.getItem("appliedFilters") || '{}')[params.id || ""] || []
     );
@@ -36,6 +38,13 @@ const RecordGroupPage = () => {
         setCurrentPage(0);
     }, [sortBy, sortAscending, filterBy]);
 
+    useEffect(() => {
+        let temp_navigation: { [key: string]: Function; } = { 
+            "Projects": () => navigate("/projects", { replace: true })
+        }
+        temp_navigation[project.name] = () => navigate("/project/"+project._id, { replace: true })
+        setNavigation(temp_navigation)
+    }, [project]);
 
     const loadData = () => {
         const sort: [string, number] = [sortBy, sortAscending];
@@ -48,12 +57,12 @@ const RecordGroupPage = () => {
         );
     };
 
-    const handleSuccess = (data: { records: any[], rg_data: RecordGroup, record_count: number }) => {
-        console.log(data)
+    const handleSuccess = (data: { records: any[], rg_data: RecordGroup, record_count: number, project: ProjectData }) => {
         setRecords(data.records);
         setRecordGroup(data.rg_data);
         setRecordGroupName(data.rg_data.name);
         setRecordCount(data.record_count);
+        setProject(data.project)
     };
 
     const styles = {
@@ -137,12 +146,7 @@ const RecordGroupPage = () => {
                         "Change record group name": handleClickChangeName, 
                     }
                 }
-                previousPages={
-                    { 
-                        "Projects": () => navigate("/projects", { replace: true }),
-                        "Record Groups": () => navigate("/record_groups", { replace: true }),
-                    }
-                }
+                previousPages={navigation}
             />
             <Box sx={styles.innerBox}>
                 <RecordsTable
