@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import RecordsTable from "../components/RecordsTable/RecordsTable"
 import { HashRouter } from "react-router-dom";
-import mockProjects from './mockProjects.json'
+import mockRecordGroups from './mockRecordGroups.json'
 
 const mockFunction = (): void => {}
 
@@ -10,7 +10,7 @@ test('test records table', (): void => {
     render( 
         <HashRouter> 
             <RecordsTable 
-                recordGroup={mockProjects[0]}
+                recordGroup={mockRecordGroups[0]}
                 records={[]}
                 pageSize={25}
                 currentPage={0}

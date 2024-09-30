@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import LoginPage from './views/LoginPage/LoginPage';
-// import ProjectsListPage from './views/ProjectsListPage/ProjectsListPage';
+import ProjectsListPage from './views/ProjectsListPage/ProjectsListPage';
 // import Project from './views/ProjectPage/ProjectPage';
 import RecordGroup from './views/RecordGroupPage/RecordGroupPage';
 import RecordGroupsListPage from './views/RecordGroupsListPage/RecordGroupsListPage';
@@ -96,12 +96,12 @@ function App() {
               path="records" 
               element={<TeamRecordsPage />}
           />
-          {/* <Route 
+          <Route 
               path="projects" 
               element={<ProjectsListPage/>} 
-          /> */}
+          />
           <Route 
-              path="record_groups" 
+              path="project/:id" 
               element={<RecordGroupsListPage/>} 
           />
           <Route
@@ -110,7 +110,7 @@ function App() {
           />
           <Route
               path="*" 
-              element={<Navigate replace to="record_groups" />}
+              element={<Navigate replace to="projects" />}
           />
           </Routes>
     </div>

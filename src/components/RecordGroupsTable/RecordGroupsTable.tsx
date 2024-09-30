@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { formatDate } from '../../assets/helperFunctions';
-import { ProjectData, RecordGroup } from "../../types";
+import { RecordGroup } from "../../types";
 import { styles } from "../../assets/styles";
 
 interface RecordGroupsTableProps {
@@ -11,8 +11,8 @@ interface RecordGroupsTableProps {
 const RecordGroupsTable = ({ record_groups }: RecordGroupsTableProps) => {
   const navigate = useNavigate();
 
-  const handleClickRecordGroup = (dg_id: string) => {
-    navigate("/record_group/" + dg_id);
+  const handleClickRecordGroup = (rg_id: string) => {
+    navigate("/record_group/" + rg_id);
   }
   
   return (
@@ -26,7 +26,7 @@ const RecordGroupsTable = ({ record_groups }: RecordGroupsTableProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {record_groups.map((row: ProjectData, idx: number) => (
+          {record_groups.map((row: RecordGroup, idx: number) => (
             <TableRow
               key={row.name + " " + idx}
               sx={styles.tableRow}

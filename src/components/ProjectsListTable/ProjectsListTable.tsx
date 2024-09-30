@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { formatDate } from '../../assets/helperFunctions';
 import { ProjectData } from "../../types";
+import { styles } from "../../assets/styles";
 
 interface ProjectsListTableProps {
   projects: ProjectData[];
@@ -9,17 +10,6 @@ interface ProjectsListTableProps {
 
 const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
   const navigate = useNavigate();
-  const styles = {
-    headerRow: {
-      fontWeight: "bold"
-    },
-    projectRow: {
-      cursor: "pointer",
-      "&:hover": {
-        background: "#efefef"
-      },
-    }
-  }
 
   const handleClickProject = (project_id: string) => {
     navigate("/project/" + project_id);
@@ -30,7 +20,7 @@ const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
       <Table sx={{ minWidth: 650 }} aria-label="projects table">
         <TableHead>
           <TableRow>
-            {["Project Name", "Description", "Document Type", "Locations", "Creator", "Date"].map((value: string) => (
+            {["Project Name", "Document Group Count", "Creator", "Date"].map((value: string) => (
               <TableCell sx={styles.headerRow} key={value}>{value}</TableCell>
             ))}
           </TableRow>
@@ -39,7 +29,7 @@ const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
           {projects.map((row: ProjectData, idx: number) => (
             <TableRow
               key={row.name + " " + idx}
-              sx={styles.projectRow}
+              sx={styles.tableRow}
               onClick={() => handleClickProject(row._id)}
               id={row.name.replaceAll(" ", "")+"_project_row"}
               className="project_row"
@@ -47,9 +37,7 @@ const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>
-              <TableCell>{row.description}</TableCell>
-              <TableCell>{row.documentType}</TableCell>
-              <TableCell>{row.state}</TableCell>
+              <TableCell>{row.record_groups.length}</TableCell>
               <TableCell>{row.creator?.name || ""}</TableCell>
               <TableCell>{formatDate(row.dateCreated || null)}</TableCell>
             </TableRow>

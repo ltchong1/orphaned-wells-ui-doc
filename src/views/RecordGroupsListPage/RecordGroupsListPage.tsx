@@ -5,14 +5,16 @@ import RecordGroupsTable from '../../components/RecordGroupsTable/RecordGroupsTa
 import NewRecordGroupDialog from '../../components/NewRecordGroupDialog/NewRecordGroupDialog';
 import { getRecordGroups } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
+import { useParams } from 'react-router-dom';
 
 const RecordGroupsListPage = () => {
+    let params = useParams();
     const [record_groups, setRecordGroups] = useState<any[]>([]);
     const [unableToConnect, setUnableToConnect] = useState(false);
     const [showNewRecordGroupDialog, setShowNewRecordGroupDialog] = useState(false);
 
     useEffect(() => {
-        callAPI(getRecordGroups, [], handleSuccess, handleError);
+        callAPI(getRecordGroups, [params.id], handleSuccess, handleError);
     }, []);
 
     const handleSuccess = (data: any) => {

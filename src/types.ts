@@ -19,13 +19,9 @@ export interface RecordData {
 
 export interface ProjectData {
     _id: string;
-    attributes: any[];
     name: string;
-    processor_id: string;
-    processorId: string;
+    record_groups: RecordGroup[]
     settings?: any;
-    description?: string;
-    documentType?: string;
     state?: string;
     creator?: {
       name?: string;
@@ -105,7 +101,7 @@ export interface RecordAttributesTableProps {
 }
 
 export interface RecordsTableProps {
-    recordGroup: ProjectData;
+    recordGroup: RecordGroup;
     records: RecordData[];
     setRecords: (records: RecordData[]) => void;
     pageSize: number;
@@ -191,7 +187,7 @@ export interface DocumentContainerProps {
 export interface ColumnSelectDialogProps {
     open: boolean;
     onClose: () => void;
-    recordGroup: ProjectData;
+    recordGroup: RecordGroup;
     handleUpdateRecordGroup: (update: any) => void;
 }
 

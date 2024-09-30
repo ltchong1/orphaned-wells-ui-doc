@@ -48,11 +48,11 @@ const RecordGroupPage = () => {
         );
     };
 
-    const handleSuccess = (data: { records: any[], dg_data: RecordGroup, record_count: number }) => {
+    const handleSuccess = (data: { records: any[], rg_data: RecordGroup, record_count: number }) => {
         console.log(data)
         setRecords(data.records);
-        setRecordGroup(data.dg_data);
-        setRecordGroupName(data.dg_data.name);
+        setRecordGroup(data.rg_data);
+        setRecordGroupName(data.rg_data.name);
         setRecordCount(data.record_count);
     };
 
