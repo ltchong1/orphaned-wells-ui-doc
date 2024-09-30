@@ -34,7 +34,7 @@ const SORTABLE_COLUMNS = ["name", "dateCreated", "status", "review_status"]
 const RecordsTable = (props: RecordsTableProps) => {
   let navigate = useNavigate();
   const { 
-    documentGroup, 
+    recordGroup, 
     records, 
     setRecords, 
     pageSize,
@@ -48,7 +48,7 @@ const RecordsTable = (props: RecordsTableProps) => {
     setAppliedFilters,
     setSortBy,
     setSortAscending,
-    handleUpdateDocumentGroup
+    handleUpdateRecordGroup
   } = props;
 
   const [ openColumnSelect, setOpenColumnSelect ] = useState(false);
@@ -124,7 +124,7 @@ const RecordsTable = (props: RecordsTableProps) => {
     let currentAppliedFilters = localStorage.getItem("appliedFilters");
     if (currentAppliedFilters === null) newAppliedFilters = {};
     else newAppliedFilters = JSON.parse(currentAppliedFilters);
-    newAppliedFilters[documentGroup._id || ""] = appliedFilters;
+    newAppliedFilters[recordGroup._id || ""] = appliedFilters;
     localStorage.setItem("appliedFilters", JSON.stringify(newAppliedFilters));
   }
 
@@ -222,9 +222,9 @@ const RecordsTable = (props: RecordsTableProps) => {
             <TableFilters applyFilters={handleApplyFilters} appliedFilters={appliedFilters} />
           </Grid>
           <Grid item sx={styles.topSectionRight} xs={6}>
-            {documentGroup && 
+            {recordGroup && 
               <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<IosShareIcon />}>
-                Export Document Group
+                Export Record Group
               </Button>
             }
           </Grid>
@@ -285,12 +285,12 @@ const RecordsTable = (props: RecordsTableProps) => {
           </TableRow>
         </TableFooter>
       </Table>
-      { documentGroup && 
+      { recordGroup && 
         <ColumnSelectDialog
           open={openColumnSelect}
           onClose={() => setOpenColumnSelect(false)}
-          documentGroup={documentGroup}
-          handleUpdateDocumentGroup={handleUpdateDocumentGroup}
+          recordGroup={recordGroup}
+          handleUpdateRecordGroup={handleUpdateRecordGroup}
         />
       }
       <Notes

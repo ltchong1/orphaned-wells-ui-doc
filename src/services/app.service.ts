@@ -7,9 +7,9 @@ export const getProjects = () => {
     });
 };
 
-export const getDocumentGroups = () => {
+export const getRecordGroups = () => {
     // TODO: take project id as parameter here
-    return fetch(BACKEND_URL + '/get_document_groups/test', {
+    return fetch(BACKEND_URL + '/get_record_groups/test', {
         mode: 'cors',
         headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
     });
@@ -43,8 +43,8 @@ export const getProjectData = (project_id: string, page: number, records_per_pag
     });
 };
 
-export const getDocumentGroup = (dg_id: string, page: number, records_per_page: number, sort: string, filter: string) => {
-    let route = BACKEND_URL + '/get_document_group/' + dg_id + '?page=' + page + '&records_per_page=' + records_per_page;
+export const getRecordGroup = (dg_id: string, page: number, records_per_page: number, sort: string, filter: string) => {
+    let route = BACKEND_URL + '/get_record_group/' + dg_id + '?page=' + page + '&records_per_page=' + records_per_page;
     let data: { sort: string; filter: string } = {
         sort: sort,
         filter: filter
@@ -73,8 +73,8 @@ export const addProject = (data: any) => {
     });
 };
 
-export const addDocumentGroup = (data: any) => {
-    return fetch(BACKEND_URL + '/add_document_group', {
+export const addRecordGroup = (data: any) => {
+    return fetch(BACKEND_URL + '/add_record_group', {
         method: 'POST',
         mode: 'cors',
         body: JSON.stringify(data),
@@ -122,8 +122,8 @@ export const updateProject = (project_id: string, data: any) => {
     });
 };
 
-export const updateDocumentGroup = (dg_id: string, data: any) => {
-    return fetch(BACKEND_URL + '/update_document_group/' + dg_id, {
+export const updateRecordGroup = (dg_id: string, data: any) => {
+    return fetch(BACKEND_URL + '/update_record_group/' + dg_id, {
         method: 'POST',
         mode: 'cors',
         body: JSON.stringify(data),
@@ -148,8 +148,8 @@ export const deleteProject = (project_id: string) => {
     });
 };
 
-export const deleteDocumentGroup = (dg_id: string) => {
-    return fetch(BACKEND_URL + '/delete_document_group/' + dg_id, {
+export const deleteRecordGroup = (dg_id: string) => {
+    return fetch(BACKEND_URL + '/delete_record_group/' + dg_id, {
         method: 'POST',
         mode: 'cors',
         headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }

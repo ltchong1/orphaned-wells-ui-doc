@@ -34,7 +34,7 @@ export interface ProjectData {
     dateCreated?: number;
 }
 
-export interface DocumentGroup {
+export interface RecordGroup {
     _id: string;
     attributes: any[];
     name: string;
@@ -105,7 +105,7 @@ export interface RecordAttributesTableProps {
 }
 
 export interface RecordsTableProps {
-    documentGroup: ProjectData;
+    recordGroup: ProjectData;
     records: RecordData[];
     setRecords: (records: RecordData[]) => void;
     pageSize: number;
@@ -119,7 +119,7 @@ export interface RecordsTableProps {
     setAppliedFilters: (filters: any) => void;
     setSortBy: (sortBy: string) => void;
     setSortAscending: (ascending: number) => void;
-    handleUpdateDocumentGroup: (update: any) => void;
+    handleUpdateRecordGroup: (update: any) => void;
 }
 
 export interface PopupModalProps {
@@ -191,8 +191,8 @@ export interface DocumentContainerProps {
 export interface ColumnSelectDialogProps {
     open: boolean;
     onClose: () => void;
-    documentGroup: ProjectData;
-    handleUpdateDocumentGroup: (update: any) => void;
+    recordGroup: ProjectData;
+    handleUpdateRecordGroup: (update: any) => void;
 }
 
 export interface CheckboxesGroupProps {

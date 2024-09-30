@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
-import { getDocumentGroup, uploadDocument, deleteDocumentGroup, updateDocumentGroup } from '../../services/app.service';
+import { getRecordGroup, uploadDocument, deleteRecordGroup, updateRecordGroup } from '../../services/app.service';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
 import Subheader from '../../components/Subheader/Subheader';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import { callAPI } from '../../assets/helperFunctions';
 import { convertFiltersToMongoFormat } from '../../assets/helperFunctions';
-import { DocumentGroup } from '../../types';
+import { RecordGroup } from '../../types';
 
-const DocumentGroupPage = () => {
+const RecordGroupPage = () => {
     const params = useParams<{ id: string }>(); 
     const navigate = useNavigate();
     const [records, setRecords] = useState<any[]>([]);
-    const [documentGroup, setDocumentGroup] = useState<DocumentGroup>({ } as DocumentGroup);
+    const [recordGroup, setRecordGroup] = useState<RecordGroup>({ } as RecordGroup);
     const [showDocumentModal, setShowDocumentModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
-    const [documentGroupName, setDocumentGroupName] = useState("");
+    const [recordGroupName, setRecordGroupName] = useState("");
     const [recordCount, setRecordCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize, setPageSize] = useState(100);
@@ -41,18 +41,18 @@ const DocumentGroupPage = () => {
         const sort: [string, number] = [sortBy, sortAscending];
         const args: [string, number, number, [string, number], any] = [params.id || "", currentPage, pageSize, sort, convertFiltersToMongoFormat(filterBy)];
         callAPI(
-            getDocumentGroup,
+            getRecordGroup,
             args,
             handleSuccess,
-            (e: Error) => { console.error('error getting document group data: ', e); }
+            (e: Error) => { console.error('error getting record group data: ', e); }
         );
     };
 
-    const handleSuccess = (data: { records: any[], dg_data: DocumentGroup, record_count: number }) => {
+    const handleSuccess = (data: { records: any[], dg_data: RecordGroup, record_count: number }) => {
         console.log(data)
         setRecords(data.records);
-        setDocumentGroup(data.dg_data);
-        setDocumentGroupName(data.dg_data.name);
+        setRecordGroup(data.dg_data);
+        setRecordGroupName(data.dg_data.name);
         setRecordCount(data.record_count);
     };
 
@@ -72,7 +72,7 @@ const DocumentGroupPage = () => {
         formData.append('file', file, file.name);
         callAPI(
             uploadDocument,
-            [formData, documentGroup._id],
+            [formData, recordGroup._id],
             handleSuccessfulDocumentUpload,
             (e: Error) => { console.error('error on file upload: ', e); }
         );
@@ -88,65 +88,65 @@ const DocumentGroupPage = () => {
         setOpenUpdateNameModal(true);
     };
 
-    const handleDeleteDocumentGroup = () => {
+    const handleDeleteRecordGroup = () => {
         setOpenDeleteModal(false);
         callAPI(
-            deleteDocumentGroup,
-            [documentGroup._id],
-            (data: any) => navigate("/document_groups", { replace: true }),
-            (e: Error) => { console.error('error on deleting document group: ', e); }
+            deleteRecordGroup,
+            [recordGroup._id],
+            (data: any) => navigate("/record_groups", { replace: true }),
+            (e: Error) => { console.error('error on deleting record group: ', e); }
         );
     };
 
-    const handleChangeDocumentGroupName = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDocumentGroupName(event.target.value);
+    const handleChangeRecordGroupName = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRecordGroupName(event.target.value);
     };
 
-    const handleUpdateDocumentGroupName = () => {
+    const handleUpdateRecordGroupName = () => {
         setOpenUpdateNameModal(false);
         callAPI(
-            updateDocumentGroup,
-            [params.id, { name: documentGroupName }],
+            updateRecordGroup,
+            [params.id, { name: recordGroupName }],
             (data: any) => window.location.reload(),
-            (e: Error) => console.error('error on updating document group name: ', e)
+            (e: Error) => console.error('error on updating record group name: ', e)
         );
     };
 
-    const handleUpdateDocumentGroup = (update: any) => {
+    const handleUpdateRecordGroup = (update: any) => {
         callAPI(
-            updateDocumentGroup,
+            updateRecordGroup,
             [params.id, update],
-            (data: DocumentGroup) => setDocumentGroup(data),
-            (e: Error) => console.error('error on updating document group name: ', e)
+            (data: RecordGroup) => setRecordGroup(data),
+            (e: Error) => console.error('error on updating record group name: ', e)
         );
     };
 
     return (
         <Box sx={styles.outerBox}>
             <Subheader
-                currentPage={documentGroup.name}
+                currentPage={recordGroup.name}
                 buttonName="Upload new record(s)"
                 handleClickButton={() => setShowDocumentModal(true)}
                 actions={(localStorage.getItem("role") && localStorage.getItem("role") === "10") ?
                     {
-                        "Change document group name": handleClickChangeName, 
-                        "Delete document group": () => setOpenDeleteModal(true),
+                        "Change record group name": handleClickChangeName, 
+                        "Delete record group": () => setOpenDeleteModal(true),
                     }
                     :
                     {
-                        "Change document group name": handleClickChangeName, 
+                        "Change record group name": handleClickChangeName, 
                     }
                 }
                 previousPages={
                     { 
                         "Projects": () => navigate("/projects", { replace: true }),
-                        "Document Groups": () => navigate("/document_groups", { replace: true }),
+                        "Record Groups": () => navigate("/record_groups", { replace: true }),
                     }
                 }
             />
             <Box sx={styles.innerBox}>
                 <RecordsTable
-                    documentGroup={documentGroup}
+                    recordGroup={recordGroup}
                     records={records}
                     setRecords={setRecords}
                     pageSize={pageSize}
@@ -160,7 +160,7 @@ const DocumentGroupPage = () => {
                     setAppliedFilters={setFilterBy}
                     setSortBy={setSortBy}
                     setSortAscending={setSortAscending}
-                    handleUpdateDocumentGroup={handleUpdateDocumentGroup}
+                    handleUpdateRecordGroup={handleUpdateRecordGroup}
                 />
             </Box>
             {showDocumentModal && 
@@ -172,8 +172,8 @@ const DocumentGroupPage = () => {
             <PopupModal
                 open={openDeleteModal}
                 handleClose={() => setOpenDeleteModal(false)}
-                text="Are you sure you want to delete this document group?"
-                handleSave={handleDeleteDocumentGroup}
+                text="Are you sure you want to delete this record group?"
+                handleSave={handleDeleteRecordGroup}
                 buttonText='Delete'
                 buttonColor='error'
                 buttonVariant='contained'
@@ -183,10 +183,10 @@ const DocumentGroupPage = () => {
                 input
                 open={openUpdateNameModal}
                 handleClose={() => setOpenUpdateNameModal(false)}
-                text={documentGroupName}
+                text={recordGroupName}
                 textLabel='Document group Name'
-                handleEditText={handleChangeDocumentGroupName}
-                handleSave={handleUpdateDocumentGroupName}
+                handleEditText={handleChangeRecordGroupName}
+                handleSave={handleUpdateRecordGroupName}
                 buttonText='Update'
                 buttonColor='primary'
                 buttonVariant='contained'
@@ -196,4 +196,4 @@ const DocumentGroupPage = () => {
     );
 };
 
-export default DocumentGroupPage;
+export default RecordGroupPage;

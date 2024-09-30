@@ -1,38 +1,38 @@
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { formatDate } from '../../assets/helperFunctions';
-import { ProjectData, DocumentGroup } from "../../types";
+import { ProjectData, RecordGroup } from "../../types";
 import { styles } from "../../assets/styles";
 
-interface DocumentGroupsTableProps {
-  document_groups: DocumentGroup[];
+interface RecordGroupsTableProps {
+  record_groups: RecordGroup[];
 }
 
-const DocumentGroupsTable = ({ document_groups }: DocumentGroupsTableProps) => {
+const RecordGroupsTable = ({ record_groups }: RecordGroupsTableProps) => {
   const navigate = useNavigate();
 
-  const handleClickDocumentGroup = (dg_id: string) => {
-    navigate("/document_group/" + dg_id);
+  const handleClickRecordGroup = (dg_id: string) => {
+    navigate("/record_group/" + dg_id);
   }
   
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="Document Groups table">
+      <Table sx={{ minWidth: 650 }} aria-label="Record Groups table">
         <TableHead>
           <TableRow>
-            {["Document Group Name", "Description", "Document Type", "Locations", "Creator", "Date"].map((value: string) => (
+            {["Record Group Name", "Description", "Document Type", "Locations", "Creator", "Date"].map((value: string) => (
               <TableCell sx={styles.headerRow} key={value}>{value}</TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
-          {document_groups.map((row: ProjectData, idx: number) => (
+          {record_groups.map((row: ProjectData, idx: number) => (
             <TableRow
               key={row.name + " " + idx}
               sx={styles.tableRow}
-              onClick={() => handleClickDocumentGroup(row._id)}
-              id={row.name.replaceAll(" ", "")+"_document_group_row"}
-              className="document_group_row"
+              onClick={() => handleClickRecordGroup(row._id)}
+              id={row.name.replaceAll(" ", "")+"_record_group_row"}
+              className="record_group_row"
             >
               <TableCell component="th" scope="row">
                 {row.name}
@@ -50,4 +50,4 @@ const DocumentGroupsTable = ({ document_groups }: DocumentGroupsTableProps) => {
   );
 }
 
-export default DocumentGroupsTable;
+export default RecordGroupsTable;

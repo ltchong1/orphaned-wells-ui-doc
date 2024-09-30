@@ -1,18 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Box, TextField, IconButton, Grid, Button, Tooltip, Dialog, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { addDocumentGroup, getProcessors } from '../../services/app.service';
+import { addRecordGroup, getProcessors } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 import { Processor } from '../../types';
 
-interface NewDocumentGroupDialogProps {
+interface NewRecordGroupDialogProps {
     open: boolean;
     onClose: () => void;
 }
 
-const NewDocumentGroupDialog = ({ open, onClose }: NewDocumentGroupDialogProps) => {
-    const [documentGroupName, setDocumentGroupName] = useState("");
-    const [documentGroupDescription, setDocumentGroupDescription] = useState("");
+const NewRecordGroupDialog = ({ open, onClose }: NewRecordGroupDialogProps) => {
+    const [recordGroupName, setRecordGroupName] = useState("");
+    const [recordGroupDescription, setRecordGroupDescription] = useState("");
     const [processors, setProcessors] = useState<Processor[]>([])
     const [selectedProcessor, setSelectedProcessor] = useState<Processor>({} as Processor);
     const [disableCreateButton, setDisableCreateButton] = useState(true);
@@ -31,12 +31,12 @@ const NewDocumentGroupDialog = ({ open, onClose }: NewDocumentGroupDialogProps) 
     }, [open]);
 
     useEffect(() => {
-        if (documentGroupName !== "" && selectedProcessor.id && disableCreateButton) {
+        if (recordGroupName !== "" && selectedProcessor.id && disableCreateButton) {
             setDisableCreateButton(false);
-        } else if ((documentGroupName === "" || !selectedProcessor.id) && !disableCreateButton) {
+        } else if ((recordGroupName === "" || !selectedProcessor.id) && !disableCreateButton) {
             setDisableCreateButton(true);
         }
-    }, [documentGroupName, selectedProcessor]);
+    }, [recordGroupName, selectedProcessor]);
 
     useEffect(() => {
         if (open) {
@@ -60,7 +60,7 @@ const NewDocumentGroupDialog = ({ open, onClose }: NewDocumentGroupDialogProps) 
             minWidth: dialogWidth,
             maxWidth: dialogWidth,
         },
-        documentGroupName: {
+        recordGroupName: {
             marginBottom: 2
         },
         processorGridItem: {
@@ -104,24 +104,24 @@ const NewDocumentGroupDialog = ({ open, onClose }: NewDocumentGroupDialogProps) 
         return styling;
     };
 
-    const handleCreateDocumentGroup = () => {
+    const handleCreateRecordGroup = () => {
         let body = {
-            name: documentGroupName,
-            description: documentGroupDescription,
+            name: recordGroupName,
+            description: recordGroupDescription,
             state: selectedProcessor.state,
             history: [],
             documentType: selectedProcessor.documentType,
             processorId: selectedProcessor.id,
         };
         callAPI(
-            addDocumentGroup,
+            addRecordGroup,
             [body],
-            handleSuccessfulDocumentGroupCreation,
-            (e: Error) => console.error('error on documentGroup add ', e)
+            handleSuccessfulRecordGroupCreation,
+            (e: Error) => console.error('error on recordGroup add ', e)
         );
     };
 
-    const handleSuccessfulDocumentGroupCreation = () => {
+    const handleSuccessfulRecordGroupCreation = () => {
         setTimeout(() => {
             window.location.reload();
         }, 500);
@@ -138,7 +138,7 @@ const NewDocumentGroupDialog = ({ open, onClose }: NewDocumentGroupDialogProps) 
                 sx: styles.dialogPaper
             }}
         >
-            <DialogTitle id="new-dg-dialog-title">New Document Group</DialogTitle>
+            <DialogTitle id="new-dg-dialog-title">New Record Group</DialogTitle>
             <IconButton
                 aria-label="close"
                 onClick={handleClose}
@@ -162,19 +162,19 @@ const NewDocumentGroupDialog = ({ open, onClose }: NewDocumentGroupDialogProps) 
                         <Grid item xs={5}>
                             <TextField
                                 fullWidth
-                                label="Document Group Name"
+                                label="Record Group Name"
                                 variant="outlined"
-                                value={documentGroupName}
-                                onChange={(event) => setDocumentGroupName(event.target.value)}
-                                sx={styles.documentGroupName}
+                                value={recordGroupName}
+                                onChange={(event) => setRecordGroupName(event.target.value)}
+                                sx={styles.recordGroupName}
                                 id="dg-name-textbox"
                             />
                             <TextField
                                 fullWidth
                                 label="Description"
                                 variant="outlined"
-                                value={documentGroupDescription}
-                                onChange={(event) => setDocumentGroupDescription(event.target.value)}
+                                value={recordGroupDescription}
+                                onChange={(event) => setRecordGroupDescription(event.target.value)}
                                 multiline
                                 rows={4}
                             />
@@ -218,13 +218,13 @@ const NewDocumentGroupDialog = ({ open, onClose }: NewDocumentGroupDialogProps) 
                         bottom: 10,
                     }}
                     disabled={disableCreateButton}
-                    onClick={handleCreateDocumentGroup}
+                    onClick={handleCreateRecordGroup}
                 >
-                    Create Document Group
+                    Create Record Group
                 </Button>
             </DialogContent>
         </Dialog>
     );
 }
 
-export default NewDocumentGroupDialog;
+export default NewRecordGroupDialog;
