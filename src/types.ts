@@ -34,6 +34,23 @@ export interface ProjectData {
     dateCreated?: number;
 }
 
+export interface DocumentGroup {
+    _id: string;
+    attributes: any[];
+    name: string;
+    processor_id: string;
+    processorId: string;
+    settings?: any;
+    description?: string;
+    documentType?: string;
+    state?: string;
+    creator?: {
+      name?: string;
+      email?: string;
+    };
+    dateCreated?: number;
+}
+
 export interface Attribute {
     name: string;
     key: string;
@@ -88,7 +105,7 @@ export interface RecordAttributesTableProps {
 }
 
 export interface RecordsTableProps {
-    projectData: ProjectData;
+    documentGroup: ProjectData;
     records: RecordData[];
     setRecords: (records: RecordData[]) => void;
     pageSize: number;
@@ -102,7 +119,7 @@ export interface RecordsTableProps {
     setAppliedFilters: (filters: any) => void;
     setSortBy: (sortBy: string) => void;
     setSortAscending: (ascending: number) => void;
-    handleUpdateProject: (update: any) => void;
+    handleUpdateDocumentGroup: (update: any) => void;
 }
 
 export interface PopupModalProps {
@@ -174,8 +191,8 @@ export interface DocumentContainerProps {
 export interface ColumnSelectDialogProps {
     open: boolean;
     onClose: () => void;
-    projectData: ProjectData;
-    handleUpdateProject: (update: any) => void;
+    documentGroup: ProjectData;
+    handleUpdateDocumentGroup: (update: any) => void;
 }
 
 export interface CheckboxesGroupProps {

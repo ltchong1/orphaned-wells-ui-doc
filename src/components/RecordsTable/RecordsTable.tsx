@@ -34,7 +34,7 @@ const SORTABLE_COLUMNS = ["name", "dateCreated", "status", "review_status"]
 const RecordsTable = (props: RecordsTableProps) => {
   let navigate = useNavigate();
   const { 
-    projectData, 
+    documentGroup, 
     records, 
     setRecords, 
     pageSize,
@@ -48,7 +48,7 @@ const RecordsTable = (props: RecordsTableProps) => {
     setAppliedFilters,
     setSortBy,
     setSortAscending,
-    handleUpdateProject
+    handleUpdateDocumentGroup
   } = props;
 
   const [ openColumnSelect, setOpenColumnSelect ] = useState(false);
@@ -124,7 +124,7 @@ const RecordsTable = (props: RecordsTableProps) => {
     let currentAppliedFilters = localStorage.getItem("appliedFilters");
     if (currentAppliedFilters === null) newAppliedFilters = {};
     else newAppliedFilters = JSON.parse(currentAppliedFilters);
-    newAppliedFilters[projectData._id || ""] = appliedFilters;
+    newAppliedFilters[documentGroup._id || ""] = appliedFilters;
     localStorage.setItem("appliedFilters", JSON.stringify(newAppliedFilters));
   }
 
@@ -222,9 +222,9 @@ const RecordsTable = (props: RecordsTableProps) => {
             <TableFilters applyFilters={handleApplyFilters} appliedFilters={appliedFilters} />
           </Grid>
           <Grid item sx={styles.topSectionRight} xs={6}>
-            {projectData && 
+            {documentGroup && 
               <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<IosShareIcon />}>
-                Export Project
+                Export Document Group
               </Button>
             }
           </Grid>
@@ -285,12 +285,12 @@ const RecordsTable = (props: RecordsTableProps) => {
           </TableRow>
         </TableFooter>
       </Table>
-      { projectData && 
+      { documentGroup && 
         <ColumnSelectDialog
           open={openColumnSelect}
           onClose={() => setOpenColumnSelect(false)}
-          projectData={projectData}
-          handleUpdateProject={handleUpdateProject}
+          documentGroup={documentGroup}
+          handleUpdateDocumentGroup={handleUpdateDocumentGroup}
         />
       }
       <Notes

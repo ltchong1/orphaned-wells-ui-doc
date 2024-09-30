@@ -7,6 +7,14 @@ export const getProjects = () => {
     });
 };
 
+export const getDocumentGroups = () => {
+    // TODO: take project id as parameter here
+    return fetch(BACKEND_URL + '/get_document_groups/test', {
+        mode: 'cors',
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
+    });
+};
+
 export const getProcessors = (state: string) => {
     return fetch(BACKEND_URL + '/get_processors/'+state, {
         mode: 'cors',
@@ -35,6 +43,20 @@ export const getProjectData = (project_id: string, page: number, records_per_pag
     });
 };
 
+export const getDocumentGroup = (dg_id: string, page: number, records_per_page: number, sort: string, filter: string) => {
+    let route = BACKEND_URL + '/get_document_group/' + dg_id + '?page=' + page + '&records_per_page=' + records_per_page;
+    let data: { sort: string; filter: string } = {
+        sort: sort,
+        filter: filter
+    };
+    return fetch(route, {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify(data),
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
+    });
+};
+
 export const getTeamRecords = () => {
     return fetch(BACKEND_URL + '/get_team_records', {
         mode: 'cors',
@@ -44,6 +66,15 @@ export const getTeamRecords = () => {
 
 export const addProject = (data: any) => {
     return fetch(BACKEND_URL + '/add_project', {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify(data),
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
+    });
+};
+
+export const addDocumentGroup = (data: any) => {
+    return fetch(BACKEND_URL + '/add_document_group', {
         method: 'POST',
         mode: 'cors',
         body: JSON.stringify(data),
@@ -91,6 +122,15 @@ export const updateProject = (project_id: string, data: any) => {
     });
 };
 
+export const updateDocumentGroup = (dg_id: string, data: any) => {
+    return fetch(BACKEND_URL + '/update_document_group/' + dg_id, {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify(data),
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
+    });
+};
+
 export const updateRecord = (record_id: string, data: any) => {
     return fetch(BACKEND_URL + '/update_record/' + record_id, {
         method: 'POST',
@@ -102,6 +142,14 @@ export const updateRecord = (record_id: string, data: any) => {
 
 export const deleteProject = (project_id: string) => {
     return fetch(BACKEND_URL + '/delete_project/' + project_id, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
+    });
+};
+
+export const deleteDocumentGroup = (dg_id: string) => {
+    return fetch(BACKEND_URL + '/delete_document_group/' + dg_id, {
         method: 'POST',
         mode: 'cors',
         headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }

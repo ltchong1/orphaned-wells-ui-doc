@@ -7,7 +7,7 @@ import { downloadRecords, getProcessorData } from '../../services/app.service';
 import { ColumnSelectDialogProps, CheckboxesGroupProps, Processor } from '../../types';
 
 const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
-    const { open, onClose, projectData, handleUpdateProject } = props;
+    const { open, onClose, documentGroup, handleUpdateDocumentGroup } = props;
 
     const [columns, setColumns] = useState<string[]>([]);
     const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
@@ -19,7 +19,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         if (open) {
             callAPI(
                 getProcessorData,
-                [projectData.processorId],
+                [documentGroup.processorId],
                 setDefaultColumns,
                 (e: Error) => console.error("unable to get processor data: " + e)
             );
@@ -57,8 +57,8 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
             temp_columns.push(attr.name)
         }
         setColumns(temp_columns)
-        if (projectData.settings && projectData.settings.exportColumns) {
-            setSelectedColumns([...projectData.settings.exportColumns]);
+        if (documentGroup.settings && documentGroup.settings.exportColumns) {
+            setSelectedColumns([...documentGroup.settings.exportColumns]);
         } else {
             setSelectedColumns([...temp_columns]);
         }
@@ -75,7 +75,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         };
         callAPIWithBlobResponse(
             downloadRecords,
-            [projectData._id, body],
+            [documentGroup._id, body],
             handleSuccessfulExport,
             (e: Error) => console.error("unable to download csv: " + e)
         );
@@ -86,20 +86,20 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         const href = window.URL.createObjectURL(data);
         const link = document.createElement('a');
         link.href = href;
-        link.setAttribute('download', `${projectData.name}_records.${exportType}`);
+        link.setAttribute('download', `${documentGroup.name}_records.${exportType}`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
 
         // update project settings to include selected columns
         let settings;
-        if (projectData.settings)  {
-            settings = projectData.settings
+        if (documentGroup.settings)  {
+            settings = documentGroup.settings
             settings["exportColumns"] = selectedColumns
         } else {
             settings = {exportColumns: selectedColumns}
         }
-        handleUpdateProject({"settings": settings})
+        handleUpdateDocumentGroup({"settings": settings})
     };
 
     return (
