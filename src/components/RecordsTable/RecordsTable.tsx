@@ -18,6 +18,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelectDialog';
 import { formatDate, average, formatConfidence } from '../../assets/helperFunctions';
+import { styles } from '../../assets/styles';
 import Notes from '../Notes/Notes';
 import TableFilters from '../TableFilters/TableFilters';
 import { RecordData } from '../../types';
@@ -54,31 +55,6 @@ const RecordsTable = (props: RecordsTableProps) => {
   const [ showNotes, setShowNotes ] = useState(false);
   const [ notesRecordId, setNotesRecordId ] = useState<string | null | undefined>(null);
   const [ notes, setNotes ] = useState<string | null | undefined>(null);
-
-  const styles = {
-    projectRow: {
-      cursor: "pointer",
-      "&:hover": {
-        background: "#efefef"
-      },
-    },
-    topSection: {
-      marginTop: 2, 
-      marginRight: 2,
-      paddingX: 3,
-    },
-    topSectionLeft: {
-      display: "flex",
-      justifyContent: "flex-start",
-    },
-    topSectionRight: {
-      display: "flex",
-      justifyContent: "flex-end",
-    },
-    headerCell: {
-      fontWeight: "bold"
-    },
-  }
 
   const handleClickRecord = (record_id: string) => {
     navigate("/record/" + record_id);
@@ -180,7 +156,7 @@ const RecordsTable = (props: RecordsTableProps) => {
   const tableRow = (row: RecordData, idx: number) => {
     return (
       <TableRow
-        sx={styles.projectRow}
+        sx={styles.tableRow}
         onClick={() => handleClickRecord(row._id)}
         key={row._id}
         id={row.name+"_record_row"}
