@@ -63,7 +63,11 @@ const Project = () => {
                 :
                     <h1>Unable to connect to backend. Please make sure that backend server is up and running.</h1>
                 }
-                <NewRecordGroupDialog open={showNewRecordGroupDialog} onClose={() => setShowNewRecordGroupDialog(false)} />
+                <NewRecordGroupDialog 
+                    open={showNewRecordGroupDialog} 
+                    onClose={() => setShowNewRecordGroupDialog(false)} 
+                    project_id={params.id || ''}
+                />
             </Box>
         </Box>
     );

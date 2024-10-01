@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Box, TextField, IconButton, Grid, Button, Tooltip, Dialog, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
+import { Box, TextField, IconButton, Grid, Button, Tooltip } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { addRecordGroup, getProcessors } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
@@ -8,9 +9,10 @@ import { Processor } from '../../types';
 interface NewRecordGroupDialogProps {
     open: boolean;
     onClose: () => void;
+    project_id: string;
 }
 
-const NewRecordGroupDialog = ({ open, onClose }: NewRecordGroupDialogProps) => {
+const NewRecordGroupDialog = ({ open, onClose, project_id }: NewRecordGroupDialogProps) => {
     const [recordGroupName, setRecordGroupName] = useState("");
     const [recordGroupDescription, setRecordGroupDescription] = useState("");
     const [processors, setProcessors] = useState<Processor[]>([])
@@ -112,6 +114,7 @@ const NewRecordGroupDialog = ({ open, onClose }: NewRecordGroupDialogProps) => {
             history: [],
             documentType: selectedProcessor.documentType,
             processorId: selectedProcessor.id,
+            project_id: project_id,
         };
         callAPI(
             addRecordGroup,
