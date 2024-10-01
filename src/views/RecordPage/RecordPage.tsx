@@ -8,11 +8,9 @@ import Bottombar from '../../components/BottomBar/BottomBar';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
-import { RecordData, handleChangeValueSignature } from '../../types';
+import { RecordData, handleChangeValueSignature, PreviousPages } from '../../types';
 
-interface PreviousPages {
-    [key: string]: () => void;
-}
+
 
 const Record = () => {
     const [recordData, setRecordData] = useState<RecordData>({} as RecordData);

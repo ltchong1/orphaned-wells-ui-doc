@@ -81,12 +81,21 @@ const Subheader = (props: SubheaderProps) => {
                         /
                         {
                             previousPages &&
-                            Object.entries(previousPages).map(([page, pageAction]) => (
-                                <Fragment key={page}>
-                                    <Button sx={styles.iconButton} size="small" onClick={pageAction}>{page || ""}</Button>
-                                    /
-                                </Fragment>
-                            ))
+                            Object.entries(previousPages).map(([page, pageAction]) => {
+                                if (page && page !== "undefined") return (
+                                    <Fragment key={page}>
+                                        <Button 
+                                            sx={styles.iconButton} 
+                                            size="small" 
+                                            onClick={pageAction}
+                                        >
+                                            {page}
+                                        </Button>
+                                        /
+                                    </Fragment>
+                                )
+                                
+                            })
                         }
 
                         <Button sx={styles.iconButton} size="small">{currentPage!== undefined ? currentPage : ""}</Button>

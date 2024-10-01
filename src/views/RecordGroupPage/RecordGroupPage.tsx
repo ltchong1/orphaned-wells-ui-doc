@@ -8,7 +8,7 @@ import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDo
 import PopupModal from '../../components/PopupModal/PopupModal';
 import { callAPI } from '../../assets/helperFunctions';
 import { convertFiltersToMongoFormat } from '../../assets/helperFunctions';
-import { RecordGroup, ProjectData } from '../../types';
+import { RecordGroup, ProjectData, PreviousPages } from '../../types';
 
 const RecordGroupPage = () => {
     const params = useParams<{ id: string }>(); 
@@ -25,7 +25,7 @@ const RecordGroupPage = () => {
     const [pageSize, setPageSize] = useState(100);
     const [sortBy, setSortBy] = useState('dateCreated');
     const [sortAscending, setSortAscending] = useState(1);
-    const [navigation, setNavigation] = useState({})
+    const [navigation, setNavigation] = useState<PreviousPages>({"Projects": () => navigate("/projects", { replace: true })})
     const [filterBy, setFilterBy] = useState<any[]>(
             JSON.parse(localStorage.getItem("appliedFilters") || '{}')[params.id || ""] || []
     );
@@ -39,7 +39,7 @@ const RecordGroupPage = () => {
     }, [sortBy, sortAscending, filterBy]);
 
     useEffect(() => {
-        let temp_navigation: { [key: string]: Function; } = { 
+        let temp_navigation: PreviousPages = { 
             "Projects": () => navigate("/projects", { replace: true })
         }
         temp_navigation[project.name] = () => navigate("/project/"+project._id, { replace: true })

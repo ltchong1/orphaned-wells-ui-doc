@@ -87,6 +87,10 @@ export interface User {
     user_info?: any
   }
 
+export interface PreviousPages {
+    [key: string]: () => void;
+}
+
 /*
 props interfaces
 */
