@@ -102,7 +102,7 @@ const RecordGroupPage = () => {
         callAPI(
             deleteRecordGroup,
             [recordGroup._id],
-            (data: any) => navigate("/record_groups", { replace: true }),
+            (data: any) => navigate("/project/"+project._id, { replace: true }),
             (e: Error) => { console.error('error on deleting record group: ', e); }
         );
     };
