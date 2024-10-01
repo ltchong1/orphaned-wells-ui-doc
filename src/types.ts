@@ -157,7 +157,7 @@ export interface SubheaderProps {
     handleClickButton?: () => void;
     disableButton?: boolean;
     previousPages?: Record<string, () => void>;
-    actions?: Record<string, () => void>;
+    actions?: Record<string, () => void> | null;
     locked?: boolean;
 }
 
