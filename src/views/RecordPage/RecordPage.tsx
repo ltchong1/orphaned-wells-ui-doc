@@ -126,7 +126,7 @@ const Record = () => {
             setShowErrorBar(true);
             setErrorMsg(`Unable to update record: ${data.detail}. Returning to records list in 5 seconds.`);
             setTimeout(() => {
-                goToProject();
+                goToRecordGroup();
             }, 5000);
         } else {
             console.error('error updating record data: ', data);
@@ -163,13 +163,13 @@ const Record = () => {
         callAPI(
             deleteRecord,
             [params.id],
-            goToProject,
+            goToRecordGroup,
             (e) => console.error('error on deleting record: ', e)
         );
     }
 
-    const goToProject = () => {
-        navigate("/project/" + recordData.project_id, { replace: true });
+    const goToRecordGroup = () => {
+        navigate("/record_group/" + recordData.rg_id, { replace: true })
     }
 
     const handleClickNext = () => {

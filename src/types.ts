@@ -6,6 +6,7 @@ export interface RecordData {
     name: string;
     project_id: string;
     project_name: string;
+    rg_id: string;
     attributesList: Array<any>;
     img_urls: Array<string>;
     recordIndex?: number;
