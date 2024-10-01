@@ -85,7 +85,10 @@ const Record = () => {
         let tempPreviousPages: PreviousPages = {
             "Projects": () => navigate("/projects", { replace: true }),
         };
-        tempPreviousPages[newRecordData.project_name] = () => navigate("/project/" + newRecordData.project_id, { replace: true });
+        tempPreviousPages[newRecordData.project_name] = 
+            () => navigate("/project/" + newRecordData.project_id, { replace: true });
+        tempPreviousPages[newRecordData.rg_name] = 
+            () => navigate("/record_group/" + newRecordData.rg_id, { replace: true });
         setPreviousPages(tempPreviousPages);
     }
 
