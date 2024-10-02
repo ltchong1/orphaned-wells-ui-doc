@@ -126,7 +126,7 @@ const RecordsTable = (props: RecordsTableProps) => {
 
   const handleSort = (key: string) => {
     if (SORTABLE_COLUMNS.includes(key)) {
-      if (sortBy === key) setSortAscending(sortAscending * -1);
+      if (sortBy === key) setSortAscending((sortAscending || 1) * -1);
       else {
         setSortBy(key);
         setSortAscending(1);
@@ -206,7 +206,9 @@ const RecordsTable = (props: RecordsTableProps) => {
       <Box sx={styles.topSection}>
         <Grid container>
           <Grid item sx={styles.topSectionLeft} xs={6}>
-            <TableFilters applyFilters={handleApplyFilters} appliedFilters={appliedFilters} />
+            {appliedFilters && 
+              <TableFilters applyFilters={handleApplyFilters} appliedFilters={appliedFilters} />
+            }
           </Grid>
           <Grid item sx={styles.topSectionRight} xs={6}>
             <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<IosShareIcon />}>
@@ -224,7 +226,7 @@ const RecordsTable = (props: RecordsTableProps) => {
                 <TableCell sx={styles.headerCell} key={idx} align={idx > 0 ? "right" : "left"}>
                   <p style={getParagraphStyle(TABLE_ATTRIBUTES.keyNames[idx])} onClick={() => handleSort(TABLE_ATTRIBUTES.keyNames[idx])}>
                     {TABLE_ATTRIBUTES.keyNames[idx] === sortBy &&
-                      <IconButton onClick={() => setSortAscending(sortAscending * -1)}>
+                      <IconButton onClick={() => setSortAscending((sortAscending || 1) * -1)}>
                         {
                           sortAscending === 1 ? 
                             <KeyboardArrowUpIcon /> :
@@ -247,28 +249,33 @@ const RecordsTable = (props: RecordsTableProps) => {
             </Fragment>
           ))}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 50, 100, { label: 'All', value: -1 }]}
-              colSpan={3}
-              count={recordCount}
-              rowsPerPage={pageSize}
-              page={currentPage}
-              slotProps={{
-                select: {
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                },
-              }}
-              onPageChange={(e) => handleChangePage(e)}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
+        
+          {pageSize && 
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[10, 25, 50, 100, { label: 'All', value: -1 }]}
+                  colSpan={3}
+                  count={recordCount}
+                  rowsPerPage={pageSize}
+                  page={currentPage}
+                  slotProps={{
+                    select: {
+                      inputProps: {
+                        'aria-label': 'rows per page',
+                      },
+                      native: true,
+                    },
+                  }}
+                  onPageChange={(e) => handleChangePage(e)}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          }
+          
+        
       </Table>
       <Notes
         record_id={notesRecordId}

@@ -110,12 +110,12 @@ export interface RecordsTableProps {
     setRecords: (records: RecordData[]) => void;
     pageSize: number;
     currentPage: number;
-    sortBy: string;
-    sortAscending: number;
+    sortBy?: string;
+    sortAscending?: number;
     recordCount: number;
     setPageSize: (size: number) => void;
     setCurrentPage: (page: number) => void;
-    appliedFilters: any;
+    appliedFilters?: any;
     handleApplyFilters: (filters: any) => void;
     setSortBy: (sortBy: string) => void;
     setSortAscending: (ascending: number) => void;

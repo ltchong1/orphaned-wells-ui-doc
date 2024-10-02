@@ -9,6 +9,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ProjectData, RecordData } from '../../types';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ProjectTabs from '../../components/ProjectTabs/ProjectTabs';
+import RecordsTable from '../../components/RecordsTable/RecordsTable';
 
 const Project = () => {
     let params = useParams();
@@ -18,6 +19,8 @@ const Project = () => {
     const [record_groups, setRecordGroups] = useState<any[]>([]);
     const [records, setRecords] = useState([] as RecordData[])
     const [recordCount, setRecordCount] = useState(0)
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pageSize, setPageSize] = useState(100);
     const [unableToConnect, setUnableToConnect] = useState(false);
     const [showNewRecordGroupDialog, setShowNewRecordGroupDialog] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -98,6 +101,10 @@ const Project = () => {
         );
     }
 
+    const placeHolder = (data: any) => {
+        console.log("placeholder")
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
@@ -127,7 +134,19 @@ const Project = () => {
                                 <RecordGroupsTable record_groups={record_groups} />
                             :
                             tabs[currentTab] === "All Records" &&
-                                null
+                                <RecordsTable 
+                                    records={records}
+                                    setRecords={setRecords}
+                                    pageSize={pageSize}
+                                    currentPage={currentPage}
+                                    recordCount={recordCount}
+                                    setPageSize={setPageSize}
+                                    setCurrentPage={setCurrentPage}
+                                    handleApplyFilters={placeHolder}
+                                    setSortBy={placeHolder}
+                                    setSortAscending={placeHolder}
+                                    setOpenColumnSelect={placeHolder}
+                                />
                         }
                         
                     </div>
