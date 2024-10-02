@@ -9,6 +9,7 @@ import PopupModal from '../../components/PopupModal/PopupModal';
 import { callAPI } from '../../assets/helperFunctions';
 import { convertFiltersToMongoFormat } from '../../assets/helperFunctions';
 import { RecordGroup, ProjectData, PreviousPages } from '../../types';
+import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelectDialog';
 
 const RecordGroupPage = () => {
     const params = useParams<{ id: string }>(); 
@@ -25,6 +26,7 @@ const RecordGroupPage = () => {
     const [pageSize, setPageSize] = useState(100);
     const [sortBy, setSortBy] = useState('dateCreated');
     const [sortAscending, setSortAscending] = useState(1);
+    const [ openColumnSelect, setOpenColumnSelect ] = useState(false);
     const [navigation, setNavigation] = useState<PreviousPages>({"Projects": () => navigate("/projects", { replace: true })})
     const [filterBy, setFilterBy] = useState<any[]>(
             JSON.parse(localStorage.getItem("appliedFilters") || '{}')[params.id || ""] || []
@@ -130,6 +132,16 @@ const RecordGroupPage = () => {
         );
     };
 
+    const handleApplyFilters = (appliedFilters: any) => {
+        setFilterBy(appliedFilters);
+        let newAppliedFilters;
+        let currentAppliedFilters = localStorage.getItem("appliedFilters");
+        if (currentAppliedFilters === null) newAppliedFilters = {};
+        else newAppliedFilters = JSON.parse(currentAppliedFilters);
+        newAppliedFilters[recordGroup._id || ""] = appliedFilters;
+        localStorage.setItem("appliedFilters", JSON.stringify(newAppliedFilters));
+      }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
@@ -150,7 +162,6 @@ const RecordGroupPage = () => {
             />
             <Box sx={styles.innerBox}>
                 <RecordsTable
-                    recordGroup={recordGroup}
                     records={records}
                     setRecords={setRecords}
                     pageSize={pageSize}
@@ -161,16 +172,24 @@ const RecordGroupPage = () => {
                     setPageSize={setPageSize}
                     setCurrentPage={setCurrentPage}
                     appliedFilters={filterBy}
-                    setAppliedFilters={setFilterBy}
+                    handleApplyFilters={handleApplyFilters}
                     setSortBy={setSortBy}
                     setSortAscending={setSortAscending}
-                    handleUpdateRecordGroup={handleUpdateRecordGroup}
+                    setOpenColumnSelect={setOpenColumnSelect}
                 />
             </Box>
             {showDocumentModal && 
                 <UploadDocumentsModal 
                     setShowModal={setShowDocumentModal}
                     handleUploadDocument={handleUploadDocument}
+                />
+            }
+            { recordGroup && 
+                <ColumnSelectDialog
+                open={openColumnSelect}
+                onClose={() => setOpenColumnSelect(false)}
+                recordGroup={recordGroup}
+                handleUpdateRecordGroup={handleUpdateRecordGroup}
                 />
             }
             <PopupModal

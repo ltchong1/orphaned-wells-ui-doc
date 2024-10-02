@@ -106,7 +106,6 @@ export interface RecordAttributesTableProps {
 }
 
 export interface RecordsTableProps {
-    recordGroup: RecordGroup;
     records: RecordData[];
     setRecords: (records: RecordData[]) => void;
     pageSize: number;
@@ -117,10 +116,10 @@ export interface RecordsTableProps {
     setPageSize: (size: number) => void;
     setCurrentPage: (page: number) => void;
     appliedFilters: any;
-    setAppliedFilters: (filters: any) => void;
+    handleApplyFilters: (filters: any) => void;
     setSortBy: (sortBy: string) => void;
     setSortAscending: (ascending: number) => void;
-    handleUpdateRecordGroup: (update: any) => void;
+    setOpenColumnSelect: (v: boolean) => void;
 }
 
 export interface PopupModalProps {

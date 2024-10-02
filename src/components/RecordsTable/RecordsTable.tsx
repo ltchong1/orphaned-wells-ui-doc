@@ -16,7 +16,6 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelectDialog';
 import { formatDate, average, formatConfidence } from '../../assets/helperFunctions';
 import { styles } from '../../assets/styles';
 import Notes from '../Notes/Notes';
@@ -34,7 +33,6 @@ const SORTABLE_COLUMNS = ["name", "dateCreated", "status", "review_status"]
 const RecordsTable = (props: RecordsTableProps) => {
   let navigate = useNavigate();
   const { 
-    recordGroup, 
     records, 
     setRecords, 
     pageSize,
@@ -45,13 +43,12 @@ const RecordsTable = (props: RecordsTableProps) => {
     setPageSize,
     setCurrentPage,
     appliedFilters,
-    setAppliedFilters,
+    handleApplyFilters,
     setSortBy,
     setSortAscending,
-    handleUpdateRecordGroup
+    setOpenColumnSelect
   } = props;
 
-  const [ openColumnSelect, setOpenColumnSelect ] = useState(false);
   const [ showNotes, setShowNotes ] = useState(false);
   const [ notesRecordId, setNotesRecordId ] = useState<string | null | undefined>(null);
   const [ notes, setNotes ] = useState<string | null | undefined>(null);
@@ -116,16 +113,6 @@ const RecordsTable = (props: RecordsTableProps) => {
         setRecords(tempRecords);
       }
     }
-  }
-
-  const handleApplyFilters = (appliedFilters: any) => {
-    setAppliedFilters(appliedFilters);
-    let newAppliedFilters;
-    let currentAppliedFilters = localStorage.getItem("appliedFilters");
-    if (currentAppliedFilters === null) newAppliedFilters = {};
-    else newAppliedFilters = JSON.parse(currentAppliedFilters);
-    newAppliedFilters[recordGroup._id || ""] = appliedFilters;
-    localStorage.setItem("appliedFilters", JSON.stringify(newAppliedFilters));
   }
 
   const handleChangePage = (newPage: any) => {
@@ -222,11 +209,9 @@ const RecordsTable = (props: RecordsTableProps) => {
             <TableFilters applyFilters={handleApplyFilters} appliedFilters={appliedFilters} />
           </Grid>
           <Grid item sx={styles.topSectionRight} xs={6}>
-            {recordGroup && 
-              <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<IosShareIcon />}>
-                Export Record Group
-              </Button>
-            }
+            <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<IosShareIcon />}>
+              Export Record Group
+            </Button>
           </Grid>
         </Grid>
       </Box>
@@ -285,14 +270,6 @@ const RecordsTable = (props: RecordsTableProps) => {
           </TableRow>
         </TableFooter>
       </Table>
-      { recordGroup && 
-        <ColumnSelectDialog
-          open={openColumnSelect}
-          onClose={() => setOpenColumnSelect(false)}
-          recordGroup={recordGroup}
-          handleUpdateRecordGroup={handleUpdateRecordGroup}
-        />
-      }
       <Notes
         record_id={notesRecordId}
         notes={notes}

@@ -101,7 +101,14 @@ const Project = () => {
                 {!unableToConnect ? 
                     <div>
                         <ProjectTabs options={tabs} value={currentTab} setValue={setCurrentTab}/>
-                        <RecordGroupsTable record_groups={record_groups} />
+                        {
+                            tabs[currentTab] === "Record Groups" ? 
+                                <RecordGroupsTable record_groups={record_groups} />
+                            :
+                            tabs[currentTab] === "All Records" &&
+                                null
+                        }
+                        
                     </div>
                 :
                     <h1>Unable to connect to backend. Please make sure that backend server is up and running.</h1>
