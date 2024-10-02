@@ -8,6 +8,7 @@ import { callAPI } from '../../assets/helperFunctions';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ProjectData } from '../../types';
 import PopupModal from '../../components/PopupModal/PopupModal';
+import ProjectTabs from '../../components/ProjectTabs/ProjectTabs';
 
 const Project = () => {
     let params = useParams();
@@ -19,6 +20,8 @@ const Project = () => {
     const [showNewRecordGroupDialog, setShowNewRecordGroupDialog] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
+    const [currentTab, setCurrentTab] = useState(0)
+    const tabs = ["Record Groups", "All records"]
 
     useEffect(() => {
         callAPI(getRecordGroups, [params.id], handleSuccess, handleError);
@@ -96,7 +99,10 @@ const Project = () => {
             />
             <Box sx={styles.innerBox}>
                 {!unableToConnect ? 
-                    <RecordGroupsTable record_groups={record_groups} />
+                    <div>
+                        <ProjectTabs options={tabs} value={currentTab} setValue={setCurrentTab}/>
+                        <RecordGroupsTable record_groups={record_groups} />
+                    </div>
                 :
                     <h1>Unable to connect to backend. Please make sure that backend server is up and running.</h1>
                 }
