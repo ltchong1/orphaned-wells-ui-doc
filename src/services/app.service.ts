@@ -56,11 +56,11 @@ export const getRecordGroup = (rg_id: string, page: number, records_per_page: nu
     });
 };
 
-export const getRecords = (query: any) => {
-    return fetch(BACKEND_URL + '/get_records', {
+export const getRecords = (get_by: string, data: any) => {
+    return fetch(BACKEND_URL + '/get_records/'+get_by, {
         method: 'POST',
         mode: 'cors',
-        body: JSON.stringify(query),
+        body: JSON.stringify(data),
         headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
     });
 };

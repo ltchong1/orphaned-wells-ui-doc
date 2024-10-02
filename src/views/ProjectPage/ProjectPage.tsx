@@ -3,10 +3,10 @@ import { Box } from '@mui/material';
 import Subheader from '../../components/Subheader/Subheader';
 import RecordGroupsTable from '../../components/RecordGroupsTable/RecordGroupsTable';
 import NewRecordGroupDialog from '../../components/NewRecordGroupDialog/NewRecordGroupDialog';
-import { getRecordGroups, updateProject, deleteProject } from '../../services/app.service';
+import { getRecordGroups, getRecords, updateProject, deleteProject } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ProjectData } from '../../types';
+import { ProjectData, RecordData } from '../../types';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ProjectTabs from '../../components/ProjectTabs/ProjectTabs';
 
@@ -16,21 +16,42 @@ const Project = () => {
     const [projectData, setProjectData] = useState({} as ProjectData)
     const [projectName, setProjectName] = useState("")
     const [record_groups, setRecordGroups] = useState<any[]>([]);
+    const [records, setRecords] = useState([] as RecordData[])
+    const [recordCount, setRecordCount] = useState(0)
     const [unableToConnect, setUnableToConnect] = useState(false);
     const [showNewRecordGroupDialog, setShowNewRecordGroupDialog] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [currentTab, setCurrentTab] = useState(0)
-    const tabs = ["Record Groups", "All records"]
+    const tabs = ["Record Groups", "All Records"]
+
+    /*
+        TODO: write useeffect that runs upon page load to fetch project data
+        this way we only load project data once, and records/record groups load separately depending on the tab
+    */
 
     useEffect(() => {
-        callAPI(getRecordGroups, [params.id], handleSuccess, handleError);
-    }, []);
+        if (tabs[currentTab] === "Record Groups") callAPI(getRecordGroups, [params.id], handleFetchedRecordGroups, handleError);
+        else if (tabs[currentTab] === "All Records") {
+            if (projectData.record_groups) {
+                const query = {"project_id": params.id}
+                callAPI(getRecords, ["project_id", query], handleFetchedRecords, handleError);
+            } else {
+                console.error("missing project data")
+            }
+            
+        }
+    }, [currentTab]);
 
-    const handleSuccess = (data: any) => {
+    const handleFetchedRecordGroups = (data: any) => {
         setRecordGroups(data.record_groups);
         setProjectData(data.project)
         setProjectName(data.project.name)
+    };
+
+    const handleFetchedRecords = (data: any) => {
+        setRecords(data.records);
+        setRecordCount(data.record_count);
     };
 
     const handleError = (e: Error) => {
