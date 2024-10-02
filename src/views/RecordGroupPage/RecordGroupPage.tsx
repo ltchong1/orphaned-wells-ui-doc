@@ -207,7 +207,7 @@ const RecordGroupPage = () => {
                 open={openUpdateNameModal}
                 handleClose={() => setOpenUpdateNameModal(false)}
                 text={recordGroupName}
-                textLabel='Document group Name'
+                textLabel='Record group Name'
                 handleEditText={handleChangeRecordGroupName}
                 handleSave={handleUpdateRecordGroupName}
                 buttonText='Update'
