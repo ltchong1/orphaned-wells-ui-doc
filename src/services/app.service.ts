@@ -56,6 +56,15 @@ export const getRecordGroup = (rg_id: string, page: number, records_per_page: nu
     });
 };
 
+export const getRecords = (query: any) => {
+    return fetch(BACKEND_URL + '/get_records', {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify(query),
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
+    });
+};
+
 export const getTeamRecords = () => {
     return fetch(BACKEND_URL + '/get_team_records', {
         mode: 'cors',
