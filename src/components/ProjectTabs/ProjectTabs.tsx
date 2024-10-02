@@ -25,7 +25,7 @@ export default function ProjectTabs({ options, value, setValue }: ProjectTabProp
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="project tabs" centered>
+        <Tabs value={value} onChange={handleChange} aria-label="project tabs" centered variant="fullWidth">
           {options.map((v, idx) => (
             <Tab label={options[idx]} {...a11yProps(idx)} />
           ))}
