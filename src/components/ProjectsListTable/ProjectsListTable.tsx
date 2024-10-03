@@ -20,7 +20,7 @@ const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
       <Table sx={{ minWidth: 650 }} aria-label="projects table">
         <TableHead>
           <TableRow>
-            {["Project Name", "Document Group Count", "Creator", "Date"].map((value: string) => (
+            {["Project Name", "Record Group Count", "Creator", "Date"].map((value: string) => (
               <TableCell sx={styles.headerRow} key={value}>{value}</TableCell>
             ))}
           </TableRow>
