@@ -122,15 +122,6 @@ export const downloadRecords = (location: string, _id: string, export_type: stri
     });
 };
 
-export const downloadRecordsOld = (project_id: string, data: any) => {
-    return fetch(BACKEND_URL + '/download_records/' + project_id, {
-        method: 'POST',
-        mode: 'cors',
-        body: JSON.stringify(data),
-        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
-    });
-};
-
 export const updateProject = (project_id: string, data: any) => {
     return fetch(BACKEND_URL + '/update_project/' + project_id, {
         method: 'POST',
