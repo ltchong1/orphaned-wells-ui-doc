@@ -66,15 +66,6 @@ export const getRecords = (get_by: string, data: any, page: number, records_per_
     });
 };
 
-export const getRecordsOld = (get_by: string, data: any) => {
-    return fetch(BACKEND_URL + '/get_records/'+get_by, {
-        method: 'POST',
-        mode: 'cors',
-        body: JSON.stringify(data),
-        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
-    });
-};
-
 export const getTeamRecords = () => {
     return fetch(BACKEND_URL + '/get_team_records', {
         mode: 'cors',
@@ -122,7 +113,16 @@ export const downloadRecordsCSV = (project_id: string) => {
     });
 };
 
-export const downloadRecords = (project_id: string, data: any) => {
+export const downloadRecords = (location: string, _id: string, export_type: string, data: any) => {
+    return fetch(BACKEND_URL + '/download_records/' + location + '/' + _id + '/' + export_type, {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify(data),
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
+    });
+};
+
+export const downloadRecordsOld = (project_id: string, data: any) => {
     return fetch(BACKEND_URL + '/download_records/' + project_id, {
         method: 'POST',
         mode: 'cors',

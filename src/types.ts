@@ -183,7 +183,7 @@ export interface ColumnSelectDialogProps {
     open: boolean;
     onClose: () => void;
     location: string;
-    handleUpdateRecordGroup: (update: any) => void;
+    handleUpdate: (update: any) => void;
     _id: string;
 }
 

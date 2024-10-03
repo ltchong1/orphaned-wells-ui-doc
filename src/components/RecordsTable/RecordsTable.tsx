@@ -251,7 +251,7 @@ const RecordsTable = (props: RecordsTableProps) => {
           </Grid>
           <Grid item sx={styles.topSectionRight} xs={6}>
             <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<IosShareIcon />}>
-              Export Record Group
+              Export {location.replaceAll("_", " ")}
             </Button>
           </Grid>
         </Grid>
@@ -326,7 +326,7 @@ const RecordsTable = (props: RecordsTableProps) => {
           open={openColumnSelect}
           onClose={() => setOpenColumnSelect(false)}
           location={location}
-          handleUpdateRecordGroup={handleUpdate}
+          handleUpdate={handleUpdate}
           _id={params.id}
       />
     </TableContainer>

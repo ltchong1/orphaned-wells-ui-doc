@@ -7,7 +7,7 @@ import { downloadRecords, getColumnData } from '../../services/app.service';
 import { ColumnSelectDialogProps, CheckboxesGroupProps, Processor, RecordGroup } from '../../types';
 
 const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
-    const { open, onClose, location, handleUpdateRecordGroup, _id } = props;
+    const { open, onClose, location, handleUpdate, _id } = props;
 
     const [columns, setColumns] = useState<string[]>([]);
     const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
@@ -70,12 +70,11 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
 
     const handleExport = () => {
         const body = {
-            exportType: exportType,
             columns: selectedColumns
         };
         callAPIWithBlobResponse(
             downloadRecords,
-            [_id, body],
+            [location, _id, exportType, body],
             handleSuccessfulExport,
             (e: Error) => console.error("unable to download csv: " + e)
         );
@@ -99,7 +98,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         } else {
             settings = {exportColumns: selectedColumns}
         }
-        handleUpdateRecordGroup({"settings": settings})
+        handleUpdate({"settings": settings})
     };
 
     return (
