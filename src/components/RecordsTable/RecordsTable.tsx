@@ -35,7 +35,8 @@ const RecordsTable = (props: RecordsTableProps) => {
   const {
     location,
     params,
-    setOpenColumnSelect
+    setOpenColumnSelect,
+    filter_options
   } = props;
 
   const [ showNotes, setShowNotes ] = useState(false);
@@ -243,7 +244,7 @@ const RecordsTable = (props: RecordsTableProps) => {
         <Grid container>
           <Grid item sx={styles.topSectionLeft} xs={6}>
             {filterBy && 
-              <TableFilters applyFilters={handleApplyFilters} appliedFilters={filterBy} />
+              <TableFilters applyFilters={handleApplyFilters} appliedFilters={filterBy} filter_options={filter_options} />
             }
           </Grid>
           <Grid item sx={styles.topSectionRight} xs={6}>

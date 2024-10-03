@@ -109,6 +109,7 @@ export interface RecordsTableProps {
     location: string;
     params: any;
     setOpenColumnSelect: (v: boolean) => void;
+    filter_options?: {[key: string]: FilterOption};
 }
 
 export interface PopupModalProps {
@@ -152,6 +153,7 @@ export interface SubheaderProps {
 export interface TableFiltersProps {
     applyFilters: (filters: FilterOption[]) => void;
     appliedFilters: FilterOption[];
+    filter_options?: {[key: string]: FilterOption};
 }
 
 export interface UploadDocumentsModalProps {

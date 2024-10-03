@@ -6,10 +6,11 @@ import NewRecordGroupDialog from '../../components/NewRecordGroupDialog/NewRecor
 import { getRecordGroups, getRecords, updateProject, deleteProject } from '../../services/app.service';
 import { callAPI } from '../../assets/helperFunctions';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ProjectData, RecordData } from '../../types';
+import { ProjectData, FilterOption } from '../../types';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ProjectTabs from '../../components/ProjectTabs/ProjectTabs';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
+import { DEFAULT_FILTER_OPTIONS } from '../../assets/filterOptions';
 
 const Project = () => {
     let params = useParams();
@@ -22,6 +23,7 @@ const Project = () => {
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [currentTab, setCurrentTab] = useState(0)
+    const [filters, setFilters] = useState({...DEFAULT_FILTER_OPTIONS})
     const tabs = ["Record Groups", "All Records"]
 
     /*
@@ -41,6 +43,28 @@ const Project = () => {
             
         }
     }, [currentTab]);
+
+    useEffect(() => {
+        let filterOptions = []
+        let selectedFilterOptions = []
+        for (let rg of record_groups) {
+            filterOptions.push({
+                name: rg._id,
+                checked: true,
+            })
+            selectedFilterOptions.push(rg._id)
+        }
+        let tempFilters = {...filters}
+        tempFilters["record_group_id"] = {
+            key: 'record_group_id',
+            displayName: "Record Group",   
+            type: "checkbox",
+            operator: 'equals',
+            options: filterOptions,
+            selectedOptions: selectedFilterOptions
+        }
+        setFilters(tempFilters)
+    },[record_groups])
 
     const handleFetchedRecordGroups = (data: any) => {
         setRecordGroups(data.record_groups);
@@ -129,6 +153,7 @@ const Project = () => {
                                     location="project"
                                     params={params}
                                     setOpenColumnSelect={placeHolder}
+                                    filter_options={filters}
                                 />
                         }
                         

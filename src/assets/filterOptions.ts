@@ -1,6 +1,6 @@
 import { FilterOption } from "../types";
 
-export const FILTER_OPTIONS: {
+export const DEFAULT_FILTER_OPTIONS: {
   [key: string]: FilterOption;
 } = {
   review_status: {
