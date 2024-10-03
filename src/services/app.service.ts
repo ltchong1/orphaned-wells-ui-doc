@@ -56,7 +56,17 @@ export const getRecordGroup = (rg_id: string, page: number, records_per_page: nu
     });
 };
 
-export const getRecords = (get_by: string, data: any) => {
+export const getRecords = (get_by: string, data: any, page: number, records_per_page: number) => {
+    let route = BACKEND_URL + '/get_records/' + get_by + '?page=' + page + '&records_per_page=' + records_per_page;
+    return fetch(route, {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify(data),
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
+    });
+};
+
+export const getRecordsOld = (get_by: string, data: any) => {
     return fetch(BACKEND_URL + '/get_records/'+get_by, {
         method: 'POST',
         mode: 'cors',

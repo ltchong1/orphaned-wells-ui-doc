@@ -10,19 +10,8 @@ test('test records table', (): void => {
     render( 
         <HashRouter> 
             <RecordsTable
-                records={[]}
-                pageSize={25}
-                currentPage={0}
-                recordCount={10}
-                appliedFilters={[]}
-                sortBy={"dateAscending"}
-                sortAscending={1}
-                setRecords={mockFunction}
-                setSortBy={mockFunction}
-                setPageSize={mockFunction}
-                setCurrentPage={mockFunction}
-                handleApplyFilters={mockFunction}
-                setSortAscending={mockFunction}
+                location="project"
+                params="1"
                 setOpenColumnSelect={mockFunction}
             /> 
         </HashRouter> )

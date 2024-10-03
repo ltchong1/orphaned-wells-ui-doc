@@ -38,7 +38,7 @@ const Project = () => {
         else if (tabs[currentTab] === "All Records") {
             if (projectData.record_groups) {
                 const query = {"project_id": params.id}
-                callAPI(getRecords, ["project_id", query], handleFetchedRecords, handleError);
+                callAPI(getRecords, ["project", query], handleFetchedRecords, handleError);
             } else {
                 console.error("missing project data")
             }
@@ -134,17 +134,9 @@ const Project = () => {
                                 <RecordGroupsTable record_groups={record_groups} />
                             :
                             tabs[currentTab] === "All Records" &&
-                                <RecordsTable 
-                                    records={records}
-                                    setRecords={setRecords}
-                                    pageSize={pageSize}
-                                    currentPage={currentPage}
-                                    recordCount={recordCount}
-                                    setPageSize={setPageSize}
-                                    setCurrentPage={setCurrentPage}
-                                    handleApplyFilters={placeHolder}
-                                    setSortBy={placeHolder}
-                                    setSortAscending={placeHolder}
+                                <RecordsTable
+                                    location="project"
+                                    params={params}
                                     setOpenColumnSelect={placeHolder}
                                 />
                         }

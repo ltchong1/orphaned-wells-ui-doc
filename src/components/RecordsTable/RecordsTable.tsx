@@ -16,12 +16,12 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import { formatDate, average, formatConfidence } from '../../assets/helperFunctions';
+import { formatDate, average, formatConfidence, callAPI, convertFiltersToMongoFormat } from '../../assets/helperFunctions';
 import { styles } from '../../assets/styles';
 import Notes from '../Notes/Notes';
 import TableFilters from '../TableFilters/TableFilters';
-import { RecordData } from '../../types';
-import { RecordsTableProps } from '../../types';
+import { RecordData, RecordsTableProps } from '../../types';
+import { getRecords } from '../../services/app.service';
 
 const TABLE_ATTRIBUTES = {
   displayNames: ["Record Name", "Date Uploaded", "API Number", "Mean Confidence", "Lowest Confidence", "Notes", "Digitization Status", "Review Status"],
@@ -32,29 +32,65 @@ const SORTABLE_COLUMNS = ["name", "dateCreated", "status", "review_status"]
 
 const RecordsTable = (props: RecordsTableProps) => {
   let navigate = useNavigate();
-  const { 
-    records, 
-    setRecords, 
-    pageSize,
-    currentPage,
-    sortBy,
-    sortAscending,
-    recordCount,
-    setPageSize,
-    setCurrentPage,
-    appliedFilters,
-    handleApplyFilters,
-    setSortBy,
-    setSortAscending,
+  const {
+    location,
+    params,
     setOpenColumnSelect
   } = props;
 
   const [ showNotes, setShowNotes ] = useState(false);
   const [ notesRecordId, setNotesRecordId ] = useState<string | null | undefined>(null);
   const [ notes, setNotes ] = useState<string | null | undefined>(null);
+  const [records, setRecords] = useState<any[]>([]);
+  const [recordCount, setRecordCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize, setPageSize] = useState(100);
+  const [sortBy, setSortBy] = useState('dateCreated');
+  const [sortAscending, setSortAscending] = useState(1);
+  const [filterBy, setFilterBy] = useState<any[]>(
+    JSON.parse(localStorage.getItem("appliedFilters") || '{}')[params.id || ""] || []
+);
+
+  useEffect(() => {
+    loadData();
+  }, [params.id, pageSize, currentPage, sortBy, sortAscending, filterBy]);
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [sortBy, sortAscending, filterBy]);
+
+  const loadData = () => {
+    const body = {
+      sort: [sortBy, sortAscending],
+      filter: convertFiltersToMongoFormat(filterBy),
+      rg_id: params.id,
+    };
+    const args = ["record_group", body, currentPage, pageSize];
+    callAPI(
+        getRecords,
+        args,
+        handleSuccess,
+        (e: Error) => { console.error('error getting record group data: ', e); }
+    );
+  };
+
+  const handleSuccess = (data: { records: any[], record_count: number }) => {
+      setRecords(data.records);
+      setRecordCount(data.record_count);
+  };
 
   const handleClickRecord = (record_id: string) => {
     navigate("/record/" + record_id);
+  }
+
+  const handleApplyFilters = (appliedFilters: any) => {
+    setFilterBy(appliedFilters);
+    let newAppliedFilters;
+    let currentAppliedFilters = localStorage.getItem("appliedFilters");
+    if (currentAppliedFilters === null) newAppliedFilters = {};
+    else newAppliedFilters = JSON.parse(currentAppliedFilters);
+    newAppliedFilters[params._id || ""] = appliedFilters;
+    localStorage.setItem("appliedFilters", JSON.stringify(newAppliedFilters));
   }
 
   const calculateAverageConfidence = (attributes: Array<{ confidence?: number }>) => {
@@ -206,8 +242,8 @@ const RecordsTable = (props: RecordsTableProps) => {
       <Box sx={styles.topSection}>
         <Grid container>
           <Grid item sx={styles.topSectionLeft} xs={6}>
-            {appliedFilters && 
-              <TableFilters applyFilters={handleApplyFilters} appliedFilters={appliedFilters} />
+            {filterBy && 
+              <TableFilters applyFilters={handleApplyFilters} appliedFilters={filterBy} />
             }
           </Grid>
           <Grid item sx={styles.topSectionRight} xs={6}>

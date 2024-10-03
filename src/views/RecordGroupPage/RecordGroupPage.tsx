@@ -7,7 +7,6 @@ import Subheader from '../../components/Subheader/Subheader';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import { callAPI } from '../../assets/helperFunctions';
-import { convertFiltersToMongoFormat } from '../../assets/helperFunctions';
 import { RecordGroup, ProjectData, PreviousPages } from '../../types';
 import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelectDialog';
 
@@ -15,30 +14,21 @@ const RecordGroupPage = () => {
     const params = useParams<{ id: string }>(); 
     const navigate = useNavigate();
     const [project, setProject] = useState({} as ProjectData)
-    const [records, setRecords] = useState<any[]>([]);
     const [recordGroup, setRecordGroup] = useState<RecordGroup>({ } as RecordGroup);
     const [showDocumentModal, setShowDocumentModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [recordGroupName, setRecordGroupName] = useState("");
-    const [recordCount, setRecordCount] = useState(0);
-    const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, setPageSize] = useState(100);
-    const [sortBy, setSortBy] = useState('dateCreated');
-    const [sortAscending, setSortAscending] = useState(1);
     const [ openColumnSelect, setOpenColumnSelect ] = useState(false);
     const [navigation, setNavigation] = useState<PreviousPages>({"Projects": () => navigate("/projects", { replace: true })})
-    const [filterBy, setFilterBy] = useState<any[]>(
-            JSON.parse(localStorage.getItem("appliedFilters") || '{}')[params.id || ""] || []
-    );
+    
 
     useEffect(() => {
-        loadData();
-    }, [params.id, pageSize, currentPage, sortBy, sortAscending, filterBy]);
+        if (params.id) {
+            // call api for rg_data
+        }
+    }, [params.id]);
 
-    useEffect(() => {
-        setCurrentPage(0);
-    }, [sortBy, sortAscending, filterBy]);
 
     useEffect(() => {
         let temp_navigation: PreviousPages = { 
@@ -47,25 +37,6 @@ const RecordGroupPage = () => {
         temp_navigation[project.name] = () => navigate("/project/"+project._id, { replace: true })
         setNavigation(temp_navigation)
     }, [project]);
-
-    const loadData = () => {
-        const sort: [string, number] = [sortBy, sortAscending];
-        const args: [string, number, number, [string, number], any] = [params.id || "", currentPage, pageSize, sort, convertFiltersToMongoFormat(filterBy)];
-        callAPI(
-            getRecordGroup,
-            args,
-            handleSuccess,
-            (e: Error) => { console.error('error getting record group data: ', e); }
-        );
-    };
-
-    const handleSuccess = (data: { records: any[], rg_data: RecordGroup, record_count: number, project: ProjectData }) => {
-        setRecords(data.records);
-        setRecordGroup(data.rg_data);
-        setRecordGroupName(data.rg_data.name);
-        setRecordCount(data.record_count);
-        setProject(data.project)
-    };
 
     const styles = {
         outerBox: {
@@ -132,15 +103,7 @@ const RecordGroupPage = () => {
         );
     };
 
-    const handleApplyFilters = (appliedFilters: any) => {
-        setFilterBy(appliedFilters);
-        let newAppliedFilters;
-        let currentAppliedFilters = localStorage.getItem("appliedFilters");
-        if (currentAppliedFilters === null) newAppliedFilters = {};
-        else newAppliedFilters = JSON.parse(currentAppliedFilters);
-        newAppliedFilters[recordGroup._id || ""] = appliedFilters;
-        localStorage.setItem("appliedFilters", JSON.stringify(newAppliedFilters));
-      }
+    
 
     return (
         <Box sx={styles.outerBox}>
@@ -162,19 +125,8 @@ const RecordGroupPage = () => {
             />
             <Box sx={styles.innerBox}>
                 <RecordsTable
-                    records={records}
-                    setRecords={setRecords}
-                    pageSize={pageSize}
-                    currentPage={currentPage}
-                    sortBy={sortBy}
-                    sortAscending={sortAscending}
-                    recordCount={recordCount}
-                    setPageSize={setPageSize}
-                    setCurrentPage={setCurrentPage}
-                    appliedFilters={filterBy}
-                    handleApplyFilters={handleApplyFilters}
-                    setSortBy={setSortBy}
-                    setSortAscending={setSortAscending}
+                    location="record_group"
+                    params={params}
                     setOpenColumnSelect={setOpenColumnSelect}
                 />
             </Box>
