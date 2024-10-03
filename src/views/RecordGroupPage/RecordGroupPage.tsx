@@ -25,10 +25,9 @@ const RecordGroupPage = () => {
 
     useEffect(() => {
         if (params.id) {
-            // call api for rg_data
+            loadRecordGroup()
         }
     }, [params.id]);
-
 
     useEffect(() => {
         let temp_navigation: PreviousPages = { 
@@ -48,6 +47,21 @@ const RecordGroupPage = () => {
             paddingX: 5,
         },
     };
+
+    const loadRecordGroup = () => {
+        callAPI(
+            getRecordGroup,
+            [params.id],
+            gotRecordGroup,
+            (e: Error) => { console.error('error on deleting record group: ', e); }
+        );
+    }
+
+    const gotRecordGroup = (data: {project: any, rg_data: any}) => {
+        setRecordGroup(data.rg_data)
+        setRecordGroupName(data.rg_data.name)
+        setProject(data.project)
+    } 
 
     const handleUploadDocument = (file: File) => {
         const formData = new FormData();
