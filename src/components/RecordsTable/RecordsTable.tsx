@@ -63,9 +63,9 @@ const RecordsTable = (props: RecordsTableProps) => {
     const body = {
       sort: [sortBy, sortAscending],
       filter: convertFiltersToMongoFormat(filterBy),
-      rg_id: params.id,
+      id: params.id,
     };
-    const args = ["record_group", body, currentPage, pageSize];
+    const args = [location, body, currentPage, pageSize];
     callAPI(
         getRecords,
         args,

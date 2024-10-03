@@ -17,10 +17,6 @@ const Project = () => {
     const [projectData, setProjectData] = useState({} as ProjectData)
     const [projectName, setProjectName] = useState("")
     const [record_groups, setRecordGroups] = useState<any[]>([]);
-    const [records, setRecords] = useState([] as RecordData[])
-    const [recordCount, setRecordCount] = useState(0)
-    const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, setPageSize] = useState(100);
     const [unableToConnect, setUnableToConnect] = useState(false);
     const [showNewRecordGroupDialog, setShowNewRecordGroupDialog] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -37,8 +33,8 @@ const Project = () => {
         if (tabs[currentTab] === "Record Groups") callAPI(getRecordGroups, [params.id], handleFetchedRecordGroups, handleError);
         else if (tabs[currentTab] === "All Records") {
             if (projectData.record_groups) {
-                const query = {"project_id": params.id}
-                callAPI(getRecords, ["project", query], handleFetchedRecords, handleError);
+                // const query = {"project_id": params.id}
+                // callAPI(getRecords, ["project", query], handleFetchedRecords, handleError);
             } else {
                 console.error("missing project data")
             }
@@ -50,11 +46,6 @@ const Project = () => {
         setRecordGroups(data.record_groups);
         setProjectData(data.project)
         setProjectName(data.project.name)
-    };
-
-    const handleFetchedRecords = (data: any) => {
-        setRecords(data.records);
-        setRecordCount(data.record_count);
     };
 
     const handleError = (e: Error) => {
