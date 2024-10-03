@@ -74,7 +74,7 @@ export interface FilterOption {
     displayName: string;
     type: string;
     operator: string;
-    options?: { name: string; checked: boolean }[];
+    options?: { name: string; checked: boolean, value: string }[];
     selectedOptions?: string[];
     value?: string;
 }

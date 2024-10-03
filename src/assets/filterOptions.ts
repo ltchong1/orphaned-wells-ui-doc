@@ -9,10 +9,10 @@ export const DEFAULT_FILTER_OPTIONS: {
       type: "checkbox",
       operator: 'equals',
       options: [
-          { name: "reviewed", checked: true },
-          { name: "unreviewed", checked: true },
-          { name: "incomplete", checked: true },
-          { name: "defective", checked: true },
+          { name: "reviewed", checked: true, value: "reviewed" },
+          { name: "unreviewed", checked: true, value: "unreviewed" },
+          { name: "incomplete", checked: true, value: "incomplete" },
+          { name: "defective", checked: true, value: "defective" },
       ],
       selectedOptions: ["reviewed", "unreviewed", "incomplete", "defective"]
   },

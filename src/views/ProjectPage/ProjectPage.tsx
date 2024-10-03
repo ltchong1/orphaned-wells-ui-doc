@@ -49,10 +49,11 @@ const Project = () => {
         let selectedFilterOptions = []
         for (let rg of record_groups) {
             filterOptions.push({
-                name: rg._id,
+                name: rg.name,
                 checked: true,
+                value: rg._id,
             })
-            selectedFilterOptions.push(rg._id)
+            selectedFilterOptions.push(rg.name)
         }
         let tempFilters = {...filters}
         tempFilters["record_group_id"] = {

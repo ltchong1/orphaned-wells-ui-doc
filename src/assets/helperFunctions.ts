@@ -1,6 +1,6 @@
-import { parse } from "path";
 import { refreshAuth, revokeToken } from "../services/app.service"
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { FilterOption } from "../types";
 
 export const round = (num: number, scale: number): number => {
   if(!("" + num).includes("e")) {
@@ -104,14 +104,14 @@ export const logout = (): void => {
   window.location.replace("/");
 }
 
-export const convertFiltersToMongoFormat = (filters: Array<{ type: string; options?: Array<{ checked: boolean; name: string; }>; value?: string; operator?: string; key: string; }>): object => {
+export const convertFiltersToMongoFormat = (filters: FilterOption[]): object => {
   let filterBy: { [key: string]: any } = {};
   for (let filter of filters) {
       let nextFilter: any;
       if (filter.type === 'checkbox') {
           nextFilter = { "$in": [] };
           for (let each of filter.options || []) {
-              if (each.checked) nextFilter["$in"].push(each.name);
+              if (each.checked) nextFilter["$in"].push(each.value);
           }
       }
       else if (filter.type === 'date') {
