@@ -109,14 +109,9 @@ export const convertFiltersToMongoFormat = (filters: Array<{ type: string; optio
   for (let filter of filters) {
       let nextFilter: any;
       if (filter.type === 'checkbox') {
-          let allOptionsTrue: boolean = true;
           nextFilter = { "$in": [] };
           for (let each of filter.options || []) {
               if (each.checked) nextFilter["$in"].push(each.name);
-              else allOptionsTrue = false;
-          }
-          if (allOptionsTrue) {
-              nextFilter = {};
           }
       }
       else if (filter.type === 'date') {
