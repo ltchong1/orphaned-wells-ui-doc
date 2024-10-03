@@ -3,23 +3,25 @@ import { Box, FormLabel, FormControl, IconButton, FormGroup, FormControlLabel, R
 import { Dialog, DialogTitle, DialogContent, DialogContentText, Button, Checkbox, Radio } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { callAPIWithBlobResponse, callAPI } from '../../assets/helperFunctions';
-import { downloadRecords, getProcessorData } from '../../services/app.service';
-import { ColumnSelectDialogProps, CheckboxesGroupProps, Processor } from '../../types';
+import { downloadRecords, getColumnData } from '../../services/app.service';
+import { ColumnSelectDialogProps, CheckboxesGroupProps, Processor, RecordGroup } from '../../types';
 
 const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
-    const { open, onClose, recordGroup, handleUpdateRecordGroup } = props;
+    const { open, onClose, location, handleUpdateRecordGroup, _id } = props;
 
     const [columns, setColumns] = useState<string[]>([]);
     const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
     const [exportType, setExportType] = useState("csv");
+    const [objSettings, setObjSettings] = useState<any>()
+    const [name, setName] = useState("")
     const dialogHeight = '85vh';
     const dialogWidth = '60vw';
 
     useEffect(() => {
         if (open) {
             callAPI(
-                getProcessorData,
-                [recordGroup.processorId],
+                getColumnData,
+                [location, _id],
                 setDefaultColumns,
                 (e: Error) => console.error("unable to get processor data: " + e)
             );
@@ -50,18 +52,16 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         }
     };
 
-    const setDefaultColumns = (data: Processor) => {
-        let temp_columns: string[] = []
-        let attributes = data.attributes;
-        for (let attr of attributes) {
-            temp_columns.push(attr.name)
-        }
+    const setDefaultColumns = (data: {columns: string[], obj: any}) => {
+        let temp_columns = data.columns;
         setColumns(temp_columns)
-        if (recordGroup.settings && recordGroup.settings.exportColumns) {
-            setSelectedColumns([...recordGroup.settings.exportColumns]);
+        if (data.obj.settings && data.obj.settings.exportColumns) {
+            setSelectedColumns([...data.obj.settings.exportColumns]);
         } else {
             setSelectedColumns([...temp_columns]);
         }
+        setObjSettings(data.obj.settings)
+        setName(data.obj.name)
     }
 
     const handleClose = () => {
@@ -75,7 +75,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         };
         callAPIWithBlobResponse(
             downloadRecords,
-            [recordGroup._id, body],
+            [_id, body],
             handleSuccessfulExport,
             (e: Error) => console.error("unable to download csv: " + e)
         );
@@ -86,15 +86,15 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         const href = window.URL.createObjectURL(data);
         const link = document.createElement('a');
         link.href = href;
-        link.setAttribute('download', `${recordGroup.name}_records.${exportType}`);
+        link.setAttribute('download', `${name}_records.${exportType}`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
 
         // update project settings to include selected columns
         let settings;
-        if (recordGroup.settings)  {
-            settings = recordGroup.settings
+        if (objSettings)  {
+            settings = objSettings
             settings["exportColumns"] = selectedColumns
         } else {
             settings = {exportColumns: selectedColumns}
@@ -113,7 +113,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
                 sx: styles.dialogPaper
             }}
         >
-            <DialogTitle id="export-dialog-title">Export Project</DialogTitle>
+            <DialogTitle id="export-dialog-title">Export {location}</DialogTitle>
             <IconButton
                 aria-label="close"
                 onClick={handleClose}

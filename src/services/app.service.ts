@@ -28,6 +28,13 @@ export const getProcessorData = (google_id: string) => {
     });
 }
 
+export const getColumnData = (location: string, _id: string) => {
+    return fetch(BACKEND_URL + '/get_column_data/'+location+'/'+_id, {
+        mode: 'cors',
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
+    });
+}
+
 export const getProjectData = (project_id: string, page: number, records_per_page: number, sort: string, filter: string) => {
     let route = BACKEND_URL + '/get_project/' + project_id + '?page=' + page + '&records_per_page=' + records_per_page;
     let data: { sort: string; filter: string } = {

@@ -19,7 +19,6 @@ const RecordGroupPage = () => {
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [recordGroupName, setRecordGroupName] = useState("");
-    const [ openColumnSelect, setOpenColumnSelect ] = useState(false);
     const [navigation, setNavigation] = useState<PreviousPages>({"Projects": () => navigate("/projects", { replace: true })})
     
 
@@ -141,21 +140,13 @@ const RecordGroupPage = () => {
                 <RecordsTable
                     location="record_group"
                     params={params}
-                    setOpenColumnSelect={setOpenColumnSelect}
+                    handleUpdate={handleUpdateRecordGroup}
                 />
             </Box>
             {showDocumentModal && 
                 <UploadDocumentsModal 
                     setShowModal={setShowDocumentModal}
                     handleUploadDocument={handleUploadDocument}
-                />
-            }
-            { recordGroup && 
-                <ColumnSelectDialog
-                open={openColumnSelect}
-                onClose={() => setOpenColumnSelect(false)}
-                recordGroup={recordGroup}
-                handleUpdateRecordGroup={handleUpdateRecordGroup}
                 />
             }
             <PopupModal

@@ -12,7 +12,7 @@ test('test records table', (): void => {
             <RecordsTable
                 location="project"
                 params="1"
-                setOpenColumnSelect={mockFunction}
+                handleUpdate={mockFunction}
             /> 
         </HashRouter> )
 

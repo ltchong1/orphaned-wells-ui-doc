@@ -117,6 +117,16 @@ const Project = () => {
         );
     }
 
+    const handleUpdateProject = (update: any) => {
+        setOpenUpdateNameModal(false);
+        callAPI(
+            updateProject,
+            [params.id, update],
+            (data: ProjectData) => setProjectData(data),
+            (e: Error) => console.error('error on updating record group name: ', e)
+        );
+    }
+
     const placeHolder = (data: any) => {
         console.log("placeholder")
     }
@@ -153,8 +163,8 @@ const Project = () => {
                                 <RecordsTable
                                     location="project"
                                     params={params}
-                                    setOpenColumnSelect={placeHolder}
                                     filter_options={filters}
+                                    handleUpdate={handleUpdateProject}
                                 />
                         }
                         

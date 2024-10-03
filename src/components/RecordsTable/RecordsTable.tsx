@@ -22,6 +22,7 @@ import Notes from '../Notes/Notes';
 import TableFilters from '../TableFilters/TableFilters';
 import { RecordData, RecordsTableProps } from '../../types';
 import { getRecords } from '../../services/app.service';
+import ColumnSelectDialog from '../ColumnSelectDialog/ColumnSelectDialog';
 
 const TABLE_ATTRIBUTES = {
   displayNames: ["Record Name", "Date Uploaded", "API Number", "Mean Confidence", "Lowest Confidence", "Notes", "Digitization Status", "Review Status"],
@@ -35,13 +36,14 @@ const RecordsTable = (props: RecordsTableProps) => {
   const {
     location,
     params,
-    setOpenColumnSelect,
-    filter_options
+    filter_options,
+    handleUpdate
   } = props;
 
   const [ showNotes, setShowNotes ] = useState(false);
   const [ notesRecordId, setNotesRecordId ] = useState<string | null | undefined>(null);
   const [ notes, setNotes ] = useState<string | null | undefined>(null);
+  const [ openColumnSelect, setOpenColumnSelect ] = useState(false);
   const [records, setRecords] = useState<any[]>([]);
   const [recordCount, setRecordCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
@@ -319,6 +321,13 @@ const RecordsTable = (props: RecordsTableProps) => {
         notes={notes}
         open={showNotes}
         onClose={handleCloseNotesModal}
+      />
+      <ColumnSelectDialog
+          open={openColumnSelect}
+          onClose={() => setOpenColumnSelect(false)}
+          location={location}
+          handleUpdateRecordGroup={handleUpdate}
+          _id={params.id}
       />
     </TableContainer>
   );

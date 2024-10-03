@@ -108,7 +108,7 @@ export interface RecordAttributesTableProps {
 export interface RecordsTableProps {
     location: string;
     params: any;
-    setOpenColumnSelect: (v: boolean) => void;
+    handleUpdate: (update: any) => void;
     filter_options?: {[key: string]: FilterOption};
 }
 
@@ -182,8 +182,9 @@ export interface DocumentContainerProps {
 export interface ColumnSelectDialogProps {
     open: boolean;
     onClose: () => void;
-    recordGroup: RecordGroup;
+    location: string;
     handleUpdateRecordGroup: (update: any) => void;
+    _id: string;
 }
 
 export interface CheckboxesGroupProps {
