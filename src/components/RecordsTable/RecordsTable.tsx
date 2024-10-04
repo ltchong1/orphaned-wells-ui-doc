@@ -1,7 +1,7 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, TablePagination, Icon } from '@mui/material';
-import { Button, Box, Paper, IconButton, Grid } from '@mui/material';
+import { Button, Box, Paper, IconButton, Grid, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ErrorIcon from '@mui/icons-material/Error';
@@ -212,6 +212,7 @@ const RecordsTable = (props: RecordsTableProps) => {
     )
     if (key === "status") return (
         <TableCell key={key} align="right">
+          <Typography variant='inherit' noWrap>
           {
             row.status === "processing" ? 
             <IconButton>
@@ -228,11 +229,13 @@ const RecordsTable = (props: RecordsTableProps) => {
             null
           }
           {row.status}
+          </Typography>
         </TableCell>
     )
 
     if (key === "review_status") return (
         <TableCell key={key} align="right">
+          <Typography variant='inherit' noWrap>
           <IconButton>
             {
               row.review_status === "unreviewed" ? 
@@ -251,9 +254,17 @@ const RecordsTable = (props: RecordsTableProps) => {
             }
           </IconButton>
           {row.review_status}
+          </Typography>
         </TableCell>
     )
-    if (key === "record_group") return <TableCell key={key} align='right'>{getRecordGroupName(row.record_group_id)}</TableCell>
+    if (key === "record_group") return (
+      <TableCell key={key} align='right'>
+        <Typography variant='inherit' noWrap>
+          {getRecordGroupName(row.record_group_id)}
+        </Typography>
+        
+      </TableCell>
+    )
     if (key === "documentType") return <TableCell key={key} align='right'>{getDocumentType(row.record_group_id)}</TableCell>
   }
 
