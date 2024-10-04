@@ -1,6 +1,6 @@
 import { refreshAuth, revokeToken } from "../services/app.service"
 import { useEffect, useRef } from 'react';
-import { FilterOption } from "../types";
+import { FilterOption, TableColumns } from "../types";
 
 export const DEFAULT_FILTER_OPTIONS: {
   [key: string]: FilterOption;
@@ -34,14 +34,16 @@ export const DEFAULT_FILTER_OPTIONS: {
   }
 }
 
-export const TABLE_ATTRIBUTES = {
+export const TABLE_ATTRIBUTES: {
+  [key: string]: TableColumns;
+} = {
   record_group: {
       displayNames: ["Record Name", "Date Uploaded", "API Number", "Mean Confidence", "Lowest Confidence", "Notes", "Digitization Status", "Review Status"],
       keyNames: ["name", "dateCreated", "API_NUMBER", "confidence_median", "confidence_lowest", "notes", "status", "review_status"],
   },
   project: {
-    displayNames: ["Record Name", "Date Uploaded", "API Number", "Notes", "Review Status"],
-    keyNames: ["name", "dateCreated", "API_NUMBER", "notes", "review_status"],
+    displayNames: ["Record Name", "Record Group", "Date Uploaded", "API Number", "Notes", "Digitization Status", "Review Status"],
+    keyNames: ["name", "record_group", "dateCreated", "API_NUMBER", "notes", "status", "review_status"],
   },
 }
 

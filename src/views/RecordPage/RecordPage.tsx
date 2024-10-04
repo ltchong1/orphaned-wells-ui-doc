@@ -169,7 +169,7 @@ const Record = () => {
     }
 
     const goToRecordGroup = () => {
-        navigate("/record_group/" + recordData.rg_id, { replace: true })
+        navigate("/record_group/" + recordData.record_group_id, { replace: true })
     }
 
     const handleClickNext = () => {

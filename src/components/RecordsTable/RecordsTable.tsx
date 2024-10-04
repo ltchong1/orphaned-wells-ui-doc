@@ -16,18 +16,13 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import { formatDate, average, formatConfidence, callAPI, convertFiltersToMongoFormat } from '../../assets/util';
+import { formatDate, average, formatConfidence, callAPI, convertFiltersToMongoFormat, TABLE_ATTRIBUTES } from '../../assets/util';
 import { styles } from '../../assets/styles';
 import Notes from '../Notes/Notes';
 import TableFilters from '../TableFilters/TableFilters';
 import { RecordData, RecordsTableProps } from '../../types';
 import { getRecords } from '../../services/app.service';
 import ColumnSelectDialog from '../ColumnSelectDialog/ColumnSelectDialog';
-
-const TABLE_ATTRIBUTES = {
-  displayNames: ["Record Name", "Date Uploaded", "API Number", "Mean Confidence", "Lowest Confidence", "Notes", "Digitization Status", "Review Status"],
-  keyNames: ["name", "dateCreated", "API_NUMBER", "confidence_median", "confidence_lowest", "notes", "status", "review_status"],
-}
 
 const SORTABLE_COLUMNS = ["name", "dateCreated", "status", "review_status"]
 
@@ -37,7 +32,8 @@ const RecordsTable = (props: RecordsTableProps) => {
     location,
     params,
     filter_options,
-    handleUpdate
+    handleUpdate,
+    recordGroups
   } = props;
 
   const [ showNotes, setShowNotes ] = useState(false);
@@ -52,7 +48,8 @@ const RecordsTable = (props: RecordsTableProps) => {
   const [sortAscending, setSortAscending] = useState(1);
   const [filterBy, setFilterBy] = useState<any[]>(
     JSON.parse(localStorage.getItem("appliedFilters") || '{}')[params.id || ""] || []
-);
+  );
+  const table_columns = TABLE_ATTRIBUTES[location]
 
   useEffect(() => {
     loadData();
@@ -186,26 +183,35 @@ const RecordsTable = (props: RecordsTableProps) => {
     return paragraphStyle;
   }
 
-  const tableRow = (row: RecordData, idx: number) => {
-    return (
-      <TableRow
-        sx={styles.tableRow}
-        onClick={() => handleClickRecord(row._id)}
-        key={row._id}
-        id={row.name+"_record_row"}
-      >
-        <TableCell align="right">{row.recordIndex}.</TableCell>
-        <TableCell>{row.name}</TableCell>
-        <TableCell align="right">{formatDate(row.dateCreated)}</TableCell>
-        <TableCell align="right">{row.status === "digitized" ? getAPINumber(row) : null}</TableCell>
-        <TableCell align="right">{row.status === "digitized" ? calculateAverageConfidence(row.attributesList) : null}</TableCell>
-        <TableCell align="right">{row.status === "digitized" ? calculateLowestConfidence(row.attributesList) : null}</TableCell>
-        <TableCell align="right">
+  const getRecordGroupName = (rg_id: string) => {
+    const tempRecordGroups = recordGroups || []
+    const rg = tempRecordGroups.find((element) => element._id === rg_id);
+    if (rg) return rg.name
+    else return ""
+  }
+
+  const getDocumentType = (rg_id: string) => {
+    const tempRecordGroups = recordGroups || []
+    const rg = tempRecordGroups.find((element) => element._id === rg_id);
+    if (rg) return rg.documentType
+    else return ""
+  }
+
+  const tableCell = (row: RecordData, key: string) => {
+    if (key === "name") return <TableCell key={key}>{row.name}</TableCell>
+    if (key === "dateCreated") return <TableCell key={key} align="right">{formatDate(row.dateCreated)}</TableCell>
+    if (key === "API_NUMBER") return <TableCell key={key} align="right">{row.status === "digitized" ? getAPINumber(row) : null}</TableCell>
+    if (key === "confidence_median") return <TableCell key={key} align="right">{row.status === "digitized" && calculateAverageConfidence(row.attributesList)}</TableCell>
+    if (key === "confidence_lowest") return <TableCell key={key} align="right">{row.status === "digitized" && calculateLowestConfidence(row.attributesList)}</TableCell>
+    if (key === "notes") return (
+      <TableCell key={key} align="right">
           <IconButton sx={(row.notes === "" || !row.notes) ? {} : { color: "#F2DB6F" }} onClick={(e) => handleClickNotes(e, row)}>
-            <StickyNote2Icon />
-          </IconButton>
-        </TableCell>
-        <TableCell align="right">
+          <StickyNote2Icon />
+        </IconButton>
+      </TableCell>
+    )
+    if (key === "status") return (
+        <TableCell key={key} align="right">
           {
             row.status === "processing" ? 
             <IconButton>
@@ -223,7 +229,10 @@ const RecordsTable = (props: RecordsTableProps) => {
           }
           {row.status}
         </TableCell>
-        <TableCell align="right">
+    )
+
+    if (key === "review_status") return (
+        <TableCell key={key} align="right">
           <IconButton>
             {
               row.review_status === "unreviewed" ? 
@@ -243,6 +252,23 @@ const RecordsTable = (props: RecordsTableProps) => {
           </IconButton>
           {row.review_status}
         </TableCell>
+    )
+    if (key === "record_group") return <TableCell key={key} align='right'>{getRecordGroupName(row.record_group_id)}</TableCell>
+    if (key === "documentType") return <TableCell key={key} align='right'>{getDocumentType(row.record_group_id)}</TableCell>
+  }
+
+  const tableRow = (row: RecordData, idx: number) => {
+    return (
+      <TableRow
+        sx={styles.tableRow}
+        onClick={() => handleClickRecord(row._id)}
+        key={row._id}
+        id={row.name+"_record_row"}
+      >
+        <TableCell align="right">{row.recordIndex}.</TableCell>
+        {table_columns.keyNames.map((v,i) => (
+          tableCell(row, v)
+        ))}
       </TableRow>
     );
   }
@@ -267,10 +293,10 @@ const RecordsTable = (props: RecordsTableProps) => {
           <TableRow>
             <TableCell></TableCell>
             {
-              TABLE_ATTRIBUTES.displayNames.map((attribute, idx) => (
+              table_columns.displayNames.map((attribute, idx) => (
                 <TableCell sx={styles.headerCell} key={idx} align={idx > 0 ? "right" : "left"}>
-                  <p style={getParagraphStyle(TABLE_ATTRIBUTES.keyNames[idx])} onClick={() => handleSort(TABLE_ATTRIBUTES.keyNames[idx])}>
-                    {TABLE_ATTRIBUTES.keyNames[idx] === sortBy &&
+                  <p style={getParagraphStyle(table_columns.keyNames[idx])} onClick={() => handleSort(table_columns.keyNames[idx])}>
+                    {table_columns.keyNames[idx] === sortBy &&
                       <IconButton onClick={() => setSortAscending((sortAscending || 1) * -1)}>
                         {
                           sortAscending === 1 ? 

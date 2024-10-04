@@ -7,7 +7,7 @@ export interface RecordData {
     filename: string;
     project_id: string;
     project_name: string;
-    rg_id: string;
+    record_group_id: string;
     attributesList: Array<any>;
     img_urls: Array<string>;
     recordIndex?: number;
@@ -93,6 +93,11 @@ export interface PreviousPages {
     [key: string]: () => void;
 }
 
+export interface TableColumns {
+    displayNames: string[];
+    keyNames: string[];
+}
+
 /*
 props interfaces
 */
@@ -111,6 +116,7 @@ export interface RecordsTableProps {
     params: any;
     handleUpdate: (update: any) => void;
     filter_options?: {[key: string]: FilterOption};
+    recordGroups?: RecordGroup[];
 }
 
 export interface PopupModalProps {

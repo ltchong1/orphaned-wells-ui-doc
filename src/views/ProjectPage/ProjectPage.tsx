@@ -164,6 +164,7 @@ const Project = () => {
                                     params={params}
                                     filter_options={filters}
                                     handleUpdate={handleUpdateProject}
+                                    recordGroups={record_groups}
                                 />
                         }
                         
