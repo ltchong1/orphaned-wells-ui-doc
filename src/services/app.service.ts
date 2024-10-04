@@ -66,13 +66,6 @@ export const getRecords = (get_by: string, data: any, page: number, records_per_
     });
 };
 
-export const getTeamRecords = () => {
-    return fetch(BACKEND_URL + '/get_team_records', {
-        mode: 'cors',
-        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
-    });
-};
-
 export const addProject = (data: any) => {
     return fetch(BACKEND_URL + '/add_project', {
         method: 'POST',
