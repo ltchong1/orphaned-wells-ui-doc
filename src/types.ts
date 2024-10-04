@@ -4,6 +4,7 @@ objects
 export interface RecordData {
     _id: string;
     name: string;
+    filename: string;
     project_id: string;
     project_name: string;
     rg_id: string;

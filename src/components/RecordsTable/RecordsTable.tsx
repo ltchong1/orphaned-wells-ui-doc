@@ -119,13 +119,20 @@ const RecordsTable = (props: RecordsTableProps) => {
   }
 
   const getAPINumber = (record: RecordData) => {
+    let api_number = "";
     try {
+      // check for api number in parsed attributes
       for (let attr of record.attributesList) {
         if (attr.key === "API_NUMBER")  {
-          return attr.value;
+          api_number = attr.value;
         }
       }
-      return "";
+      // if unable to find in attributes, check filename
+      if (!api_number || api_number == "") {
+        const filename = record.filename
+        api_number = filename.split("_")[0]
+      }
+      return api_number;
     } catch (e) {
       return "";
     }

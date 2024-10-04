@@ -31,3 +31,14 @@ export const DEFAULT_FILTER_OPTIONS: {
     value: ''
   }
 }
+
+export const TABLE_ATTRIBUTES = {
+  record_group: {
+      displayNames: ["Record Name", "Date Uploaded", "API Number", "Mean Confidence", "Lowest Confidence", "Notes", "Digitization Status", "Review Status"],
+      keyNames: ["name", "dateCreated", "API_NUMBER", "confidence_median", "confidence_lowest", "notes", "status", "review_status"],
+  },
+  project: {
+    displayNames: ["Record Name", "Date Uploaded", "API Number", "Notes", "Review Status"],
+    keyNames: ["name", "dateCreated", "API_NUMBER", "notes", "review_status"],
+  },
+}
