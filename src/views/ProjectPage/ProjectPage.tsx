@@ -4,13 +4,12 @@ import Subheader from '../../components/Subheader/Subheader';
 import RecordGroupsTable from '../../components/RecordGroupsTable/RecordGroupsTable';
 import NewRecordGroupDialog from '../../components/NewRecordGroupDialog/NewRecordGroupDialog';
 import { getRecordGroups, getRecords, updateProject, deleteProject } from '../../services/app.service';
-import { callAPI } from '../../assets/helperFunctions';
+import { callAPI, DEFAULT_FILTER_OPTIONS } from '../../assets/helperFunctions';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ProjectData, FilterOption } from '../../types';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ProjectTabs from '../../components/ProjectTabs/ProjectTabs';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
-import { DEFAULT_FILTER_OPTIONS } from '../../assets/filterOptions';
 
 const Project = () => {
     let params = useParams();
