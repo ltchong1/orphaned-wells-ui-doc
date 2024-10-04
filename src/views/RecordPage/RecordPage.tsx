@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
 import { getRecordData, updateRecord, deleteRecord } from '../../services/app.service';
-import { callAPI, useKeyDown } from '../../assets/helperFunctions';
+import { callAPI, useKeyDown } from '../../assets/util';
 import Subheader from '../../components/Subheader/Subheader';
 import Bottombar from '../../components/BottomBar/BottomBar';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';

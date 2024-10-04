@@ -6,7 +6,7 @@ import RecordsTable from '../../components/RecordsTable/RecordsTable';
 import Subheader from '../../components/Subheader/Subheader';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 import PopupModal from '../../components/PopupModal/PopupModal';
-import { callAPI } from '../../assets/helperFunctions';
+import { callAPI } from '../../assets/util';
 import { RecordGroup, ProjectData, PreviousPages } from '../../types';
 import ColumnSelectDialog from '../../components/ColumnSelectDialog/ColumnSelectDialog';
 

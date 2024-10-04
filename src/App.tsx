@@ -8,7 +8,7 @@ import Record from './views/RecordPage/RecordPage';
 import TeamRecordsPage from './views/TeamRecordsPage/TeamRecordsPage';
 import AdminPage from './views/AdminPage/AdminPage';
 import Header from './components/Header/Header'; 
-import { callAPI } from './assets/helperFunctions';
+import { callAPI } from './assets/util';
 import { checkAuth } from './services/app.service';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import './App.css';

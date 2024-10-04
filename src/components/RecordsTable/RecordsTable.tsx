@@ -16,7 +16,7 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import { formatDate, average, formatConfidence, callAPI, convertFiltersToMongoFormat } from '../../assets/helperFunctions';
+import { formatDate, average, formatConfidence, callAPI, convertFiltersToMongoFormat } from '../../assets/util';
 import { styles } from '../../assets/styles';
 import Notes from '../Notes/Notes';
 import TableFilters from '../TableFilters/TableFilters';

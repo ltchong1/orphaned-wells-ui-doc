@@ -4,7 +4,7 @@ import Subheader from '../../components/Subheader/Subheader';
 import RecordGroupsTable from '../../components/RecordGroupsTable/RecordGroupsTable';
 import NewRecordGroupDialog from '../../components/NewRecordGroupDialog/NewRecordGroupDialog';
 import { getRecordGroups, getRecords, updateProject, deleteProject } from '../../services/app.service';
-import { callAPI, DEFAULT_FILTER_OPTIONS } from '../../assets/helperFunctions';
+import { callAPI, DEFAULT_FILTER_OPTIONS } from '../../assets/util';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ProjectData, FilterOption } from '../../types';
 import PopupModal from '../../components/PopupModal/PopupModal';

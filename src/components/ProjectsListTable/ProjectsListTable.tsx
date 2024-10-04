@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { formatDate } from '../../assets/helperFunctions';
+import { formatDate } from '../../assets/util';
 import { ProjectData } from "../../types";
 import { styles } from "../../assets/styles";
 

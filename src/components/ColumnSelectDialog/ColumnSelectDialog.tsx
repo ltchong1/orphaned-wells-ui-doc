@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Box, FormLabel, FormControl, IconButton, FormGroup, FormControlLabel, RadioGroup, Grid } from '@mui/material';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, Button, Checkbox, Radio } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { callAPIWithBlobResponse, callAPI } from '../../assets/helperFunctions';
+import { callAPIWithBlobResponse, callAPI } from '../../assets/util';
 import { downloadRecords, getColumnData } from '../../services/app.service';
 import { ColumnSelectDialogProps, CheckboxesGroupProps, Processor, RecordGroup } from '../../types';
 
