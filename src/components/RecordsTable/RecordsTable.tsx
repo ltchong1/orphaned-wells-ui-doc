@@ -245,14 +245,13 @@ const RecordsTable = (props: RecordsTableProps) => {
       <Box sx={styles.topSection}>
         <Grid container>
           <Grid item sx={styles.topSectionLeft} xs={6}>
-            {filterBy && 
-              <TableFilters applyFilters={handleApplyFilters} appliedFilters={filterBy} filter_options={filter_options} />
-            }
+            <TableFilters applyFilters={handleApplyFilters} appliedFilters={filterBy} filter_options={filter_options} />
+            <Button onClick={() => setOpenColumnSelect(true)} startIcon={<IosShareIcon />}>
+              Export
+            </Button>
           </Grid>
           <Grid item sx={styles.topSectionRight} xs={6}>
-            <Button variant="contained" onClick={() => setOpenColumnSelect(true)} startIcon={<IosShareIcon />}>
-              Export {location.replaceAll("_", " ")}
-            </Button>
+            
           </Grid>
         </Grid>
       </Box>
