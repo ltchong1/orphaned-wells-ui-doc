@@ -20,7 +20,7 @@ const RecordGroupsTable = ({ record_groups }: RecordGroupsTableProps) => {
       <Table sx={{ minWidth: 650 }} aria-label="Record Groups table">
         <TableHead>
           <TableRow>
-            {["Record Group Name", "Description", "Document Type", "Locations", "Creator", "Date"].map((value: string) => (
+            {["Record Group Name", "Description", "Document Type", "Locations", "Creator", "Date Created"].map((value: string) => (
               <TableCell sx={styles.headerRow} key={value}>{value}</TableCell>
             ))}
           </TableRow>
