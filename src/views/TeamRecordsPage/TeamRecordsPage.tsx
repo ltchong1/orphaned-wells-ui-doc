@@ -1,25 +1,30 @@
 import { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import { Box } from '@mui/material';
-import { getRecords } from '../../services/app.service';
+import { getTeamInfo } from '../../services/app.service';
 import Subheader from '../../components/Subheader/Subheader';
 import { callAPI } from '../../assets/util';
 import { RecordData } from '../../types';
+import RecordsTable from '../../components/RecordsTable/RecordsTable';
 
 const TeamRecordsPage = () => {
-    const [records, setRecords] = useState<RecordData[]>([]);
+    const params = useParams<{ id: string }>(); 
+    const [showRecordsTable, setShowRecordsTable] = useState(false);
+    const [teamInfo, setTeamInfo] = useState<any>({})
 
     useEffect(() => {
+        /*
+            - get team data. this includes all record groups that team owns
+            - display records table with all those record groups
+
+        */
         callAPI(
-            getRecords,
+            getTeamInfo,
             [],
-            handleSuccess,
+            handleFetchedTeamInfo,
             (e: Error) => { console.error('error getting team records: ', e) }
         );
     }, []);
-
-    const handleSuccess = (data: { records: RecordData[] }) => {
-        setRecords(data.records);
-    };
 
     const styles = {
         outerBox: {
@@ -32,12 +37,25 @@ const TeamRecordsPage = () => {
         },
     };
 
+    const handleFetchedTeamInfo = (data: any) => {
+        console.log(data)
+        setTeamInfo(data);
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage="All Records"
             />
             <Box sx={styles.innerBox}>
+                {showRecordsTable && 
+                    <RecordsTable
+                        location="team_records"
+                        params={params}
+                        filter_options={{}}
+                        handleUpdate={(e) => {}}
+                    />
+                }
             </Box>
         </Box>
     );
