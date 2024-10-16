@@ -80,7 +80,6 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
     }, [params.id]);
 
     const tabCallback = () => {
-        console.log("in tab callback")
         let tempIndex: number;
         let tempSubIndex: number | null;
         let isSubattribute: boolean;
