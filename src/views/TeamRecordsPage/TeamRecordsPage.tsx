@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom";
 import { Box } from '@mui/material';
 import { getTeamInfo } from '../../services/app.service';
 import Subheader from '../../components/Subheader/Subheader';
@@ -8,7 +7,6 @@ import { RecordData } from '../../types';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
 
 const TeamRecordsPage = () => {
-    const params = useParams<{ id: string }>(); 
     const [showRecordsTable, setShowRecordsTable] = useState(false);
     const [teamInfo, setTeamInfo] = useState<any>({})
 
@@ -18,12 +16,12 @@ const TeamRecordsPage = () => {
             - display records table with all those record groups
 
         */
-        callAPI(
-            getTeamInfo,
-            [],
-            handleFetchedTeamInfo,
-            (e: Error) => { console.error('error getting team records: ', e) }
-        );
+        // callAPI(
+        //     getTeamInfo,
+        //     [],
+        //     handleFetchedTeamInfo,
+        //     (e: Error) => { console.error('error getting team records: ', e) }
+        // );
     }, []);
 
     const styles = {
@@ -48,14 +46,11 @@ const TeamRecordsPage = () => {
                 currentPage="All Records"
             />
             <Box sx={styles.innerBox}>
-                {showRecordsTable && 
-                    <RecordsTable
-                        location="team_records"
-                        params={params}
-                        filter_options={{}}
-                        handleUpdate={(e) => {}}
-                    />
-                }
+                <RecordsTable
+                    location="team"
+                    params={{id: "team"}}
+                    handleUpdate={(e) => {console.log(e)}}
+                />
             </Box>
         </Box>
     );
