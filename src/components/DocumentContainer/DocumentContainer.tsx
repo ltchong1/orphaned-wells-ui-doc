@@ -80,13 +80,15 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
     }, [params.id]);
 
     const tabCallback = () => {
+        console.log("in tab callback")
         let tempIndex: number;
         let tempSubIndex: number | null;
         let isSubattribute: boolean;
         let tempKey: string;
         let tempVertices: any;
 
-        if (displayKeyIndex === null) {
+        if (displayKeyIndex === -1) {
+            console.log("display index was null")
             tempIndex = 0;
             tempSubIndex = null;
         } 
@@ -155,7 +157,7 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
         let tempKey: string;
         let tempVertices: any;
 
-        if (displayKeyIndex === null) {
+        if (displayKeyIndex === -1) {
             tempIndex = attributesList.length - 1;
             tempSubIndex = null;
         } 
