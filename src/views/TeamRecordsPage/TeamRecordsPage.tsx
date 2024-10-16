@@ -3,10 +3,11 @@ import { Box } from '@mui/material';
 import { getTeamInfo } from '../../services/app.service';
 import Subheader from '../../components/Subheader/Subheader';
 import { callAPI } from '../../assets/util';
-import { RecordData } from '../../types';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
+import { useUserContext } from '../../usercontext';
 
 const TeamRecordsPage = () => {
+    const { user } = useUserContext();
     const [showRecordsTable, setShowRecordsTable] = useState(false);
     const [teamInfo, setTeamInfo] = useState<any>({})
 
@@ -48,7 +49,7 @@ const TeamRecordsPage = () => {
             <Box sx={styles.innerBox}>
                 <RecordsTable
                     location="team"
-                    params={{id: "team"}}
+                    params={{id: user?.default_team || ''}}
                     handleUpdate={(e) => {console.log(e)}}
                 />
             </Box>
