@@ -1,25 +1,29 @@
 import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
-import { getRecords } from '../../services/app.service';
+import { getTeamInfo } from '../../services/app.service';
 import Subheader from '../../components/Subheader/Subheader';
 import { callAPI } from '../../assets/util';
-import { RecordData } from '../../types';
+import RecordsTable from '../../components/RecordsTable/RecordsTable';
+import { useUserContext } from '../../usercontext';
 
 const TeamRecordsPage = () => {
-    const [records, setRecords] = useState<RecordData[]>([]);
+    const { user } = useUserContext();
+    const [showRecordsTable, setShowRecordsTable] = useState(false);
+    const [teamInfo, setTeamInfo] = useState<any>({})
 
     useEffect(() => {
-        callAPI(
-            getRecords,
-            [],
-            handleSuccess,
-            (e: Error) => { console.error('error getting team records: ', e) }
-        );
-    }, []);
+        /*
+            - get team data. this includes all record groups that team owns
+            - display records table with all those record groups
 
-    const handleSuccess = (data: { records: RecordData[] }) => {
-        setRecords(data.records);
-    };
+        */
+        // callAPI(
+        //     getTeamInfo,
+        //     [],
+        //     handleFetchedTeamInfo,
+        //     (e: Error) => { console.error('error getting team records: ', e) }
+        // );
+    }, []);
 
     const styles = {
         outerBox: {
@@ -32,12 +36,22 @@ const TeamRecordsPage = () => {
         },
     };
 
+    const handleFetchedTeamInfo = (data: any) => {
+        console.log(data)
+        setTeamInfo(data);
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage="All Records"
             />
             <Box sx={styles.innerBox}>
+                <RecordsTable
+                    location="team"
+                    params={{id: user?.default_team || ''}}
+                    handleUpdate={(e) => {console.log(e)}}
+                />
             </Box>
         </Box>
     );
