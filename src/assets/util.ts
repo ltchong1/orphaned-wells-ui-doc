@@ -46,8 +46,8 @@ export const TABLE_ATTRIBUTES: {
     keyNames: ["name", "record_group", "dateCreated", "API_NUMBER", "notes", "status", "review_status"],
   },
   team: {
-    displayNames: ["Record Name", "Record Group", "Date Uploaded", "API Number", "Notes", "Digitization Status", "Review Status"],
-    keyNames: ["name", "record_group", "dateCreated", "API_NUMBER", "notes", "status", "review_status"],
+    displayNames: ["Record Name", "Date Uploaded", "API Number", "Notes", "Digitization Status", "Review Status"],
+    keyNames: ["name", "dateCreated", "API_NUMBER", "notes", "status", "review_status"],
   }
 }
 
