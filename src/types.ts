@@ -17,6 +17,7 @@ export interface RecordData {
     status: string;
     previous_id?: string;
     next_id?: string;
+    api_number?: string;
 }
 
 export interface ProjectData {

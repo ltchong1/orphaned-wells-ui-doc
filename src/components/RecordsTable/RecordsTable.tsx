@@ -117,23 +117,16 @@ const RecordsTable = (props: RecordsTableProps) => {
   }
 
   const getAPINumber = (record: RecordData) => {
-    let api_number = "";
-    try {
-      // check for api number in parsed attributes
-      for (let attr of record.attributesList) {
-        if (attr.key === "API_NUMBER")  {
-          api_number = attr.value;
-        }
-      }
-      // if unable to find in attributes, check filename
-      if (!api_number || api_number == "") {
+    let api_number = record.api_number;
+    if (!api_number || api_number == "") {
+      try{
         const filename = record.filename
         api_number = filename.split("_")[0]
+      } catch(e) {
+        api_number = "";
       }
-      return api_number;
-    } catch (e) {
-      return "";
     }
+    return api_number;
   }
 
   const handleClickNotes = (event: React.MouseEvent<HTMLButtonElement>, row: RecordData) => {
