@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Chip, IconButton, Grid, Button, Stack, Dialog, DialogTitle, DialogContent, DialogContentText, Box } from '@mui/material';
+import { Chip, IconButton, Grid, Button, Stack, Dialog, DialogTitle, DialogContent, DialogContentText, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 interface DefectiveDialogProps {
@@ -10,8 +10,9 @@ interface DefectiveDialogProps {
 
 const DefectiveDialog = ({ open, handleMarkDefective, onClose }: DefectiveDialogProps) => {
     const [categoryOptions, setCategeoryOptions] = useState([
-        "Wrong report type", "Missing fields", "Fields that aren't identified", "Fields not split out correctly", "Form quality"
+        "Wrong report type", "Missing fields", "Fields that aren't identified", "Fields not split out correctly", "Wrong coordinates", "Form quality"
     ]);
+    const [ selectedOther, setSelectedOther ] = useState(false)
     const [selectedCategories, setSelectedCategories] = useState<string[]>([])
     const dialogHeight = '25vh';
     const dialogWidth = '40vw';
@@ -33,12 +34,34 @@ const DefectiveDialog = ({ open, handleMarkDefective, onClose }: DefectiveDialog
             minWidth: dialogWidth,
         },
         chip: {
-            m: 1,
-            cursor: 'pointer'
+            filled: {
+                m: 1,
+                cursor: 'pointer',
+            },
+            unfilled: {
+                m: 1,
+                cursor: 'pointer',
+                border: '1px dashed'
+            }
         },
         submitButton: {
-            // display: 'flex'
-        }
+            mt: 2
+        },
+        chipBox: {
+            mx: 2
+        },
+        chipStyle: {
+            borderRadius: '16px',       // Keeps the rounded look
+            padding: '4px',         // Reduced padding to make it smaller
+            // backgroundColor: '#e0e0e0', // Typical MUI chip background
+            color: '#000',              // Default text color for chips
+            fontSize: '0.75rem',        // Smaller font size to match compact chip style
+            fontWeight: 500,            // Standard weight for readability
+            display: 'inline-flex',     // Centers content vertically
+            alignItems: 'center',
+            height: '32px',             // Matches chip height in MUI
+            border: '1px solid',
+          }
     };
 
     const handleClose = () => {
@@ -92,17 +115,24 @@ const DefectiveDialog = ({ open, handleMarkDefective, onClose }: DefectiveDialog
                         <div>
                             Please select at least one category for why this record is defective:
                         </div>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} sx={styles.chipBox}>
                             {categoryOptions.map((option) => (
                                 <Chip 
                                     key={option}
                                     color={'primary'}
-                                    sx={styles.chip}
+                                    sx={selectedCategories.includes(option) ? styles.chip.filled : styles.chip.unfilled}
                                     label={option}
                                     variant={selectedCategories.includes(option) ? 'filled' : 'outlined'}
                                     onClick={() => handleSelect(option)}
                                 />
                             ))}
+                            {/* <Chip 
+                                color={'primary'}
+                                sx={styles.chip}
+                                label={"Add new category +"}
+                                variant={selectedOther ? 'filled' : 'outlined'}
+                                onClick={handleSelectOther}
+                            /> */}
                         </Grid>
                     </Grid>
                     <Stack
