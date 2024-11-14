@@ -116,7 +116,7 @@ const DefectiveDialog = ({ open, handleMarkDefective, onClose }: DefectiveDialog
                                     sx={selectedCategories.includes(option) ? styles.chip.filled : styles.chip.unfilled}
                                     label={option}
                                     variant={selectedCategories.includes(option) ? 'filled' : 'outlined'}
-                                    // icon={<CheckIcon />}
+                                    icon={selectedCategories.includes(option) ? <CheckIcon /> : undefined}
                                     onClick={() => handleSelect(option)}
                                 />
                             ))}
