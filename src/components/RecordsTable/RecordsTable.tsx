@@ -25,7 +25,7 @@ import { RecordData, RecordsTableProps } from '../../types';
 import { getRecords } from '../../services/app.service';
 import ColumnSelectDialog from '../ColumnSelectDialog/ColumnSelectDialog';
 
-const SORTABLE_COLUMNS = ["name", "dateCreated", "status", "review_status"]
+const SORTABLE_COLUMNS = ["name", "dateCreated", "status", "review_status", "api_number"]
 
 const RecordsTable = (props: RecordsTableProps) => {
   let navigate = useNavigate();
@@ -181,7 +181,7 @@ const RecordsTable = (props: RecordsTableProps) => {
   const tableCell = (row: RecordData, key: string) => {
     if (key === "name") return <TableCell key={key}>{row.name}</TableCell>
     if (key === "dateCreated") return <TableCell key={key} align="right">{formatDate(row.dateCreated)}</TableCell>
-    if (key === "API_NUMBER") return <TableCell key={key} align="right">{(row.status === "digitized" || row.status === "reprocessed") ? row.api_number : null}</TableCell>
+    if (key === "api_number") return <TableCell key={key} align="right">{(row.status === "digitized" || row.status === "reprocessed") ? row.api_number : null}</TableCell>
     if (key === "confidence_median") return <TableCell key={key} align="right">{(row.status === "digitized" || row.status === "reprocessed") && calculateAverageConfidence(row.attributesList)}</TableCell>
     if (key === "confidence_lowest") return <TableCell key={key} align="right">{(row.status === "digitized" || row.status === "reprocessed") && calculateLowestConfidence(row.attributesList)}</TableCell>
     if (key === "notes") return (
