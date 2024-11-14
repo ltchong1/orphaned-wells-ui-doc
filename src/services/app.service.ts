@@ -226,6 +226,15 @@ export const addUser = (email: string) => {
     });
 };
 
+export const updateUserRole = (data: any) => {
+    return fetch(BACKEND_URL + '/update_user_role', {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify(data),
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
+    });
+};
+
 export const deleteUser = (email: string) => {
     return fetch(BACKEND_URL + '/delete_user/' + email, {
         method: 'POST',
