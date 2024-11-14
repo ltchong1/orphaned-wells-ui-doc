@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Chip, IconButton, Grid, Button, Stack, Dialog, DialogTitle, DialogContent, DialogContentText, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import CancelIcon from '@mui/icons-material/Cancel'
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckIcon from '@mui/icons-material/Check'
 
 interface DefectiveDialogProps {
     open: boolean;
@@ -11,7 +12,7 @@ interface DefectiveDialogProps {
 
 const DefectiveDialog = ({ open, handleMarkDefective, onClose }: DefectiveDialogProps) => {
     const [categoryOptions, setCategeoryOptions] = useState([
-        "Wrong report type", "Some Fields not detected", "Wrong coordinates", "Complex fields not split correctly", "Complex fields not split correctly", "Form quality", "Other"
+        "Wrong report type", "Some fields not detected", "Wrong coordinates", "Complex fields not split correctly", "Many wrong detected values", "Form quality", "Other"
     ]);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([])
     const [defectiveDescription, setDefectiveDescription] = useState("")
@@ -51,18 +52,9 @@ const DefectiveDialog = ({ open, handleMarkDefective, onClose }: DefectiveDialog
         chipBox: {
             mx: 2
         },
-        chipStyle: {
-            borderRadius: '16px',       // Keeps the rounded look
-            padding: '4px',         // Reduced padding to make it smaller
-            // backgroundColor: '#e0e0e0', // Typical MUI chip background
-            color: '#000',              // Default text color for chips
-            fontSize: '0.75rem',        // Smaller font size to match compact chip style
-            fontWeight: 500,            // Standard weight for readability
-            display: 'inline-flex',     // Centers content vertically
-            alignItems: 'center',
-            height: '32px',             // Matches chip height in MUI
-            border: '1px solid',
-          }
+        description: {
+            borderRadius: '12px'
+        },
     };
 
     const handleClose = () => {
@@ -124,6 +116,7 @@ const DefectiveDialog = ({ open, handleMarkDefective, onClose }: DefectiveDialog
                                     sx={selectedCategories.includes(option) ? styles.chip.filled : styles.chip.unfilled}
                                     label={option}
                                     variant={selectedCategories.includes(option) ? 'filled' : 'outlined'}
+                                    // icon={<CheckIcon />}
                                     onClick={() => handleSelect(option)}
                                 />
                             ))}
@@ -138,6 +131,10 @@ const DefectiveDialog = ({ open, handleMarkDefective, onClose }: DefectiveDialog
                                 fullWidth
                                 multiline
                                 rows={3}
+                                InputProps={{
+                                    style: styles.description,
+                                }}
+                                placeholder='Type in a new note'
                                 onChange={(e)=>setDefectiveDescription(e.target.value)}
                             />
                         </Grid>
