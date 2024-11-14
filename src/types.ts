@@ -12,7 +12,7 @@ export interface RecordData {
     img_urls: Array<string>;
     dateCreated: number;
     status: string;
-    api_number: string | null;
+    api_number: number | null;
     previous_id?: string;
     next_id?: string;
     recordIndex?: number;
