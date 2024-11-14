@@ -176,7 +176,7 @@ export interface BottombarProps {
     onPreviousButtonClick: () => void;
     onNextButtonClick: () => void;
     onReviewButtonClick: () => void;
-    handleUpdateReviewStatus: (status: string, categories?: string[]) => void;
+    handleUpdateReviewStatus: (status: string, categories?: string[], description?: string) => void;
     promptResetRecord: () => void;
     locked?: boolean;
 }

@@ -100,8 +100,8 @@ const Bottombar = (props: BottombarProps) => {
     }
   };
 
-  const handleMarkDefective = (categories: string[]) => {
-    handleUpdateReviewStatus("defective", categories);
+  const handleMarkDefective = (categories: string[], description: string) => {
+    handleUpdateReviewStatus("defective", categories, description);
   }
 
   return ( 

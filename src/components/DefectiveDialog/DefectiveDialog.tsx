@@ -1,19 +1,20 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Chip, IconButton, Grid, Button, Stack, Dialog, DialogTitle, DialogContent, DialogContentText, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import CancelIcon from '@mui/icons-material/Cancel'
 
 interface DefectiveDialogProps {
     open: boolean;
-    handleMarkDefective: (categories: string[]) => void;
+    handleMarkDefective: (categories: string[], description: string) => void;
     onClose: () => void;
 }
 
 const DefectiveDialog = ({ open, handleMarkDefective, onClose }: DefectiveDialogProps) => {
     const [categoryOptions, setCategeoryOptions] = useState([
-        "Wrong report type", "Missing fields", "Fields that aren't identified", "Fields not split out correctly", "Wrong coordinates", "Form quality"
+        "Wrong report type", "Some Fields not detected", "Wrong coordinates", "Complex fields not split correctly", "Complex fields not split correctly", "Form quality", "Other"
     ]);
-    const [ selectedOther, setSelectedOther ] = useState(false)
     const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+    const [defectiveDescription, setDefectiveDescription] = useState("")
     const dialogHeight = '25vh';
     const dialogWidth = '40vw';
 
@@ -126,13 +127,19 @@ const DefectiveDialog = ({ open, handleMarkDefective, onClose }: DefectiveDialog
                                     onClick={() => handleSelect(option)}
                                 />
                             ))}
-                            {/* <Chip 
-                                color={'primary'}
-                                sx={styles.chip}
-                                label={"Add new category +"}
-                                variant={selectedOther ? 'filled' : 'outlined'}
-                                onClick={handleSelectOther}
-                            /> */}
+                        </Grid>
+                        <Grid item xs={12} sx={styles.chipBox}>
+                            <p>Add more details about the issues:</p>
+                        </Grid>
+                        <Grid item xs={12} sx={styles.chipBox}>
+                            <TextField
+                                id='defective-description'
+                                value={defectiveDescription}
+                                fullWidth
+                                multiline
+                                rows={3}
+                                onChange={(e)=>setDefectiveDescription(e.target.value)}
+                            />
                         </Grid>
                     </Grid>
                     <Stack
@@ -149,9 +156,10 @@ const DefectiveDialog = ({ open, handleMarkDefective, onClose }: DefectiveDialog
                                 styles.submitButton
                             }
                             disabled={selectedCategories.length === 0}
-                            onClick={() => handleMarkDefective(selectedCategories)}
+                            onClick={() => handleMarkDefective(selectedCategories, defectiveDescription)}
+                            startIcon={<CancelIcon sx={{ color: selectedCategories.length === 0 ? 'grey' : '#F44336' }} />}
                         >
-                            Mark Defective
+                            Mark As Defective
                         </Button>
                     </Stack>
                 </DialogContentText>
