@@ -10,14 +10,14 @@ export interface RecordData {
     record_group_id: string;
     attributesList: Array<any>;
     img_urls: Array<string>;
+    dateCreated: number;
+    status: string;
+    api_number: string | null;
+    previous_id?: string;
+    next_id?: string;
     recordIndex?: number;
     review_status?: string;
     notes?: string | null;
-    dateCreated: number;
-    status: string;
-    previous_id?: string;
-    next_id?: string;
-    api_number?: string;
 }
 
 export interface ProjectData {

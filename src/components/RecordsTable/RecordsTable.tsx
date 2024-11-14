@@ -116,19 +116,6 @@ const RecordsTable = (props: RecordsTableProps) => {
     return formatConfidence(lowestConfidence);
   }
 
-  const getAPINumber = (record: RecordData) => {
-    let api_number = record.api_number;
-    if (!api_number || api_number == "") {
-      try{
-        const filename = record.filename
-        api_number = filename.split("_")[0]
-      } catch(e) {
-        api_number = "";
-      }
-    }
-    return api_number;
-  }
-
   const handleClickNotes = (event: React.MouseEvent<HTMLButtonElement>, row: RecordData) => {
     event.stopPropagation();
     setShowNotes(true);
@@ -194,7 +181,7 @@ const RecordsTable = (props: RecordsTableProps) => {
   const tableCell = (row: RecordData, key: string) => {
     if (key === "name") return <TableCell key={key}>{row.name}</TableCell>
     if (key === "dateCreated") return <TableCell key={key} align="right">{formatDate(row.dateCreated)}</TableCell>
-    if (key === "API_NUMBER") return <TableCell key={key} align="right">{(row.status === "digitized" || row.status === "reprocessed") ? getAPINumber(row) : null}</TableCell>
+    if (key === "API_NUMBER") return <TableCell key={key} align="right">{(row.status === "digitized" || row.status === "reprocessed") ? row.api_number : null}</TableCell>
     if (key === "confidence_median") return <TableCell key={key} align="right">{(row.status === "digitized" || row.status === "reprocessed") && calculateAverageConfidence(row.attributesList)}</TableCell>
     if (key === "confidence_lowest") return <TableCell key={key} align="right">{(row.status === "digitized" || row.status === "reprocessed") && calculateLowestConfidence(row.attributesList)}</TableCell>
     if (key === "notes") return (
