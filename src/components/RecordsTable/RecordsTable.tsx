@@ -78,7 +78,6 @@ const RecordsTable = (props: RecordsTableProps) => {
   const handleSuccess = (data: { records: any[], record_count: number }) => {
       setRecords(data.records);
       setRecordCount(data.record_count);
-      console.log(data.records)
   };
 
   const handleClickRecord = (record_id: string) => {
