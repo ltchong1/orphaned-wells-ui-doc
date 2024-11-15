@@ -12,7 +12,7 @@ interface DefectiveDialogProps {
 
 const DefectiveDialog = ({ open, handleMarkDefective, onClose }: DefectiveDialogProps) => {
     const [categoryOptions, setCategeoryOptions] = useState([
-        "Wrong report type", "Some fields not detected", "Wrong coordinates", "Complex fields not split correctly", "Many wrong detected values", "Form quality", "Other"
+        "Wrong document type", "Some fields not detected", "Fields in wrong position on document", "Complex fields not split correctly", "Document Illegible", "Other"
     ]);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([])
     const [defectiveDescription, setDefectiveDescription] = useState("")
