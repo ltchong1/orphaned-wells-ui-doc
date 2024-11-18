@@ -90,6 +90,7 @@ export interface User {
     hd: string,
     role: number,
     user_info?: any
+    permissions?: any
   }
 
 export interface PreviousPages {
