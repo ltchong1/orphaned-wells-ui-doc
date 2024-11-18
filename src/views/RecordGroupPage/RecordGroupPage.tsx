@@ -8,10 +8,12 @@ import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDo
 import PopupModal from '../../components/PopupModal/PopupModal';
 import { callAPI } from '../../assets/util';
 import { RecordGroup, ProjectData, PreviousPages } from '../../types';
+import { useUserContext } from '../../usercontext';
 
 const RecordGroupPage = () => {
     const params = useParams<{ id: string }>(); 
     const navigate = useNavigate();
+    const { userPermissions} = useUserContext();
     const [project, setProject] = useState({} as ProjectData)
     const [recordGroup, setRecordGroup] = useState<RecordGroup>({ } as RecordGroup);
     const [showDocumentModal, setShowDocumentModal] = useState(false);
@@ -123,7 +125,7 @@ const RecordGroupPage = () => {
                 currentPage={recordGroup.name}
                 buttonName="Upload new record(s)"
                 handleClickButton={() => setShowDocumentModal(true)}
-                actions={(localStorage.getItem("role") && localStorage.getItem("role") === "10") ?
+                actions={(userPermissions && userPermissions.includes('manage_project')) ?
                     {
                         "Change record group name": handleClickChangeName, 
                         "Delete record group": () => setOpenDeleteModal(true),

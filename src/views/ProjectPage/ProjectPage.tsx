@@ -10,10 +10,12 @@ import { ProjectData } from '../../types';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ProjectTabs from '../../components/ProjectTabs/ProjectTabs';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
+import { useUserContext } from '../../usercontext';
 
 const Project = () => {
     let params = useParams();
     const navigate = useNavigate();
+    const { userPermissions} = useUserContext();
     const [projectData, setProjectData] = useState({} as ProjectData)
     const [projectName, setProjectName] = useState("")
     const [record_groups, setRecordGroups] = useState<any[]>([]);
@@ -126,10 +128,6 @@ const Project = () => {
         );
     }
 
-    const placeHolder = (data: any) => {
-        console.log("placeholder")
-    }
-
     return (
         <Box sx={styles.outerBox}>
             <Subheader
@@ -141,7 +139,7 @@ const Project = () => {
                         "Projects": () => navigate("/projects", { replace: true }),
                     }
                 }
-                actions={(localStorage.getItem("role") && localStorage.getItem("role") === "10") ?
+                actions={(userPermissions && userPermissions.includes('manage_project')) ?
                     {
                         "Change project name": () => setOpenUpdateNameModal(true), 
                         "Delete project": () => setOpenDeleteModal(true),

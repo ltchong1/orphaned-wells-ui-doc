@@ -9,8 +9,7 @@ import DocumentContainer from '../../components/DocumentContainer/DocumentContai
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
 import { RecordData, handleChangeValueSignature, PreviousPages } from '../../types';
-
-
+import { useUserContext } from '../../usercontext';
 
 const Record = () => {
     const [recordData, setRecordData] = useState<RecordData>({} as RecordData);
@@ -24,6 +23,7 @@ const Record = () => {
     const [locked, setLocked] = useState(false)
     const params = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const { userPermissions} = useUserContext();
 
     const styles = {
         outerBox: {
@@ -227,7 +227,7 @@ const Record = () => {
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={`${recordData.recordIndex !== undefined ? recordData.recordIndex : ""}. ${recordData.name !== undefined ? recordData.name : ""}`}
-                actions={(localStorage.getItem("role") && localStorage.getItem("role") === "10") ?
+                actions={(userPermissions && userPermissions.includes('manage_project')) ?
                     {
                         "Change record name": () => setOpenUpdateNameModal(true),
                         "Delete record": () => setOpenDeleteModal(true)
