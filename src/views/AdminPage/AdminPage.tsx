@@ -4,7 +4,7 @@ import { Select, MenuItem, FormControl, IconButton, Tooltip, InputLabel } from '
 import Subheader from '../../components/Subheader/Subheader';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
-import { getUsers, approveUser, addUser, deleteUser } from '../../services/app.service';
+import { getUsers, addUser, deleteUser } from '../../services/app.service';
 import { callAPI } from '../../assets/util';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -21,7 +21,6 @@ const AdminPage = () => {
     const [users, setUsers] = useState<any[]>([]);
     const [unableToConnect, setUnableToConnect] = useState(false);
     const [showNewUserModal, setShowNewUserModal] = useState(false);
-    const [showApproveUserModal, setShowApproveUserModal] = useState(false);
     const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState<string | null>(null);
     const [newUser, setNewUser] = useState("");
@@ -61,10 +60,6 @@ const AdminPage = () => {
         setUnableToConnect(true);
     }
 
-    const handleApproveUser = () => {
-        callAPI(approveUser, [selectedUser], handleSuccess, (e) => handleUserError("unable to approve user", e));
-    }
-
     const handleAddUser = () => {
         callAPI(addUser, [newUser], handleSuccess, (e) => handleUserError("unable to add user", e));
     }
@@ -80,7 +75,6 @@ const AdminPage = () => {
     }
 
     const handleClose = () => {
-        setShowApproveUserModal(false);
         setSelectedUser(null);
         setShowNewUserModal(false);
         setNewUser("");
@@ -106,7 +100,6 @@ const AdminPage = () => {
                         user={user}
                         users={users}
                         setSelectedUser={setSelectedUser}
-                        setShowApproveUserModal={setShowApproveUserModal}
                         setShowDeleteUserModal={setShowDeleteUserModal}
                         userPermissions={userPermissions}
                     />
@@ -114,16 +107,6 @@ const AdminPage = () => {
                     <h1>You are not authorized to view this page.</h1>
                 }
             </Box>
-            <PopupModal
-                open={showApproveUserModal}
-                handleClose={handleClose}
-                text="Would you like to approve this user for use of the application?"
-                handleSave={handleApproveUser}
-                buttonText='Approve'
-                buttonColor='primary'
-                buttonVariant='contained'
-                width={400}
-            />
             <PopupModal
                 input
                 open={showNewUserModal}
@@ -159,12 +142,11 @@ interface UsersTableProps {
     user: any;
     users: any[];
     setSelectedUser: (user: string | null) => void;
-    setShowApproveUserModal: (show: boolean) => void;
     setShowDeleteUserModal: (show: boolean) => void;
     userPermissions: any;
 }
 
-const UsersTable = ({ user, users, setSelectedUser, setShowApproveUserModal, setShowDeleteUserModal, userPermissions }: UsersTableProps) => {
+const UsersTable = ({ user, users, setSelectedUser, setShowDeleteUserModal, userPermissions }: UsersTableProps) => {
     const [tableRole, setTableRole] = useState(-1);
 
     const styles = {
@@ -176,11 +158,6 @@ const UsersTable = ({ user, users, setSelectedUser, setShowApproveUserModal, set
                 background: "#efefef"
             },
         }
-    }
-
-    const handleSelectUser = (user: any) => {
-        setShowApproveUserModal(true);
-        setSelectedUser(user.email);
     }
 
     const handleDeleteUser = (user: any) => {

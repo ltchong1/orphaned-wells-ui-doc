@@ -208,14 +208,6 @@ export const getUsers = () => {
     });
 };
 
-export const approveUser = (email: string) => {
-    return fetch(BACKEND_URL + '/approve_user/' + email, {
-        method: 'POST',
-        mode: 'cors',
-        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
-    });
-};
-
 export const addUser = (email: string, team_lead?: boolean, sys_admin?: boolean) => {
     if (!team_lead) team_lead = false
     if (!sys_admin) sys_admin = false
