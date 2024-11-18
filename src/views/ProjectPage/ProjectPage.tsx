@@ -132,7 +132,7 @@ const Project = () => {
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={projectData.name}
-                buttonName="New Record Group"
+                buttonName={(userPermissions && userPermissions.includes('create_record_group')) ? "New Record Group" : undefined}
                 handleClickButton={handleClickNewRecordGroup}
                 previousPages={
                     { 

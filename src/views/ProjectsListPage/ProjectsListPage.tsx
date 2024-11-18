@@ -5,8 +5,10 @@ import ProjectsListTable from '../../components/ProjectsListTable/ProjectsListTa
 import NewProjectDialog from '../../components/NewProjectDialog/NewProjectDialog';
 import { getProjects } from '../../services/app.service';
 import { callAPI } from '../../assets/util';
+import { useUserContext } from '../../usercontext';
 
 const ProjectsListPage = () => {
+    const { userPermissions} = useUserContext();
     const [projects, setProjects] = useState<any[]>([]);
     const [unableToConnect, setUnableToConnect] = useState(false);
     const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
@@ -43,7 +45,7 @@ const ProjectsListPage = () => {
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage="Projects"
-                buttonName="New Project"
+                buttonName={(userPermissions && userPermissions.includes('create_project')) ? "New Project" : undefined}
                 handleClickButton={handleClickNewProject}
             />
             <Box sx={styles.innerBox}>

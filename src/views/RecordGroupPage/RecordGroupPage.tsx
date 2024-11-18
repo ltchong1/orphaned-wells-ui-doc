@@ -123,7 +123,7 @@ const RecordGroupPage = () => {
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={recordGroup.name}
-                buttonName="Upload new record(s)"
+                buttonName={(userPermissions && userPermissions.includes('upload_record')) ? "Upload new record(s)" : undefined}
                 handleClickButton={() => setShowDocumentModal(true)}
                 actions={(userPermissions && userPermissions.includes('manage_project')) ?
                     {

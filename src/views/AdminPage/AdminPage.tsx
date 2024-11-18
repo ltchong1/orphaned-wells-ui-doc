@@ -97,7 +97,7 @@ const AdminPage = () => {
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage="Admin"
-                buttonName="+ Add user"
+                buttonName={(userPermissions && userPermissions.includes('add_user')) ? "+ Add user" : undefined}
                 handleClickButton={() => setShowNewUserModal(true)}
             />
             <Box sx={styles.innerBox}>

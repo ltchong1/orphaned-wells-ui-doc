@@ -5,11 +5,9 @@ import HomeIcon from '@mui/icons-material/Home';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { SubheaderProps } from '../../types';
 import LockIcon from '@mui/icons-material/Lock';
-import { useUserContext } from '../../usercontext';
 
 const Subheader = (props: SubheaderProps) => {
     const navigate = useNavigate();
-    const { userPermissions } = useUserContext();
     const { currentPage, buttonName, status, subtext, handleClickButton, disableButton, previousPages, actions, locked } = props;
     const [showActions, setShowActions] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -133,7 +131,7 @@ const Subheader = (props: SubheaderProps) => {
                 </Grid>
                 <Grid item xs={3}>
                     <Box sx={styles.newProjectColumn}>
-                        {buttonName && userPermissions && userPermissions.includes("create_project") &&
+                        {buttonName &&
                             <Button variant="contained" onClick={handleClickButton} disabled={disableButton}>
                                 {buttonName}
                             </Button>
