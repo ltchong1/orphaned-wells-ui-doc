@@ -6,6 +6,7 @@ interface UserContextObject {
   username?: string;
   userPhoto?: string;
   userRole?: string;
+  userPermissions?: any;
 }
 
 const UserContext = createContext({} as UserContextObject);
