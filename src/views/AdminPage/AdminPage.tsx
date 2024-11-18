@@ -8,6 +8,7 @@ import { getUsers, approveUser, addUser, deleteUser } from '../../services/app.s
 import { callAPI } from '../../assets/util';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { useUserContext } from '../../usercontext';
 
 const ROLES: { [key: string]: string } = {
     "-1": "pending",
@@ -16,6 +17,7 @@ const ROLES: { [key: string]: string } = {
 }
 
 const AdminPage = () => {
+    const { user, userPermissions } = useUserContext();
     const [users, setUsers] = useState<any[]>([]);
     const [unableToConnect, setUnableToConnect] = useState(false);
     const [showNewUserModal, setShowNewUserModal] = useState(false);
@@ -101,10 +103,12 @@ const AdminPage = () => {
             <Box sx={styles.innerBox}>
                 {!unableToConnect ?
                     <UsersTable
+                        user={user}
                         users={users}
                         setSelectedUser={setSelectedUser}
                         setShowApproveUserModal={setShowApproveUserModal}
                         setShowDeleteUserModal={setShowDeleteUserModal}
+                        userPermissions={userPermissions}
                     />
                     :
                     <h1>You are not authorized to view this page.</h1>
@@ -152,13 +156,15 @@ const AdminPage = () => {
 }
 
 interface UsersTableProps {
+    user: any;
     users: any[];
     setSelectedUser: (user: string | null) => void;
     setShowApproveUserModal: (show: boolean) => void;
     setShowDeleteUserModal: (show: boolean) => void;
+    userPermissions: any;
 }
 
-const UsersTable = ({ users, setSelectedUser, setShowApproveUserModal, setShowDeleteUserModal }: UsersTableProps) => {
+const UsersTable = ({ user, users, setSelectedUser, setShowApproveUserModal, setShowDeleteUserModal, userPermissions }: UsersTableProps) => {
     const [tableRole, setTableRole] = useState(-1);
 
     const styles = {
@@ -182,7 +188,15 @@ const UsersTable = ({ users, setSelectedUser, setShowApproveUserModal, setShowDe
         setSelectedUser(user.email);
     }
 
-    return (
+    const getRole = (row: any) => {
+        if (row.roles.teams && row.roles.teams[user.default_team]) {
+            if (row.roles.teams[user.default_team].includes('team_lead')) return 'team lead'
+            else if (row.roles.teams[user.default_team].includes('team_member')) return 'team member'
+            else return null
+        }
+    }
+
+    if (user) return (
         <TableContainer component={Paper}>
             <h1>Users</h1>
             <Table sx={{ minWidth: 650, borderTop: "5px solid #F5F5F6" }} aria-label="pending users table" size="small">
@@ -204,16 +218,14 @@ const UsersTable = ({ users, setSelectedUser, setShowApproveUserModal, setShowDe
                             </TableCell>
                             <TableCell>{row.email}</TableCell>
                             <TableCell>{row.hd}</TableCell>
-                            <TableCell>{ROLES[row.role]}</TableCell>
+                            <TableCell>{getRole(row)}</TableCell>
                             <TableCell>
-                                {row.role === -1 &&
-                                    <Tooltip title="Approve User">
-                                        <IconButton color="success" disabled={row.role !== -1} onClick={() => handleSelectUser(row)}><CheckCircleIcon /></IconButton>
+                                {userPermissions && userPermissions.includes('manage_team') &&
+                                    <Tooltip title="Remove User">
+                                        <IconButton color="error" onClick={() => handleDeleteUser(row)}><CancelIcon /></IconButton>
                                     </Tooltip>
                                 }
-                                <Tooltip title="Remove User">
-                                    <IconButton color="error" onClick={() => handleDeleteUser(row)}><CancelIcon /></IconButton>
-                                </Tooltip>
+                                
                             </TableCell>
                         </TableRow>
                     ))}
@@ -221,6 +233,11 @@ const UsersTable = ({ users, setSelectedUser, setShowApproveUserModal, setShowDe
             </Table>
         </TableContainer>
     );
+    else return (
+        <div>
+
+        </div>
+    )
 }
 
 interface RoleDropdownProps {
