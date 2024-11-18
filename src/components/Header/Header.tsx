@@ -8,7 +8,7 @@ import { useUserContext } from '../../usercontext';
 
 const Header = (props: any) => {
   const navigate = useNavigate();
-  const { user, username, userPhoto, userRole} = useUserContext();
+  const { user, username, userPhoto, userPermissions} = useUserContext();
   const [anchorAr, setAnchorAr] = useState<null | HTMLElement>(null);
   const [profileActions, setProfileActions] = useState(false);
   const [tabValue, setTabValue] = useState(0);
@@ -89,7 +89,7 @@ const Header = (props: any) => {
           >
             <Tab label="Projects" {...a11yProps(0)} />
             <Tab label="Records" {...a11yProps(1)} />
-            {userRole && userRole === "10" &&
+            {userPermissions && userPermissions.includes("manage_team") &&
               <Tab label="Users" {...a11yProps(2)} />
             }
           </Tabs>
