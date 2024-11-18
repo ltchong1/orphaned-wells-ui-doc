@@ -216,10 +216,17 @@ export const approveUser = (email: string) => {
     });
 };
 
-export const addUser = (email: string) => {
+export const addUser = (email: string, team_lead?: boolean, sys_admin?: boolean) => {
+    if (!team_lead) team_lead = false
+    if (!sys_admin) sys_admin = false
+    let data = {
+        team_lead: team_lead,
+        sys_admin: sys_admin
+    }
     return fetch(BACKEND_URL + '/add_user/' + email, {
         method: 'POST',
         mode: 'cors',
+        body: JSON.stringify(data),
         headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
     });
 };
