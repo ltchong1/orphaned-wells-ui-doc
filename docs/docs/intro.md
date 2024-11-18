@@ -2,46 +2,26 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Introduction to OGRRE
 
-Let's discover **Docusaurus in less than 5 minutes**.
+## About
 
-## Getting Started
+The **O**il and **G**as **R**egulatory **R**ecord Digitiz**e**r, or OGGRE, was created as part of
+the U.S. Department of Energy's (DOE) Consortium Advancing Technology for Assessment of Lost Oil & Gas Wells (CATALOG),
+a collaborative effort between NETL, LANL, SNL, and LLNL.
 
-Get started by **creating a new site**.
+The co-oauthors of the OGGRE software are:
+Dan Gunter (LBNL), Michael Pesce (LBNL), Rajshree Deshmukh (LBNL), Mumbi Mundia-Howe (NETL), Jacob Shay (NETL), Nathan D. Webb (ISGS), Chester J. Weiss (SNL), David Buttler (LLNL), Daniel O’Malley (LANL)
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+## Motivation
+Details describing the construction and use history of all wells in the U.S. are missing from most public and proprietary well databases.
+Most well information is not digitial.
+This hinders well plugging planning, understanding historic practices, and well characterization efforts.
 
-### What you'll need
+To address these challenges, the OGGRE tool is a user-friendly platform that allows users to leverage OCR and LLM models
+for rapid data extraction from records.
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+## Using OGRRE
 
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**.
-
-The classic template will automatically be added to your project after you run the command:
-
-```bash
-npm init docusaurus@latest my-website classic
-```
-
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
-
-The command also installs all necessary dependencies you need to run Docusaurus.
-
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+Currently, OGRRE is being used in tandem with close collaboration with the joint LBNL and NETL team.
+For those working with this team already, please see this [guide](guide).

@@ -30,6 +30,7 @@ const config: Config = {
     defaultLocale: 'en',
     locales: ['en'],
   },
+  
 
   presets: [
     [
@@ -63,6 +64,12 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
+  // Enable Mermaid
+  markdown: {
+    mermaid: true
+  },
+  themes: ['@docusaurus/theme-mermaid'],
+
 
   themeConfig: {
     // Replace with your project's social card
@@ -78,7 +85,7 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Documentation',
         },
        /*  {to: '/blog', label: 'Blog', position: 'left'},*/
         {
@@ -95,8 +102,12 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'Tutorial',
+              label: 'Introduction',
               to: '/docs/intro',
+            },
+            {
+              label: 'Guide',
+              to: '/docs/guide',
             },
           ],
         },
