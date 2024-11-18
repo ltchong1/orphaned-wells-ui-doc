@@ -201,11 +201,9 @@ export const refreshAuth = () => {
     });
 };
 
-export const getUsers = (role: string, data: any) => {
-    return fetch(BACKEND_URL + '/get_users/' + role, {
-        method: 'POST',
+export const getUsers = () => {
+    return fetch(BACKEND_URL + '/get_users', {
         mode: 'cors',
-        body: JSON.stringify(data),
         headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
     });
 };

@@ -39,7 +39,7 @@ const AdminPage = () => {
     }
 
     useEffect(() => {
-        callAPI(getUsers, ["admin", {}], handleAuthSuccess, handleAuthError);
+        callAPI(getUsers, [], handleAuthSuccess, handleAuthError);
     }, []);
 
     useEffect(() => {
