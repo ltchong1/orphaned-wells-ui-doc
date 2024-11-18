@@ -133,7 +133,7 @@ const Subheader = (props: SubheaderProps) => {
                 </Grid>
                 <Grid item xs={3}>
                     <Box sx={styles.newProjectColumn}>
-                        {buttonName && userPermissions.includes("create_projects") &&
+                        {buttonName && userPermissions && userPermissions.includes("create_projects") &&
                             <Button variant="contained" onClick={handleClickButton} disabled={disableButton}>
                                 {buttonName}
                             </Button>
