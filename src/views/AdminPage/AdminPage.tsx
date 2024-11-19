@@ -9,19 +9,22 @@ import { callAPI } from '../../assets/util';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useUserContext } from '../../usercontext';
+import ChangeRoleDialog from '../../components/ChangeRoleDialog/ChangeRoleDialog';
+import { User } from '../../types';
 
 const AdminPage = () => {
     const { user, userPermissions } = useUserContext();
-    const [users, setUsers] = useState<any[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
     const [unableToConnect, setUnableToConnect] = useState(false);
     const [showNewUserModal, setShowNewUserModal] = useState(false);
     const [showChangeRoleModal, setShowChangeRoleModal] = useState(false);
     const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<string | null>(null);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [newUser, setNewUser] = useState("");
     const [newRole, setNewRole] = useState("")
     const [disableSubmitNewUserButton, setDisableSubmitNewUserButton] = useState(true);
     const [errorMessage, setErrorMessage] = useState<string | null>("");
+    const [showChangeRoleDialog, setShowChangeRoleDialog] = useState(false)
 
     const styles = {
         outerBox: {
@@ -60,14 +63,14 @@ const AdminPage = () => {
     }
 
     const handleDeleteUser = () => {
-        callAPI(deleteUser, [selectedUser], handleSuccess, (e) => handleUserError("unable to delete user", e));
+        callAPI(deleteUser, [selectedUser?.email], handleSuccess, (e) => handleUserError("unable to delete user", e));
     }
 
     const handleChangeRole = () => {
         let data = {
-            email: selectedUser,
+            email: selectedUser?.email,
             new_role: newRole,
-            role_type: "teams",
+            role_type: "team",
         }
         callAPI(updateUserRole, [data], handleSuccess, (e) => handleUserError("unable to change role", e));
     }
@@ -106,6 +109,7 @@ const AdminPage = () => {
                         setSelectedUser={setSelectedUser}
                         setNewRole={setNewRole}
                         setShowChangeRoleModal={setShowChangeRoleModal}
+                        setShowChangeRoleDialog={setShowChangeRoleDialog}
                         setShowDeleteUserModal={setShowDeleteUserModal}
                         userPermissions={userPermissions}
                     />
@@ -130,7 +134,7 @@ const AdminPage = () => {
             <PopupModal
                 open={showChangeRoleModal}
                 handleClose={handleClose}
-                text={"Are you sure you would like to change "+selectedUser+"'s role to "+newRole.replace('_', ' ')+"?"}
+                text={"Are you sure you would like to change "+selectedUser?.email+"'s role to "+newRole.replace('_', ' ')+"?"}
                 handleSave={handleChangeRole}
                 buttonText='Submit'
                 buttonColor='primary'
@@ -147,6 +151,12 @@ const AdminPage = () => {
                 buttonVariant='contained'
                 width={400}
             />
+            <ChangeRoleDialog
+                open={showChangeRoleDialog}
+                selectedUser={selectedUser}
+                onClose={() => setShowChangeRoleDialog(false)}
+                team={user?.default_team}
+            />
             <ErrorBar 
                 duration={10000} 
                 setErrorMessage={setErrorMessage} 
@@ -157,16 +167,18 @@ const AdminPage = () => {
 }
 
 interface UsersTableProps {
-    user: any;
-    users: any[];
-    setSelectedUser: (user: string | null) => void;
+    user: User;
+    users: User[];
+    setSelectedUser: (user: any) => void;
     setNewRole: (role: string) => void;
+    setShowChangeRoleDialog: (show: boolean) => void;
     setShowChangeRoleModal: (show: boolean) => void;
     setShowDeleteUserModal: (show: boolean) => void;
     userPermissions: any;
 }
 
-const UsersTable = ({ user, users, setSelectedUser, setShowChangeRoleModal, setNewRole, setShowDeleteUserModal, userPermissions }: UsersTableProps) => {
+const UsersTable = ({ user, users, setSelectedUser, setShowChangeRoleModal, setShowChangeRoleDialog, setNewRole, setShowDeleteUserModal, userPermissions }: UsersTableProps) => {
+    
 
     const styles = {
         headerRow: {
@@ -179,21 +191,20 @@ const UsersTable = ({ user, users, setSelectedUser, setShowChangeRoleModal, setN
         }
     }
 
-    const handleDeleteUser = (user: any) => {
+    const handleDeleteUser = (user: User) => {
         setShowDeleteUserModal(true);
-        setSelectedUser(user.email);
+        setSelectedUser(user);
     }
 
-    const handleChangeRole = (user: any, role: string) => {
-        setNewRole(role)
-        setSelectedUser(user.email)
-        setShowChangeRoleModal(true)
+    const handleClickChangeRole = (row: User) => {
+        setSelectedUser(row)
+        setShowChangeRoleDialog(true)
     }
 
     const getRole = (roles: any) => {
-        if (roles.teams && roles.teams[user.default_team]) {
-            if (roles.teams[user.default_team].includes('team_lead')) return 'team lead'
-            else if (roles.teams[user.default_team].includes('team_member')) return 'team member'
+        if (roles.team && roles.team[user.default_team]) {
+            if (roles.team[user.default_team].includes('team_lead')) return 'team lead'
+            else if (roles.team[user.default_team].includes('team_member')) return 'team member'
             else return null
         }
         return null
@@ -223,7 +234,11 @@ const UsersTable = ({ user, users, setSelectedUser, setShowChangeRoleModal, setN
                             <TableCell>{getRole(row.roles)}</TableCell>
                             <TableCell>
                             {userPermissions && userPermissions.includes('manage_team') &&
-                                <RoleDropdown user={row} role={getRole(row.roles)} handleSelectRole={handleChangeRole}/>
+                                <Tooltip title="Update Roles">
+                                    <IconButton color="primary" onClick={()=> handleClickChangeRole(row)}>
+                                        <ManageAccountsIcon/>
+                                    </IconButton>
+                                </Tooltip>
                             }
                             {userPermissions && userPermissions.includes('manage_team') &&
                                 <Tooltip title="Remove User">
