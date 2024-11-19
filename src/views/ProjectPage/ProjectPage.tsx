@@ -10,6 +10,7 @@ import { ProjectData } from '../../types';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ProjectTabs from '../../components/ProjectTabs/ProjectTabs';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
+import ErrorBar from '../../components/ErrorBar/ErrorBar';
 import { useUserContext } from '../../usercontext';
 
 const Project = () => {
@@ -24,13 +25,9 @@ const Project = () => {
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [currentTab, setCurrentTab] = useState(0)
+    const [errorMsg, setErrorMsg] = useState<string | null>("")
     const [filters, setFilters] = useState({...DEFAULT_FILTER_OPTIONS})
     const tabs = ["Record Groups", "All Records"]
-
-    /*
-        TODO: write useeffect that runs upon page load to fetch project data
-        this way we only load project data once, and records/record groups load separately depending on the tab
-    */
 
     useEffect(() => {
         if (tabs[currentTab] === "Record Groups") callAPI(getRecordGroups, [params.id], handleFetchedRecordGroups, handleError);
@@ -100,7 +97,7 @@ const Project = () => {
             deleteProject,
             [projectData._id],
             (data: any) => navigate("/projects", { replace: true }),
-            (e: Error) => { console.error('error on deleting project: ', e); }
+            handleAPIErrorResponse
         );
     }
 
@@ -114,7 +111,7 @@ const Project = () => {
             updateProject,
             [params.id, { name: projectName }],
             (data: any) => window.location.reload(),
-            (e: Error) => console.error('error on updating record group name: ', e)
+            handleAPIErrorResponse
         );
     }
 
@@ -124,8 +121,12 @@ const Project = () => {
             updateProject,
             [params.id, update],
             (data: ProjectData) => setProjectData(data),
-            (e: Error) => console.error('error on updating record group name: ', e)
+            handleAPIErrorResponse
         );
+    }
+
+    const handleAPIErrorResponse = (e: any) => {
+        setErrorMsg(e.detail)
     }
 
     return (
@@ -198,6 +199,10 @@ const Project = () => {
                 buttonColor='primary'
                 buttonVariant='contained'
                 width={400}
+            />
+            <ErrorBar
+                errorMessage={errorMsg}
+                setErrorMessage={setErrorMsg}
             />
         </Box>
     );

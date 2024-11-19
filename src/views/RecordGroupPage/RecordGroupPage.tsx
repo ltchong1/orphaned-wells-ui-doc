@@ -55,7 +55,7 @@ const RecordGroupPage = () => {
             getRecordGroup,
             [params.id],
             gotRecordGroup,
-            (e: Error) => { console.error('error on deleting record group: ', e); }
+            handleAPIErrorResponse
         );
     }
 
@@ -72,7 +72,7 @@ const RecordGroupPage = () => {
             uploadDocument,
             [formData, recordGroup._id, false],
             handleSuccessfulDocumentUpload,
-            (e: any) => setErrorMsg(e.detail)
+            handleAPIErrorResponse
         );
     };
 
@@ -92,7 +92,7 @@ const RecordGroupPage = () => {
             deleteRecordGroup,
             [recordGroup._id],
             (data: any) => navigate("/project/"+project._id, { replace: true }),
-            (e: Error) => { console.error('error on deleting record group: ', e); }
+            handleAPIErrorResponse
         );
     };
 
@@ -106,7 +106,7 @@ const RecordGroupPage = () => {
             updateRecordGroup,
             [params.id, { name: recordGroupName }],
             (data: any) => window.location.reload(),
-            (e: Error) => console.error('error on updating record group name: ', e)
+            handleAPIErrorResponse
         );
     };
 
@@ -115,11 +115,13 @@ const RecordGroupPage = () => {
             updateRecordGroup,
             [params.id, update],
             (data: RecordGroup) => setRecordGroup(data),
-            (e: Error) => console.error('error on updating record group name: ', e)
+            handleAPIErrorResponse
         );
     };
 
-    
+    const handleAPIErrorResponse = (e: any) => {
+        setErrorMsg(e.detail)
+    }
 
     return (
         <Box sx={styles.outerBox}>
