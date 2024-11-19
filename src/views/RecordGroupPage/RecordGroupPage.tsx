@@ -6,6 +6,7 @@ import RecordsTable from '../../components/RecordsTable/RecordsTable';
 import Subheader from '../../components/Subheader/Subheader';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 import PopupModal from '../../components/PopupModal/PopupModal';
+import ErrorBar from '../../components/ErrorBar/ErrorBar';
 import { callAPI } from '../../assets/util';
 import { RecordGroup, ProjectData, PreviousPages } from '../../types';
 import { useUserContext } from '../../usercontext';
@@ -20,6 +21,7 @@ const RecordGroupPage = () => {
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [recordGroupName, setRecordGroupName] = useState("");
+    const [errorMsg, setErrorMsg] = useState<string | null>("")
     const [navigation, setNavigation] = useState<PreviousPages>({"Projects": () => navigate("/projects", { replace: true })})
     
 
@@ -70,7 +72,7 @@ const RecordGroupPage = () => {
             uploadDocument,
             [formData, recordGroup._id, false],
             handleSuccessfulDocumentUpload,
-            (e: Error) => { console.error('error on file upload: ', e); }
+            (e: any) => setErrorMsg(e.detail)
         );
     };
 
@@ -172,6 +174,10 @@ const RecordGroupPage = () => {
                 buttonColor='primary'
                 buttonVariant='contained'
                 width={400}
+            />
+            <ErrorBar
+                errorMessage={errorMsg}
+                setErrorMessage={setErrorMsg}
             />
         </Box>
     );
