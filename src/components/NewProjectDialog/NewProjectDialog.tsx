@@ -7,9 +7,11 @@ import { callAPI } from '../../assets/util';
 interface NewProjectDialogProps {
     open: boolean;
     onClose: () => void;
+    setShowError: (v: boolean) => void;
+    setErrorMsg: (msg: string) => void;
 }
 
-const NewProjectDialog = ({ open, onClose }: NewProjectDialogProps) => {
+const NewProjectDialog = ({ open, onClose, setShowError, setErrorMsg }: NewProjectDialogProps) => {
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
     const [disableCreateButton, setDisableCreateButton] = useState(true);
@@ -71,7 +73,7 @@ const NewProjectDialog = ({ open, onClose }: NewProjectDialogProps) => {
             addProject,
             [body],
             handleSuccessfulProjectCreation,
-            (e: Error) => console.error('error on project add ', e)
+            handleError
         );
     };
 
@@ -80,6 +82,16 @@ const NewProjectDialog = ({ open, onClose }: NewProjectDialogProps) => {
             window.location.reload();
         }, 500);
     };
+
+    const handleError = (e: any) => {
+        setShowError(true)
+        setErrorMsg(e.detail)
+        onClose()
+        setTimeout(() => {
+            setShowError(false)
+            setErrorMsg("")
+        }, 30000)
+    }
 
     return (
         <Dialog

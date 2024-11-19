@@ -6,12 +6,15 @@ import NewProjectDialog from '../../components/NewProjectDialog/NewProjectDialog
 import { getProjects } from '../../services/app.service';
 import { callAPI } from '../../assets/util';
 import { useUserContext } from '../../usercontext';
+import ErrorBar from '../../components/ErrorBar/ErrorBar';
 
 const ProjectsListPage = () => {
     const { userPermissions} = useUserContext();
     const [projects, setProjects] = useState<any[]>([]);
     const [unableToConnect, setUnableToConnect] = useState(false);
     const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
+    const [showError, setShowError] = useState(false)
+    const [errorMsg, setErrorMsg] = useState("")
 
     useEffect(() => {
         callAPI(getProjects, [], handleSuccess, handleError);
@@ -54,8 +57,21 @@ const ProjectsListPage = () => {
                 :
                     <h1>Unable to connect to backend. Please make sure that backend server is up and running.</h1>
                 }
-                <NewProjectDialog open={showNewProjectDialog} onClose={() => setShowNewProjectDialog(false)} />
+                <NewProjectDialog 
+                    open={showNewProjectDialog} 
+                    onClose={() => setShowNewProjectDialog(false)}
+                    setShowError={setShowError}
+                    setErrorMsg={setErrorMsg}
+                />
             </Box>
+            {showError &&
+                <ErrorBar
+                    setOpen={setShowError}
+                    duration={30000}
+                    errorMessage={errorMsg}
+                />
+            }
+            
         </Box>
     );
 };
