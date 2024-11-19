@@ -223,11 +223,18 @@ export const addUser = (email: string, team_lead?: boolean, sys_admin?: boolean)
     });
 };
 
-export const updateUserRole = (data: any) => {
-    return fetch(BACKEND_URL + '/update_user_role', {
+export const updateUserRoles = (data: any) => {
+    return fetch(BACKEND_URL + '/update_user_roles', {
         method: 'POST',
         mode: 'cors',
         body: JSON.stringify(data),
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
+    });
+};
+
+export const fetchRoles = (role_category: string) => {
+    return fetch(BACKEND_URL + '/fetch_roles/'+role_category, {
+        mode: 'cors',
         headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
     });
 };
