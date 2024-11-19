@@ -236,7 +236,6 @@ const NewRecordGroupDialog = ({ open, onClose, project_id }: NewRecordGroupDialo
             <ErrorBar
                 errorMessage={errorMsg}
                 setErrorMessage={setErrorMsg}
-                duration={5000}
             />
         </Dialog>
     );
