@@ -84,13 +84,15 @@ export interface FilterOption {
 }
 
 export interface User {
-    email: string,
-    name: string,
-    picture: string,
-    hd: string,
-    role: number,
-    user_info?: any
-    permissions?: any
+    email: string;
+    name: string;
+    picture: string;
+    hd: string;
+    role: number;
+    roles: string[];
+    user_info?: any;
+    permissions?: any;
+    default_team: string;
   }
 
 export interface PreviousPages {
