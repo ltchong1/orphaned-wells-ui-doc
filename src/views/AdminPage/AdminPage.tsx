@@ -4,7 +4,7 @@ import { Select, MenuItem, Menu, IconButton, Tooltip, InputLabel } from '@mui/ma
 import Subheader from '../../components/Subheader/Subheader';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
-import { getUsers, addUser, deleteUser, updateUserRole } from '../../services/app.service';
+import { getUsers, addUser, deleteUser, updateUserRoles } from '../../services/app.service';
 import { callAPI } from '../../assets/util';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -17,7 +17,6 @@ const AdminPage = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [unableToConnect, setUnableToConnect] = useState(false);
     const [showNewUserModal, setShowNewUserModal] = useState(false);
-    const [showChangeRoleModal, setShowChangeRoleModal] = useState(false);
     const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [newUser, setNewUser] = useState("");
@@ -66,15 +65,6 @@ const AdminPage = () => {
         callAPI(deleteUser, [selectedUser?.email], handleSuccess, (e) => handleUserError("unable to delete user", e));
     }
 
-    const handleChangeRole = () => {
-        let data = {
-            email: selectedUser?.email,
-            new_role: newRole,
-            role_type: "team",
-        }
-        callAPI(updateUserRole, [data], handleSuccess, (e) => handleUserError("unable to change role", e));
-    }
-
     const handleSuccess = () => {
         setTimeout(() => {
             window.location.reload();
@@ -87,7 +77,6 @@ const AdminPage = () => {
         setShowNewUserModal(false);
         setNewUser("");
         setShowDeleteUserModal(false);
-        setShowChangeRoleModal(false)
     }
 
     const handleUserError = (message: string, e: any) => {
@@ -107,8 +96,6 @@ const AdminPage = () => {
                         user={user}
                         users={users}
                         setSelectedUser={setSelectedUser}
-                        setNewRole={setNewRole}
-                        setShowChangeRoleModal={setShowChangeRoleModal}
                         setShowChangeRoleDialog={setShowChangeRoleDialog}
                         setShowDeleteUserModal={setShowDeleteUserModal}
                         userPermissions={userPermissions}
@@ -130,16 +117,6 @@ const AdminPage = () => {
                 buttonVariant='contained'
                 width={600}
                 disableSubmit={disableSubmitNewUserButton}
-            />
-            <PopupModal
-                open={showChangeRoleModal}
-                handleClose={handleClose}
-                text={"Are you sure you would like to change "+selectedUser?.email+"'s role to "+newRole.replace('_', ' ')+"?"}
-                handleSave={handleChangeRole}
-                buttonText='Submit'
-                buttonColor='primary'
-                buttonVariant='contained'
-                width={600}
             />
             <PopupModal
                 open={showDeleteUserModal}
@@ -170,14 +147,12 @@ interface UsersTableProps {
     user: User;
     users: User[];
     setSelectedUser: (user: any) => void;
-    setNewRole: (role: string) => void;
     setShowChangeRoleDialog: (show: boolean) => void;
-    setShowChangeRoleModal: (show: boolean) => void;
     setShowDeleteUserModal: (show: boolean) => void;
     userPermissions: any;
 }
 
-const UsersTable = ({ user, users, setSelectedUser, setShowChangeRoleModal, setShowChangeRoleDialog, setNewRole, setShowDeleteUserModal, userPermissions }: UsersTableProps) => {
+const UsersTable = ({ user, users, setSelectedUser, setShowChangeRoleDialog, setShowDeleteUserModal, userPermissions }: UsersTableProps) => {
     
 
     const styles = {
@@ -203,9 +178,11 @@ const UsersTable = ({ user, users, setSelectedUser, setShowChangeRoleModal, setS
 
     const getRole = (roles: any) => {
         if (roles.team && roles.team[user.default_team]) {
-            if (roles.team[user.default_team].includes('team_lead')) return 'team lead'
-            else if (roles.team[user.default_team].includes('team_member')) return 'team member'
-            else return null
+            let team_roles = roles.team[user.default_team]
+            return team_roles.map((role: string, idx: number)=> {
+                if (idx === team_roles.length-1) return role.replace('_', ' ')
+                return role.replace('_', ' ')+', '
+            })
         }
         return null
     }
@@ -216,7 +193,7 @@ const UsersTable = ({ user, users, setSelectedUser, setShowChangeRoleModal, setS
             <Table sx={{ minWidth: 650, borderTop: "5px solid #F5F5F6" }} aria-label="pending users table" size="small">
                 <TableHead>
                     <TableRow>
-                        {[["Name", "25%"], ["Email", "25%"], ["Role", "25%"], ["Actions", "25%"]].map((value) => (
+                        {[["Name", "25%"], ["Email", "25%"], ["Roles", "25%"], ["Actions", "25%"]].map((value) => (
                             <TableCell width={value[1]} sx={styles.headerRow} key={value[0]}>{value[0]}</TableCell>
                         ))}
                     </TableRow>
@@ -258,56 +235,6 @@ const UsersTable = ({ user, users, setSelectedUser, setShowChangeRoleModal, setS
 
         </div>
     )
-}
-
-interface RoleDropdownProps {
-    user: any;
-    role: string | null;
-    handleSelectRole: (user: any, role: string) => void;
-}
-
-const RoleDropdown = ({ user, role, handleSelectRole }: RoleDropdownProps) => {
-
-  const [anchorAr, setAnchorAr] = useState<null | HTMLElement>(null);
-  const [roleActions, setRoleActions] = useState(false);
-
-  const handleShowRoleActions = (event: React.MouseEvent<HTMLElement>) => {
-    setRoleActions(!roleActions);
-    setAnchorAr(event.currentTarget);
-  }
-
-  const handleClick = (user: any, r: string) => {
-    handleSelectRole(user, r.replace(' ', '_'))
-    setRoleActions(false)
-  }
-
-    return (
-        <span>
-            <Tooltip title="Change role">
-                <IconButton color="primary" onClick={handleShowRoleActions}>
-                    <ManageAccountsIcon/>
-                </IconButton>
-            </Tooltip>
-            <Menu
-                id="actions-list"
-                anchorEl={anchorAr}
-                open={roleActions}
-                onClose={() => setRoleActions(false)}
-            >
-                {['team member', 'team lead'].map((r) => {
-                    if (r !== role) return (
-                        <MenuItem
-                            key={r}
-                            value={r}
-                            onClick={() => handleClick(user, r.replace(' ', '_'))}
-                        >
-                            {r}
-                        </MenuItem>
-                    )
-                })}
-            </Menu>
-        </span>
-    );
 }
 
 export default AdminPage;

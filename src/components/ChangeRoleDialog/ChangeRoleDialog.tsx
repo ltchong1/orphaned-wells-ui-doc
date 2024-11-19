@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Box, TextField, IconButton, Grid, Button, Tooltip } from '@mui/material';
+import { Box, TextField, IconButton, Grid, Button, Tooltip, Chip } from '@mui/material';
 import { Dialog, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { } from '../../services/app.service';
 import { callAPI } from '../../assets/util';
+import { fetchRoles, updateUserRoles } from '../../services/app.service';
 import ErrorBar from '../ErrorBar/ErrorBar';
+import CheckIcon from '@mui/icons-material/Check'
 
 interface ChangeRoleDialogProps {
     open: boolean;
@@ -15,9 +17,10 @@ interface ChangeRoleDialogProps {
 
 const ChangeRoleDialog = ({ open, selectedUser, onClose, team }: ChangeRoleDialogProps) => {
     const [errorMsg, setErrorMsg] = useState<string | null>(null)
-    const [roles, setRoles] = useState([])
+    const [availableRoles, setAvailableRoles] = useState<any[]>([])
+    const [roles, setRoles] = useState<string[]>([])
     const dialogHeight = '25vh';
-    const dialogWidth = '60vw';
+    const dialogWidth = '30vw';
 
     const descriptionElementRef = useRef<HTMLDivElement | null>(null);
     useEffect(() => {
@@ -26,6 +29,8 @@ const ChangeRoleDialog = ({ open, selectedUser, onClose, team }: ChangeRoleDialo
             if (descriptionElement !== null) {
                 descriptionElement.focus();
             }
+
+            callAPI(fetchRoles, ['team'], handleFetchedAvailableRoles, (e)=> console.error('unable to fetch roles '+e));
         }
     }, [open]);
 
@@ -43,33 +48,50 @@ const ChangeRoleDialog = ({ open, selectedUser, onClose, team }: ChangeRoleDialo
             minWidth: dialogWidth,
             maxWidth: dialogWidth,
         },
-        recordGroupName: {
-            marginBottom: 2
+        chip: {
+            filled: {
+                m: 1,
+                cursor: 'pointer',
+            },
+            unfilled: {
+                m: 1,
+                cursor: 'pointer',
+                border: '1px dashed'
+            }
         },
-        processorGridItem: {
-            paddingX: 1,
-            paddingBottom: 5
-        },
-        processorTextBox: {
-            display: "flex",
-            justifyContent: "center",
-        },
-        processorImageBox: {
-            display: "flex",
-            justifyContent: "center",
-            cursor: "pointer",
-        },
-        processorImage: {
-            maxHeight: "20vh"
-        }
     };
+
+    const handleFetchedAvailableRoles = (data: any) => {
+        setAvailableRoles(data)
+    }
 
     const handleClose = () => {
         onClose();
     };
 
-    const handleUpdateRole = () => {
+    const handleUpdateRoles = () => {
+        let data = {
+            role_category: 'team',
+            new_roles: roles,
+            email: selectedUser?.email
+        }
+        callAPI(updateUserRoles, [data], (data: any) => window.location.reload(), failedAuthorization);
+    }
 
+    const handleSelect = (role: string) => {
+        let tempSelected = [...roles]
+        const index = tempSelected.indexOf(role);
+        if (index > -1) {
+            tempSelected.splice(index, 1);
+        } else {
+            tempSelected.push(role)
+        }
+
+        setRoles(tempSelected)
+    }
+
+    const failedAuthorization = (e: any) => {
+        setErrorMsg(e.detail)
     }
 
     return (
@@ -83,7 +105,7 @@ const ChangeRoleDialog = ({ open, selectedUser, onClose, team }: ChangeRoleDialo
                 sx: styles.dialogPaper
             }}
         >
-            <DialogTitle id="new-dg-dialog-title">Change role for {selectedUser?.email}</DialogTitle>
+            <DialogTitle id="new-dg-dialog-title">Update team roles for {selectedUser?.email}</DialogTitle>
             <IconButton
                 aria-label="close"
                 onClick={handleClose}
@@ -106,7 +128,18 @@ const ChangeRoleDialog = ({ open, selectedUser, onClose, team }: ChangeRoleDialo
                     <Grid container>
 
                         <Grid item xs={12}>
-                            {roles.map((role) => <div>{role}</div>)}
+                            {availableRoles.map((role) => (
+                                
+                                <Chip 
+                                    key={role.id}
+                                    color={'primary'}
+                                    sx={roles.includes(role.id) ? styles.chip.filled : styles.chip.unfilled}
+                                    label={role.name}
+                                    variant={roles.includes(role.id) ? 'filled' : 'outlined'}
+                                    icon={roles.includes(role.id) ? <CheckIcon /> : undefined}
+                                    onClick={() => handleSelect(role.id)}
+                                />
+                            ))}
                         </Grid>
                         
                     </Grid>
@@ -118,9 +151,9 @@ const ChangeRoleDialog = ({ open, selectedUser, onClose, team }: ChangeRoleDialo
                         right: 10,
                         bottom: 10,
                     }}
-                    onClick={handleUpdateRole}
+                    onClick={handleUpdateRoles}
                 >
-                    Update Role
+                    Update Roles
                 </Button>
             </DialogContent>
             <ErrorBar
