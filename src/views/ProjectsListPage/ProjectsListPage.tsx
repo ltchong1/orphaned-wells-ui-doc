@@ -13,8 +13,7 @@ const ProjectsListPage = () => {
     const [projects, setProjects] = useState<any[]>([]);
     const [unableToConnect, setUnableToConnect] = useState(false);
     const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
-    const [showError, setShowError] = useState(false)
-    const [errorMsg, setErrorMsg] = useState("")
+    const [errorMsg, setErrorMsg] = useState<string | null>("")
 
     useEffect(() => {
         callAPI(getProjects, [], handleSuccess, handleError);
@@ -60,17 +59,13 @@ const ProjectsListPage = () => {
                 <NewProjectDialog 
                     open={showNewProjectDialog} 
                     onClose={() => setShowNewProjectDialog(false)}
-                    setShowError={setShowError}
                     setErrorMsg={setErrorMsg}
                 />
-            </Box>
-            {showError &&
-                <ErrorBar
-                    setOpen={setShowError}
-                    duration={30000}
-                    errorMessage={errorMsg}
-                />
-            }
+        </Box>
+            <ErrorBar
+                setErrorMessage={setErrorMsg}
+                errorMessage={errorMsg}
+            />
             
         </Box>
     );

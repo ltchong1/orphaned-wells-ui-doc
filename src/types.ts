@@ -207,11 +207,10 @@ export interface CheckboxesGroupProps {
 }
 
 export interface ErrorBarProps {
-    setOpen: (open: boolean) => void;
+    errorMessage: string | null;
+    setErrorMessage: (v: string | null) => void;
     duration?: number;
     margin?: boolean;
-    severity?: "error" | "warning" | "info" | "success";
-    errorMessage: string;
   }
 
 

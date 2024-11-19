@@ -21,8 +21,7 @@ const AdminPage = () => {
     const [newUser, setNewUser] = useState("");
     const [newRole, setNewRole] = useState("")
     const [disableSubmitNewUserButton, setDisableSubmitNewUserButton] = useState(true);
-    const [showError, setShowError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState<string | null>("");
 
     const styles = {
         outerBox: {
@@ -89,9 +88,6 @@ const AdminPage = () => {
     }
 
     const handleUserError = (message: string, e: any) => {
-        console.error(message)
-        console.error(e.detail);
-        setShowError(true);
         setErrorMessage(e.detail);
     }
 
@@ -151,9 +147,11 @@ const AdminPage = () => {
                 buttonVariant='contained'
                 width={400}
             />
-            {
-                showError && <ErrorBar duration={10000} setOpen={setShowError} severity="error" errorMessage={errorMessage} />
-            }
+            <ErrorBar 
+                duration={10000} 
+                setErrorMessage={setErrorMessage} 
+                errorMessage={errorMessage} 
+            />
         </Box>
     );
 }

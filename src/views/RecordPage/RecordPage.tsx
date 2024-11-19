@@ -17,8 +17,7 @@ const Record = () => {
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [recordName, setRecordName] = useState("");
     const [previousPages, setPreviousPages] = useState<PreviousPages>({ "Projects": () => navigate("/projects", { replace: true }) });
-    const [showErrorBar, setShowErrorBar] = useState(false);
-    const [errorMsg, setErrorMsg] = useState("");
+    const [errorMsg, setErrorMsg] = useState<string | null>("");
     const [showResetPrompt, setShowResetPrompt] = useState(false);
     const [locked, setLocked] = useState(false)
     const params = useParams<{ id: string }>();
@@ -69,12 +68,10 @@ const Record = () => {
     const handleSuccessfulFetchRecord = (data: any, lock_record?: boolean) => {
         let newRecordData = data.recordData;
         if (lock_record) {
-            setShowErrorBar(true)
             setErrorMsg("This record is currently being reviewed by a team member.")
             setLocked(true)
         }
         else {
-            setShowErrorBar(false)
             setErrorMsg("")
             setLocked(false)
         }
@@ -125,7 +122,6 @@ const Record = () => {
 
     const handleFailedUpdate = (data: any, response_status?: number) => {
         if (response_status === 403) {
-            setShowErrorBar(true);
             setErrorMsg(`Unable to update record: ${data.detail}. Returning to records list in 5 seconds.`);
             setTimeout(() => {
                 goToRecordGroup();
@@ -292,14 +288,12 @@ const Record = () => {
                 buttonVariant='contained'
                 width={400}
             />
-            {showErrorBar &&
-                <ErrorBar
-                    errorMessage={errorMsg}
-                    setOpen={setShowErrorBar}
-                    duration={1200000}
-                    margin
-                />
-            }
+            <ErrorBar
+                errorMessage={errorMsg}
+                setErrorMessage={setErrorMsg}
+                duration={1200000}
+                margin
+            />
         </Box>
     );
 }
