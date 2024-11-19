@@ -20,7 +20,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Review Documents',
-    Svg: require('@site/static/img/ogrre-review-screenshot.svg').default,
+    Svg: require('@site/static/img/ogrre-review-document.svg').default,
     description: (
       <>
       Review and correct digitized data with an intuitive user interface.
