@@ -7,7 +7,7 @@ main branch.
 
 ```
 npx docusaurus start
-``
+```
 
 ## Testing and Deployment
 
