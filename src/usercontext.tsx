@@ -28,7 +28,7 @@ export const UserContextProvider = ({ children }: any) => {
     setUsername(localStorage.getItem('user_name') || undefined);
     setUserPhoto(localStorage.getItem('user_picture') || undefined);
     setUserRole(localStorage.getItem('role') || undefined);
-    setUserPermissions(JSON.parse(localStorage.getItem('permissions') || '{}'));
+    setUserPermissions(JSON.parse(localStorage.getItem('permissions') || '[]'));
   },[location]);
 
 
