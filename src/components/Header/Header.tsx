@@ -1,9 +1,11 @@
 import './Header.css';
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Menu, MenuItem, IconButton, Avatar, Tabs, Tab } from '@mui/material';
-import { logout } from '../../assets/util';
+import { Menu, MenuItem, IconButton, Avatar, Tabs, Tab, Divider, ListItemIcon } from '@mui/material';
+import { logout, callAPI } from '../../assets/util';
+import { fetchTeams, updateDefaultTeam } from '../../services/app.service';
 import { useUserContext } from '../../usercontext';
+import Logout from '@mui/icons-material/Logout';
 
 
 const Header = (props: any) => {
@@ -12,6 +14,7 @@ const Header = (props: any) => {
   const [anchorAr, setAnchorAr] = useState<null | HTMLElement>(null);
   const [profileActions, setProfileActions] = useState(false);
   const [tabValue, setTabValue] = useState(0);
+  const [teams, setTeams] = useState<string[]>([])
 
   const styles = {
     iconLeft: {
@@ -40,6 +43,34 @@ const Header = (props: any) => {
       verticalAlign: "middle",
       cursor: "pointer"
     },
+    menuSlotProps: {
+      paper: {
+        elevation: 0,
+        sx: {
+          overflow: 'visible',
+          filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+          mt: 1.5,
+          '& .MuiAvatar-root': {
+            width: 32,
+            height: 32,
+            ml: -0.5,
+            mr: 1,
+          },
+          '&::before': {
+            content: '""',
+            display: 'block',
+            position: 'absolute',
+            top: 0,
+            right: 14,
+            width: 10,
+            height: 10,
+            bgcolor: 'background.paper',
+            transform: 'translateY(-50%) rotate(45deg)',
+            zIndex: 0,
+          },
+        },
+      },
+    }
   }
 
   useEffect(() => {
@@ -52,7 +83,8 @@ const Header = (props: any) => {
     } else {
       setTabValue(0);
     }
-  }, [props]);
+    if (userPermissions && userPermissions.includes('manage_system')) callAPI(fetchTeams, [], fetchedTeams, failedFetchTeams)
+  }, [props, userPermissions]);
 
   const handleNavigateHome = () => {
     navigate("/", { replace: true });
@@ -74,6 +106,22 @@ const Header = (props: any) => {
       navigate(newLocation, { replace: true });
     }
   };
+
+  const changeTeam = (team: string) => {
+    let data = {
+      new_team: team
+    }
+    setProfileActions(false)
+    callAPI(updateDefaultTeam, [data], (data) => window.location.reload(), (e)=> console.error(e.detail))
+  }
+
+  const fetchedTeams = (data: string[]) => {
+    setTeams(data)
+  }
+
+  const failedFetchTeams = () => {
+
+  }
 
   return (
     <div id="Header">
@@ -105,8 +153,30 @@ const Header = (props: any) => {
             anchorEl={anchorAr}
             open={profileActions}
             onClose={() => setProfileActions(false)}
+            slotProps={
+              styles.menuSlotProps
+            }
           >
-            <MenuItem onClick={logout}>Sign out</MenuItem>
+            {/* <MenuItem>
+              <Avatar /> My account
+            </MenuItem> */}
+            {userPermissions && userPermissions.includes('manage_system') && (
+              <span>
+              {teams.map((team) => (
+                <MenuItem key={team} onClick={() => changeTeam(team)}>
+                  Change to {team}
+                </MenuItem>
+              ))}
+              <Divider />
+              </span>
+            )
+            }
+            <MenuItem onClick={logout}>
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Logout
+            </MenuItem>
           </Menu>
         </div>
       </div>
