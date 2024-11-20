@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
 import { Box, Button, Typography, Modal } from '@mui/material';
 import { useGoogleLogin } from '@react-oauth/google';
 import { authLogin } from '../../services/app.service';
@@ -7,19 +6,11 @@ import GoogleIcon from '@mui/icons-material/Google';
 
 interface LoginPageProps {
     handleSuccessfulAuthentication: (accessToken: string, refreshToken: string, idToken: string) => void;
-    authenticated: boolean;
 }
 
 const LoginPage = (props: LoginPageProps) => {
-    const { handleSuccessfulAuthentication, authenticated } = props;
+    const { handleSuccessfulAuthentication } = props;
     const [showUnauthorizedMessage, setShowUnauthorizedMessage] = useState(false);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (authenticated) {
-            navigate("/");
-        }
-    }, [authenticated, navigate]);
 
     const googleLogin = useGoogleLogin({
         onSuccess: async ({ code }: { code: string }) => {

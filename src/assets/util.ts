@@ -230,13 +230,16 @@ export const callAPI = (
                         onError(e);
                       });
                   } else {
+                    console.error('received response status '+response.status+' when attempting to refresh tokens')
                     logout();
                   }
                 }).catch((e) => {
-                  logout();
+                  console.error(e)
+                  // logout();
                 });
               }).catch((e) => {
-                logout();
+                console.error(e)
+                // logout();
               });
             } else {
               onError(data);
