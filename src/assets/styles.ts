@@ -23,6 +23,37 @@ export const styles = {
   },
   headerCell: {
       fontWeight: "bold"
+  },
+  fieldsTable: {
+    width: "100%",
+    maxHeight: "70vh",
+    backgroundColor: "white"
+  },
+  tableHead: {
+      backgroundColor: "#EDF2FA",
+      fontWeight: "bold",
+  }, 
+  fieldKey: {
+      cursor: "pointer",
+  },
+  subattributesTable: {
+      backgroundColor: "#FAFAFA",
+  },
+  rowIconButton: {
+      padding: 0.5,
+      marginTop: -0.5
+  },
+  rowIcon: {
+      fontSize: "16px"
+  },
+  flaggedConfidence: {
+      padding: 0,
+      margin: 0,
+      color: "#9E0101",
+  },
+  unflaggedConfidence: {
+      padding: 0,
+      margin: 0,
   }
 }
 
@@ -96,3 +127,68 @@ export const BottomBarStyles = {
     zIndex: 2,
   }
 };
+
+export const SubheaderStyles = {
+  iconButton: {
+    top: -5,
+    color: "black",
+  },
+  icon: {
+      fontSize: "15px"
+  },
+  box: {
+      paddingTop: 1,
+      paddingBottom: 1,
+      backgroundColor: "white",
+      width: "100%",
+      boxShadow: 1
+  },
+  gridContainer: {
+      margin: 0,
+      padding: 0,
+  },
+  directoryDisplay: {
+      display: "flex",
+      justifyContent: "flex-start",
+      marginLeft: 40,
+      overflow: "auto",
+      width: "80vw"
+  },
+  pageName: {
+      display: "flex",
+      justifyContent: "flex-start",
+      marginLeft: 50,
+      fontSize: "25px"
+  },
+  newProjectColumn: {
+      display: "flex",
+      justifyContent: "flex-end",
+      marginRight: 5,
+      marginTop: 3
+  },
+  subtext: {
+      marginTop: 2,
+      display: "flex",
+      justifyContent: "flex-start",
+      marginLeft: 50,
+      fontSize: "15px"
+  }
+}
+
+export const TableFiltersStyles = {
+  tableFilter: {
+      paddingBottom: 2,
+  },
+  box: {
+      width: '50vw',
+      display: 'flex',
+      justifyContent: 'space-between',
+      paddingTop: 5
+  },
+  closeIcon: {
+      position: 'absolute',
+      right: 0,
+      top: 8,
+      mb: 2,
+  }
+}
