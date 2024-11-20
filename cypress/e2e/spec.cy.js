@@ -37,12 +37,12 @@ describe('End to end testing', () => {
 
     // click first record group
     cy.findByRole('rowheader', {
-      name: /test record group 1/i
+      name: /cypress test record group/i
     }).click()
 
     // test that record group page loaded correctly
     cy.findByRole('button', {
-      name: /test record group/i
+      name: /cypress test record group/i
     }).should('be.visible')
     cy.findByRole('columnheader', {
       name: /record name/i
