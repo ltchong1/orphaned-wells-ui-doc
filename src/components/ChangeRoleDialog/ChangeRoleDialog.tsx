@@ -57,6 +57,9 @@ const ChangeRoleDialog = ({ open, selectedUser, onClose, team }: ChangeRoleDialo
                 border: '1px dashed'
             }
         },
+        dialogTitle: {
+            mx: 2
+        }
     };
 
     const handleFetchedAvailableRoles = (data: any) => {
@@ -103,7 +106,7 @@ const ChangeRoleDialog = ({ open, selectedUser, onClose, team }: ChangeRoleDialo
                 sx: styles.dialogPaper
             }}
         >
-            <DialogTitle id="new-dg-dialog-title">Update team roles for {selectedUser?.email}</DialogTitle>
+            <DialogTitle sx={styles.dialogTitle} id="new-dg-dialog-title">Assign roles for {selectedUser?.name || selectedUser?.email || ''}</DialogTitle>
             <IconButton
                 aria-label="close"
                 onClick={handleClose}

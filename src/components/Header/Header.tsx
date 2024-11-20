@@ -1,6 +1,6 @@
 import './Header.css';
 import { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Menu, MenuItem, IconButton, Avatar, Tabs, Tab, Divider, ListItemIcon } from '@mui/material';
 import { logout, callAPI } from '../../assets/util';
 import { fetchTeams, updateDefaultTeam } from '../../services/app.service';
@@ -11,6 +11,7 @@ import { HeaderStyles as styles } from '../../assets/styles';
 
 const Header = (props: any) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, username, userPhoto, userPermissions} = useUserContext();
   const [anchorAr, setAnchorAr] = useState<null | HTMLElement>(null);
   const [profileActions, setProfileActions] = useState(false);
@@ -28,7 +29,7 @@ const Header = (props: any) => {
       setTabValue(0);
     }
     if (userPermissions && userPermissions.includes('manage_system')) callAPI(fetchTeams, [], fetchedTeams, failedFetchTeams)
-  }, [props, userPermissions]);
+  }, [props, userPermissions, location]);
 
   const handleNavigateHome = () => {
     navigate("/", { replace: true });
