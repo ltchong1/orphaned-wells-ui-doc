@@ -44,9 +44,7 @@ const ChangeRoleDialog = ({ open, selectedUser, onClose, team }: ChangeRoleDialo
     const styles = {
         dialogPaper: {
             minHeight: dialogHeight,
-            maxHeight: dialogHeight,
             minWidth: dialogWidth,
-            maxWidth: dialogWidth,
         },
         chip: {
             filled: {

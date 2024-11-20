@@ -36,20 +36,6 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
             minWidth: dialogWidth,
             maxWidth: dialogWidth,
         },
-        projectName: {
-            marginBottom: 2
-        },
-        processorGridItem: {
-            paddingX: 1
-        },
-        processorImageBox: {
-            display: "flex",
-            justifyContent: "center",
-            cursor: "pointer",
-        },
-        processorImage: {
-            maxHeight: "20vh"
-        }
     };
 
     const setDefaultColumns = (data: {columns: string[], obj: any}) => {

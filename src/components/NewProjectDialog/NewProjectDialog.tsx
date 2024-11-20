@@ -40,22 +40,6 @@ const NewProjectDialog = ({ open, onClose, setErrorMsg }: NewProjectDialogProps)
         projectName: {
             marginBottom: 2
         },
-        processorGridItem: {
-            paddingX: 1,
-            paddingBottom: 5
-        },
-        processorTextBox: {
-            display: "flex",
-            justifyContent: "center",
-        },
-        processorImageBox: {
-            display: "flex",
-            justifyContent: "center",
-            cursor: "pointer",
-        },
-        processorImage: {
-            maxHeight: "20vh"
-        }
     };
 
 

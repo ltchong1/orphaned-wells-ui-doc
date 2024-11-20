@@ -16,6 +16,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import WarningIcon from '@mui/icons-material/Warning';
 import DefectiveDialog from '../DefectiveDialog/DefectiveDialog';
 import { BottombarProps } from '../../types';
+import { BottomBarStyles as styles } from '../../assets/styles';
 
 const Bottombar = (props: BottombarProps) => {
   let params = useParams(); 
@@ -86,19 +87,7 @@ const Bottombar = (props: BottombarProps) => {
     ],
   };
 
-  const styles = {
-    button: {
-      marginX: 1,
-    },
-    paper: {
-      position: 'fixed',
-      bottom: 0, 
-      left: '0px',
-      right: 0,
-      height: '60px',
-      zIndex: 2,
-    }
-  };
+  
 
   const handleMarkDefective = (categories: string[], description: string) => {
     handleUpdateReviewStatus("defective", categories, description);
