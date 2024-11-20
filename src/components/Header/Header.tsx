@@ -1,18 +1,18 @@
 import './Header.css';
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
+import { HeaderStyles as styles } from '../../assets/styles';
+import { useUserContext } from '../../usercontext';
+import { fetchTeams, updateDefaultTeam } from '../../services/app.service';
 import { Menu, MenuItem, IconButton, Avatar, Tabs, Tab, Divider, ListItemIcon } from '@mui/material';
 import { logout, callAPI } from '../../assets/util';
-import { fetchTeams, updateDefaultTeam } from '../../services/app.service';
-import { useUserContext } from '../../usercontext';
 import Logout from '@mui/icons-material/Logout';
-import { HeaderStyles as styles } from '../../assets/styles';
 
 
 const Header = (props: any) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, username, userPhoto, userPermissions} = useUserContext();
+  const { username, userPhoto, userPermissions} = useUserContext();
   const [anchorAr, setAnchorAr] = useState<null | HTMLElement>(null);
   const [profileActions, setProfileActions] = useState(false);
   const [tabValue, setTabValue] = useState(0);
@@ -102,9 +102,6 @@ const Header = (props: any) => {
               styles.menuSlotProps
             }
           >
-            {/* <MenuItem>
-              <Avatar /> My account
-            </MenuItem> */}
             {userPermissions && userPermissions.includes('manage_system') && (
               <span>
               {teams.map((team) => (

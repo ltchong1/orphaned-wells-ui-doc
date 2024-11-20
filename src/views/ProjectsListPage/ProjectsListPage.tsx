@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
-import Subheader from '../../components/Subheader/Subheader';
-import ProjectsListTable from '../../components/ProjectsListTable/ProjectsListTable';
-import NewProjectDialog from '../../components/NewProjectDialog/NewProjectDialog';
 import { getProjects } from '../../services/app.service';
 import { callAPI } from '../../assets/util';
 import { useUserContext } from '../../usercontext';
+import Subheader from '../../components/Subheader/Subheader';
+import ProjectsListTable from '../../components/ProjectsListTable/ProjectsListTable';
+import NewProjectDialog from '../../components/NewProjectDialog/NewProjectDialog';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
+import { Box } from '@mui/material';
 
 const ProjectsListPage = () => {
     const { userPermissions} = useUserContext();

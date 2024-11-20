@@ -4,7 +4,7 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, Button, Checkbox
 import CloseIcon from '@mui/icons-material/Close';
 import { callAPIWithBlobResponse, callAPI } from '../../assets/util';
 import { downloadRecords, getColumnData } from '../../services/app.service';
-import { ColumnSelectDialogProps, CheckboxesGroupProps, Processor, RecordGroup } from '../../types';
+import { ColumnSelectDialogProps, CheckboxesGroupProps } from '../../types';
 
 const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
     const { open, onClose, location, handleUpdate, _id } = props;

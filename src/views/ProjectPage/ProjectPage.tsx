@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 import Subheader from '../../components/Subheader/Subheader';
 import RecordGroupsTable from '../../components/RecordGroupsTable/RecordGroupsTable';
 import NewRecordGroupDialog from '../../components/NewRecordGroupDialog/NewRecordGroupDialog';
-import { getRecordGroups, updateProject, deleteProject } from '../../services/app.service';
-import { callAPI, DEFAULT_FILTER_OPTIONS } from '../../assets/util';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ProjectData } from '../../types';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ProjectTabs from '../../components/ProjectTabs/ProjectTabs';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
 import { useUserContext } from '../../usercontext';
+import { getRecordGroups, updateProject, deleteProject } from '../../services/app.service';
+import { callAPI, DEFAULT_FILTER_OPTIONS } from '../../assets/util';
+import { ProjectData } from '../../types';
 
 const Project = () => {
     let params = useParams();
@@ -33,8 +33,7 @@ const Project = () => {
         if (tabs[currentTab] === "Record Groups") callAPI(getRecordGroups, [params.id], handleFetchedRecordGroups, handleError);
         else if (tabs[currentTab] === "All Records") {
             if (projectData.record_groups) {
-                // const query = {"project_id": params.id}
-                // callAPI(getRecords, ["project", query], handleFetchedRecords, handleError);
+                
             } else {
                 console.error("missing project data")
             }

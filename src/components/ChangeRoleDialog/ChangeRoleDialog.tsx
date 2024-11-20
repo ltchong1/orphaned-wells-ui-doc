@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Box, TextField, IconButton, Grid, Button, Tooltip, Chip } from '@mui/material';
-import { Dialog, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { } from '../../services/app.service';
 import { callAPI } from '../../assets/util';
 import { fetchRoles, updateUserRoles } from '../../services/app.service';
+import { IconButton, Grid, Button, Chip } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogContentText } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import ErrorBar from '../ErrorBar/ErrorBar';
 import CheckIcon from '@mui/icons-material/Check'
 

@@ -123,9 +123,6 @@ const Record = () => {
     const handleFailedUpdate = (data: any, response_status?: number) => {
         if (response_status === 403) {
             setErrorMsg(`${data.detail}.`);
-            // setTimeout(() => {
-            //     goToRecordGroup();
-            // }, 5000);
         } else {
             console.error('error updating record data: ', data);
         }
@@ -181,7 +178,6 @@ const Record = () => {
     const handleClickMarkReviewed = () => {
         if (locked) return
         handleUpdateReviewStatus("reviewed")
-        // navigateToRecord({recordData: {_id: recordData.next_id}})
     }
 
     useKeyDown("ArrowLeft", undefined, undefined, handleClickPrevious, undefined);

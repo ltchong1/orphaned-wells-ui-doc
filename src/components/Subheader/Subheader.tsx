@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Button, Grid, IconButton, Box, Menu, MenuItem, Chip } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { SubheaderProps } from '../../types';
 import LockIcon from '@mui/icons-material/Lock';
+import { SubheaderProps } from '../../types';
 import { SubheaderStyles as styles } from '../../assets/styles';
 
 const Subheader = (props: SubheaderProps) => {

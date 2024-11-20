@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { Select, MenuItem, Menu, IconButton, Tooltip, InputLabel } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import CancelIcon from '@mui/icons-material/Cancel';
 import Subheader from '../../components/Subheader/Subheader';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
-import { getUsers, addUser, deleteUser, updateUserRoles } from '../../services/app.service';
-import { callAPI } from '../../assets/util';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import CancelIcon from '@mui/icons-material/Cancel';
-import { useUserContext } from '../../usercontext';
 import ChangeRoleDialog from '../../components/ChangeRoleDialog/ChangeRoleDialog';
+import { getUsers, addUser, deleteUser } from '../../services/app.service';
+import { useUserContext } from '../../usercontext';
+import { callAPI } from '../../assets/util';
 import { User } from '../../types';
 
 const AdminPage = () => {
@@ -20,7 +20,6 @@ const AdminPage = () => {
     const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [newUser, setNewUser] = useState("");
-    const [newRole, setNewRole] = useState("")
     const [disableSubmitNewUserButton, setDisableSubmitNewUserButton] = useState(true);
     const [errorMessage, setErrorMessage] = useState<string | null>("");
     const [showChangeRoleDialog, setShowChangeRoleDialog] = useState(false)
@@ -73,7 +72,6 @@ const AdminPage = () => {
 
     const handleClose = () => {
         setSelectedUser(null);
-        setNewRole("")
         setShowNewUserModal(false);
         setNewUser("");
         setShowDeleteUserModal(false);
