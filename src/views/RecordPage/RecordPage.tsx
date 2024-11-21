@@ -205,7 +205,13 @@ const Record = () => {
             data_update = tempRecordData;
         } else if (new_status === "defective") {
             data_update = {review_status: new_status, defective_categories: categories, defective_description: description};
-        } 
+        } else if (new_status === "verification_required") {
+            return
+        } else if (new_status === "reviewed-verified") {
+            return
+        } else if (new_status === "defective-verified") {
+            return
+        }
         else data_update = { review_status: new_status };
         callAPI(
             updateRecord,
