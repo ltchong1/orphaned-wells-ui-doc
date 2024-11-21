@@ -7,9 +7,10 @@ import LoginPage from './views/LoginPage/LoginPage';
 
 interface UserContextObject {
   user: any;
-  username?: string;
-  userPhoto?: string;
-  userPermissions?: any;
+  userEmail: string;
+  userName: string;
+  userPhoto: string;
+  userPermissions: any;
 }
 
 const UserContext = createContext({} as UserContextObject);
@@ -22,8 +23,9 @@ export const UserContextProvider = ({ children }: any) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [user, setUser] = useState<any>(null);
-  const [username, setUsername] = useState<string | undefined>(undefined);
-  const [userPhoto, setUserPhoto] = useState<string | undefined>(undefined);
+  const [userEmail, setUserEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userPhoto, setUserPhoto] = useState("");
   const [userPermissions, setUserPermissions] = useState<any>(undefined);
   const [loading, setLoading] = useState(true)
   const [authenticated, setAuthenticated] = useState(false);
@@ -48,8 +50,9 @@ export const UserContextProvider = ({ children }: any) => {
   const handlePassedAuthentication = (user_data: User) => {
     setAuthenticated(true)
     setUser(user_data)
+    setUserEmail(user_data.email)
     setUserPermissions(JSON.stringify(user_data.permissions))
-    if (user_data.name && user_data.name !== "") setUsername(user_data.name)
+    if (user_data.name && user_data.name !== "") setUserName(user_data.name)
     if (user_data.picture) setUserPhoto(user_data.picture)
     if (window.location.hash.includes("login")){
       navigate('/projects')
@@ -78,7 +81,8 @@ export const UserContextProvider = ({ children }: any) => {
 
   const value = {
     user,
-    username,
+    userEmail,
+    userName,
     userPhoto,
     userPermissions
   };
