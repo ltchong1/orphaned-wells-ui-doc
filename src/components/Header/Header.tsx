@@ -12,7 +12,7 @@ import Logout from '@mui/icons-material/Logout';
 const Header = (props: any) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { username, userPhoto, userPermissions} = useUserContext();
+  const { userName, userPhoto, userPermissions} = useUserContext();
   const [anchorAr, setAnchorAr] = useState<null | HTMLElement>(null);
   const [profileActions, setProfileActions] = useState(false);
   const [tabValue, setTabValue] = useState(0);
@@ -90,7 +90,7 @@ const Header = (props: any) => {
 
         <div className="right">
           <IconButton sx={styles.icon} onClick={handleShowProfileActions}>
-            <Avatar sx={styles.avatar} alt={username} src={userPhoto}/>
+            <Avatar sx={styles.avatar} alt={userName} src={userPhoto}/>
             
           </IconButton>
           <Menu

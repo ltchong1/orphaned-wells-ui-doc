@@ -14,7 +14,7 @@ import { useUserContext } from '../../usercontext';
 const RecordGroupPage = () => {
     const params = useParams<{ id: string }>(); 
     const navigate = useNavigate();
-    const { userPermissions} = useUserContext();
+    const { userEmail, userPermissions} = useUserContext();
     const [project, setProject] = useState({} as ProjectData)
     const [recordGroup, setRecordGroup] = useState<RecordGroup>({ } as RecordGroup);
     const [showDocumentModal, setShowDocumentModal] = useState(false);
@@ -70,7 +70,7 @@ const RecordGroupPage = () => {
         formData.append('file', file, file.name);
         callAPI(
             uploadDocument,
-            [formData, recordGroup._id, false],
+            [formData, recordGroup._id, userEmail, false],
             handleSuccessfulDocumentUpload,
             handleAPIErrorResponse
         );
