@@ -135,9 +135,7 @@ const RecordGroupPage = () => {
                         "Delete record group": () => setOpenDeleteModal(true),
                     }
                     :
-                    {
-                        "Change record group name": handleClickChangeName, 
-                    }
+                    null
                 }
                 previousPages={navigation}
             />

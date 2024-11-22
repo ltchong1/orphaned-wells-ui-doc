@@ -215,7 +215,7 @@ const UsersTable = ({ user, users, setSelectedUser, setShowChangeRoleDialog, set
                                     </IconButton>
                                 </Tooltip>
                             }
-                            {userPermissions && userPermissions.includes('manage_team') &&
+                            {userPermissions && userPermissions.includes('delete') &&
                                 <Tooltip title="Remove User">
                                     <IconButton color="error" onClick={() => handleDeleteUser(row)}><CancelIcon /></IconButton>
                                 </Tooltip>
