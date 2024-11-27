@@ -18,6 +18,7 @@ export interface RecordData {
     recordIndex?: number;
     review_status?: string;
     notes?: string | null;
+    verification_status?: string;
 }
 
 export interface ProjectData {

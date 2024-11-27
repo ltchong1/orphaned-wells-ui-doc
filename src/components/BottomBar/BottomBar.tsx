@@ -32,8 +32,80 @@ const Bottombar = (props: BottombarProps) => {
   } = props;
   const [openNotesModal, setOpenNotesModal] = useState(false);
   const [openDefectiveDialog, setOpenDefectiveDialog] = useState(false);
+
+  const handleUpdateVerificationStatus = (verification_status: string, review_status?: string) => {
+    console.log('updating verification status to '+review_status+'-'+verification_status)
+  }
+
   
-  const splitButtonOptions: Record<string, Array<{ text: string; onClick: () => void; icon: JSX.Element; selected?: boolean }>> = {
+  const getSplitButtonOptions = (review_status: string, verification_status?: string) => {
+    let markAsUnreviewed = {
+        text: "Reset to unreviewed",
+        onClick: promptResetRecord,
+        icon: <PanoramaFishEyeIcon sx={{ color: "#828282" }} />
+    }
+    let markAsIncomplete = {
+        text: "Mark as incomplete",
+        onClick: () => handleUpdateReviewStatus("incomplete"),
+        icon: <TonalityIcon sx={{ color: "#E3B62E" }} />
+    }
+    let markAsNeedsVerification = {
+        text: "Needs Verification",
+        onClick: () => handleUpdateVerificationStatus("required"),
+        icon: <NewReleasesIcon sx={{ color: "#FFC130" }} />
+    }
+    let markAsDefective = {
+        text: "Mark as defective",
+        onClick: () => setOpenDefectiveDialog(true),
+        icon: <CancelIcon sx={{ color: "#9F0100" }} />
+    }
+    let markAsDefectiveVerified = {
+      text: "Mark as defective",
+      onClick: () => handleUpdateVerificationStatus("verified", "defective"),
+      icon: <CancelIcon sx={{ color: "#9F0100" }} />
+  }
+    let markAsVerified = {
+        text: "Mark as reviewed-verified",
+        onClick: () => handleUpdateVerificationStatus("verified", "reviewed"),
+        icon: <CheckCircleIcon sx={{ color: "#3A9227" }} />
+    }
+    let options: Array<{ text: string; onClick: () => void; icon: JSX.Element; selected?: boolean }> = []
+
+    if (verification_status === undefined) {
+      if (review_status === 'unreviewed') {
+        options = [
+          markAsIncomplete, markAsNeedsVerification, markAsDefective
+        ]
+      } else if (review_status === 'incomplete') {
+        options = [
+          markAsUnreviewed, markAsNeedsVerification, markAsDefective
+        ]
+        if (userPermissions && userPermissions.includes('verify_records')) options.push(markAsVerified)
+      } else if (review_status === 'defective') {
+        options = [
+          markAsUnreviewed, markAsIncomplete, markAsNeedsVerification 
+        ]
+        if (userPermissions && userPermissions.includes('verify_records')) options.push(markAsVerified)
+      } else if (review_status === 'reviewed') {
+        options = [
+          markAsUnreviewed, markAsIncomplete, markAsNeedsVerification 
+        ]
+        if (userPermissions && userPermissions.includes('verify_records')) options.push(markAsVerified)
+      }
+    } else if (verification_status === "required") {
+      options = [
+        markAsVerified, markAsDefectiveVerified, markAsUnreviewed 
+      ]
+    } else if (verification_status === "verified") {
+      options = [
+        markAsUnreviewed
+      ]
+    }
+    return options
+  }
+
+
+  const splitButtonOptionsOld: Record<string, Array<{ text: string; onClick: () => void; icon: JSX.Element; selected?: boolean }>> = {
     unreviewed: [
       {
         text: "Mark as incomplete",
@@ -153,7 +225,7 @@ const Bottombar = (props: BottombarProps) => {
 
               {recordData.review_status && 
                 <SplitButton
-                  options={splitButtonOptions[recordData.review_status]}
+                  options={getSplitButtonOptions(recordData.review_status, recordData.verification_status)}
                   disabled={locked}
                 />
               }
