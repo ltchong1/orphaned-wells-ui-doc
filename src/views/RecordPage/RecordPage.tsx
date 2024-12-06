@@ -187,7 +187,8 @@ const Record = () => {
         let record_data = data.recordData;
         if (record_data?._id) {
             let newUrl = "/#/record/" + record_data._id;
-            window.location.href = newUrl;
+            if (record_data._id == recordData._id) window.location.reload()
+            else window.location.href = newUrl;
         } else {
             console.error("error redirecting")
         }
@@ -257,6 +258,7 @@ const Record = () => {
                 }
                 previousPages={previousPages}
                 status={recordData.review_status}
+                verification_status={recordData.verification_status}
                 locked={locked}
             />
             <Box sx={styles.innerBox}>

@@ -156,6 +156,7 @@ export interface SubheaderProps {
     currentPage: string;
     buttonName?: string;
     status?: string;
+    verification_status?: string;
     subtext?: string;
     handleClickButton?: () => void;
     disableButton?: boolean;
