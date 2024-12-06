@@ -26,17 +26,13 @@ const Bottombar = (props: BottombarProps) => {
     onPreviousButtonClick, 
     onNextButtonClick, 
     onReviewButtonClick, 
-    handleUpdateReviewStatus, 
+    handleUpdateReviewStatus,
+    handleUpdateVerificationStatus,
     promptResetRecord,
     locked
   } = props;
   const [openNotesModal, setOpenNotesModal] = useState(false);
   const [openDefectiveDialog, setOpenDefectiveDialog] = useState(false);
-
-  const handleUpdateVerificationStatus = (verification_status: string, review_status?: string) => {
-    console.log('updating verification status to '+review_status+'-'+verification_status)
-  }
-
   
   const getSplitButtonOptions = (review_status: string, verification_status?: string) => {
     let markAsUnreviewed = {
@@ -50,7 +46,7 @@ const Bottombar = (props: BottombarProps) => {
         icon: <TonalityIcon sx={{ color: "#E3B62E" }} />
     }
     let markAsNeedsVerification = {
-        text: "Needs Verification",
+        text: "Needs verification",
         onClick: () => handleUpdateVerificationStatus("required"),
         icon: <NewReleasesIcon sx={{ color: "#FFC130" }} />
     }
@@ -63,7 +59,7 @@ const Bottombar = (props: BottombarProps) => {
       text: "Mark as defective",
       onClick: () => handleUpdateVerificationStatus("verified", "defective"),
       icon: <CancelIcon sx={{ color: "#9F0100" }} />
-  }
+    }
     let markAsVerified = {
         text: "Mark as reviewed-verified",
         onClick: () => handleUpdateVerificationStatus("verified", "reviewed"),
@@ -71,7 +67,7 @@ const Bottombar = (props: BottombarProps) => {
     }
     let options: Array<{ text: string; onClick: () => void; icon: JSX.Element; selected?: boolean }> = []
 
-    if (verification_status === undefined) {
+    if (!verification_status) {
       if (review_status === 'unreviewed') {
         options = [
           markAsIncomplete, markAsNeedsVerification, markAsDefective
@@ -103,93 +99,6 @@ const Bottombar = (props: BottombarProps) => {
     }
     return options
   }
-
-
-  const splitButtonOptionsOld: Record<string, Array<{ text: string; onClick: () => void; icon: JSX.Element; selected?: boolean }>> = {
-    unreviewed: [
-      {
-        text: "Mark as incomplete",
-        onClick: () => handleUpdateReviewStatus("incomplete"),
-        icon: <TonalityIcon sx={{ color: "#E3B62E" }} />,
-        selected: true
-      },
-      {
-        text: "Needs Verification",
-        onClick: () => handleUpdateReviewStatus("verification_required"),
-        icon: <NewReleasesIcon sx={{ color: "#FFC130" }} />,
-      },
-      {
-        text: "Mark as defective",
-        onClick: () => setOpenDefectiveDialog(true),
-        icon: <CancelIcon sx={{ color: "#9F0100" }} />,
-      }
-    ],
-    incomplete: [
-      {
-        text: "Reset to unreviewed",
-        onClick: promptResetRecord,
-        icon: <PanoramaFishEyeIcon sx={{ color: "#828282" }} />,
-        selected: true
-      },
-      {
-        text: "Needs Verification",
-        onClick: () => handleUpdateReviewStatus("verification_required"),
-        icon: <NewReleasesIcon sx={{ color: "#FFC130" }} />,
-      },
-      {
-        text: "Mark as defective",
-        onClick: () => setOpenDefectiveDialog(true),
-        icon: <CancelIcon sx={{ color: "#9F0100" }} />,
-      },
-      userPermissions && userPermissions.includes('verify_records') && {
-        text: "Mark as reviewed-verified",
-        onClick: () => handleUpdateReviewStatus("reviewed-verified"),
-        icon: <CheckCircleIcon sx={{ color: "#3A9227" }} />,
-      }
-    ],
-    defective: [
-      {
-        text: "Reset to unreviewed",
-        onClick: promptResetRecord,
-        icon: <PanoramaFishEyeIcon sx={{ color: "#828282" }} />,
-        selected: true
-      },
-      {
-        text: "Mark as incomplete",
-        onClick: () => handleUpdateReviewStatus("incomplete"),
-        icon: <TonalityIcon sx={{ color: "#E3B62E" }} />,
-      },
-      {
-        text: "Needs Verification",
-        onClick: () => handleUpdateReviewStatus("verification_required"),
-        icon: <NewReleasesIcon sx={{ color: "#FFC130" }} />,
-      },
-    ],
-    reviewed: [
-      {
-        text: "Reset to unreviewed",
-        onClick: promptResetRecord,
-        icon: <PanoramaFishEyeIcon sx={{ color: "#828282" }} />,
-      },
-      {
-        text: "Mark as incomplete",
-        onClick: () => handleUpdateReviewStatus("incomplete"),
-        icon: <TonalityIcon sx={{ color: "#E3B62E" }} />,
-        selected: true
-      },
-      {
-        text: "Needs Verification",
-        onClick: () => handleUpdateReviewStatus("verification_required"),
-        icon: <NewReleasesIcon sx={{ color: "#FFC130" }} />,
-      },
-      (userPermissions && userPermissions.includes('verify_record')) && {
-        text: "Mark as reviewed-verified",
-        onClick: () => handleUpdateReviewStatus("reviewed-verified"),
-        icon: <CheckCircleIcon sx={{ color: "#3A9227" }} />,
-      }
-    ],
-  };
-
   
 
   const handleMarkDefective = (categories: string[], description: string) => {

@@ -221,6 +221,21 @@ const Record = () => {
         );
     }
 
+    const handleUpdateVerificationStatus = (verification_status: string, review_status?: string) => {
+        let data_update: any;
+        let type = "verification_status"
+        data_update = { verification_status: verification_status };
+        if (review_status) {
+            data_update["review_status"] = review_status
+        }
+        callAPI(
+            updateRecord,
+            [params.id, { data: data_update, type: type }],
+            (data) => handleSuccessfulStatusUpdate(data, verification_status),
+            handleFailedUpdate
+        );
+    }
+
     const handleSuccessfulStatusUpdate = (data: any, new_status: string) => {
         if (new_status === "reviewed") navigateToRecord({recordData: {_id: recordData.next_id}})
         else window.location.reload()
@@ -259,6 +274,7 @@ const Record = () => {
                 onReviewButtonClick={handleClickMarkReviewed}
                 recordData={recordData}
                 handleUpdateReviewStatus={handleUpdateReviewStatus}
+                handleUpdateVerificationStatus={handleUpdateVerificationStatus}
                 promptResetRecord={promptResetRecord}
                 locked={locked}
             />
