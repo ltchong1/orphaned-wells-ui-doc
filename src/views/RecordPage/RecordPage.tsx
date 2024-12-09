@@ -68,7 +68,7 @@ const Record = () => {
     const handleSuccessfulFetchRecord = (data: any, lock_record?: boolean) => {
         let newRecordData = data.recordData;
         if (lock_record) {
-            setErrorMsg("This record is currently being reviewed by a team member.")
+            setErrorMsg(data.lockedMessage)
             setLocked(true)
         }
         else {

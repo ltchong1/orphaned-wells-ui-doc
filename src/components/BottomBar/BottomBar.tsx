@@ -100,9 +100,32 @@ const Bottombar = (props: BottombarProps) => {
     return options
   }
   
-
   const handleMarkDefective = (categories: string[], description: string) => {
     handleUpdateReviewStatus("defective", categories, description);
+  }
+
+  const getNextButton = () => {
+    if (recordData.review_status === "reviewed" || recordData.review_status === "defective" || locked || recordData.verification_status === "required") {
+      return <Button 
+                sx={styles.button} 
+                variant="contained" 
+                endIcon={<KeyboardArrowRightIcon />}
+                onClick={onNextButtonClick}
+              >
+                next
+              </Button>
+    }
+    else if (recordData.review_status === "unreviewed" || recordData.review_status === "incomplete") {
+      return <Button 
+                sx={styles.button} 
+                variant="contained" 
+                startIcon={<CheckCircleIcon sx={{ color: "#43A047" }} />}
+                endIcon={<KeyboardArrowRightIcon />}
+                onClick={onReviewButtonClick}
+              > 
+                Mark as reviewed & next 
+              </Button>
+    }
   }
 
   return ( 
@@ -139,28 +162,7 @@ const Bottombar = (props: BottombarProps) => {
                 />
               }
               
-              {
-                (recordData.review_status === "reviewed" || recordData.review_status === "defective" || locked) ?
-                <Button 
-                  sx={styles.button} 
-                  variant="contained" 
-                  endIcon={<KeyboardArrowRightIcon />}
-                  onClick={onNextButtonClick}
-                >
-                  next
-                </Button>
-                :
-                (recordData.review_status === "unreviewed" || recordData.review_status === "incomplete") && 
-                  <Button 
-                    sx={styles.button} 
-                    variant="contained" 
-                    startIcon={<CheckCircleIcon sx={{ color: "#43A047" }} />}
-                    endIcon={<KeyboardArrowRightIcon />}
-                    onClick={onReviewButtonClick}
-                  > 
-                    Mark as reviewed & next 
-                  </Button>
-              }
+              {getNextButton()}
             </Box>
           </Grid>
         </Grid>
