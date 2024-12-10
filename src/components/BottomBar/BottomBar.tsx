@@ -66,28 +66,31 @@ const Bottombar = (props: BottombarProps) => {
         icon: <CheckCircleIcon sx={{ color: "#3A9227" }} />
     }
     let options: Array<{ text: string; onClick: () => void; icon: JSX.Element; selected?: boolean }> = []
-    console.log('verification status: '+ verification_status+' | review_status: '+ review_status+' userPermissions: ')
-    console.log(userPermissions)
     if (!verification_status) {
       if (review_status === 'unreviewed') {
         options = [
-          markAsIncomplete, markAsNeedsVerification, markAsDefective
+          markAsIncomplete, markAsDefective
         ]
+        if (userPermissions && userPermissions.includes('verify_record')) options.push(markAsVerified)
+        else options.push(markAsNeedsVerification)
       } else if (review_status === 'incomplete') {
         options = [
-          markAsUnreviewed, markAsNeedsVerification, markAsDefective
+          markAsUnreviewed, markAsDefective
         ]
         if (userPermissions && userPermissions.includes('verify_record')) options.push(markAsVerified)
+        else options.push(markAsNeedsVerification)
       } else if (review_status === 'defective') {
         options = [
-          markAsUnreviewed, markAsIncomplete, markAsNeedsVerification 
+          markAsUnreviewed, markAsIncomplete 
         ]
         if (userPermissions && userPermissions.includes('verify_record')) options.push(markAsVerified)
+        else options.push(markAsNeedsVerification)
       } else if (review_status === 'reviewed') {
         options = [
-          markAsUnreviewed, markAsIncomplete, markAsNeedsVerification 
+          markAsUnreviewed, markAsIncomplete 
         ]
         if (userPermissions && userPermissions.includes('verify_record')) options.push(markAsVerified)
+        else options.push(markAsNeedsVerification)
       }
     } else if (verification_status === "required") {
       options = [
