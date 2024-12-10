@@ -56,7 +56,7 @@ const Bottombar = (props: BottombarProps) => {
         icon: <CancelIcon sx={{ color: "#9F0100" }} />
     }
     let markAsDefectiveVerified = {
-      text: "Mark as defective",
+      text: "Mark as defective-verified",
       onClick: () => handleUpdateVerificationStatus("verified", "defective"),
       icon: <CancelIcon sx={{ color: "#9F0100" }} />
     }
@@ -83,7 +83,10 @@ const Bottombar = (props: BottombarProps) => {
         options = [
           markAsUnreviewed, markAsIncomplete 
         ]
-        if (userPermissions && userPermissions.includes('verify_record')) options.push(markAsVerified)
+        if (userPermissions && userPermissions.includes('verify_record')) {
+          options.push(markAsDefectiveVerified)
+          options.push(markAsVerified)
+        }
         else options.push(markAsNeedsVerification)
       } else if (review_status === 'reviewed') {
         options = [
