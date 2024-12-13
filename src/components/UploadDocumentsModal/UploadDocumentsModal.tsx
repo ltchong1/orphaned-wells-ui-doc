@@ -4,14 +4,18 @@ import CloseIcon from '@mui/icons-material/Close';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { FileUploader } from "react-drag-drop-files";
 import { UploadDocumentsModalProps } from '../../types';
+import UploadDirectory from './UploadDirectory';
 
 const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     const { setShowModal, handleUploadDocument } = props;
     const [ showWarning, setShowWarning ] = useState(false);
     const [ warningMessage, setWarningMessage ] = useState("");
     const [ file, setFile ] = useState<File | null>(null);
+    const [uploadDirectory, setUploadDirectory] = useState<string>()
+    const [uploadDirectoryFiles, setUploadDirectoryFiles ] = useState<any>([])
     const maxFileSize = 10;
     const fileTypes: string[] = ["tiff", "tif", "pdf", "png", "jpg", "jpeg", "zip"];
+    const validFileTypes = ['image/png', 'application/pdf', 'image/tiff', 'image/jpeg']
     const inputRef = useRef<HTMLInputElement>(null);
 
     const styles = {
@@ -90,8 +94,28 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
 
     const handleChooseDirectory = (e: ChangeEvent<HTMLInputElement>) => {
         // console.log(e.target.files)
-        props.handleDirectoryInput(e.target.files)
+        handleDirectoryInput(e.target.files)
         setShowWarning(false);
+    }
+
+    const handleDirectoryInput = (f: FileList | null) => {
+        let files = f || [] as any
+        let validFiles = []
+        let directoryName
+        // console.log(`handling ${files.length} files`)
+        for (let file of files) {
+            if (validFileTypes.includes(file.type)) {
+                validFiles.push(file)
+            }
+        }
+        // console.log(`found ${validFiles.length} valid document files`)
+        if (files && files.length && files.length > 0) {
+            let filePath = files[0].webkitRelativePath
+            let splitPath = filePath.split('/')
+            directoryName = splitPath[0]
+        }
+        setUploadDirectory(directoryName)
+        setUploadDirectoryFiles(validFiles)
     }
 
     const fileUploaderContainer = () => {
@@ -166,34 +190,45 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                         <IconButton onClick={handleClose}><CloseIcon/></IconButton>
                     </Box>
                 </Grid>
-                <Grid item xs={12}>
-                    {DragDrop()}
-                </Grid>
-                <Grid item xs={12}>
-                <input
-                    ref={inputRef}
-                    type="file"
-                    onChange={handleChooseDirectory}
-                    style={{ display: "none" }}
-                    multiple
-                    {...{ webkitdirectory: '', mozdirectory: '', directory: '' }}
-                />
-                <Box style={{display: "flex", justifyContent: "center"}}>
-                </Box>
-                    
-                </Grid>
-                <Grid item xs={12}>
-                    <Box style={{display: "flex", justifyContent: "space-around"}}>
-                        <Button variant="contained" style={styles.button} onClick={handleClickUpload} disabled={file === null}>
-                            Upload File
-                        </Button>
-                        <p style={{display: 'flex', margin:0, alignItems: 'center'}}>or</p>
-                        <Button variant="outlined" style={styles.button} onClick={() => inputRef.current?.click()}>
-                            Choose Directory
-                        </Button>
-                    </Box>
-                </Grid>
+                {uploadDirectory ? 
+                    <UploadDirectory
+                        setShowModal={setShowModal}
+                        directoryName={uploadDirectory}
+                        directoryFiles={uploadDirectoryFiles}
+                    />  :
+                    <>
+                        <Grid item xs={12}>
+                            {DragDrop()}
+                        </Grid>
+                        <Grid item xs={12}>
+                        <input
+                            ref={inputRef}
+                            type="file"
+                            onChange={handleChooseDirectory}
+                            style={{ display: "none" }}
+                            multiple
+                            {...{ webkitdirectory: '', mozdirectory: '', directory: '' }}
+                        />
+                        <Box style={{display: "flex", justifyContent: "center"}}>
+                        </Box>
+                            
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Box style={{display: "flex", justifyContent: "space-around"}}>
+                                <Button variant="contained" style={styles.button} onClick={handleClickUpload} disabled={file === null}>
+                                    Upload File
+                                </Button>
+                                <p style={{display: 'flex', margin:0, alignItems: 'center'}}>or</p>
+                                <Button variant="outlined" style={styles.button} onClick={() => inputRef.current?.click()}>
+                                    Choose Directory
+                                </Button>
+                            </Box>
+                        </Grid>
+                    </>
+                }
+                
             </Grid>
+            
         </Modal>
     );
 };

@@ -19,15 +19,11 @@ const RecordGroupPage = () => {
     const [project, setProject] = useState({} as ProjectData)
     const [recordGroup, setRecordGroup] = useState<RecordGroup>({ } as RecordGroup);
     const [showDocumentModal, setShowDocumentModal] = useState(false);
-    const [showDirectoryModal, setShowDirectoryModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [recordGroupName, setRecordGroupName] = useState("");
     const [errorMsg, setErrorMsg] = useState<string | null>("");
-    const [uploadDirectory, setUploadDirectory] = useState('')
-    const [uploadDirectoryFiles, setUploadDirectoryFiles ] = useState<any>()
     const [navigation, setNavigation] = useState<PreviousPages>({"Projects": () => navigate("/projects", { replace: true })})
-    const validFileTypes = ['image/png', 'application/pdf', 'image/tiff', 'image/jpeg']
 
     useEffect(() => {
         if (params.id) {
@@ -130,28 +126,6 @@ const RecordGroupPage = () => {
         setErrorMsg(e.detail)
     }
 
-    const handleDirectoryInput = (f: FileList | null) => {
-        let files = f || [] as any
-        let validFiles = []
-        let directoryName
-        console.log(`handling ${files.length} files`)
-        for (let file of files) {
-            if (validFileTypes.includes(file.type)) {
-                validFiles.push(file)
-            }
-        }
-        console.log(`found ${validFiles.length} valid document files`)
-        if (files && files.length && files.length > 0) {
-            let filePath = files[0].webkitRelativePath
-            let splitPath = filePath.split('/')
-            directoryName = splitPath[0]
-        }
-        setShowDocumentModal(false)
-        setShowDirectoryModal(true)
-        setUploadDirectory(directoryName)
-        setUploadDirectoryFiles(validFiles)
-    }
-
     return (
         <Box sx={styles.outerBox}>
             <Subheader
@@ -179,10 +153,9 @@ const RecordGroupPage = () => {
                 <UploadDocumentsModal 
                     setShowModal={setShowDocumentModal}
                     handleUploadDocument={handleUploadDocument}
-                    handleDirectoryInput={handleDirectoryInput}
                 />
             }
-            {showDirectoryModal && 
+            {/* {showDirectoryModal && 
                 <UploadDirectoryModal 
                     setShowModal={setShowDirectoryModal}
                     directoryName={uploadDirectory}
@@ -190,7 +163,7 @@ const RecordGroupPage = () => {
                     recordGroupId={recordGroup._id}
                     userEmail={userEmail}
                 />
-            }
+            } */}
             <PopupModal
                 open={openDeleteModal}
                 handleClose={() => setOpenDeleteModal(false)}

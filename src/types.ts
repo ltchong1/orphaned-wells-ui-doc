@@ -174,7 +174,6 @@ export interface TableFiltersProps {
 export interface UploadDocumentsModalProps {
     setShowModal: (show: boolean) => void;
     handleUploadDocument: (file: File, refresh?: boolean) => void;
-    handleDirectoryInput: (files: FileList | null) => void;
 }
 
 export interface UploadDirectoryModalProps {
@@ -183,6 +182,12 @@ export interface UploadDirectoryModalProps {
     directoryName: string
     recordGroupId: string
     userEmail: string
+}
+
+export interface UploadDirectoryProps {
+    setShowModal: (show: boolean) => void;
+    directoryFiles: File[]
+    directoryName: string
 }
 
 export interface ProgressBarProps {
