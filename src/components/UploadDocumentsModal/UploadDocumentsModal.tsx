@@ -2,6 +2,7 @@ import { useState, useRef, ChangeEvent } from 'react';
 import { Grid, Box, Modal, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { FileUploader } from "react-drag-drop-files";
 import { UploadDocumentsModalProps } from '../../types';
 import UploadDirectory from './UploadDirectory';
@@ -24,12 +25,17 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: 650,
+            minWidth: 650,
+            maxWidth: 650,
+            // maxWidth: '80vw',
             bgcolor: 'background.paper',
             border: '1px solid #AEAEAE',
             borderRadius: 2,
             boxShadow: 24,
             p: 2,
+            maxHeight: '75vh',
+            overflow: 'scroll',
+            overflowX: 'hidden'
         },
         header: {
             marginTop: 5
@@ -96,6 +102,12 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
         // console.log(e.target.files)
         handleDirectoryInput(e.target.files)
         setShowWarning(false);
+    }
+
+    const handleBack = () => {
+        setUploadDirectory(undefined)
+        setUploadDirectoryFiles([])
+        setFile(null)
     }
 
     const handleDirectoryInput = (f: FileList | null) => {
@@ -182,8 +194,18 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
             aria-describedby="modal-modal-description"
         >
             <Grid container sx={styles.modalStyle} spacing={1}>
-                <Grid item xs={9}>
-                    <h2 style={styles.header}>Upload document(s)</h2>
+                {/** TODO: convert the below 3 items to a stack? */}
+                <Grid item xs={3}>
+                    {uploadDirectory && 
+                        <Box sx={{display: 'flex', justifyContent: 'flex-start', marginLeft: '10px'}}>
+                            <IconButton onClick={handleBack}><ArrowBackIcon/></IconButton>
+                        </Box>
+                    }
+                </Grid>
+                <Grid item xs={6}>
+                    <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                        <h2 style={styles.header}>Upload document(s)</h2>
+                    </Box>
                 </Grid>
                 <Grid item xs={3}>
                     <Box sx={{display: 'flex', justifyContent: 'flex-end', marginRight: '10px'}}>

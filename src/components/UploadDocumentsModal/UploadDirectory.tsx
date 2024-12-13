@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { useUserContext } from '../../usercontext';
-import { Grid, Box, Button, Typography } from '@mui/material';
+import { Grid, Box, Button, Typography, Stack } from '@mui/material';
 import { UploadDirectoryProps, ProgressBarProps } from '../../types';
 import { uploadDocument } from '../../services/app.service';
 import { callAPI } from '../../assets/util';
 import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const UploadDirectory = (props: UploadDirectoryProps) => {
     const params = useParams<{ id: string }>();
@@ -34,21 +35,17 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     },[uploadedAmt])
 
     const styles = {
-        gridStyle: {
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 650,
-            bgcolor: 'background.paper',
-            border: '1px solid #AEAEAE',
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 2,
-        },
         button: {
             borderRadius: '8px', 
             width: 200,
+        },
+        stack: {
+            height: '30vh',
+            overflow: 'scroll',
+            // border: '1px solid',
+            // borderRadius: '4px', 
+            boxShadow: 1,
+            padding: 2
         }
     };
 
@@ -84,38 +81,42 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     return (
         <Grid container>
             <Grid item xs={12}>
-                <p>Upload {directoryFiles.length} files from {directoryName}:</p>
+                <p>Upload {directoryFiles.length} files from the directory <i>{directoryName}</i>:</p>
             </Grid>
-            {/* <Grid item xs={12}>
-                <Box>
+            <Grid item xs={12}>
+                <Stack direction='column' sx={styles.stack}>
                     {directoryFiles.map((file) =>  (
-                        <p key={file.name}>
+                        <p style={{margin: 3}} key={file.name}>
+                            {
+                                uploadedFiles.includes(file.name) ? 
+                                <s>{`- ${file.name}`}</s> :
+                                `- ${file.name}`
+                            }
+                        </p>
+                    ))}
+                </Stack>
+                {/* <Grid container spacing={2} sx={{height: '30vh', overflow: 'scroll'}}>
+                    {directoryFiles.map((file) =>  (
+                        <Grid item xs={12} key={file.name} sx={{
+            overflow: 'scroll'}}>
                             {
                                 uploadedFiles.includes(file.name) ? 
                                 <s>{file.name}</s> :
                                 file.name
                             }
-                        </p>
+                        </Grid>
                     ))}
-                </Box>
-            </Grid> */}
-            <Grid item xs={12}>
-                {uploading && 
-                    <LinearWithValueLabel progress={progress}/>
-                }
+                </Grid> */}
             </Grid>
-            {/* <Grid item xs={12}>
-                {uploadedFiles.map((filename) => (
-                    <p key={filename}>{filename}</p>
-                ))
-                }
-            </Grid> */}
             <Grid item xs={12}>
-                <Box style={{display: "flex", justifyContent: "space-around"}}>
+                <Box sx={{display: "flex", justifyContent: "space-around", marginTop: 3}}>
                     {!uploading && !finishedUploading && 
-                        <Button variant="contained" style={styles.button} onClick={upload}>
+                        <Button variant="contained" sx={styles.button} onClick={upload}>
                             Upload
                         </Button>
+                    }
+                    {uploading && 
+                        <CircularProgress variant="determinate" value={progress} />
                     }
                 </Box>
             </Grid>
