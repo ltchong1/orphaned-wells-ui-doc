@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { useUserContext } from '../../usercontext';
-import { Grid, Box, Modal, IconButton, Button, Typography } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { Grid, Box, Button, Typography } from '@mui/material';
 import { UploadDirectoryProps, ProgressBarProps } from '../../types';
 import { uploadDocument } from '../../services/app.service';
 import { callAPI } from '../../assets/util';
@@ -13,14 +11,11 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     const params = useParams<{ id: string }>();
     const { userEmail } = useUserContext();
     const { directoryName, directoryFiles } = props;
-    const [ showWarning, setShowWarning ] = useState(false);
     const [ uploading, setUploading ] = useState(false)
     const [ finishedUploading, setFinishedUploading ] = useState(false)
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([])
     const [ uploadedAmt, setUploadedAmt ] = useState(0)
-    const [ warningMessage, setWarningMessage ] = useState("");
     const [ progress, setProgress ] = useState(0)
-    const maxFileSize = 10;
 
     useEffect(() => {
         if (uploadedAmt === directoryFiles.length) {
