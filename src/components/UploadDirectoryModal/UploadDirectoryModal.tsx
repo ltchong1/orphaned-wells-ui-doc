@@ -12,26 +12,24 @@ const UploadDirectoryModal = (props: UploadDirectoryModalProps) => {
     const [ showWarning, setShowWarning ] = useState(false);
     const [ uploading, setUploading ] = useState(false)
     const [ finishedUploading, setFinishedUploading ] = useState(false)
-    const [ uploadedFiles, setUploadedFiles ] = useState<any>({})
+    const [ uploadedAmt, setUploadedAmt ] = useState(0)
     const [ warningMessage, setWarningMessage ] = useState("");
     const [ progress, setProgress ] = useState(0)
-    const [ file, setFile ] = useState<File | null>(null);
     const maxFileSize = 10;
-    //TODO: useeffect to check wehn files are finished uploading
+
     useEffect(() => {
-        let uploadedAmt = Object.keys(uploadedFiles).length
-        console.log(uploadedAmt, directoryFiles.length)
+        console.log(uploadedAmt)
         if (uploadedAmt === directoryFiles.length) {
             setFinishedUploading(true)
         }
         try {
             if (directoryFiles.length!== 0) {
-                setProgress(uploadedAmt / directoryFiles.length)
+                setProgress( (uploadedAmt / directoryFiles.length) * 100)
             }
         } catch(e) {
             setProgress(0)
         }
-    },[uploadedFiles])
+    },[uploadedAmt])
 
     const styles = {
         modalStyle: {
@@ -85,37 +83,31 @@ const UploadDirectoryModal = (props: UploadDirectoryModalProps) => {
 
     const upload = () => {
         setUploading(true)
-        // for (let file of directoryFiles) {
         directoryFiles.map((file) => {
             let formData = new FormData();
             formData.append('file', file, file.name);
-            return callAPI(
+            console.log('calling '+file.name)
+            let promise = callAPI(
                 uploadDocument,
                 [formData, recordGroupId, userEmail, false],
                 () => handleSuccessfulDocumentUpload(file),
                 () => handleAPIErrorResponse(file)
             );
+            promise.then(() => {
+                setUploadedAmt((uploadedAmt) => uploadedAmt+1)
+            }).catch((e) => {
+                console.error(`error uploading ${file.name}`)
+                setUploadedAmt((uploadedAmt) => uploadedAmt+1)
+            })
         })
-            
-        // }
-        
-
-        // handleClose()
     }
 
     const handleSuccessfulDocumentUpload = (file: File) => {
-        console.log(`successfully uploaded ${file.name}`)
-        // TODO: add to list of uploaded files
-        let tempUploadedFiles = {...uploadedFiles}
-        tempUploadedFiles[file.name] = true
-        setUploadedFiles(tempUploadedFiles)
+        // console.log(`successfully uploaded ${file.name}`)
     }
 
     const handleAPIErrorResponse = (file: File) => {
         console.error(`error uploading ${file.name}`)
-        let tempUploadedFiles = {...uploadedFiles}
-        tempUploadedFiles[file.name] = false
-        setUploadedFiles(tempUploadedFiles)
     }
 
     return (
@@ -148,7 +140,7 @@ const UploadDirectoryModal = (props: UploadDirectoryModalProps) => {
                     </Box>
                 </Grid> */}
                 <Grid item xs={12}>
-                    {uploading && !finishedUploading && 
+                    {uploading && 
                         <LinearWithValueLabel progress={progress}/>
                     }
                 </Grid>
@@ -187,14 +179,6 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
 
 function LinearWithValueLabel(props: ProgressBarProps) {
 const { progress } = props;
-//   useEffect(() => {
-//     const timer = setInterval(() => {
-//       setProgress((prevProgress) => (prevProgress >= 100 ? 10 : prevProgress + 10));
-//     }, 800);
-//     return () => {
-//       clearInterval(timer);
-//     };
-//   }, []);
 
   return (
     <Box sx={{ width: '100%' }}>
