@@ -16,6 +16,7 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     const [ showWarning, setShowWarning ] = useState(false);
     const [ uploading, setUploading ] = useState(false)
     const [ finishedUploading, setFinishedUploading ] = useState(false)
+    const [uploadedFiles, setUploadedFiles] = useState<string[]>([])
     const [ uploadedAmt, setUploadedAmt ] = useState(0)
     const [ warningMessage, setWarningMessage ] = useState("");
     const [ progress, setProgress ] = useState(0)
@@ -68,6 +69,7 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
                 () => handleAPIErrorResponse(file)
             );
             promise.then(() => {
+                setUploadedFiles((uploadedFiles) => [...uploadedFiles, file.name]);
                 setUploadedAmt((uploadedAmt) => uploadedAmt+1)
             }).catch((e) => {
                 console.error(`error uploading ${file.name}`)
@@ -92,8 +94,12 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
             {/* <Grid item xs={12}>
                 <Box>
                     {directoryFiles.map((file) =>  (
-                        <p>
-                            {file.name}
+                        <p key={file.name}>
+                            {
+                                uploadedFiles.includes(file.name) ? 
+                                <s>{file.name}</s> :
+                                file.name
+                            }
                         </p>
                     ))}
                 </Box>
@@ -103,6 +109,12 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
                     <LinearWithValueLabel progress={progress}/>
                 }
             </Grid>
+            {/* <Grid item xs={12}>
+                {uploadedFiles.map((filename) => (
+                    <p key={filename}>{filename}</p>
+                ))
+                }
+            </Grid> */}
             <Grid item xs={12}>
                 <Box style={{display: "flex", justifyContent: "space-around"}}>
                     {!uploading && !finishedUploading && 
