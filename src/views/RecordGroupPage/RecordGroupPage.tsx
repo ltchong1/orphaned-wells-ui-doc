@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getRecordGroup, uploadDocument, deleteRecordGroup, updateRecordGroup } from '../../services/app.service';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
 import Subheader from '../../components/Subheader/Subheader';
+import UploadDirectoryModal from '../../components/UploadDirectoryModal/UploadDirectoryModal';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
@@ -18,11 +19,13 @@ const RecordGroupPage = () => {
     const [project, setProject] = useState({} as ProjectData)
     const [recordGroup, setRecordGroup] = useState<RecordGroup>({ } as RecordGroup);
     const [showDocumentModal, setShowDocumentModal] = useState(false);
+    const [showDirectoryModal, setShowDirectoryModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [recordGroupName, setRecordGroupName] = useState("");
     const [errorMsg, setErrorMsg] = useState<string | null>("");
-    const [directoryFiles, setDirectoryFiles ] = useState<any>()
+    const [uploadDirectory, setUploadDirectory] = useState('')
+    const [uploadDirectoryFiles, setUploadDirectoryFiles ] = useState<any>()
     const [navigation, setNavigation] = useState<PreviousPages>({"Projects": () => navigate("/projects", { replace: true })})
     const validFileTypes = ['image/png', 'application/pdf', 'image/tiff', 'image/jpeg']
 
@@ -130,15 +133,23 @@ const RecordGroupPage = () => {
     const handleDirectoryInput = (f: FileList | null) => {
         let files = f || [] as any
         let validFiles = []
+        let directoryName
         console.log(`handling ${files.length} files`)
         for (let file of files) {
             if (validFileTypes.includes(file.type)) {
                 validFiles.push(file)
             }
         }
-        console.log(validFiles)
+        console.log(`found ${validFiles.length} valid document files`)
+        if (files && files.length && files.length > 0) {
+            let filePath = files[0].webkitRelativePath
+            let splitPath = filePath.split('/')
+            directoryName = splitPath[0]
+        }
         setShowDocumentModal(false)
-        setDirectoryFiles(validFiles)
+        setShowDirectoryModal(true)
+        setUploadDirectory(directoryName)
+        setUploadDirectoryFiles(validFiles)
     }
 
     return (
@@ -169,6 +180,15 @@ const RecordGroupPage = () => {
                     setShowModal={setShowDocumentModal}
                     handleUploadDocument={handleUploadDocument}
                     handleDirectoryInput={handleDirectoryInput}
+                />
+            }
+            {showDirectoryModal && 
+                <UploadDirectoryModal 
+                    setShowModal={setShowDirectoryModal}
+                    directoryName={uploadDirectory}
+                    directoryFiles={uploadDirectoryFiles}
+                    recordGroupId={recordGroup._id}
+                    userEmail={userEmail}
                 />
             }
             <PopupModal

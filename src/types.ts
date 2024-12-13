@@ -177,6 +177,18 @@ export interface UploadDocumentsModalProps {
     handleDirectoryInput: (files: FileList | null) => void;
 }
 
+export interface UploadDirectoryModalProps {
+    setShowModal: (show: boolean) => void;
+    directoryFiles: File[]
+    directoryName: string
+    recordGroupId: string
+    userEmail: string
+}
+
+export interface ProgressBarProps {
+    progress: number
+}
+
 export interface BottombarProps {
     recordData: RecordData;
     onPreviousButtonClick: () => void;
