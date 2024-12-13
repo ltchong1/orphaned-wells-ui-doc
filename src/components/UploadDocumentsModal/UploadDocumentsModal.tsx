@@ -1,4 +1,4 @@
-import { useState } from 'react';   
+import { useState, useRef, ChangeEvent } from 'react';
 import { Grid, Box, Modal, IconButton, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
@@ -12,6 +12,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     const [ file, setFile ] = useState<File | null>(null);
     const maxFileSize = 10;
     const fileTypes: string[] = ["tiff", "tif", "pdf", "png", "jpg", "jpeg", "zip"];
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const styles = {
         modalStyle: {
@@ -87,6 +88,10 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
         setShowWarning(true);
     };
 
+    const handleDirectoryInput = (e: ChangeEvent<HTMLInputElement>) => {
+        console.log(e.target.files)
+    }
+
     const fileUploaderContainer = () => {
         return (
             <Box sx={styles.fileUploaderBox}>
@@ -125,7 +130,9 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     };
 
     const DragDrop = () => {
-        const handleChange = (file: File) => {
+        const handleChange = (files: FileList | null) => {
+            console.log('handle change')
+            console.log(files)
             setWarningMessage("");
             setShowWarning(false);
             setFile(file);
@@ -163,8 +170,27 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                     {DragDrop()}
                 </Grid>
                 <Grid item xs={12}>
-                    <Box style={{display: "flex", justifyContent: "center"}}>
-                        <Button variant="contained" style={styles.button} onClick={handleClickUpload} disabled={file === null}>Upload File</Button>
+                <input
+                    ref={inputRef}
+                    type="file"
+                    onChange={handleDirectoryInput}
+                    style={{ display: "none" }}
+                    multiple
+                    {...{ webkitdirectory: '', mozdirectory: '', directory: '' }}
+                />
+                <Box style={{display: "flex", justifyContent: "center"}}>
+                </Box>
+                    
+                </Grid>
+                <Grid item xs={12}>
+                    <Box style={{display: "flex", justifyContent: "space-around"}}>
+                        <Button variant="contained" style={styles.button} onClick={handleClickUpload} disabled={file === null}>
+                            Upload File
+                        </Button>
+                        <p style={{display: 'flex', margin:0, alignItems: 'center'}}>or</p>
+                        <Button variant="outlined" style={styles.button} onClick={() => inputRef.current?.click()}>
+                            Upload Directory
+                        </Button>
                     </Box>
                 </Grid>
             </Grid>
@@ -173,3 +199,4 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
 };
 
 export default UploadDocumentsModal;
+

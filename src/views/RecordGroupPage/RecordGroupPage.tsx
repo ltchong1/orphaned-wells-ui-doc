@@ -65,21 +65,24 @@ const RecordGroupPage = () => {
         setProject(data.project)
     } 
 
-    const handleUploadDocument = (file: File) => {
+    const handleUploadDocument = (file: File, refresh: boolean = true) => {
         const formData = new FormData();
         formData.append('file', file, file.name);
         callAPI(
             uploadDocument,
             [formData, recordGroup._id, userEmail, false],
-            handleSuccessfulDocumentUpload,
+            () => handleSuccessfulDocumentUpload(refresh),
             handleAPIErrorResponse
         );
     };
 
-    const handleSuccessfulDocumentUpload = () => {
-        setTimeout(() => {
-            window.location.reload();
-        }, 500);
+    const handleSuccessfulDocumentUpload = (refresh: boolean = true) => {
+        if (refresh) {
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        }
+        
     };
 
     const handleClickChangeName = () => {
