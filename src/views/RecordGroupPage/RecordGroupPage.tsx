@@ -4,7 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getRecordGroup, uploadDocument, deleteRecordGroup, updateRecordGroup } from '../../services/app.service';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
 import Subheader from '../../components/Subheader/Subheader';
-import UploadDirectoryModal from '../../components/UploadDirectoryModal/UploadDirectoryModal';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
@@ -155,15 +154,6 @@ const RecordGroupPage = () => {
                     handleUploadDocument={handleUploadDocument}
                 />
             }
-            {/* {showDirectoryModal && 
-                <UploadDirectoryModal 
-                    setShowModal={setShowDirectoryModal}
-                    directoryName={uploadDirectory}
-                    directoryFiles={uploadDirectoryFiles}
-                    recordGroupId={recordGroup._id}
-                    userEmail={userEmail}
-                />
-            } */}
             <PopupModal
                 open={openDeleteModal}
                 handleClose={() => setOpenDeleteModal(false)}

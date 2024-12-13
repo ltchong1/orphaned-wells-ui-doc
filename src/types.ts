@@ -176,14 +176,6 @@ export interface UploadDocumentsModalProps {
     handleUploadDocument: (file: File, refresh?: boolean) => void;
 }
 
-export interface UploadDirectoryModalProps {
-    setShowModal: (show: boolean) => void;
-    directoryFiles: File[]
-    directoryName: string
-    recordGroupId: string
-    userEmail: string
-}
-
 export interface UploadDirectoryProps {
     setShowModal: (show: boolean) => void;
     directoryFiles: File[]
