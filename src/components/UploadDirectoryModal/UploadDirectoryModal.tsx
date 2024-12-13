@@ -18,9 +18,11 @@ const UploadDirectoryModal = (props: UploadDirectoryModalProps) => {
     const maxFileSize = 10;
 
     useEffect(() => {
-        console.log(uploadedAmt)
         if (uploadedAmt === directoryFiles.length) {
             setFinishedUploading(true)
+            setTimeout(()=> {
+                window.location.reload()
+            },3000)
         }
         try {
             if (directoryFiles.length!== 0) {
@@ -86,7 +88,6 @@ const UploadDirectoryModal = (props: UploadDirectoryModalProps) => {
         directoryFiles.map((file) => {
             let formData = new FormData();
             formData.append('file', file, file.name);
-            console.log('calling '+file.name)
             let promise = callAPI(
                 uploadDocument,
                 [formData, recordGroupId, userEmail, false],
