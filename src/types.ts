@@ -173,7 +173,8 @@ export interface TableFiltersProps {
 
 export interface UploadDocumentsModalProps {
     setShowModal: (show: boolean) => void;
-    handleUploadDocument: (file: File) => void;
+    handleUploadDocument: (file: File, refresh?: boolean) => void;
+    handleDirectoryInput: (files: FileList | null) => void;
 }
 
 export interface BottombarProps {

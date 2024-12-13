@@ -88,8 +88,10 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
         setShowWarning(true);
     };
 
-    const handleDirectoryInput = (e: ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.files)
+    const handleChooseDirectory = (e: ChangeEvent<HTMLInputElement>) => {
+        // console.log(e.target.files)
+        props.handleDirectoryInput(e.target.files)
+        setShowWarning(false);
     }
 
     const fileUploaderContainer = () => {
@@ -130,9 +132,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     };
 
     const DragDrop = () => {
-        const handleChange = (files: FileList | null) => {
-            console.log('handle change')
-            console.log(files)
+        const handleChange = (file: File) => {
             setWarningMessage("");
             setShowWarning(false);
             setFile(file);
@@ -173,7 +173,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                 <input
                     ref={inputRef}
                     type="file"
-                    onChange={handleDirectoryInput}
+                    onChange={handleChooseDirectory}
                     style={{ display: "none" }}
                     multiple
                     {...{ webkitdirectory: '', mozdirectory: '', directory: '' }}
@@ -189,7 +189,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                         </Button>
                         <p style={{display: 'flex', margin:0, alignItems: 'center'}}>or</p>
                         <Button variant="outlined" style={styles.button} onClick={() => inputRef.current?.click()}>
-                            Upload Directory
+                            Choose Directory
                         </Button>
                     </Box>
                 </Grid>

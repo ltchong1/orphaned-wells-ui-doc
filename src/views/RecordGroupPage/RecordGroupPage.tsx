@@ -21,9 +21,10 @@ const RecordGroupPage = () => {
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [recordGroupName, setRecordGroupName] = useState("");
-    const [errorMsg, setErrorMsg] = useState<string | null>("")
+    const [errorMsg, setErrorMsg] = useState<string | null>("");
+    const [directoryFiles, setDirectoryFiles ] = useState<any>()
     const [navigation, setNavigation] = useState<PreviousPages>({"Projects": () => navigate("/projects", { replace: true })})
-    
+    const validFileTypes = ['image/png', 'application/pdf', 'image/tiff', 'image/jpeg']
 
     useEffect(() => {
         if (params.id) {
@@ -68,7 +69,7 @@ const RecordGroupPage = () => {
     const handleUploadDocument = (file: File, refresh: boolean = true) => {
         const formData = new FormData();
         formData.append('file', file, file.name);
-        callAPI(
+        return callAPI(
             uploadDocument,
             [formData, recordGroup._id, userEmail, false],
             () => handleSuccessfulDocumentUpload(refresh),
@@ -81,7 +82,7 @@ const RecordGroupPage = () => {
             setTimeout(() => {
                 window.location.reload();
             }, 500);
-        }
+        } else console.log('finished upload')
         
     };
 
@@ -126,6 +127,20 @@ const RecordGroupPage = () => {
         setErrorMsg(e.detail)
     }
 
+    const handleDirectoryInput = (f: FileList | null) => {
+        let files = f || [] as any
+        let validFiles = []
+        console.log(`handling ${files.length} files`)
+        for (let file of files) {
+            if (validFileTypes.includes(file.type)) {
+                validFiles.push(file)
+            }
+        }
+        console.log(validFiles)
+        setShowDocumentModal(false)
+        setDirectoryFiles(validFiles)
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
@@ -153,6 +168,7 @@ const RecordGroupPage = () => {
                 <UploadDocumentsModal 
                     setShowModal={setShowDocumentModal}
                     handleUploadDocument={handleUploadDocument}
+                    handleDirectoryInput={handleDirectoryInput}
                 />
             }
             <PopupModal
