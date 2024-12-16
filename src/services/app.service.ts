@@ -91,9 +91,10 @@ export const addRecordGroup = (data: any) => {
     });
 };
 
-export const uploadDocument = (data: FormData, project_id: string, user_email: any, reprocessed?: boolean)  => {
+export const uploadDocument = (data: FormData, project_id: string, user_email: any, reprocessed?: boolean, preventDuplicates?: boolean)  => {
     if (!reprocessed) reprocessed = false
-    return fetch(BACKEND_URL + '/upload_document/' + project_id + '/' + user_email+'?reprocessed='+reprocessed, {
+    if (!preventDuplicates) preventDuplicates = false
+    return fetch(BACKEND_URL + '/upload_document/' + project_id + '/' + user_email+'?reprocessed='+reprocessed+'&preventDuplicates='+preventDuplicates, {
         method: 'POST',
         mode: 'cors',
         body: data,

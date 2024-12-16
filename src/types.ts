@@ -182,10 +182,6 @@ export interface UploadDirectoryProps {
     directoryName: string
 }
 
-export interface ProgressBarProps {
-    progress: number
-}
-
 export interface BottombarProps {
     recordData: RecordData;
     onPreviousButtonClick: () => void;

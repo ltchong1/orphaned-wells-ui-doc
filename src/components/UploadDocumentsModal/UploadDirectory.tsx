@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { useUserContext } from '../../usercontext';
-import { Grid, Box, Button, Typography, Stack } from '@mui/material';
-import { UploadDirectoryProps, ProgressBarProps } from '../../types';
+import { Grid, Box, Button, Stack, FormControlLabel, Switch, Tooltip } from '@mui/material';
+import { UploadDirectoryProps } from '../../types';
 import { uploadDocument } from '../../services/app.service';
 import { callAPI } from '../../assets/util';
-import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const UploadDirectory = (props: UploadDirectoryProps) => {
@@ -17,6 +16,7 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     const [uploadedFiles, setUploadedFiles] = useState<string[]>([])
     const [ uploadedAmt, setUploadedAmt ] = useState(0)
     const [ progress, setProgress ] = useState(0)
+    const [ preventDuplicates, setPreventDuplicates ] = useState(true)
 
     useEffect(() => {
         if (uploadedAmt === directoryFiles.length) {
@@ -42,8 +42,6 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
         stack: {
             height: '30vh',
             overflow: 'scroll',
-            // border: '1px solid',
-            // borderRadius: '4px', 
             boxShadow: 1,
             padding: 2
         }
@@ -54,28 +52,27 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
         directoryFiles.map((file) => {
             let formData = new FormData();
             formData.append('file', file, file.name);
-            let promise = callAPI(
+            callAPI(
                 uploadDocument,
-                [formData, params.id, userEmail, false],
+                [formData, params.id, userEmail, false, preventDuplicates],
                 () => handleSuccessfulDocumentUpload(file),
                 () => handleAPIErrorResponse(file)
             );
-            promise.then(() => {
-                setUploadedFiles((uploadedFiles) => [...uploadedFiles, file.name]);
-                setUploadedAmt((uploadedAmt) => uploadedAmt+1)
-            }).catch((e) => {
-                console.error(`error uploading ${file.name}`)
-                setUploadedAmt((uploadedAmt) => uploadedAmt+1)
-            })
         })
     }
 
     const handleSuccessfulDocumentUpload = (file: File) => {
-        // console.log(`successfully uploaded ${file.name}`)
+        setUploadedFiles((uploadedFiles) => [...uploadedFiles, file.name]);
+        setUploadedAmt((uploadedAmt) => uploadedAmt+1)
     }
 
     const handleAPIErrorResponse = (file: File) => {
         console.error(`error uploading ${file.name}`)
+        setUploadedAmt((uploadedAmt) => uploadedAmt+1)
+    }
+
+    const handlePreventDuplicates = (e: any) => {
+        setPreventDuplicates(e.target.checked);
     }
 
     return (
@@ -95,18 +92,6 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
                         </p>
                     ))}
                 </Stack>
-                {/* <Grid container spacing={2} sx={{height: '30vh', overflow: 'scroll'}}>
-                    {directoryFiles.map((file) =>  (
-                        <Grid item xs={12} key={file.name} sx={{
-            overflow: 'scroll'}}>
-                            {
-                                uploadedFiles.includes(file.name) ? 
-                                <s>{file.name}</s> :
-                                file.name
-                            }
-                        </Grid>
-                    ))}
-                </Grid> */}
             </Grid>
             <Grid item xs={12}>
                 <Box sx={{display: "flex", justifyContent: "space-around", marginTop: 3}}>
@@ -118,6 +103,17 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
                     {uploading && 
                         <CircularProgress variant="determinate" value={progress} />
                     }
+                    <div>
+                        <Tooltip title={'When selected, filenames that are already present in database will not be uploaded.'}>
+                            <FormControlLabel 
+                                disabled={uploading}
+                                control={<Switch/>} 
+                                label="Prevent Duplicates" 
+                                onChange={handlePreventDuplicates}
+                                checked={preventDuplicates}
+                            />
+                        </Tooltip>
+                    </div>
                 </Box>
             </Grid>
         </Grid>
@@ -125,30 +121,3 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
 };
 
 export default UploadDirectory;
-
-
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      <Box sx={{ width: '100%', mr: 1 }}>
-        <LinearProgress variant="determinate" {...props} />
-      </Box>
-      <Box sx={{ minWidth: 35 }}>
-        <Typography
-          variant="body2"
-          sx={{ color: 'text.secondary' }}
-        >{`${Math.round(props.value)}%`}</Typography>
-      </Box>
-    </Box>
-  );
-}
-
-function LinearWithValueLabel(props: ProgressBarProps) {
-const { progress } = props;
-
-  return (
-    <Box sx={{ width: '100%' }}>
-      <LinearProgressWithLabel value={progress} />
-    </Box>
-  );
-}
