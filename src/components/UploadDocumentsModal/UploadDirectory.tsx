@@ -13,17 +13,19 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     const { directoryName, directoryFiles } = props;
     const [ uploading, setUploading ] = useState(false)
     const [ finishedUploading, setFinishedUploading ] = useState(false)
-    const [uploadedFiles, setUploadedFiles] = useState<string[]>([])
     const [ uploadedAmt, setUploadedAmt ] = useState(0)
     const [ progress, setProgress ] = useState(0)
     const [ preventDuplicates, setPreventDuplicates ] = useState(true)
+    const [ uploadedFiles, setUploadedFiles ] = useState<string[]>([])
+    const [ duplicateFiles, setDuplicateFiles ] = useState<string[]>([])
+    const [ errorFiles, setErrorFiles ] = useState<string[]>([])
 
     useEffect(() => {
         if (uploadedAmt === directoryFiles.length) {
             setFinishedUploading(true)
-            setTimeout(()=> {
-                window.location.reload()
-            },3000)
+            // setTimeout(()=> {
+            //     window.location.reload()
+            // },3000)
         }
         try {
             if (directoryFiles.length!== 0) {
@@ -70,15 +72,27 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
         if (status_code === 208) {
             // this document has already been processed
             setUploadedFiles((uploadedFiles) => [...uploadedFiles, file.name]);
-            // add it to a different list as well, to indiciate to the UI that this one has already been processed?
+            setDuplicateFiles((duplicateFiles) => [...duplicateFiles, file.name]);
         } else {
             console.error(`error uploading ${file.name} with status code ${status_code}`)
+            setErrorFiles((errorFiles) => [...errorFiles, file.name]);
         }
         setUploadedAmt((uploadedAmt) => uploadedAmt+1)
     }
 
     const handlePreventDuplicates = (e: any) => {
         setPreventDuplicates(e.target.checked);
+    }
+
+    const formatFileName = (filename: string) => {
+        // todo: format files that were duplicates (or errored out) differently
+        let style = {
+            color: 'black'
+        }
+        // if (errorFiles.includes(filename)) style.color = 'red'
+        // if (duplicateFiles.includes(filename)) style.color = 'blue'
+        if (uploadedFiles.includes(filename)) return <s style={style}>{`- ${filename}`}</s> 
+        else return `- ${filename}`
     }
 
     return (
@@ -90,11 +104,7 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
                 <Stack direction='column' sx={styles.stack}>
                     {directoryFiles.map((file) =>  (
                         <p style={{margin: 3}} key={file.name}>
-                            {
-                                uploadedFiles.includes(file.name) ? 
-                                <s>{`- ${file.name}`}</s> :
-                                `- ${file.name}`
-                            }
+                            {formatFileName(file.name)}
                         </p>
                     ))}
                 </Stack>
