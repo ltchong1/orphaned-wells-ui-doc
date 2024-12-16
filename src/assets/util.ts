@@ -242,7 +242,7 @@ export const callAPI = (
                 // logout();
               });
             } else {
-              onError(data);
+              onError(data, response.status);
           }
       }).catch((e) => {
         onError(e);

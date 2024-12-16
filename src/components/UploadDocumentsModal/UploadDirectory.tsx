@@ -56,7 +56,7 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
                 uploadDocument,
                 [formData, params.id, userEmail, false, preventDuplicates],
                 () => handleSuccessfulDocumentUpload(file),
-                () => handleAPIErrorResponse(file)
+                (e, status) => handleAPIErrorResponse(file, status)
             );
         })
     }
@@ -66,8 +66,14 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
         setUploadedAmt((uploadedAmt) => uploadedAmt+1)
     }
 
-    const handleAPIErrorResponse = (file: File) => {
-        console.error(`error uploading ${file.name}`)
+    const handleAPIErrorResponse = (file: File, status_code?: number) => {
+        if (status_code === 208) {
+            // this document has already been processed
+            setUploadedFiles((uploadedFiles) => [...uploadedFiles, file.name]);
+            // add it to a different list as well, to indiciate to the UI that this one has already been processed?
+        } else {
+            console.error(`error uploading ${file.name} with status code ${status_code}`)
+        }
         setUploadedAmt((uploadedAmt) => uploadedAmt+1)
     }
 
