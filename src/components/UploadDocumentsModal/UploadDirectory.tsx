@@ -23,9 +23,9 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     useEffect(() => {
         if (uploadedAmt === directoryFiles.length) {
             setFinishedUploading(true)
-            // setTimeout(()=> {
-            //     window.location.reload()
-            // },3000)
+            setTimeout(()=> {
+                window.location.reload()
+            },3000)
         }
         try {
             if (directoryFiles.length!== 0) {
