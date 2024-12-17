@@ -23,7 +23,7 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     const [ errorFiles, setErrorFiles ] = useState<string[]>([])
 
     useEffect(() => {
-        if (uploadedAmt === filesToUpload.length) {
+        if (uploading && uploadedAmt === filesToUpload.length) {
             setFinishedUploading(true)
             setTimeout(()=> {
                 window.location.reload()
@@ -39,6 +39,7 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     },[uploadedAmt])
 
     useEffect(() => {
+        //TODO: disable button if amount to upload is invalid
         setFilesToUpload(directoryFiles.slice(0, amountToUpload))
     },[amountToUpload])
 
@@ -108,7 +109,8 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
 
     const handleUpdateAmountToUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         let newamount = parseInt(event.target.value);
-        if (newamount <= directoryFiles.length && newamount > 0) setAmountToUpload(parseInt(event.target.value));
+        // if (newamount <= directoryFiles.length) setAmountToUpload(parseInt(event.target.value));
+        setAmountToUpload(parseInt(event.target.value));
     }
 
 
