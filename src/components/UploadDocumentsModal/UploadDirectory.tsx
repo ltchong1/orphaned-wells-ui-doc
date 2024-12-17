@@ -11,18 +11,20 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     const params = useParams<{ id: string }>();
     const { userEmail } = useUserContext();
     const { directoryName, directoryFiles } = props;
-    const [ amountToUpload, setAmountToUpload ] = useState<number>()
+    const [ amountToUpload, setAmountToUpload ] = useState(directoryFiles.length)
     const [ filesToUpload, setFilesToUpload ] = useState(directoryFiles.slice(0, amountToUpload)) 
     const [ uploading, setUploading ] = useState(false)
     const [ finishedUploading, setFinishedUploading ] = useState(false)
-    const [ uploadedAmt, setUploadedAmt ] = useState(0)
     const [ progress, setProgress ] = useState(0)
     const [ preventDuplicates, setPreventDuplicates ] = useState(true)
     const [ uploadedFiles, setUploadedFiles ] = useState<string[]>([])
     const [ duplicateFiles, setDuplicateFiles ] = useState<string[]>([])
     const [ errorFiles, setErrorFiles ] = useState<string[]>([])
+    const [ disabled, setDisabled ] = useState(false)
+    const MAX_UPLOAD_AMT = 100;
 
     useEffect(() => {
+        let uploadedAmt = uploadedFiles.length;
         if (uploading && uploadedAmt === filesToUpload.length) {
             setFinishedUploading(true)
             setTimeout(()=> {
@@ -36,11 +38,17 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
         } catch(e) {
             setProgress(0)
         }
-    },[uploadedAmt])
+    },[uploadedFiles])
 
     useEffect(() => {
-        //TODO: disable button if amount to upload is invalid
-        setFilesToUpload(directoryFiles.slice(0, amountToUpload))
+        // console.log(amountToUpload)
+        if (isNaN(amountToUpload) || amountToUpload <=0 || amountToUpload > MAX_UPLOAD_AMT) {
+            setDisabled(true)
+            setFilesToUpload([])
+        } else {
+            setDisabled(false)
+            setFilesToUpload(directoryFiles.slice(0, amountToUpload))
+        }
     },[amountToUpload])
 
     useEffect(() => {
@@ -78,19 +86,18 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
 
     const handleSuccessfulDocumentUpload = (file: File) => {
         setUploadedFiles((uploadedFiles) => [...uploadedFiles, file.name]);
-        setUploadedAmt((uploadedAmt) => uploadedAmt+1)
     }
 
     const handleAPIErrorResponse = (file: File, status_code?: number) => {
         if (status_code === 208) {
             // this document has already been processed
-            setUploadedFiles((uploadedFiles) => [...uploadedFiles, file.name]);
+            
             setDuplicateFiles((duplicateFiles) => [...duplicateFiles, file.name]);
         } else {
             console.error(`error uploading ${file.name} with status code ${status_code}`)
             setErrorFiles((errorFiles) => [...errorFiles, file.name]);
         }
-        setUploadedAmt((uploadedAmt) => uploadedAmt+1)
+        setUploadedFiles((uploadedFiles) => [...uploadedFiles, file.name]);
     }
 
     const handlePreventDuplicates = (e: any) => {
@@ -108,9 +115,9 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     }
 
     const handleUpdateAmountToUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let newamount = parseInt(event.target.value);
-        // if (newamount <= directoryFiles.length) setAmountToUpload(parseInt(event.target.value));
-        setAmountToUpload(parseInt(event.target.value));
+        let newamount = parseInt(event.target.value)
+        if (isNaN(newamount)) setAmountToUpload(0)
+        else setAmountToUpload(newamount);
     }
 
 
@@ -118,21 +125,24 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
         <Grid container>
             <Grid item xs={12}>
                 {/* <p>Upload {filesToUpload.length} files from the directory <i>{directoryName}</i>:</p> */}
-                <p style={{marginBottom: 0}}>How many files would you like to upload from the directory <i>{directoryName}</i>?</p>
-                <TextField 
-                    id="amt-to_upload" 
-                    label="Upload Amount" 
-                    variant="standard" 
-                    type="number"
-                    value={amountToUpload}
-                    onChange={handleUpdateAmountToUpload}
-                    
-                />
+                <p style={{marginBottom: 0}}>How many files would you like to upload from the directory <i>{directoryName}</i>? Please enter an amount between 0 and {MAX_UPLOAD_AMT}.</p>
+                <Stack direction='row' alignItems={'baseline'} justifyContent={'center'}>
+                    <TextField 
+                        id="amt-to_upload" 
+                        label="Upload Amount" 
+                        variant="standard" 
+                        type="number"
+                        defaultValue={amountToUpload}
+                        onChange={handleUpdateAmountToUpload}
+                    />
+                </Stack>
+                
+                
             </Grid>
             <Grid item xs={12}>
                 <Stack direction='column' sx={styles.stack}>
-                    {filesToUpload.map((file) =>  (
-                        <p style={{margin: 3}} key={file.name}>
+                    {filesToUpload.map((file, idx) =>  (
+                        <p style={{margin: 3}} key={`${file.name}_${idx}`}>
                             {formatFileName(file.name)}
                         </p>
                     ))}
@@ -141,7 +151,7 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
             <Grid item xs={12}>
                 <Box sx={{display: "flex", justifyContent: "space-around", marginTop: 3}}>
                     {!uploading && !finishedUploading && 
-                        <Button variant="contained" sx={styles.button} onClick={upload}>
+                        <Button variant="contained" sx={styles.button} onClick={upload} disabled={disabled}>
                             Upload
                         </Button>
                     }
