@@ -30,6 +30,7 @@ const Subheader = (props: SubheaderProps) => {
     const displayStatus = () => {
         if (verification_status === 'required') return 'Awaiting Verification'
         else if (verification_status === 'verified') return `${status}-Verified`
+        else if (locked) return 'LOCKED'
         else return `${status}`
     }
 
@@ -97,16 +98,17 @@ const Subheader = (props: SubheaderProps) => {
                                 {buttonName}
                             </Button>
                         }
-                        {locked ? 
-                        <Chip
-                            sx={{
-                                fontSize: "16px",
-                                backgroundColor: "default"
-                            }}
-                            label={"LOCKED"}
-                            icon={<LockIcon/>}
-                        />
-                        : 
+                        {
+                        // locked ? 
+                        // <Chip
+                        //     sx={{
+                        //         fontSize: "16px",
+                        //         backgroundColor: "default"
+                        //     }}
+                        //     label={displayStatus()}
+                        //     icon={<LockIcon/>}
+                        // />
+                        // : 
                         !buttonName && status &&
                             <Chip
                                 sx={{
@@ -121,6 +123,7 @@ const Subheader = (props: SubheaderProps) => {
                                 }}
                                 label={displayStatus()}
                                 id="review_status_chip"
+                                icon={locked ? <LockIcon/> : undefined}
                             />
                         }
                     </Box>
