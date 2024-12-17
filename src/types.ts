@@ -89,7 +89,6 @@ export interface User {
     name: string;
     picture: string;
     hd: string;
-    role: number;
     roles: string[];
     user_info?: any;
     permissions?: any;

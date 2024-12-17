@@ -41,7 +41,6 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     },[uploadedFiles])
 
     useEffect(() => {
-        // console.log(amountToUpload)
         if (isNaN(amountToUpload) || amountToUpload <=0 || amountToUpload > MAX_UPLOAD_AMT) {
             setDisabled(true)
             setFilesToUpload([])
@@ -110,9 +109,7 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
 
     const handleAPIErrorResponse = (file: File, status_code?: number) => {
         if (status_code === 208) {
-            // this document has already been processed
             console.log('duplicate: '+file.name)
-            // setDuplicateFiles((duplicateFiles) => [...duplicateFiles, file.name]);
         } else {
             console.error(`error uploading ${file.name} with status code ${status_code}`)
             setErrorFiles((errorFiles) => [...errorFiles, file.name]);
@@ -143,7 +140,6 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     return (
         <Grid container>
             <Grid item xs={12}>
-                {/* <p>Upload {filesToUpload.length} files from the directory <i>{directoryName}</i>:</p> */}
                 <p style={{marginBottom: 0}}>How many files would you like to upload from the directory <i>{directoryName}</i>? Please enter an amount between 0 and {MAX_UPLOAD_AMT}.</p>
                 <Stack direction='row' alignItems={'baseline'} justifyContent={'center'}>
                     <TextField 
