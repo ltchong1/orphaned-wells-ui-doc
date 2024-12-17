@@ -125,12 +125,10 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     }
 
     const formatFileName = (filename: string) => {
-        filename = filename.split('.')[0]
         let style = {
             color: 'black'
         }
         if (errorFiles.includes(filename)) style.color = 'red'
-        // if (duplicateFiles.includes(filename)) style.color = 'blue'
         if (uploadedFiles.includes(filename)) return <s style={style}>{`- ${filename}`}</s> 
         else return <span style={style}>{`- ${filename}`}</span>
     }
