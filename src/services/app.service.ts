@@ -256,6 +256,15 @@ export const fetchTeams = () => {
     });
 };
 
+export const checkForDuplicateRecords = (data: any, rg_id: string) => {
+    return fetch(BACKEND_URL + '/check_if_records_exist/'+rg_id, {
+        method: 'POST',
+        mode: 'cors',
+        body: JSON.stringify(data),
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
+    });
+};
+
 export const deleteUser = (email: string) => {
     return fetch(BACKEND_URL + '/delete_user/' + email, {
         method: 'POST',

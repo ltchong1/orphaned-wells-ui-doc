@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useUserContext } from '../../usercontext';
 import { Grid, Box, Button, Stack, FormControlLabel, Switch, Tooltip, TextField } from '@mui/material';
 import { UploadDirectoryProps } from '../../types';
-import { uploadDocument } from '../../services/app.service';
+import { uploadDocument, checkForDuplicateRecords } from '../../services/app.service';
 import { callAPI } from '../../assets/util';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -12,13 +12,13 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     const { userEmail } = useUserContext();
     const { directoryName, directoryFiles } = props;
     const [ amountToUpload, setAmountToUpload ] = useState(directoryFiles.length)
-    const [ filesToUpload, setFilesToUpload ] = useState(directoryFiles.slice(0, amountToUpload)) 
+    const [ filesToUpload, setFilesToUpload ] = useState<File[]>([]) 
     const [ uploading, setUploading ] = useState(false)
     const [ finishedUploading, setFinishedUploading ] = useState(false)
     const [ progress, setProgress ] = useState(0)
     const [ preventDuplicates, setPreventDuplicates ] = useState(true)
     const [ uploadedFiles, setUploadedFiles ] = useState<string[]>([])
-    const [ duplicateFiles, setDuplicateFiles ] = useState<string[]>([])
+    const [ duplicateFiles, setDuplicateFiles ] = useState<string[]>()
     const [ errorFiles, setErrorFiles ] = useState<string[]>([])
     const [ disabled, setDisabled ] = useState(false)
     const MAX_UPLOAD_AMT = 100;
@@ -46,13 +46,33 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
             setDisabled(true)
             setFilesToUpload([])
         } else {
-            setDisabled(false)
-            setFilesToUpload(directoryFiles.slice(0, amountToUpload))
+            if (duplicateFiles !== undefined) {
+                setDisabled(false)
+                let tempFilesToUpload = []
+                for (let file of directoryFiles) {
+                    if (!preventDuplicates || !duplicateFiles.includes(file.name.split('.')[0])) {
+                        tempFilesToUpload.push(file)
+                    }
+                    if (tempFilesToUpload.length >= amountToUpload) break
+                }
+                setFilesToUpload(tempFilesToUpload)
+            }
+            
         }
-    },[amountToUpload])
+    },[amountToUpload, duplicateFiles, preventDuplicates])
 
     useEffect(() => {
         setAmountToUpload(directoryFiles.length)
+
+        let data = {
+            file_list: directoryFiles.map((directoryFile) => directoryFile.name)
+        }
+        callAPI(
+            checkForDuplicateRecords,
+            [data, params.id],
+            (r) => setDuplicateFiles(r),
+            (e, status) => console.error(e)
+        );
     },[directoryFiles])
 
 
@@ -91,8 +111,8 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     const handleAPIErrorResponse = (file: File, status_code?: number) => {
         if (status_code === 208) {
             // this document has already been processed
-            
-            setDuplicateFiles((duplicateFiles) => [...duplicateFiles, file.name]);
+            console.log('duplicate: '+file.name)
+            // setDuplicateFiles((duplicateFiles) => [...duplicateFiles, file.name]);
         } else {
             console.error(`error uploading ${file.name} with status code ${status_code}`)
             setErrorFiles((errorFiles) => [...errorFiles, file.name]);
@@ -105,13 +125,14 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     }
 
     const formatFileName = (filename: string) => {
+        filename = filename.split('.')[0]
         let style = {
             color: 'black'
         }
-        // if (errorFiles.includes(filename)) style.color = 'red'
+        if (errorFiles.includes(filename)) style.color = 'red'
         // if (duplicateFiles.includes(filename)) style.color = 'blue'
         if (uploadedFiles.includes(filename)) return <s style={style}>{`- ${filename}`}</s> 
-        else return `- ${filename}`
+        else return <span style={style}>{`- ${filename}`}</span>
     }
 
     const handleUpdateAmountToUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
