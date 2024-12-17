@@ -80,7 +80,7 @@ export interface FilterOption {
     type: string;
     operator: string;
     options?: { name: string; checked: boolean, value: string | null }[];
-    selectedOptions?: string[];
+    selectedOptions?: string[]; // this is a list of the (default) selection option NAMES
     value?: string;
 }
 
