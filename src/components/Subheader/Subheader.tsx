@@ -98,18 +98,7 @@ const Subheader = (props: SubheaderProps) => {
                                 {buttonName}
                             </Button>
                         }
-                        {
-                        // locked ? 
-                        // <Chip
-                        //     sx={{
-                        //         fontSize: "16px",
-                        //         backgroundColor: "default"
-                        //     }}
-                        //     label={displayStatus()}
-                        //     icon={<LockIcon/>}
-                        // />
-                        // : 
-                        !buttonName && status &&
+                        {!buttonName && status &&
                             <Chip
                                 sx={{
                                     fontSize: "16px",
