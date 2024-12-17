@@ -194,8 +194,8 @@ export const callAPI = (
   apiParams: any[], 
   onSuccess: (data: any) => void, 
   onError: (error: any, status?: number) => void
-): void => {
-  apiFunc(...apiParams)
+): Promise<void> => {
+  return apiFunc(...apiParams)
   .then(response => {
       response.json()
       .then((data) => {
@@ -242,7 +242,7 @@ export const callAPI = (
                 // logout();
               });
             } else {
-              onError(data);
+              onError(data, response.status);
           }
       }).catch((e) => {
         onError(e);

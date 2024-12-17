@@ -89,7 +89,6 @@ export interface User {
     name: string;
     picture: string;
     hd: string;
-    role: number;
     roles: string[];
     user_info?: any;
     permissions?: any;
@@ -173,7 +172,13 @@ export interface TableFiltersProps {
 
 export interface UploadDocumentsModalProps {
     setShowModal: (show: boolean) => void;
-    handleUploadDocument: (file: File) => void;
+    handleUploadDocument: (file: File, refresh?: boolean) => void;
+}
+
+export interface UploadDirectoryProps {
+    setShowModal: (show: boolean) => void;
+    directoryFiles: File[]
+    directoryName: string
 }
 
 export interface BottombarProps {
