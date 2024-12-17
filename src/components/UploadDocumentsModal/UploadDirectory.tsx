@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { useUserContext } from '../../usercontext';
-import { Grid, Box, Button, Stack, FormControlLabel, Switch, Tooltip } from '@mui/material';
+import { Grid, Box, Button, Stack, FormControlLabel, Switch, Tooltip, TextField } from '@mui/material';
 import { UploadDirectoryProps } from '../../types';
 import { uploadDocument } from '../../services/app.service';
 import { callAPI } from '../../assets/util';
@@ -11,6 +11,8 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     const params = useParams<{ id: string }>();
     const { userEmail } = useUserContext();
     const { directoryName, directoryFiles } = props;
+    const [ amountToUpload, setAmountToUpload ] = useState<number>()
+    const [ filesToUpload, setFilesToUpload ] = useState(directoryFiles.slice(0, amountToUpload)) 
     const [ uploading, setUploading ] = useState(false)
     const [ finishedUploading, setFinishedUploading ] = useState(false)
     const [ uploadedAmt, setUploadedAmt ] = useState(0)
@@ -21,20 +23,29 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     const [ errorFiles, setErrorFiles ] = useState<string[]>([])
 
     useEffect(() => {
-        if (uploadedAmt === directoryFiles.length) {
+        if (uploadedAmt === filesToUpload.length) {
             setFinishedUploading(true)
             setTimeout(()=> {
                 window.location.reload()
             },3000)
         }
         try {
-            if (directoryFiles.length!== 0) {
-                setProgress( (uploadedAmt / directoryFiles.length) * 100)
+            if (filesToUpload.length!== 0) {
+                setProgress( (uploadedAmt / filesToUpload.length) * 100)
             }
         } catch(e) {
             setProgress(0)
         }
     },[uploadedAmt])
+
+    useEffect(() => {
+        setFilesToUpload(directoryFiles.slice(0, amountToUpload))
+    },[amountToUpload])
+
+    useEffect(() => {
+        setAmountToUpload(directoryFiles.length)
+    },[directoryFiles])
+
 
     const styles = {
         button: {
@@ -45,13 +56,14 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
             height: '30vh',
             overflow: 'scroll',
             boxShadow: 1,
-            padding: 2
+            padding: 2,
+            marginTop: 2
         }
     };
 
     const upload = () => {
         setUploading(true)
-        directoryFiles.map((file) => {
+        filesToUpload.map((file) => {
             let formData = new FormData();
             formData.append('file', file, file.name);
             callAPI(
@@ -85,7 +97,6 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
     }
 
     const formatFileName = (filename: string) => {
-        // todo: format files that were duplicates (or errored out) differently
         let style = {
             color: 'black'
         }
@@ -95,14 +106,30 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
         else return `- ${filename}`
     }
 
+    const handleUpdateAmountToUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let newamount = parseInt(event.target.value);
+        if (newamount <= directoryFiles.length && newamount > 0) setAmountToUpload(parseInt(event.target.value));
+    }
+
+
     return (
         <Grid container>
             <Grid item xs={12}>
-                <p>Upload {directoryFiles.length} files from the directory <i>{directoryName}</i>:</p>
+                {/* <p>Upload {filesToUpload.length} files from the directory <i>{directoryName}</i>:</p> */}
+                <p style={{marginBottom: 0}}>How many files would you like to upload from the directory <i>{directoryName}</i>?</p>
+                <TextField 
+                    id="amt-to_upload" 
+                    label="Upload Amount" 
+                    variant="standard" 
+                    type="number"
+                    value={amountToUpload}
+                    onChange={handleUpdateAmountToUpload}
+                    
+                />
             </Grid>
             <Grid item xs={12}>
                 <Stack direction='column' sx={styles.stack}>
-                    {directoryFiles.map((file) =>  (
+                    {filesToUpload.map((file) =>  (
                         <p style={{margin: 3}} key={file.name}>
                             {formatFileName(file.name)}
                         </p>
