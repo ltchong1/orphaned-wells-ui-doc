@@ -159,7 +159,7 @@ const Record = () => {
             deleteRecord,
             [params.id],
             goToRecordGroup,
-            (e) => console.error('error on deleting record: ', e)
+            handleFailedUpdate
         );
     }
 
@@ -246,7 +246,7 @@ const Record = () => {
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={`${recordData.recordIndex !== undefined ? recordData.recordIndex : ""}. ${recordData.name !== undefined ? recordData.name : ""}`}
-                actions={(userPermissions && userPermissions.includes('manage_project')) ?
+                actions={(userPermissions && userPermissions.includes('delete')) ?
                     {
                         "Change record name": () => setOpenUpdateNameModal(true),
                         "Delete record": () => setOpenDeleteModal(true)

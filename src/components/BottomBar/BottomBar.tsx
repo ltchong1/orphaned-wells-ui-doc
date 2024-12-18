@@ -71,29 +71,29 @@ const Bottombar = (props: BottombarProps) => {
         options = [
           markAsIncomplete, markAsDefective
         ]
+        options.push(markAsNeedsVerification)
         if (userPermissions && userPermissions.includes('verify_record')) options.push(markAsVerified)
-        else options.push(markAsNeedsVerification)
       } else if (review_status === 'incomplete') {
         options = [
           markAsUnreviewed, markAsDefective
         ]
+        options.push(markAsNeedsVerification)
         if (userPermissions && userPermissions.includes('verify_record')) options.push(markAsVerified)
-        else options.push(markAsNeedsVerification)
       } else if (review_status === 'defective') {
         options = [
           markAsUnreviewed, markAsIncomplete 
         ]
+        options.push(markAsNeedsVerification)
         if (userPermissions && userPermissions.includes('verify_record')) {
           options.push(markAsDefectiveVerified)
           options.push(markAsVerified)
         }
-        else options.push(markAsNeedsVerification)
       } else if (review_status === 'reviewed') {
         options = [
           markAsUnreviewed, markAsIncomplete 
         ]
+        options.push(markAsNeedsVerification)
         if (userPermissions && userPermissions.includes('verify_record')) options.push(markAsVerified)
-        else options.push(markAsNeedsVerification)
       }
     } else if (verification_status === "required") {
       options = [

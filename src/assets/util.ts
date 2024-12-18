@@ -18,6 +18,18 @@ export const DEFAULT_FILTER_OPTIONS: {
       ],
       selectedOptions: ["reviewed", "unreviewed", "incomplete", "defective"]
   },
+  verification_status: {
+    key: 'verification_status',
+    displayName: "Verification Status",   
+    type: "checkbox",
+    operator: 'equals',
+    options: [
+        { name: "unverified", checked: true, value: null },
+        { name: "needs verification", checked: true, value: "required" },
+        { name: "verified", checked: true, value: "verified" },
+    ],
+    selectedOptions: ["unverified", "needs verification", "verified"]
+},
   name: {
     key: "name",
     displayName: "Record Name",

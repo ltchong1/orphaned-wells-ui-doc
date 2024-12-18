@@ -79,8 +79,8 @@ export interface FilterOption {
     displayName: string;
     type: string;
     operator: string;
-    options?: { name: string; checked: boolean, value: string }[];
-    selectedOptions?: string[];
+    options?: { name: string; checked: boolean, value: string | null }[];
+    selectedOptions?: string[]; // this is a list of the (default) selection option NAMES
     value?: string;
 }
 
