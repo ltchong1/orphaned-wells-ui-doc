@@ -206,6 +206,9 @@ export interface ColumnSelectDialogProps {
     location: string;
     handleUpdate: (update: any) => void;
     _id: string;
+    appliedFilters: FilterOption[];
+    sortBy: string;
+    sortAscending: number;
 }
 
 export interface CheckboxesGroupProps {
