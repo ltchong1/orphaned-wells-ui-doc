@@ -149,6 +149,7 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
                         type="number"
                         defaultValue={amountToUpload}
                         onChange={handleUpdateAmountToUpload}
+                        disabled={uploading}
                     />
                 </Stack>
                 
