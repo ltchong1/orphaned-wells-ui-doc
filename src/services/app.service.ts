@@ -108,13 +108,6 @@ export const getRecordData = (record_id: string) => {
     });
 };
 
-export const downloadRecordsCSV = (project_id: string) => {
-    return fetch(BACKEND_URL + '/download_records/' + project_id, {
-        mode: 'cors',
-        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
-    });
-};
-
 export const downloadRecords = (location: string, _id: string, export_type: string, data: any) => {
     return fetch(BACKEND_URL + '/download_records/' + location + '/' + _id + '/' + export_type, {
         method: 'POST',

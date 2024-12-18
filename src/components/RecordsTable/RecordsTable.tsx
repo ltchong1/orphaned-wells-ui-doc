@@ -363,6 +363,9 @@ const RecordsTable = (props: RecordsTableProps) => {
           location={location}
           handleUpdate={handleUpdate}
           _id={params.id}
+          appliedFilters={filterBy}
+          sortBy={sortBy}
+          sortAscending={sortAscending}
       />
     </TableContainer>
   );
