@@ -54,6 +54,11 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
         divider: {
             marginY: 1,
         },
+        replyToText: {
+            opacity: 0.5,
+            fontStyle: 'italic',
+            overflow: 'hidden'
+        }
     };
 
     const handleAddNote = () => {
@@ -170,8 +175,13 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
                         multiline
                         minRows={2}
                     />
-                    <Box display="flex" justifyContent="flex-end" mt={1}>
-                        <Button variant="contained" onClick={handleAddNote}>
+                    <Box display="flex" justifyContent='space-between' mt={1}>
+                        <Typography noWrap paragraph sx={styles.replyToText}>
+                            {replyToIdx !== undefined && 
+                                `reply to: ${notes[replyToIdx].text.substring(0, 20)}...` 
+                            }
+                        </Typography>
+                        <Button variant="contained" onClick={handleAddNote} disabled={newNoteText===''}>
                             Add new note
                         </Button>
                     </Box>
