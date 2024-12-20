@@ -10,8 +10,10 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { updateRecord } from '../../services/app.service';
 import { callAPI, formatDateTime } from '../../assets/util';
 import { RecordNote, RecordNotesDialogProps } from '../../types';
+import { useUserContext } from '../../usercontext';
 
 const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialogProps) => {
+    const { userEmail } = useUserContext();
     const [ replyToIdx, setReplyToIdx ] = useState<number>()
     const [ editIdx, setEditIdx ] = useState<number>()
     const [ deleteIdx, setDeleteIdx ] = useState<number>()
@@ -56,13 +58,27 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
 
     const handleAddNote = () => {
         //TODO: check for replyto
-        // indexes are not going to line up perfectly :/
+        let newNote = {
+            text: newNoteText,
+            record_id: record_id,
+            timestamp: Date.now(),
+            creator: userEmail,
+            resolved: false,
+            lastUpdated: Date.now(),
+        } as RecordNote
+        if (replyToIdx) {
+            newNote.isReply = true
+            newNote.repliesTo = replyToIdx
+        } else newNote.isReply = false
+        console.log('new note: ')
+        console.log(newNote)
     }
 
     const handleClickAction = (idx: number, action: string, newValue?: string) => {
         if (action === 'edit') {
             if (editIdx === idx)  {
                 // TODO: update this comment with newValue
+                let newLastUpdate = Date.now()
                 console.log('edited '+notes[idx].text+' to '+newValue)
                 setEditIdx(undefined)
             }
@@ -155,7 +171,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
                         minRows={2}
                     />
                     <Box display="flex" justifyContent="flex-end" mt={1}>
-                        <Button variant="contained" >
+                        <Button variant="contained" onClick={handleAddNote}>
                             Add new note
                         </Button>
                     </Box>
@@ -220,12 +236,16 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction }:
                     <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'resolve')}>
                         <CheckIcon sx={styles.icon}/>
                     </IconButton>
-                    <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'reply')}>
-                        <ReplyIcon sx={styles.icon}/>
-                    </IconButton>
-                    <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'delete')}>
+                    {!note.isReply && 
+                        <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'reply')}>
+                            <ReplyIcon sx={styles.icon}/>
+                        </IconButton>
+                    }
+                    {!note.isReply && 
+                        <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'delete')}>
                         <DeleteIcon sx={styles.icon}/>
                     </IconButton>
+                    }
                 </Stack>
             </Stack>
             <Typography sx={styles.metadata}>
