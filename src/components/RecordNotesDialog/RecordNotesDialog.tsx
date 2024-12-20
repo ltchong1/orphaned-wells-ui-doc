@@ -6,13 +6,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import ReplyIcon from '@mui/icons-material/Reply';
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { updateRecord } from '../../services/app.service';
 import { callAPI, formatDateTime } from '../../assets/util';
 import { RecordNote, RecordNotesDialogProps } from '../../types';
-import { Check, Edit, NoteRounded } from '@mui/icons-material';
 
 const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialogProps) => {
-
+    const [ replyToIdx, setReplyToIdx ] = useState<number>()
+    const [ editIdx, setEditIdx ] = useState<number>()
+    const [ deleteIdx, setDeleteIdx ] = useState<number>()
+    const [ newNoteText, setNewNoteText ] = useState('')
     const descriptionElementRef = useRef<HTMLDivElement | null>(null);
     const dialogHeight = '80vh';
     const dialogWidth = '35vw';
@@ -45,8 +48,64 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
         },
         boxBottom: {
             marginTop: 2
-        }
+        },
+        divider: {
+            marginY: 1,
+        },
     };
+
+    const handleAddNote = () => {
+        //TODO: check for replyto
+        // indexes are not going to line up perfectly :/
+    }
+
+    const handleClickAction = (idx: number, action: string, newValue?: string) => {
+        if (action === 'edit') {
+            if (editIdx === idx)  {
+                // TODO: update this comment with newValue
+                console.log('edited '+notes[idx].text+' to '+newValue)
+                setEditIdx(undefined)
+            }
+            else setEditIdx(idx)
+        }
+        else if (action === 'reply') {
+            if (replyToIdx === idx) setReplyToIdx(undefined)
+            else setReplyToIdx(idx)
+            
+        }
+        else if (action === 'resolve') {
+            console.log('resolve: '+notes[idx].text)
+        }
+        else if (action === 'delete') {
+            console.log('delete: '+notes[idx].text)
+        }
+    }
+
+    const populateNotes = () => {
+        return notes.map((note, idx) => {
+            if (!note.isReply) return (
+                <div key={idx}>
+                    <IndividualNote
+                        note={note}
+                        idx={idx}
+                        highlighted={replyToIdx === idx}
+                        editMode={editIdx === idx}
+                        handleClickAction={handleClickAction}
+                    />
+                    {note.replies && note.replies.map((replyIdx) => {
+                        return <IndividualNote
+                            key={replyIdx}
+                            note={notes[replyIdx]}
+                            idx={replyIdx}
+                            highlighted={replyToIdx === replyIdx}
+                            editMode={editIdx === replyIdx}
+                            handleClickAction={handleClickAction}
+                        />
+                    })}
+                </div>
+            )
+        })
+    }
 
     return (
         <Dialog
@@ -76,22 +135,9 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
             >
                 {/* Top content */}
                 <Box sx={styles.boxTop}>
-                    {TEST_NOTES.map((note, idx) => (
-                        <div key={idx}>
-                            <IndividualNote
-                                note={note}
-                            />
-                            {note.replies && note.replies.map((reply) => (
-                                <IndividualNote
-                                    key={idx}
-                                    note={reply}
-                                />
-                            ))}
-                        </div>
-                        
-                    ))}
+                    {populateNotes()}
 
-                    <Divider />
+                    <Divider sx={styles.divider}/>
                 </Box>
 
                 {/* Bottom section */}
@@ -103,8 +149,8 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
                         id="margin-none"
                         placeholder='Type in a new note'
                         // label={}
-                        // value={}
-                        // onChange={}
+                        // value={newNoteText}
+                        onChange={(e) => setNewNoteText(e.target.value)}
                         multiline
                         minRows={2}
                     />
@@ -121,18 +167,21 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
 }
 
 interface IndividualNoteProps {
-    note: RecordNote
+    note: RecordNote,
+    idx: number,
+    highlighted?: boolean;
+    editMode?: boolean;
+    handleClickAction: (idx: number, action: string, newText?: string) => void;
 }
 
-const IndividualNote = ({ note }: IndividualNoteProps) => {
+const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction }: IndividualNoteProps) => {
+    const [ newText, setNewText ] = useState<string>()
     const styles = {
         div: {
             paddingX: 1,
             paddingBottom: 1,
             marginLeft: note.isReply ? 4 : 0,
-            "&:hover": {
-                backgroundColor: "#F5F5F6", // Highlight color on hover
-            },
+            backgroundColor: highlighted ? "#F5F5F6" : 'inherit',
         },
         metadata: {
             opacity: 0.6
@@ -151,21 +200,30 @@ const IndividualNote = ({ note }: IndividualNoteProps) => {
             <Divider sx={styles.divider}/>
             <Stack direction={'row'} justifyContent={'space-between'} alignItems='start'>
 
-                <Typography>
-                    {note.text}
-                </Typography>
+                {editMode ? 
+                    <TextField
+                        fullWidth
+                        variant='standard'
+                        defaultValue={note.text}
+                        onChange={(e) => setNewText(e.target.value)}
+                    />
+                : 
+                    <Typography>
+                        {note.text}
+                    </Typography>
+                }
 
                 <Stack direction='row'>
-                    <IconButton>
-                        <EditIcon sx={styles.icon}/>
+                    <IconButton onClick={() => handleClickAction(idx, 'edit', newText)}>
+                        {editMode ? <DoneAllIcon sx={styles.icon}/> : <EditIcon sx={styles.icon}/>}
                     </IconButton>
-                    <IconButton>
+                    <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'resolve')}>
                         <CheckIcon sx={styles.icon}/>
                     </IconButton>
-                    <IconButton>
+                    <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'reply')}>
                         <ReplyIcon sx={styles.icon}/>
                     </IconButton>
-                    <IconButton>
+                    <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'delete')}>
                         <DeleteIcon sx={styles.icon}/>
                     </IconButton>
                 </Stack>
@@ -179,44 +237,3 @@ const IndividualNote = ({ note }: IndividualNoteProps) => {
 }
 
 export default RecordNotesDialog;
-
-const TEST_NOTES = [
-    {
-        text: 'Company not legible',
-        record_id: '67619d1576a84e22d6cc71cc',
-        timestamp: 1734715386,
-        creator: 'mpesce@lbl.gov',
-        resolved: false,
-        lastUpdated: 1734715386,
-        isReply: false,
-        replies: [
-            {
-                text: 'It says OGRRE dummy',
-                record_id: '67619d1576a84e22d6cc71cc',
-                timestamp: 1734715486,
-                creator: 'michaelcpesce@lbl.gov',
-                resolved: false,
-                lastUpdated: 1734715486,
-                isReply: true
-            } as RecordNote,
-        ]
-    } as RecordNote,
-    {
-        text: 'A wee bit blurry',
-        record_id: '67619d1576a84e22d6cc71cc',
-        timestamp: 1734715426,
-        creator: 'pescemike@lbl.gov',
-        resolved: false,
-        lastUpdated: 1734715486,
-        isReply: false
-    } as RecordNote,
-    {
-        text: 'Something something somethingSomething something somethingSomething something somethingSomething something somethingSomething something something',
-        record_id: '67619d1576a84e22d6cc71cc',
-        timestamp: 1734716486,
-        creator: 'mpesce@lbl.gov',
-        resolved: false,
-        lastUpdated: 1734716486,
-        isReply: false
-    } as RecordNote,
-]

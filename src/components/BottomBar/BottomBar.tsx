@@ -4,7 +4,7 @@ import { useUserContext } from '../../usercontext';
 import Notes from '../Notes/Notes';
 import SplitButton from '../SplitButton/SplitButton';
 import DefectiveDialog from '../DefectiveDialog/DefectiveDialog';
-import { BottombarProps } from '../../types';
+import { BottombarProps, TEST_NOTES } from '../../types';
 import { BottomBarStyles as styles } from '../../assets/styles';
 import { Grid, Box, Paper, Button, CssBaseline } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
@@ -17,6 +17,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import TonalityIcon from '@mui/icons-material/Tonality';
+import RecordNotesDialog from '../RecordNotesDialog/RecordNotesDialog';
 
 const Bottombar = (props: BottombarProps) => {
   let params = useParams(); 
@@ -199,6 +200,12 @@ const Bottombar = (props: BottombarProps) => {
           open={openNotesModal}
           onClose={handleConfirmVerificationWithNotes}
           buttonText={notesButtonText}
+        />
+        <RecordNotesDialog
+            record_id={params.id}
+            notes={TEST_NOTES}
+            open={true}
+            onClose={() => console.log('close')}
         />
       </Paper>
     </Box>

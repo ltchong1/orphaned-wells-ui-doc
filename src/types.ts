@@ -103,8 +103,50 @@ export interface RecordNote {
     resolved: boolean;
     lastUpdated: number;
     isReply: boolean;
-    replies?: RecordNote[];
+    replies?: number[]; // list of indexes of notes that reply to this guy
+    repliesTo?: number; // the index that this comment replies to, if this is a reply
 }
+
+export const TEST_NOTES = [
+    {
+        text: 'Company not legible',
+        record_id: '67619d1576a84e22d6cc71cc',
+        timestamp: 1734715386,
+        creator: 'mpesce@lbl.gov',
+        resolved: false,
+        lastUpdated: 1734715386,
+        isReply: false,
+        replies: [2]
+    },
+    {
+        text: 'A wee bit blurry',
+        record_id: '67619d1576a84e22d6cc71cc',
+        timestamp: 1734715426,
+        creator: 'pescemike@lbl.gov',
+        resolved: false,
+        lastUpdated: 1734715486,
+        isReply: false
+    } as RecordNote,
+    {
+        text: 'It says OGRRE dummy',
+        record_id: '67619d1576a84e22d6cc71cc',
+        timestamp: 1734715486,
+        creator: 'michaelcpesce@lbl.gov',
+        resolved: false,
+        lastUpdated: 1734715486,
+        isReply: true,
+        repliesTo: 0,
+    } as RecordNote,
+    {
+        text: 'Something something somethingSomething something somethingSomething something somethingSomething something somethingSomething something something',
+        record_id: '67619d1576a84e22d6cc71cc',
+        timestamp: 1734716486,
+        creator: 'mpesce@lbl.gov',
+        resolved: false,
+        lastUpdated: 1734716486,
+        isReply: false
+    } as RecordNote,
+]
 
 export interface PreviousPages {
     [key: string]: () => void;
