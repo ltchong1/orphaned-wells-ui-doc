@@ -25,10 +25,10 @@ export const DEFAULT_FILTER_OPTIONS: {
     operator: 'equals',
     options: [
         { name: "unverified", checked: true, value: null },
-        { name: "needs verification", checked: true, value: "required" },
+        { name: "awaiting verification", checked: true, value: "required" },
         { name: "verified", checked: true, value: "verified" },
     ],
-    selectedOptions: ["unverified", "needs verification", "verified"]
+    selectedOptions: ["unverified", "awaiting verification", "verified"]
 },
   name: {
     key: "name",
