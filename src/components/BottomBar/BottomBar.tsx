@@ -33,6 +33,7 @@ const Bottombar = (props: BottombarProps) => {
   } = props;
   const [openNotesModal, setOpenNotesModal] = useState(false);
   const [openDefectiveDialog, setOpenDefectiveDialog] = useState(false);
+  const [notesButtonText, setNotesButtonText ] = useState<string>()
   
   const getSplitButtonOptions = (review_status: string, verification_status?: string) => {
     let markAsUnreviewed = {
@@ -47,7 +48,7 @@ const Bottombar = (props: BottombarProps) => {
     }
     let markAsNeedsVerification = {
         text: "Needs verification",
-        onClick: () => handleUpdateVerificationStatus("required"),
+        onClick: promptNeedsVerificationNote,
         icon: <NewReleasesIcon sx={{ color: "#FFC130" }} />
     }
     let markAsDefective = {
@@ -136,6 +137,19 @@ const Bottombar = (props: BottombarProps) => {
     }
   }
 
+  const promptNeedsVerificationNote = () => {
+    setOpenNotesModal(true)
+    setNotesButtonText('Update verification status with note')
+  }
+
+  const handleConfirmVerificationWithNotes = (recordId?: string | null, notes?: string | null, submitted?: boolean) => {
+      setOpenNotesModal(false)
+      if (notesButtonText) {
+        setNotesButtonText(undefined)
+        if (submitted) handleUpdateVerificationStatus("required", undefined)
+      }
+  }
+
   return ( 
     <Box sx={{ width: 500 }}>
       <CssBaseline />
@@ -183,7 +197,8 @@ const Bottombar = (props: BottombarProps) => {
           record_id={params.id}
           notes={recordData.notes}
           open={openNotesModal}
-          onClose={() => setOpenNotesModal(false)}
+          onClose={handleConfirmVerificationWithNotes}
+          buttonText={notesButtonText}
         />
       </Paper>
     </Box>
