@@ -138,7 +138,6 @@ const Bottombar = (props: BottombarProps) => {
   }
 
   const promptNeedsVerificationNote = () => {
-    console.log('prompt notes')
     setOpenNotesModal(true)
     setNotesButtonText('Update verification status with note')
   }
