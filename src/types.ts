@@ -93,7 +93,18 @@ export interface User {
     user_info?: any;
     permissions?: any;
     default_team: string;
-  }
+}
+
+export interface RecordNote {
+    text: string;
+    record_id: string;
+    timestamp: number;
+    creator: string;
+    resolved: boolean;
+    lastUpdated: number;
+    isReply: boolean;
+    replies?: RecordNote[];
+}
 
 export interface PreviousPages {
     [key: string]: () => void;
@@ -224,7 +235,14 @@ export interface ErrorBarProps {
     setErrorMessage: (v: string | null) => void;
     duration?: number;
     margin?: boolean;
-  }
+}
+
+export interface RecordNotesDialogProps {
+    record_id?: string;
+    notes: RecordNote[];
+    open: boolean;
+    onClose: () => void;
+}
 
 
 /*
