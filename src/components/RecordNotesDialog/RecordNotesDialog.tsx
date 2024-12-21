@@ -178,6 +178,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes
                                             highlighted={replyToIdx === idx}
                                             editMode={editIdx === idx}
                                             handleClickAction={handleClickAction}
+                                            userEmail={userEmail}
                                         />
                                         {note.replies && note.replies.map((replyIdx) => {
                                             return <IndividualNote
@@ -187,6 +188,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes
                                                 highlighted={replyToIdx === replyIdx}
                                                 editMode={editIdx === replyIdx}
                                                 handleClickAction={handleClickAction}
+                                                userEmail={userEmail}
                                             />
                                         })}
                                     </div>
@@ -236,9 +238,10 @@ interface IndividualNoteProps {
     highlighted?: boolean;
     editMode?: boolean;
     handleClickAction: (idx: number, action: string, newText?: string) => void;
+    userEmail: string;
 }
 
-const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction }: IndividualNoteProps) => {
+const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, userEmail }: IndividualNoteProps) => {
     const [ newText, setNewText ] = useState<string>()
     const styles = {
         div: {
@@ -290,7 +293,7 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction }:
                             <ReplyIcon sx={styles.icon}/>
                         </IconButton>
                     }
-                    {!note.isReply && 
+                    {note.creator === userEmail &&
                         <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'delete')}>
                         <DeleteIcon sx={styles.icon}/>
                     </IconButton>
