@@ -88,6 +88,10 @@ export const formatDate = (timestamp: number | null): string | null => {
 }
 
 export function formatDateTime(timestamp: number): string {
+  if (timestamp === -1) return 'unknown'
+  if (timestamp > 1e12) {
+    timestamp = Math.floor(timestamp / 1000); // Convert milliseconds to seconds
+  }
   // Convert the timestamp to milliseconds (UNIX timestamps are in seconds)
   const date = new Date(timestamp * 1000);
 
@@ -99,7 +103,6 @@ export function formatDateTime(timestamp: number): string {
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
-    second: "2-digit",
     hour12: true,
   };
 
