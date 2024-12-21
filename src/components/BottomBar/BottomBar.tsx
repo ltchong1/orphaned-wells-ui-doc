@@ -30,6 +30,7 @@ const Bottombar = (props: BottombarProps) => {
     handleUpdateReviewStatus,
     handleUpdateVerificationStatus,
     promptResetRecord,
+    refreshRecordNotes,
     locked
   } = props;
   const [openNotesModal, setOpenNotesModal] = useState(false);
@@ -194,18 +195,19 @@ const Bottombar = (props: BottombarProps) => {
           handleMarkDefective={handleMarkDefective}
           onClose={() => setOpenDefectiveDialog(false)}
         />
-        <Notes
+        {/* <Notes
           record_id={params.id}
           notes={recordData.notes}
           open={openNotesModal}
           onClose={handleConfirmVerificationWithNotes}
           buttonText={notesButtonText}
-        />
+        /> */}
         <RecordNotesDialog
             record_id={params.id}
-            notes={TEST_NOTES}
-            open={true}
-            onClose={() => console.log('close')}
+            notes={recordData.record_notes || []}
+            open={openNotesModal}
+            onClose={() => setOpenNotesModal(false)}
+            refreshRecordNotes={refreshRecordNotes}
         />
       </Paper>
     </Box>

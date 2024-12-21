@@ -13,6 +13,7 @@ export interface RecordData {
     dateCreated: number;
     status: string;
     api_number: number | null;
+    record_notes?: RecordNote[];
     previous_id?: string;
     next_id?: string;
     recordIndex?: number;
@@ -98,11 +99,11 @@ export interface User {
 export interface RecordNote {
     text: string;
     record_id: string;
-    timestamp: number;
-    creator: string;
-    resolved: boolean;
-    lastUpdated: number;
     isReply: boolean;
+    resolved: boolean;
+    timestamp?: number;
+    creator?: string;
+    lastUpdated?: number;
     replies?: number[]; // list of indexes of notes that reply to this guy
     repliesTo?: number; // the index that this comment replies to, if this is a reply
 }
@@ -242,6 +243,7 @@ export interface BottombarProps {
     handleUpdateReviewStatus: (status: string, categories?: string[], description?: string) => void;
     handleUpdateVerificationStatus: (verification_status: string, review_status?: string) => void;
     promptResetRecord: () => void;
+    refreshRecordNotes: () => void;
     locked?: boolean;
 }
 
@@ -284,6 +286,7 @@ export interface RecordNotesDialogProps {
     notes: RecordNote[];
     open: boolean;
     onClose: () => void;
+    refreshRecordNotes: () => void;
 }
 
 

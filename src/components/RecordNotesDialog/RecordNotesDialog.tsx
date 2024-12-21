@@ -12,7 +12,7 @@ import { callAPI, formatDateTime } from '../../assets/util';
 import { RecordNote, RecordNotesDialogProps } from '../../types';
 import { useUserContext } from '../../usercontext';
 
-const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialogProps) => {
+const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes }: RecordNotesDialogProps) => {
     const { userEmail } = useUserContext();
     const [ replyToIdx, setReplyToIdx ] = useState<number>()
     const [ editIdx, setEditIdx ] = useState<number>()
@@ -29,6 +29,11 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
             }
         }
     }, [open]);
+
+    useEffect(() => {
+        console.log(notes)
+        reset()
+    }, [notes]);
 
     const styles = {
         dialogPaper: {
@@ -62,7 +67,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
     };
 
     const handleAddNote = () => {
-        //TODO: check for replyto
+        let tempNotes = [...notes]
         let newNote = {
             text: newNoteText,
             record_id: record_id,
@@ -70,13 +75,23 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
             creator: userEmail,
             resolved: false,
             lastUpdated: Date.now(),
+            replies: [] as number[],
         } as RecordNote
-        if (replyToIdx) {
+        if (replyToIdx !== undefined) {
             newNote.isReply = true
             newNote.repliesTo = replyToIdx
+            if (tempNotes[replyToIdx].replies) tempNotes[replyToIdx].replies?.push(tempNotes.length)
+            else tempNotes[replyToIdx].replies = [tempNotes.length]
         } else newNote.isReply = false
         console.log('new note: ')
         console.log(newNote)
+
+        callAPI(
+            updateRecord,
+            [record_id, { data: { "record_notes": [...tempNotes, newNote] }, type: "record_notes" }],
+            () => handleSuccessfulNoteCreation(newNote),
+            handleFailedNoteCreation,
+        );
     }
 
     const handleClickAction = (idx: number, action: string, newValue?: string) => {
@@ -128,6 +143,23 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
         })
     }
 
+    const reset = () => {
+        setReplyToIdx(undefined)
+        setEditIdx(undefined)
+        setDeleteIdx(undefined)
+        setNewNoteText('')
+    }
+
+    const handleSuccessfulNoteCreation = (data: RecordNote) => {
+        console.log('success')
+        refreshRecordNotes()
+    }
+
+    const handleFailedNoteCreation = (e: any) => {
+        console.error('failed: ')
+        console.error(e)
+    }
+
     return (
         <Dialog
             open={open}
@@ -170,7 +202,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
                         id="margin-none"
                         placeholder='Type in a new note'
                         // label={}
-                        // value={newNoteText}
+                        value={newNoteText}
                         onChange={(e) => setNewNoteText(e.target.value)}
                         multiline
                         minRows={2}
@@ -210,7 +242,8 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction }:
             backgroundColor: highlighted ? "#F5F5F6" : 'inherit',
         },
         metadata: {
-            opacity: 0.6
+            opacity: 0.6,
+            fontSize: '13px'
         },
         divider: {
             marginY: 1,
@@ -259,7 +292,7 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction }:
                 </Stack>
             </Stack>
             <Typography sx={styles.metadata}>
-                - <i>{note.creator}</i>, {formatDateTime(note.lastUpdated)}
+                - <i>{note.creator || 'unknown'}</i>, {formatDateTime(note.lastUpdated || -1)}
             </Typography>
             
         </Typography>            
