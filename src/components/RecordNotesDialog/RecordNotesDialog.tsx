@@ -14,10 +14,12 @@ import { useUserContext } from '../../usercontext';
 
 const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes }: RecordNotesDialogProps) => {
     const { userEmail } = useUserContext();
+    const [ recordNotes, setRecordNotes ] = useState([...notes])
     const [ replyToIdx, setReplyToIdx ] = useState<number>()
     const [ editIdx, setEditIdx ] = useState<number>()
     const [ deleteIdx, setDeleteIdx ] = useState<number>()
     const [ newNoteText, setNewNoteText ] = useState('')
+    const [ disableButton, setDisableButton ] = useState(false)
     const descriptionElementRef = useRef<HTMLDivElement | null>(null);
     const dialogHeight = '80vh';
     const dialogWidth = '35vw';
@@ -31,8 +33,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes
     }, [open]);
 
     useEffect(() => {
-        console.log(notes)
-        reset()
+        reset(notes)
     }, [notes]);
 
     const styles = {
@@ -67,7 +68,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes
     };
 
     const handleAddNote = () => {
-        let tempNotes = [...notes]
+        let tempNotes = structuredClone(recordNotes)
         let newNote = {
             text: newNoteText,
             record_id: record_id,
@@ -76,6 +77,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes
             resolved: false,
             lastUpdated: Date.now(),
             replies: [] as number[],
+            isReply: false,
         } as RecordNote
         if (replyToIdx !== undefined) {
             newNote.isReply = true
@@ -83,13 +85,14 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes
             if (tempNotes[replyToIdx].replies) tempNotes[replyToIdx].replies?.push(tempNotes.length)
             else tempNotes[replyToIdx].replies = [tempNotes.length]
         } else newNote.isReply = false
-        console.log('new note: ')
-        console.log(newNote)
-
+        // causing a failure :/
+        // TODO: fix the breakage
+        setDisableButton(true)
+        let newNotes = [...tempNotes, newNote]
         callAPI(
             updateRecord,
-            [record_id, { data: { "record_notes": [...tempNotes, newNote] }, type: "record_notes" }],
-            () => handleSuccessfulNoteCreation(newNote),
+            [record_id, { data: { "record_notes": newNotes }, type: "record_notes" }],
+            () => handleSuccessfulNoteCreation(newNotes),
             handleFailedNoteCreation,
         );
     }
@@ -99,7 +102,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes
             if (editIdx === idx)  {
                 // TODO: update this comment with newValue
                 let newLastUpdate = Date.now()
-                console.log('edited '+notes[idx].text+' to '+newValue)
+                console.log('edited '+recordNotes[idx].text+' to '+newValue)
                 setEditIdx(undefined)
             }
             else setEditIdx(idx)
@@ -110,49 +113,25 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes
             
         }
         else if (action === 'resolve') {
-            console.log('resolve: '+notes[idx].text)
+            console.log('resolve: '+recordNotes[idx].text)
         }
         else if (action === 'delete') {
-            console.log('delete: '+notes[idx].text)
+            console.log('delete: '+recordNotes[idx].text)
         }
     }
 
-    const populateNotes = () => {
-        return notes.map((note, idx) => {
-            if (!note.isReply) return (
-                <div key={idx}>
-                    <IndividualNote
-                        note={note}
-                        idx={idx}
-                        highlighted={replyToIdx === idx}
-                        editMode={editIdx === idx}
-                        handleClickAction={handleClickAction}
-                    />
-                    {note.replies && note.replies.map((replyIdx) => {
-                        return <IndividualNote
-                            key={replyIdx}
-                            note={notes[replyIdx]}
-                            idx={replyIdx}
-                            highlighted={replyToIdx === replyIdx}
-                            editMode={editIdx === replyIdx}
-                            handleClickAction={handleClickAction}
-                        />
-                    })}
-                </div>
-            )
-        })
-    }
-
-    const reset = () => {
+    const reset = (newNotes?: RecordNote[]) => {
         setReplyToIdx(undefined)
         setEditIdx(undefined)
         setDeleteIdx(undefined)
         setNewNoteText('')
+        setDisableButton(false)
+        if (newNotes === undefined) setRecordNotes(notes)
+        else setRecordNotes(newNotes)
     }
 
-    const handleSuccessfulNoteCreation = (data: RecordNote) => {
-        console.log('success')
-        refreshRecordNotes()
+    const handleSuccessfulNoteCreation = (data: RecordNote[]) => {
+        reset(data)
     }
 
     const handleFailedNoteCreation = (e: any) => {
@@ -188,7 +167,33 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes
             >
                 {/* Top content */}
                 <Box sx={styles.boxTop}>
-                    {populateNotes()}
+                    {
+                        recordNotes.map((note, idx) => {
+                            if (!note.isReply)  {
+                                return (
+                                    <div key={note.timestamp}>
+                                        <IndividualNote
+                                            note={note}
+                                            idx={idx}
+                                            highlighted={replyToIdx === idx}
+                                            editMode={editIdx === idx}
+                                            handleClickAction={handleClickAction}
+                                        />
+                                        {note.replies && note.replies.map((replyIdx) => {
+                                            return <IndividualNote
+                                                key={replyIdx}
+                                                note={recordNotes[replyIdx]}
+                                                idx={replyIdx}
+                                                highlighted={replyToIdx === replyIdx}
+                                                editMode={editIdx === replyIdx}
+                                                handleClickAction={handleClickAction}
+                                            />
+                                        })}
+                                    </div>
+                                )
+                            }
+                        })
+                    }
 
                     <Divider sx={styles.divider}/>
                 </Box>
@@ -206,14 +211,15 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes
                         onChange={(e) => setNewNoteText(e.target.value)}
                         multiline
                         minRows={2}
+                        disabled={disableButton}
                     />
                     <Box display="flex" justifyContent='space-between' mt={1}>
                         <Typography noWrap paragraph sx={styles.replyToText}>
                             {replyToIdx !== undefined && 
-                                `reply to: ${notes[replyToIdx].text.substring(0, 20)}...` 
+                                `reply to: ${recordNotes[replyToIdx].text.substring(0, 20)}...` 
                             }
                         </Typography>
-                        <Button variant="contained" onClick={handleAddNote} disabled={newNoteText===''}>
+                        <Button variant="contained" onClick={handleAddNote} disabled={newNoteText==='' || disableButton}>
                             Add new note
                         </Button>
                     </Box>
@@ -238,7 +244,7 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction }:
         div: {
             paddingX: 1,
             paddingBottom: 1,
-            marginLeft: note.isReply ? 4 : 0,
+            marginLeft: note?.isReply ? 4 : 0,
             backgroundColor: highlighted ? "#F5F5F6" : 'inherit',
         },
         metadata: {
@@ -294,7 +300,6 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction }:
             <Typography sx={styles.metadata}>
                 - <i>{note.creator || 'unknown'}</i>, {formatDateTime(note.lastUpdated || -1)}
             </Typography>
-            
         </Typography>            
     );
 }
