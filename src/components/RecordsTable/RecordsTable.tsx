@@ -19,7 +19,6 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithChangesOutlined';
 import { formatDate, average, formatConfidence, callAPI, convertFiltersToMongoFormat, TABLE_ATTRIBUTES } from '../../assets/util';
 import { styles } from '../../assets/styles';
-import Notes from '../Notes/Notes';
 import RecordNotesDialog from '../RecordNotesDialog/RecordNotesDialog';
 import TableFilters from '../TableFilters/TableFilters';
 import { RecordData, RecordsTableProps, RecordNote } from '../../types';
@@ -349,8 +348,6 @@ const RecordsTable = (props: RecordsTableProps) => {
               </TableRow>
             </TableFooter>
           }
-          
-        
       </Table>
       <RecordNotesDialog
           record_id={notesRecordId}

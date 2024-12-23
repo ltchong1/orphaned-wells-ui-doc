@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useParams } from "react-router-dom";
 import { useUserContext } from '../../usercontext';
-import Notes from '../Notes/Notes';
 import SplitButton from '../SplitButton/SplitButton';
 import DefectiveDialog from '../DefectiveDialog/DefectiveDialog';
-import { BottombarProps, TEST_NOTES } from '../../types';
+import { BottombarProps } from '../../types';
 import { BottomBarStyles as styles } from '../../assets/styles';
 import { Grid, Box, Paper, Button, CssBaseline } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
@@ -194,19 +193,11 @@ const Bottombar = (props: BottombarProps) => {
           handleMarkDefective={handleMarkDefective}
           onClose={() => setOpenDefectiveDialog(false)}
         />
-        {/* <Notes
-          record_id={params.id}
-          notes={recordData.notes}
-          open={openNotesModal}
-          onClose={handleConfirmVerificationWithNotes}
-          buttonText={notesButtonText}
-        /> */}
         <RecordNotesDialog
             record_id={params.id}
             notes={recordData.record_notes || []}
             open={openNotesModal}
             onClose={() => setOpenNotesModal(false)}
-            // refreshRecordNotes={refreshRecordNotes}
         />
       </Paper>
     </Box>

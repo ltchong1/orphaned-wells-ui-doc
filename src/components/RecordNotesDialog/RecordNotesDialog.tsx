@@ -109,7 +109,10 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
         }
         else if (action === 'reply') {
             if (replyToIdx === idx) setReplyToIdx(undefined)
-            else setReplyToIdx(idx)
+            else { 
+                document.getElementById('new-note-textfield')?.focus();
+                setReplyToIdx(idx)
+            }
             
         }
         else if (action === 'resolve') {
@@ -203,10 +206,10 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
                 {/* Bottom section */}
                 <Box sx={styles.boxBottom}>
                     <TextField
+                        id='new-note-textfield'
                         fullWidth
                         required
                         variant='outlined'
-                        id="margin-none"
                         placeholder='Type in a new note'
                         // label={}
                         value={newNoteText}
