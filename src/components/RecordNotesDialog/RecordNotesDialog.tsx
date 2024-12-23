@@ -85,25 +85,39 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
             if (tempNotes[replyToIdx].replies) tempNotes[replyToIdx].replies?.push(tempNotes.length)
             else tempNotes[replyToIdx].replies = [tempNotes.length]
         } else newNote.isReply = false
-        // causing a failure :/
-        // TODO: fix the breakage
+        
         setDisableButton(true)
         let newNotes = [...tempNotes, newNote]
         callAPI(
             updateRecord,
             [record_id, { data: { "record_notes": newNotes }, type: "record_notes" }],
-            () => handleSuccessfulNoteCreation(newNotes),
+            () => handleSuccessfulNoteUpdate(newNotes),
             handleFailedNoteCreation,
         );
+    }
+
+    const handleEditNote = (idx: number, newValue: string) => {
+        // if (newValue === '') return
+        let tempNotes = structuredClone(recordNotes)
+        let currentNote = tempNotes[idx]
+        currentNote.text = newValue
+        currentNote.lastUpdated = Date.now()
+        setDisableButton(true)
+        let newNotes = [...tempNotes]
+        callAPI(
+            updateRecord,
+            [record_id, { data: { "record_notes": newNotes }, type: "record_notes" }],
+            () => handleSuccessfulNoteUpdate(newNotes, idx),
+            handleFailedNoteCreation,
+        );
+
     }
 
     const handleClickAction = (idx: number, action: string, newValue?: string) => {
         if (action === 'edit') {
             if (editIdx === idx)  {
-                // TODO: update this comment with newValue
-                let newLastUpdate = Date.now()
                 console.log('edited '+recordNotes[idx].text+' to '+newValue)
-                setEditIdx(undefined)
+                handleEditNote(idx, newValue || '')
             }
             else setEditIdx(idx)
         }
@@ -133,8 +147,9 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
         else setRecordNotes(newNotes)
     }
 
-    const handleSuccessfulNoteCreation = (data: RecordNote[]) => {
+    const handleSuccessfulNoteUpdate = (data: RecordNote[], editedIdx?: number) => {
         reset(data)
+        if (editedIdx !== undefined) setEditIdx(undefined)
     }
 
     const handleFailedNoteCreation = (e: any) => {
@@ -246,6 +261,7 @@ interface IndividualNoteProps {
 
 const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, userEmail }: IndividualNoteProps) => {
     const [ newText, setNewText ] = useState<string>()
+    const [ disableSaveEdit, setDisableSaveEdit ] = useState(false)
     const styles = {
         div: {
             paddingX: 1,
@@ -266,6 +282,13 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
         },
     }
 
+    const handleUpdateText = (e: any) => {
+        let newValue = e.target.value
+        setNewText(newValue)
+        if (newValue === '') setDisableSaveEdit(true)
+        else setDisableSaveEdit(false)
+    }
+
     return (
         <Typography component={'div'} sx={styles.div}>
             <Divider sx={styles.divider}/>
@@ -276,7 +299,7 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
                         fullWidth
                         variant='standard'
                         defaultValue={note.text}
-                        onChange={(e) => setNewText(e.target.value)}
+                        onChange={handleUpdateText}
                     />
                 : 
                     <Typography>
@@ -285,7 +308,7 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
                 }
 
                 <Stack direction='row'>
-                    <IconButton onClick={() => handleClickAction(idx, 'edit', newText)}>
+                    <IconButton disabled={disableSaveEdit} onClick={() => handleClickAction(idx, 'edit', newText)}>
                         {editMode ? <DoneAllIcon sx={styles.icon}/> : <EditIcon sx={styles.icon}/>}
                     </IconButton>
                     <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'resolve')}>
