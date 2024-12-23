@@ -243,7 +243,6 @@ export interface BottombarProps {
     handleUpdateReviewStatus: (status: string, categories?: string[], description?: string) => void;
     handleUpdateVerificationStatus: (verification_status: string, review_status?: string) => void;
     promptResetRecord: () => void;
-    refreshRecordNotes: () => void;
     locked?: boolean;
 }
 
@@ -285,8 +284,7 @@ export interface RecordNotesDialogProps {
     record_id?: string;
     notes: RecordNote[];
     open: boolean;
-    onClose: () => void;
-    refreshRecordNotes: () => void;
+    onClose: (record_id?: string, newNotes?: RecordNote[]) => void;
 }
 
 

@@ -30,7 +30,6 @@ const Bottombar = (props: BottombarProps) => {
     handleUpdateReviewStatus,
     handleUpdateVerificationStatus,
     promptResetRecord,
-    refreshRecordNotes,
     locked
   } = props;
   const [openNotesModal, setOpenNotesModal] = useState(false);
@@ -207,7 +206,7 @@ const Bottombar = (props: BottombarProps) => {
             notes={recordData.record_notes || []}
             open={openNotesModal}
             onClose={() => setOpenNotesModal(false)}
-            refreshRecordNotes={refreshRecordNotes}
+            // refreshRecordNotes={refreshRecordNotes}
         />
       </Paper>
     </Box>

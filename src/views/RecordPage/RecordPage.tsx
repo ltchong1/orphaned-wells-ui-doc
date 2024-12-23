@@ -206,15 +206,6 @@ const Record = () => {
         setShowResetPrompt(true);
     }
 
-    const refreshRecordNotes = () => {
-        callAPI(
-            getRecordData,
-            [params.id],
-            handleSuccessfulRefreshRecord,
-            handleFailedFetchRecord,
-        )
-    }
-
     const handleUpdateReviewStatus = (new_status: string, categories?: string[], description?: string) => {
         let data_update;
         if (new_status === "unreviewed") {
@@ -295,7 +286,6 @@ const Record = () => {
                 handleUpdateReviewStatus={handleUpdateReviewStatus}
                 handleUpdateVerificationStatus={handleUpdateVerificationStatus}
                 promptResetRecord={promptResetRecord}
-                refreshRecordNotes={refreshRecordNotes}
                 locked={locked}
             />
             <PopupModal

@@ -12,7 +12,7 @@ import { callAPI, formatDateTime } from '../../assets/util';
 import { RecordNote, RecordNotesDialogProps } from '../../types';
 import { useUserContext } from '../../usercontext';
 
-const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes }: RecordNotesDialogProps) => {
+const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialogProps) => {
     const { userEmail } = useUserContext();
     const [ recordNotes, setRecordNotes ] = useState([...notes])
     const [ replyToIdx, setReplyToIdx ] = useState<number>()
@@ -142,7 +142,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes
     return (
         <Dialog
             open={open}
-            onClose={onClose}
+            onClose={() => onClose(record_id, recordNotes)}
             scroll={"paper"}
             aria-labelledby="new-dg-dialog"
             aria-describedby="new-dg-dialog-description"
@@ -153,7 +153,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose, refreshRecordNotes
             <DialogTitle id="new-dg-dialog-title">Notes</DialogTitle>
             <IconButton
                 aria-label="close"
-                onClick={onClose}
+                onClick={() => onClose(record_id, recordNotes)}
                 sx={{
                     position: 'absolute',
                     right: 0,
