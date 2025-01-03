@@ -10,34 +10,38 @@ import DoneAllIcon from '@mui/icons-material/DoneAll';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
-import { updateRecord } from '../../services/app.service';
+import { updateRecord, getRecordNotes } from '../../services/app.service';
 import { callAPI, formatDateTime } from '../../assets/util';
 import { RecordNote, RecordNotesDialogProps } from '../../types';
 import { useUserContext } from '../../usercontext';
 
-const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialogProps) => {
+const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps) => {
     const { userEmail } = useUserContext();
-    const [ recordNotes, setRecordNotes ] = useState([...notes])
+    const [ recordNotes, setRecordNotes ] = useState([] as RecordNote[])
     const [ replyToIdx, setReplyToIdx ] = useState<number>()
     const [ editIdx, setEditIdx ] = useState<number>()
     const [ deleteIdx, setDeleteIdx ] = useState<number>()
     const [ newNoteText, setNewNoteText ] = useState('')
-    const [ disableButton, setDisableButton ] = useState(false)
+    const [ disableButton, setDisableButton ] = useState(true)
+    const [ loading, setLoading ] = useState(true)
     const descriptionElementRef = useRef<HTMLDivElement | null>(null);
     const dialogHeight = '80vh';
     const dialogWidth = '35vw';
     useEffect(() => {
         if (open) {
+            setLoading(true)
             const { current: descriptionElement } = descriptionElementRef;
             if (descriptionElement !== null) {
                 descriptionElement.focus();
             }
-        }
+            callAPI(
+                getRecordNotes,
+                [record_id],
+                (recordNotes) => reset(recordNotes),
+                handleFailed,
+            );
+        } else reset()
     }, [open]);
-
-    useEffect(() => {
-        reset(notes)
-    }, [notes]);
 
     const styles = {
         dialogPaper: {
@@ -95,7 +99,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
             updateRecord,
             [record_id, { data: { "record_notes": newNotes }, type: "record_notes" }],
             () => handleSuccessfulNoteUpdate(newNotes),
-            handleFailedNoteCreation,
+            handleFailed,
         );
     }
 
@@ -110,7 +114,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
             updateRecord,
             [record_id, { data: { "record_notes": newNotes }, type: "record_notes" }],
             () => handleSuccessfulNoteUpdate(newNotes),
-            handleFailedNoteCreation,
+            handleFailed,
         );
     }
 
@@ -125,7 +129,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
             updateRecord,
             [record_id, { data: { "record_notes": newNotes }, type: "record_notes" }],
             () => handleSuccessfulNoteUpdate(newNotes),
-            handleFailedNoteCreation,
+            handleFailed,
         );
     }
 
@@ -159,7 +163,8 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
         setDeleteIdx(undefined)
         setNewNoteText('')
         setDisableButton(false)
-        if (newNotes === undefined) setRecordNotes(notes)
+        setLoading(false)
+        if (newNotes === undefined) setRecordNotes([])
         else setRecordNotes(newNotes)
     }
 
@@ -167,7 +172,7 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
         reset(data)
     }
 
-    const handleFailedNoteCreation = (e: any) => {
+    const handleFailed = (e: any) => {
         console.error('failed: ')
         console.error(e)
     }
@@ -201,6 +206,11 @@ const RecordNotesDialog = ({ record_id, notes, open, onClose }: RecordNotesDialo
                 {/* Top content */}
                 <Box sx={styles.boxTop}>
                     {
+                        loading ? 
+                        <p style={{color: 'grey'}}>
+                            loading...
+                        </p>
+                        :
                         recordNotes.map((note, idx) => {
                             if (!note.isReply)  {
                                 return (
@@ -360,11 +370,13 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
                                     
                                 : 
                                 <div>
-                                    <Tooltip title='edit'>
-                                        <IconButton disabled={disableSaveEdit} onClick={() => handleClickAction(idx, 'edit', newText)}>
-                                            {editMode ? <DoneAllIcon sx={styles.icon}/> : <EditIcon sx={styles.icon}/>}
-                                        </IconButton>
-                                    </Tooltip>
+                                    {note.creator === userEmail &&
+                                        <Tooltip title='edit'>
+                                            <IconButton disabled={disableSaveEdit} onClick={() => handleClickAction(idx, 'edit', newText)}>
+                                                {editMode ? <DoneAllIcon sx={styles.icon}/> : <EditIcon sx={styles.icon}/>}
+                                            </IconButton>
+                                        </Tooltip>
+                                    }
                                     <Tooltip title='resolve'>
                                         <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'resolve')}>
                                             <CheckIcon sx={styles.icon}/>
