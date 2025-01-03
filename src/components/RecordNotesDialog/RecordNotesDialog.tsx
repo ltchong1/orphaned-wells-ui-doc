@@ -365,6 +365,7 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
                                 fullWidth
                                 variant='standard'
                                 defaultValue={note.text}
+                                multiline
                                 onChange={handleUpdateText}
                             />
                         : 
