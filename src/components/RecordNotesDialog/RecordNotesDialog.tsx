@@ -11,9 +11,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { updateRecord, getRecordNotes } from '../../services/app.service';
-import { callAPI, formatDateTime } from '../../assets/util';
+import { callAPI, formatDateTime, deleteCommentFromNotes } from '../../assets/util';
 import { RecordNote, RecordNotesDialogProps } from '../../types';
 import { useUserContext } from '../../usercontext';
+import PopupModal from '../PopupModal/PopupModal';
 
 const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps) => {
     const { userEmail } = useUserContext();
@@ -133,6 +134,17 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
         );
     }
 
+    const handleDeleteNote = () => {
+        let newNotes = deleteCommentFromNotes(recordNotes, deleteIdx)
+        setDisableButton(true)
+        callAPI(
+            updateRecord,
+            [record_id, { data: { "record_notes": newNotes }, type: "record_notes" }],
+            () => handleSuccessfulNoteUpdate(newNotes),
+            handleFailed,
+        );
+    }
+
     const handleClickAction = (idx: number, action: string, newValue?: string) => {
         if (action === 'edit') {
             if (editIdx === idx)  {
@@ -148,12 +160,10 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
             }
         }
         else if (action === 'resolve') {
-            console.log('resolve: '+recordNotes[idx].text)
             handleResolveNote(idx)
         }
         else if (action === 'delete') {
-            console.log('delete: '+recordNotes[idx].text)
-            // show confirmation before deleting
+            setDeleteIdx(idx)
         }
     }
 
@@ -224,6 +234,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                                             userEmail={userEmail}
                                         />
                                         {note.replies && note.replies.map((replyIdx) => {
+                                            // if (recordNotes[replyIdx])
                                             return <IndividualNote
                                                 key={replyIdx}
                                                 note={recordNotes[replyIdx]}
@@ -269,6 +280,16 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                         </Button>
                     </Box>
                 </Box>
+                <PopupModal
+                    open={deleteIdx !== undefined}
+                    handleClose={() => setDeleteIdx(undefined)}
+                    text="Are you sure you want to delete this comment?"
+                    handleSave={handleDeleteNote}
+                    buttonText='Delete'
+                    buttonColor='error'
+                    buttonVariant='contained'
+                    width={400}
+                />
             </DialogContent>
             
         </Dialog>

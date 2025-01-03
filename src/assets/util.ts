@@ -1,6 +1,6 @@
 import { refreshAuth, revokeToken } from "../services/app.service"
 import { useEffect, useRef } from 'react';
-import { FilterOption, TableColumns } from "../types";
+import { FilterOption, TableColumns, RecordNote } from "../types";
 
 export const DEFAULT_FILTER_OPTIONS: {
   [key: string]: FilterOption;
@@ -61,6 +61,84 @@ export const TABLE_ATTRIBUTES: {
     displayNames: ["Record Name", "Date Uploaded", "API Number", "Notes", "Digitization Status", "Review Status"],
     keyNames: ["name", "dateCreated", "api_number", "notes", "status", "review_status"],
   }
+}
+
+export const deleteCommentFromNotes = (recordNotes: RecordNote[], deleteIdx?: number) => {
+  let tempNotes = structuredClone(recordNotes)
+  if (deleteIdx === undefined) {
+    console.log('could not delete note')
+    return tempNotes
+  }
+  
+  let isReply, repliesTo
+  let currentNote = tempNotes[deleteIdx]
+  isReply = currentNote.isReply || false
+  repliesTo = currentNote.repliesTo
+  let replies = currentNote.replies || []
+  replies.sort(function(a,b){ return b - a; });
+  for (let reply of replies) {
+      tempNotes.splice(reply, 1);
+  }
+  tempNotes.splice(deleteIdx, 1);
+
+
+  /*
+    if this note was a reply, remove it from the replies of the parent note
+  */
+ if (isReply && repliesTo !== undefined) {
+  const replyIdx = tempNotes[repliesTo].replies?.indexOf(deleteIdx);
+  if (replyIdx !== undefined && replyIdx > -1) {
+    tempNotes[repliesTo].replies?.splice(replyIdx, 1);
+  }
+  
+ }
+
+  /*
+    compare indexes from before and after
+    make sure all reply indexes are properly updated
+  */
+  let idxesAfter: {
+    [key: number]: number;
+  } = {}
+  let nextIdx = 0
+
+  for (let note of tempNotes) {
+    idxesAfter[note.timestamp] = nextIdx
+    nextIdx += 1
+  }
+
+  let newIndexes: {
+    [key: number]: number;
+  } = {}
+
+  nextIdx = 0
+  for (let note of recordNotes) {
+    newIndexes[nextIdx] = idxesAfter[note.timestamp]
+    nextIdx += 1
+  }
+
+  /*
+    update reply indexes
+  */
+  for (let note of tempNotes) {
+    let replies = note.replies
+    if (replies) {
+      let newReplies = []
+      for (let reply of replies) {
+        if (newIndexes[reply] !== undefined) newReplies.push(newIndexes[reply])
+      }
+      note.replies = newReplies
+    }
+
+    if (note.isReply && note.repliesTo !== undefined) {
+      if (newIndexes[note.repliesTo] === undefined) {
+        console.log('newIndexes[note.repliesTo] === undefined, this should never happen')
+        console.log(note)
+      }
+      note.repliesTo = newIndexes[note.repliesTo] 
+    }
+  }
+  return tempNotes
 }
 
 export const round = (num: number, scale: number): number => {
