@@ -306,7 +306,7 @@ interface IndividualNoteProps {
 }
 
 const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, userEmail }: IndividualNoteProps) => {
-    const [ newText, setNewText ] = useState<string>()
+    const [ newText, setNewText ] = useState<string>(note.text)
     const [ disableSaveEdit, setDisableSaveEdit ] = useState(false)
     const [ showResolved, setShowResolved ] = useState(false)
     const styles = {
