@@ -243,7 +243,7 @@ export interface RecordNotesDialogProps {
     record_id?: string;
     notes: RecordNote[];
     open: boolean;
-    onClose: (record_id?: string, newNotes?: RecordNote[]) => void;
+    onClose: (record_id?: string, newNotes?: RecordNote[], submitted?: boolean) => void;
 }
 
 
