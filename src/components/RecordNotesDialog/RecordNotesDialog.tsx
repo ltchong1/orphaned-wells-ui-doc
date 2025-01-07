@@ -233,7 +233,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                                             handleClickAction={handleClickAction}
                                             userEmail={userEmail}
                                         />
-                                        {note.replies && note.replies.map((replyIdx) => {
+                                        {!note.resolved && note.replies && note.replies.map((replyIdx) => {
                                             // if (recordNotes[replyIdx])
                                             return <IndividualNote
                                                 key={replyIdx}
@@ -401,12 +401,13 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
                                             </IconButton>
                                         </Tooltip>
                                     }
-                                    <Tooltip title='resolve'>
-                                        <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'resolve')}>
-                                            <CheckIcon sx={styles.icon}/>
-                                        </IconButton>
-                                    </Tooltip>
-                                    
+                                    {!note.isReply && 
+                                        <Tooltip title='resolve'>
+                                            <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'resolve')}>
+                                                <CheckIcon sx={styles.icon}/>
+                                            </IconButton>
+                                        </Tooltip>
+                                    }
                                     {!note.isReply && 
                                         <Tooltip title='reply'>
                                             <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'reply')}>
