@@ -65,6 +65,14 @@ const Record = () => {
         }
     }
 
+    const handleSuccessfulRefreshRecord = (data: any, lock_record?: boolean) => {
+        let newRecordData = data.recordData;
+        let newNotes = newRecordData.record_notes
+        let tempRecordData = {...recordData}
+        tempRecordData.record_notes = newNotes;
+        setRecordData(tempRecordData)
+    }
+
     const handleSuccessfulFetchRecord = (data: any, lock_record?: boolean) => {
         let newRecordData = data.recordData;
         if (lock_record) {
@@ -180,8 +188,8 @@ const Record = () => {
         handleUpdateReviewStatus("reviewed")
     }
 
-    useKeyDown("ArrowLeft", undefined, undefined, handleClickPrevious, undefined);
-    useKeyDown("ArrowRight", undefined, undefined, handleClickNext, handleClickMarkReviewed);
+    useKeyDown("ArrowLeft", undefined, undefined, handleClickPrevious, undefined, true);
+    useKeyDown("ArrowRight", undefined, undefined, handleClickNext, handleClickMarkReviewed, true);
 
     const navigateToRecord = (data: any) => {
         let record_data = data.recordData;

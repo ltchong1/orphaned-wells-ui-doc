@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useParams } from "react-router-dom";
 import { useUserContext } from '../../usercontext';
-import Notes from '../Notes/Notes';
 import SplitButton from '../SplitButton/SplitButton';
 import DefectiveDialog from '../DefectiveDialog/DefectiveDialog';
-import { BottombarProps } from '../../types';
+import { BottombarProps, RecordNote } from '../../types';
 import { BottomBarStyles as styles } from '../../assets/styles';
 import { Grid, Box, Paper, Button, CssBaseline } from '@mui/material';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
@@ -17,6 +16,8 @@ import WarningIcon from '@mui/icons-material/Warning';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import TonalityIcon from '@mui/icons-material/Tonality';
+import RecordNotesDialog from '../RecordNotesDialog/RecordNotesDialog';
+import PopupModal from '../PopupModal/PopupModal';
 
 const Bottombar = (props: BottombarProps) => {
   let params = useParams(); 
@@ -33,6 +34,7 @@ const Bottombar = (props: BottombarProps) => {
   } = props;
   const [openNotesModal, setOpenNotesModal] = useState(false);
   const [openDefectiveDialog, setOpenDefectiveDialog] = useState(false);
+  const [openVerificationConfirmation, setOpenVerificationConfirmation] = useState(false)
   const [notesButtonText, setNotesButtonText ] = useState<string>()
   
   const getSplitButtonOptions = (review_status: string, verification_status?: string) => {
@@ -48,7 +50,7 @@ const Bottombar = (props: BottombarProps) => {
     }
     let markAsNeedsVerification = {
         text: "Needs verification",
-        onClick: promptNeedsVerificationNote,
+        onClick: promptNeedsVerificationModal,
         icon: <NewReleasesIcon sx={{ color: "#FFC130" }} />
     }
     let markAsDefective = {
@@ -137,18 +139,14 @@ const Bottombar = (props: BottombarProps) => {
     }
   }
 
-  const promptNeedsVerificationNote = () => {
-    setOpenNotesModal(true)
-    setNotesButtonText('Update verification status with note')
+  const promptNeedsVerificationModal = () => {
+    setOpenVerificationConfirmation(true)
   }
 
-  const handleConfirmVerificationWithNotes = (recordId?: string | null, notes?: string | null, submitted?: boolean) => {
-      setOpenNotesModal(false)
-      if (notesButtonText) {
-        setNotesButtonText(undefined)
-        if (submitted) handleUpdateVerificationStatus("required", undefined)
-      }
-  }
+  const handleConfirmVerification = () => {
+    setOpenVerificationConfirmation(false)
+    handleUpdateVerificationStatus("required", undefined)
+}
 
   return ( 
     <Box sx={{ width: 500 }}>
@@ -193,12 +191,21 @@ const Bottombar = (props: BottombarProps) => {
           handleMarkDefective={handleMarkDefective}
           onClose={() => setOpenDefectiveDialog(false)}
         />
-        <Notes
-          record_id={params.id}
-          notes={recordData.notes}
-          open={openNotesModal}
-          onClose={handleConfirmVerificationWithNotes}
-          buttonText={notesButtonText}
+        <RecordNotesDialog
+            record_id={params.id}
+            notes={recordData.record_notes || []}
+            open={openNotesModal}
+            onClose={() => setOpenNotesModal(false)}
+        />
+        <PopupModal
+            open={openVerificationConfirmation}
+            handleClose={() => setOpenVerificationConfirmation(false)}
+            text="Are you sure you want to request verification? This will lock the record and require a team lead's review."
+            handleSave={handleConfirmVerification}
+            buttonText='Request Verification'
+            buttonColor='primary'
+            buttonVariant='contained'
+            width={600}
         />
       </Paper>
     </Box>
