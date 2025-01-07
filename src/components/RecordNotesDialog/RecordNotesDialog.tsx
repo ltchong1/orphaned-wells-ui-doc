@@ -216,11 +216,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                 {/* Top content */}
                 <Box sx={styles.boxTop}>
                     {
-                        loading ? 
-                        <p style={{color: 'grey'}}>
-                            loading...
-                        </p>
-                        :
+                        !loading && 
                         recordNotes.map((note, idx) => {
                             if (!note.isReply)  {
                                 return (
@@ -252,6 +248,18 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                     }
 
                     <Divider sx={styles.divider}/>
+                    
+                    {
+                        loading ? 
+                        <p style={{color: 'grey'}}>
+                            loading...
+                        </p>
+                        :
+                        recordNotes.length === 0 && 
+                        <p style={{color: 'grey'}}>
+                            No notes added yet
+                        </p>
+                    }
                 </Box>
 
                 {/* Bottom section */}
