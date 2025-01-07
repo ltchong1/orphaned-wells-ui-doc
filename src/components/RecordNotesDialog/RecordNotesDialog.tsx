@@ -359,7 +359,7 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
                 <div>
                     <Divider sx={styles.divider}/>
                     <Stack direction={'row'} justifyContent={'space-between'} alignItems='start'>
-
+                        <div style={{ maxWidth: '75%'}}>
                         {editMode ? 
                             <TextField
                                 fullWidth
@@ -373,6 +373,8 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
                                 {note.text}
                             </Typography>
                         }
+                        </div>
+                        
 
                         <Stack direction='row'>
                             {
