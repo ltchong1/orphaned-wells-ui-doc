@@ -77,79 +77,19 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
 
     const handleAddNote = () => {
         handleUpdateRecordNotes('add', recordNotes.length, newNoteText)
-        return
-
-        // let tempNotes = structuredClone(recordNotes)
-        // let newNote = {
-        //     text: newNoteText,
-        //     record_id: record_id,
-        //     timestamp: Date.now(),
-        //     creator: userEmail,
-        //     resolved: false,
-        //     lastUpdated: Date.now(),
-        //     replies: [] as number[],
-        //     isReply: false,
-        // } as RecordNote
-        // if (replyToIdx !== undefined) {
-        //     newNote.isReply = true
-        //     newNote.repliesTo = replyToIdx
-        //     if (tempNotes[replyToIdx].replies) tempNotes[replyToIdx].replies?.push(tempNotes.length)
-        //     else tempNotes[replyToIdx].replies = [tempNotes.length]
-        // } else newNote.isReply = false
-        
-        // setDisableButton(true)
-        // let newNotes = [...tempNotes, newNote]
-        // callAPI(
-        //     updateRecord,
-        //     [record_id, { data: { "record_notes": newNotes }, type: "record_notes" }],
-        //     () => handleSuccessfulNoteUpdate(newNotes),
-        //     handleFailed,
-        // );
     }
 
     const handleEditNote = (idx: number, newValue: string) => {
         handleUpdateRecordNotes('edit', idx, newValue)
-        return
-        // let tempNotes = structuredClone(recordNotes)
-        // let currentNote = tempNotes[idx]
-        // currentNote.text = newValue
-        // currentNote.lastUpdated = Date.now()
-        // setDisableButton(true)
-        // let newNotes = [...tempNotes]
-        // callAPI(
-        //     updateRecord,
-        //     [record_id, { data: { "record_notes": newNotes }, type: "record_notes" }],
-        //     () => handleSuccessfulNoteUpdate(newNotes),
-        //     handleFailed,
-        // );
     }
 
     const handleResolveNote = (idx: number) => {
         if (recordNotes[idx].resolved) handleUpdateRecordNotes('unresolve', idx)
         else handleUpdateRecordNotes('resolve', idx)
-        // let tempNotes = structuredClone(recordNotes)
-        // let currentNote = tempNotes[idx]
-        // currentNote.lastUpdated = Date.now()
-        // currentNote.resolved = !currentNote.resolved
-        // setDisableButton(true)
-        // let newNotes = [...tempNotes]
-        // callAPI(
-        //     updateRecord,
-        //     [record_id, { data: { "record_notes": newNotes }, type: "record_notes" }],
-        //     () => handleSuccessfulNoteUpdate(newNotes),
-        //     handleFailed,
-        // );
     }
 
     const handleDeleteNote = () => {
-        let newNotes = deleteCommentFromNotes(recordNotes, deleteIdx)
-        setDisableButton(true)
-        callAPI(
-            updateRecord,
-            [record_id, { data: { "record_notes": newNotes }, type: "record_notes" }],
-            () => handleSuccessfulNoteUpdate(newNotes),
-            handleFailed,
-        );
+        if (deleteIdx !== undefined) handleUpdateRecordNotes('delete', deleteIdx)
     }
 
     const handleClickAction = (idx: number, action: string, newValue?: string) => {
@@ -245,7 +185,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                     {
                         !loading && 
                         recordNotes.map((note, idx) => {
-                            if (!note.isReply)  {
+                            if (!note.isReply && !note.deleted)  {
                                 return (
                                     <div key={note.timestamp}>
                                         <IndividualNote
