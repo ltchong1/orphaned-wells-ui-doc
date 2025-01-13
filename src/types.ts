@@ -102,6 +102,7 @@ export interface RecordNote {
     isReply: boolean;
     resolved: boolean;
     timestamp: number;
+    deleted?: boolean;
     creator?: string;
     lastUpdated?: number;
     replies?: number[]; // list of indexes of notes that reply to this guy
