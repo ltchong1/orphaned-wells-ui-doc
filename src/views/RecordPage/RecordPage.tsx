@@ -60,8 +60,11 @@ const Record = () => {
     const handleFailedFetchRecord = (data: any, response_status?: number) => {
         if (response_status === 303) {
             handleSuccessfulFetchRecord(data, true)
-        } else {
-            console.error('error getting record data: ', data);
+        } else if (response_status === 403) {
+            setErrorMsg(`${data.detail}`);
+        }
+        else {
+            setErrorMsg('error getting record data: ' + data)
         }
     }
 
