@@ -251,7 +251,9 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                             }
                         </Typography>
                         <Button variant="contained" onClick={handleAddNote} disabled={newNoteText==='' || disableButton}>
-                            Add new note
+                            {
+                                replyToIdx === undefined ? "Add new note" : "Reply to note"
+                            }
                         </Button>
                     </Box>
                 </Box>
