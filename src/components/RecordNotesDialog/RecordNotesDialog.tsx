@@ -65,13 +65,29 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
         boxBottom: {
             marginTop: 2
         },
-        divider: {
-            marginY: 1,
-        },
         replyToText: {
             opacity: 0.5,
             fontStyle: 'italic',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            margin: 0
+        },
+        textfield: {
+            '& .MuiOutlinedInput-root': {
+                // Default border
+                '& fieldset': {
+                    borderWidth: '1px',
+                    borderColor: 'black'
+                },
+                // On hover
+                '&:hover fieldset': {
+                    borderWidth: '1.5px',
+                },
+                // On focus
+                '&.Mui-focused fieldset': {
+                    borderWidth: '2px',
+                    borderColor: 'black'
+                },
+            },
         }
     };
 
@@ -92,7 +108,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
         if (deleteIdx !== undefined) handleUpdateRecordNotes('delete', deleteIdx)
     }
 
-    const handleClickAction = (idx: number, action: string, newValue?: string) => {
+    const handleClickAction = (idx: number, action: string, newValue?: string, event?: React.MouseEvent<HTMLButtonElement>) => {
         if (action === 'edit') {
             if (editIdx === idx)  {
                 handleEditNote(idx, newValue || '')
@@ -154,6 +170,15 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
         console.error(e)
     }
 
+    const handleClickOutsideReply = (event: React.MouseEvent<HTMLDivElement>) => {
+        if(replyToIdx !== undefined) setReplyToIdx(undefined)
+    }
+
+    const handleClickTextField = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
     return (
         <Dialog
             open={open}
@@ -164,6 +189,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
             PaperProps={{
                 sx: styles.dialogPaper
             }}
+            onClick={handleClickOutsideReply}
         >
             <DialogTitle id="new-dg-dialog-title">Notes</DialogTitle>
             <IconButton
@@ -214,7 +240,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                         })
                     }
 
-                    <Divider sx={styles.divider}/>
+                    <Divider/>
                     
                     {
                         loading ? 
@@ -243,15 +269,19 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                         multiline
                         minRows={2}
                         disabled={disableButton}
+                        sx={styles.textfield}
+                        onClick={handleClickTextField}
                     />
                     <Box display="flex" justifyContent='space-between' mt={1}>
                         <Typography noWrap paragraph sx={styles.replyToText}>
                             {replyToIdx !== undefined && 
-                                `reply to: ${recordNotes[replyToIdx].text.substring(0, 20)}...` 
+                                `Reply to: "${recordNotes[replyToIdx].text.substring(0, 20)}..."` 
                             }
                         </Typography>
                         <Button variant="contained" onClick={handleAddNote} disabled={newNoteText==='' || disableButton}>
-                            Add new note
+                            {
+                                replyToIdx === undefined ? "Add new note" : "Reply to note"
+                            }
                         </Button>
                     </Box>
                 </Box>
@@ -276,7 +306,7 @@ interface IndividualNoteProps {
     idx: number,
     highlighted?: boolean;
     editMode?: boolean;
-    handleClickAction: (idx: number, action: string, newText?: string) => void;
+    handleClickAction: (idx: number, action: string, newText?: string, event?: React.MouseEvent<HTMLButtonElement>) => void;
     userEmail: string;
 }
 
@@ -284,25 +314,31 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
     const [ newText, setNewText ] = useState<string>(note.text)
     const [ disableSaveEdit, setDisableSaveEdit ] = useState(false)
     const [ showResolved, setShowResolved ] = useState(false)
+    if (note.deleted) return null
     const styles = {
         div: {
             paddingX: 1,
+            paddingY: 1,
             paddingBottom: (note.resolved && !showResolved) ? 0 : 1,
             marginLeft: note?.isReply ? 4 : 0,
             backgroundColor: highlighted ? "#F5F5F6" : 'inherit',
+            border: highlighted ? '1px solid #D9D9D9' : '0px', // Small black border
+            borderRadius: 1, // Rounded corners
         },
         metadata: {
             opacity: 0.6,
             fontSize: '13px'
         },
-        divider: {
-            marginY: 1,
-        },
         icon: {
             fontSize: '14px',
             color: 'black'
         },
+        divider: {
+            paddingX: 1
+        }
     }
+
+    
 
     const handleUpdateText = (e: any) => {
         let newValue = e.target.value
@@ -310,108 +346,111 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
         if (newValue === '') setDisableSaveEdit(true)
         else setDisableSaveEdit(false)
     }
-
     return (
-        <Typography component={'div'} sx={styles.div}>
-            {(note.resolved && !showResolved) ? 
-                <div>
-                    <Divider sx={styles.divider}/>
-                    <Stack direction={'row'} justifyContent={'space-between'} alignItems='start'>
-                        <Typography sx={styles.metadata}>
-                            - Resolved, {formatDateTime(note.lastUpdated || -1)}
-                        </Typography>
-                        <Tooltip title='show resolved comment'>
-                            <IconButton onClick={() => setShowResolved((showResolved) => !showResolved)}>
-                                <KeyboardArrowUpIcon sx={styles.icon}/>
-                            </IconButton> 
-                        </Tooltip>
+        <div>
+            <Divider sx={styles.divider}/>
+            <Typography component={'div'} sx={styles.div}>
+                {(note.resolved && !showResolved) ? 
+                    <div>
                         
-                    </Stack>
-                    
-                </div>
-                
-                : 
-                <div>
-                    <Divider sx={styles.divider}/>
-                    <Stack direction={'row'} justifyContent={'space-between'} alignItems='start'>
-                        <div style={{ maxWidth: '75%'}}>
-                        {editMode ? 
-                            <TextField
-                                fullWidth
-                                variant='standard'
-                                defaultValue={note.text}
-                                multiline
-                                onChange={handleUpdateText}
-                            />
-                        : 
-                            <Typography>
-                                {note.text}
+                        <Stack direction={'row'} justifyContent={'space-between'} alignItems='start'>
+                            <Typography sx={styles.metadata}>
+                                - Resolved, {formatDateTime(note.lastUpdated || -1)}
                             </Typography>
-                        }
-                        </div>
-                        
-
-                        <Stack direction='row'>
-                            {
-                                note.resolved ? 
-                                    <div>
-                                        <Tooltip title='reopen'>
-                                            <IconButton onClick={() => handleClickAction(idx, 'resolve')}>
-                                                <AutorenewIcon sx={styles.icon}/>
-                                            </IconButton> 
-                                        </Tooltip>
-                                        <Tooltip title='hide'>
-                                            <IconButton onClick={() => setShowResolved((showResolved) => !showResolved)}>
-                                                <KeyboardArrowDownIcon sx={styles.icon}/>
-                                            </IconButton> 
-                                        </Tooltip>
-                                    </div>
-                                    
-                                : 
-                                <div>
-                                    {note.creator === userEmail &&
-                                        <Tooltip title='edit'>
-                                            <IconButton disabled={disableSaveEdit} onClick={() => handleClickAction(idx, 'edit', newText)}>
-                                                {editMode ? <DoneAllIcon sx={styles.icon}/> : <EditIcon sx={styles.icon}/>}
-                                            </IconButton>
-                                        </Tooltip>
-                                    }
-                                    {!note.isReply && 
-                                        <Tooltip title='resolve'>
-                                            <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'resolve')}>
-                                                <CheckIcon sx={styles.icon}/>
-                                            </IconButton>
-                                        </Tooltip>
-                                    }
-                                    {!note.isReply && 
-                                        <Tooltip title='reply'>
-                                            <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'reply')}>
-                                                <ReplyIcon sx={styles.icon}/>
-                                            </IconButton>
-                                        </Tooltip>
-                                    }
-                                    {note.creator === userEmail &&
-                                        <Tooltip title='delete'>
-                                            <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'delete')}>
-                                                <DeleteIcon sx={styles.icon}/>
-                                            </IconButton>
-                                        </Tooltip>
-                                    }
-                                </div>
-                            }
+                            <Tooltip title='show resolved comment'>
+                                <IconButton onClick={() => setShowResolved((showResolved) => !showResolved)}>
+                                    <KeyboardArrowUpIcon sx={styles.icon}/>
+                                </IconButton> 
+                            </Tooltip>
                             
                         </Stack>
-                    </Stack>
-                    <Tooltip title={`originally created on ${formatDateTime(note.timestamp || -1)}`} enterDelay={1000}>
-                        <Typography sx={styles.metadata}>
-                            - <i>{note.creator || 'unknown'}</i>, {formatDateTime(note.lastUpdated || -1)}
-                        </Typography>
-                    </Tooltip>
+                        
+                    </div>
                     
-                </div>
-            }
+                    : 
+                    <div>
+                        <Stack direction={'row'} justifyContent={'space-between'} alignItems='start'>
+                            <div style={{ maxWidth: '70%'}}>
+                            {editMode ? 
+                                <TextField
+                                    fullWidth
+                                    variant='standard'
+                                    defaultValue={note.text}
+                                    multiline
+                                    onChange={handleUpdateText}
+                                />
+                            : 
+                                <Typography>
+                                    {note.text}
+                                </Typography>
+                            }
+                            </div>
+                            
+
+                            <Stack direction='row'>
+                                {
+                                    note.resolved ? 
+                                        <div>
+                                            <Tooltip title='reopen'>
+                                                <IconButton onClick={(e) => handleClickAction(idx, 'resolve', undefined, e)}>
+                                                    <AutorenewIcon sx={styles.icon}/>
+                                                </IconButton> 
+                                            </Tooltip>
+                                            <Tooltip title='hide'>
+                                                <IconButton onClick={() => setShowResolved((showResolved) => !showResolved)}>
+                                                    <KeyboardArrowDownIcon sx={styles.icon}/>
+                                                </IconButton> 
+                                            </Tooltip>
+                                        </div>
+                                        
+                                    : 
+                                    <div>
+                                        {note.creator === userEmail &&
+                                            <Tooltip title='edit'>
+                                                <IconButton disabled={disableSaveEdit} onClick={() => handleClickAction(idx, 'edit', newText)}>
+                                                    {editMode ? <DoneAllIcon sx={styles.icon}/> : <EditIcon sx={styles.icon}/>}
+                                                </IconButton>
+                                            </Tooltip>
+                                        }
+                                        {!note.isReply && 
+                                            <Tooltip title='resolve'>
+                                                <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'resolve')}>
+                                                    <CheckIcon sx={styles.icon}/>
+                                                </IconButton>
+                                            </Tooltip>
+                                        }
+                                        {!note.isReply && 
+                                            <Tooltip title='reply'>
+                                                <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'reply')}>
+                                                    <ReplyIcon sx={styles.icon}/>
+                                                </IconButton>
+                                            </Tooltip>
+                                        }
+                                        {note.creator === userEmail &&
+                                            <Tooltip title='delete'>
+                                                <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'delete')}>
+                                                    <DeleteIcon sx={styles.icon}/>
+                                                </IconButton>
+                                            </Tooltip>
+                                        }
+                                    </div>
+                                }
+                                
+                            </Stack>
+                        </Stack>
+                        <Tooltip title={`originally created on ${formatDateTime(note.timestamp || -1)}`} enterDelay={1000}>
+                            <Typography sx={styles.metadata}>
+                                - <i>{note.creator || 'unknown'}</i>, {formatDateTime(note.lastUpdated || -1)}
+                            </Typography>
+                        </Tooltip>
+                        
+                    </div>
+                }
+                
+            </Typography>            
             
-        </Typography>            
+        </div>
+        
     );
 }
 
