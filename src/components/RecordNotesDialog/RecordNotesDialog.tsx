@@ -69,6 +69,24 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
             opacity: 0.5,
             fontStyle: 'italic',
             overflow: 'hidden'
+        },
+        textfield: {
+            '& .MuiOutlinedInput-root': {
+                // Default border
+                '& fieldset': {
+                    borderWidth: '1px',
+                    borderColor: 'black'
+                },
+                // On hover
+                '&:hover fieldset': {
+                    borderWidth: '1.5px',
+                },
+                // On focus
+                '&.Mui-focused fieldset': {
+                    borderWidth: '2px',
+                    borderColor: 'black'
+                },
+            },
         }
     };
 
@@ -89,7 +107,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
         if (deleteIdx !== undefined) handleUpdateRecordNotes('delete', deleteIdx)
     }
 
-    const handleClickAction = (idx: number, action: string, newValue?: string) => {
+    const handleClickAction = (idx: number, action: string, newValue?: string, event?: React.MouseEvent<HTMLButtonElement>) => {
         if (action === 'edit') {
             if (editIdx === idx)  {
                 handleEditNote(idx, newValue || '')
@@ -151,6 +169,15 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
         console.error(e)
     }
 
+    const handleClickOutsideReply = (event: React.MouseEvent<HTMLDivElement>) => {
+        if(replyToIdx !== undefined) setReplyToIdx(undefined)
+    }
+
+    const handleClickTextField = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
     return (
         <Dialog
             open={open}
@@ -161,6 +188,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
             PaperProps={{
                 sx: styles.dialogPaper
             }}
+            onClick={handleClickOutsideReply}
         >
             <DialogTitle id="new-dg-dialog-title">Notes</DialogTitle>
             <IconButton
@@ -240,11 +268,13 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                         multiline
                         minRows={2}
                         disabled={disableButton}
+                        sx={styles.textfield}
+                        onClick={handleClickTextField}
                     />
                     <Box display="flex" justifyContent='space-between' mt={1}>
                         <Typography noWrap paragraph sx={styles.replyToText}>
                             {replyToIdx !== undefined && 
-                                `reply to: ${recordNotes[replyToIdx].text.substring(0, 20)}...` 
+                                `Reply to: "${recordNotes[replyToIdx].text.substring(0, 20)}..."` 
                             }
                         </Typography>
                         <Button variant="contained" onClick={handleAddNote} disabled={newNoteText==='' || disableButton}>
@@ -275,7 +305,7 @@ interface IndividualNoteProps {
     idx: number,
     highlighted?: boolean;
     editMode?: boolean;
-    handleClickAction: (idx: number, action: string, newText?: string) => void;
+    handleClickAction: (idx: number, action: string, newText?: string, event?: React.MouseEvent<HTMLButtonElement>) => void;
     userEmail: string;
 }
 
@@ -291,7 +321,7 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
             paddingBottom: (note.resolved && !showResolved) ? 0 : 1,
             marginLeft: note?.isReply ? 4 : 0,
             backgroundColor: highlighted ? "#F5F5F6" : 'inherit',
-            // border: highlighted ? '1px solid grey' : '0px', // Small black border
+            border: highlighted ? '1px solid #D9D9D9' : '0px', // Small black border
             borderRadius: 1, // Rounded corners
         },
         metadata: {
@@ -302,7 +332,12 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
             fontSize: '14px',
             color: 'black'
         },
+        divider: {
+            paddingX: 1
+        }
     }
+
+    
 
     const handleUpdateText = (e: any) => {
         let newValue = e.target.value
@@ -312,7 +347,7 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
     }
     return (
         <div>
-            <Divider/>
+            <Divider sx={styles.divider}/>
             <Typography component={'div'} sx={styles.div}>
                 {(note.resolved && !showResolved) ? 
                     <div>
@@ -334,7 +369,7 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
                     : 
                     <div>
                         <Stack direction={'row'} justifyContent={'space-between'} alignItems='start'>
-                            <div style={{ maxWidth: '75%'}}>
+                            <div style={{ maxWidth: '70%'}}>
                             {editMode ? 
                                 <TextField
                                     fullWidth
@@ -356,7 +391,7 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
                                     note.resolved ? 
                                         <div>
                                             <Tooltip title='reopen'>
-                                                <IconButton onClick={() => handleClickAction(idx, 'resolve')}>
+                                                <IconButton onClick={(e) => handleClickAction(idx, 'resolve', undefined, e)}>
                                                     <AutorenewIcon sx={styles.icon}/>
                                                 </IconButton> 
                                             </Tooltip>
