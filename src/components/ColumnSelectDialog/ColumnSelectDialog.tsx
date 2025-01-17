@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Box, FormLabel, FormControl, IconButton, FormGroup, FormControlLabel, RadioGroup, Grid } from '@mui/material';
 import { Dialog, DialogTitle, DialogContent, DialogContentText, Button, Checkbox, Radio } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import DownloadIcon from '@mui/icons-material/Download';
 import { callAPIWithBlobResponse, callAPI, convertFiltersToMongoFormat } from '../../assets/util';
 import { downloadRecords, getColumnData } from '../../services/app.service';
 import { ColumnSelectDialogProps, CheckboxesGroupProps } from '../../types';
@@ -36,6 +37,13 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
             minWidth: dialogWidth,
             maxWidth: dialogWidth,
         },
+        dialogContent: {
+            position: "relative",
+            paddingBottom: "70px"
+        },
+        dialogButtons: {
+            paddingTop: "70px"
+        }
     };
 
     const setDefaultColumns = (data: {columns: string[], obj: any}) => {
@@ -89,6 +97,10 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         handleUpdate({"settings": settings})
     };
 
+    const downloadImageFiles = () => {
+        console.log('downloading image files for '+location + ' ' + _id)
+    }
+
     return (
         <Dialog
             open={open}
@@ -127,19 +139,35 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
                         setExportType={setExportType}
                     />
                 </DialogContentText>
-                <Button
-                    variant="contained"
-                    sx={{
-                        position: 'absolute',
-                        right: 10,
-                        bottom: 10,
-                    }}
-                    onClick={handleExport}
-                    id='download-button'
-                >
-                    Download
-                </Button>
             </DialogContent>
+                <div style={styles.dialogButtons}> 
+                    {/* <Button
+                        variant="outlined"
+                        sx={{
+                            position: 'absolute',
+                            left: 10,
+                            bottom: 10,
+                        }}
+                        onClick={downloadImageFiles}
+                        id='download-button'
+                        startIcon={<DownloadIcon/>}
+                    >
+                        Download Image Files
+                    </Button> */}
+                    <Button
+                        variant="contained"
+                        sx={{
+                            position: 'absolute',
+                            right: 10,
+                            bottom: 10,
+                        }}
+                        onClick={handleExport}
+                        id='download-button'
+                    >
+                        Download {exportType}
+                    </Button>
+                </div>
+                
         </Dialog>
     );
 };
