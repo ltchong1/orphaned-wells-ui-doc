@@ -68,7 +68,8 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
         replyToText: {
             opacity: 0.5,
             fontStyle: 'italic',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            margin: 0
         },
         textfield: {
             '& .MuiOutlinedInput-root': {
