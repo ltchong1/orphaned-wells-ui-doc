@@ -284,6 +284,7 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
     const [ newText, setNewText ] = useState<string>(note.text)
     const [ disableSaveEdit, setDisableSaveEdit ] = useState(false)
     const [ showResolved, setShowResolved ] = useState(false)
+    if (note.deleted) return null
     const styles = {
         div: {
             paddingX: 1,
@@ -310,7 +311,6 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
         if (newValue === '') setDisableSaveEdit(true)
         else setDisableSaveEdit(false)
     }
-
     return (
         <Typography component={'div'} sx={styles.div}>
             {(note.resolved && !showResolved) ? 
