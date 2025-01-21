@@ -28,10 +28,7 @@ export interface ProjectData {
     record_groups: RecordGroup[]
     settings?: any;
     state?: string;
-    creator?: {
-      name?: string;
-      email?: string;
-    };
+    creator?: User;
     dateCreated?: number;
 }
 
@@ -45,10 +42,7 @@ export interface RecordGroup {
     description?: string;
     documentType?: string;
     state?: string;
-    creator?: {
-      name?: string;
-      email?: string;
-    };
+    creator?: User;
     dateCreated?: number;
     reviewed_amt?: number;
     total_amt?: number;
