@@ -223,8 +223,11 @@ export interface CheckboxesGroupProps {
     columns: string[];
     selected: string[];
     setSelected: (selected: string[]) => void;
-    exportType: string;
-    setExportType: (exportType: string) => void;
+}
+
+export interface ExportTypeSelectionProps {
+    exportTypes: { [key: string]: boolean };
+    updateExportTypes: (exportType: string) => void;
 }
 
 export interface ErrorBarProps {

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Box, FormLabel, FormControl, IconButton, FormGroup, FormControlLabel, RadioGroup, Grid } from '@mui/material';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, Button, Checkbox, Radio } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, Button, Checkbox, Radio, Stack } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
 import { callAPIWithBlobResponse, callAPI, convertFiltersToMongoFormat } from '../../assets/util';
 import { downloadRecords, getColumnData } from '../../services/app.service';
-import { ColumnSelectDialogProps, CheckboxesGroupProps } from '../../types';
+import { ColumnSelectDialogProps, CheckboxesGroupProps, ExportTypeSelectionProps } from '../../types';
 
 const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
     const { open, onClose, location, handleUpdate, _id, appliedFilters, sortBy, sortAscending } = props;
@@ -14,6 +14,13 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
     const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
     const [exportType, setExportType] = useState("csv");
     const [objSettings, setObjSettings] = useState<any>()
+    const [ exportTypes, setExportTypes ] = useState<{ [key: string]: boolean }>(
+        {
+            'csv': true,
+            'json': false,
+            'image_files': false
+        }
+    )
     const [name, setName] = useState("")
     const dialogHeight = '85vh';
     const dialogWidth = '60vw';
@@ -97,8 +104,17 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         handleUpdate({"settings": settings})
     };
 
-    const downloadImageFiles = () => {
-        console.log('downloading image files for '+location + ' ' + _id)
+    const handleChangeExportTypes = (name: string) => {
+        let tempExportTypes = {...exportTypes}
+        tempExportTypes[name] = !tempExportTypes[name]
+        setExportTypes(tempExportTypes)
+    };
+
+    const disableDownload = () => {
+        for (let each of Object.keys(exportTypes)) {
+            if (exportTypes[each]) return false
+        }
+        return true
     }
 
     return (
@@ -131,29 +147,18 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
                     aria-labelledby="export-dialog-content-text"
                     component={'span'}
                 >
+                    <ExportTypeSelection
+                        exportTypes={exportTypes}
+                        updateExportTypes={handleChangeExportTypes}
+                    />
                     <CheckboxesGroup
                         columns={columns}
                         selected={selectedColumns}
                         setSelected={setSelectedColumns}
-                        exportType={exportType}
-                        setExportType={setExportType}
                     />
                 </DialogContentText>
             </DialogContent>
                 <div style={styles.dialogButtons}> 
-                    {/* <Button
-                        variant="outlined"
-                        sx={{
-                            position: 'absolute',
-                            left: 10,
-                            bottom: 10,
-                        }}
-                        onClick={downloadImageFiles}
-                        id='download-button'
-                        startIcon={<DownloadIcon/>}
-                    >
-                        Download Image Files
-                    </Button> */}
                     <Button
                         variant="contained"
                         sx={{
@@ -161,10 +166,12 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
                             right: 10,
                             bottom: 10,
                         }}
+                        startIcon={<DownloadIcon/>}
                         onClick={handleExport}
                         id='download-button'
+                        disabled={disableDownload()}
                     >
-                        Download {exportType}
+                        Export Data
                     </Button>
                 </div>
                 
@@ -172,11 +179,41 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
     );
 };
 
-const CheckboxesGroup = (props: CheckboxesGroupProps) => {
-    const { columns, selected, setSelected, exportType, setExportType } = props;
+const ExportTypeSelection = (props: ExportTypeSelectionProps) => {
+    const { exportTypes, updateExportTypes } = props;
 
-    useEffect(() => {
-    }, [columns]);
+    const handleChangeExportTypes = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let name = event.target.name
+        updateExportTypes(name)
+    };
+
+    return (
+        <Box sx={{ display: 'flex' }}>
+            <FormControl sx={{ mx: 3 }} component="fieldset" variant="standard" required>
+                <FormLabel component="legend" id="export-type-label">Export Format</FormLabel>
+                
+                <FormGroup>
+                    <Stack direction='row'>
+                    {Object.entries(exportTypes).map(([ export_type, is_selected] ) => (
+                        <FormControlLabel
+                            key={export_type}
+                            control={
+                                <Checkbox checked={is_selected} onChange={handleChangeExportTypes} name={export_type} />
+                            }
+                            label={export_type.replace('_', ' ')}
+                        />
+                    ))}
+                    </Stack>
+                    
+                    
+                </FormGroup>
+            </FormControl>
+        </Box>
+    );
+};
+
+const CheckboxesGroup = (props: CheckboxesGroupProps) => {
+    const { columns, selected, setSelected } = props;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const isSelected = event.target.checked;
@@ -196,17 +233,6 @@ const CheckboxesGroup = (props: CheckboxesGroupProps) => {
     return (
         <Box sx={{ display: 'flex' }}>
             <FormControl sx={{ m: 3 }} component="fieldset" variant="standard" required>
-                <FormLabel component="legend" id="export-type-label">Export Type</FormLabel>
-                <RadioGroup
-                    row
-                    name="export-type"
-                    sx={{ paddingBottom: 5 }}
-                    value={exportType}
-                    onChange={(event) => setExportType(event.target.value)}
-                >
-                    <FormControlLabel value="csv" control={<Radio />} label="CSV" />
-                    <FormControlLabel value="json" control={<Radio />} label="JSON" />
-                </RadioGroup>
 
                 <FormLabel component="legend">Select attributes to export</FormLabel>
                 <FormGroup row>
