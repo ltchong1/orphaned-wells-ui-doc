@@ -77,7 +77,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         };
         callAPIWithBlobResponse(
             downloadRecords,
-            [location, _id, exportType, body],
+            [location, _id, exportTypes, body],
             handleSuccessfulExport,
             (e: Error) => console.error("unable to download csv: " + e)
         );
@@ -88,7 +88,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         const href = window.URL.createObjectURL(data);
         const link = document.createElement('a');
         link.href = href;
-        link.setAttribute('download', `${name}_records.${exportType}`);
+        link.setAttribute('download', `${name}_records.zip`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
