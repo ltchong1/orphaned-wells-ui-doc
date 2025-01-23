@@ -28,10 +28,7 @@ export interface ProjectData {
     record_groups: RecordGroup[]
     settings?: any;
     state?: string;
-    creator?: {
-      name?: string;
-      email?: string;
-    };
+    creator?: User;
     dateCreated?: number;
 }
 
@@ -45,10 +42,7 @@ export interface RecordGroup {
     description?: string;
     documentType?: string;
     state?: string;
-    creator?: {
-      name?: string;
-      email?: string;
-    };
+    creator?: User;
     dateCreated?: number;
     reviewed_amt?: number;
     total_amt?: number;
@@ -229,8 +223,13 @@ export interface CheckboxesGroupProps {
     columns: string[];
     selected: string[];
     setSelected: (selected: string[]) => void;
-    exportType: string;
-    setExportType: (exportType: string) => void;
+    disabled?: boolean;
+}
+
+export interface ExportTypeSelectionProps {
+    exportTypes: { [key: string]: boolean };
+    updateExportTypes: (exportType: string) => void;
+    disabled?: boolean;
 }
 
 export interface ErrorBarProps {
