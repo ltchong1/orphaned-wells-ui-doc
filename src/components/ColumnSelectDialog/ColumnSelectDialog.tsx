@@ -6,6 +6,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import { callAPIWithBlobResponse, callAPI, convertFiltersToMongoFormat } from '../../assets/util';
 import { downloadRecords, getColumnData } from '../../services/app.service';
 import { ColumnSelectDialogProps, CheckboxesGroupProps, ExportTypeSelectionProps } from '../../types';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
     const { open, onClose, location, handleUpdate, _id, appliedFilters, sortBy, sortAscending } = props;
@@ -50,6 +51,16 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         },
         dialogButtons: {
             paddingTop: "70px"
+        },
+        loader: {
+            position: 'absolute',
+            right: '50%',
+            top: '50%',
+        },
+        closeIcon: {
+            position: 'absolute',
+            right: 0,
+            top: 8,
         }
     };
 
@@ -119,6 +130,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
     };
 
     const disableDownload = () => {
+        if (downloading) return true
         for (let each of Object.keys(exportTypes)) {
             if (exportTypes[each]) return false
         }
@@ -128,7 +140,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
     return (
         <Dialog
             open={open}
-            onClose={handleClose}
+            onClose={!downloading ? handleClose : undefined} // if downloading, must click x to close dialog
             scroll={"paper"}
             aria-labelledby="export-dialog"
             aria-describedby="export-dialog-description"
@@ -140,15 +152,18 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
             <IconButton
                 aria-label="close"
                 onClick={handleClose}
-                sx={{
-                    position: 'absolute',
-                    right: 0,
-                    top: 8,
-                }}
+                sx={styles.closeIcon}
             >
                 <CloseIcon />
             </IconButton>
             <DialogContent dividers={true}>
+                {
+                    downloading && 
+                    <CircularProgress 
+                        sx={styles.loader}
+                    />
+                }
+                
                 <DialogContentText
                     id="scroll-dialog-description"
                     tabIndex={-1}
@@ -158,11 +173,13 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
                     <ExportTypeSelection
                         exportTypes={exportTypes}
                         updateExportTypes={handleChangeExportTypes}
+                        disabled={downloading}
                     />
                     <CheckboxesGroup
                         columns={columns}
                         selected={selectedColumns}
                         setSelected={setSelectedColumns}
+                        disabled={downloading}
                     />
                 </DialogContentText>
             </DialogContent>
@@ -188,7 +205,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
 };
 
 const ExportTypeSelection = (props: ExportTypeSelectionProps) => {
-    const { exportTypes, updateExportTypes } = props;
+    const { exportTypes, updateExportTypes, disabled } = props;
 
     const handleChangeExportTypes = (event: React.ChangeEvent<HTMLInputElement>) => {
         let name = event.target.name
@@ -197,7 +214,7 @@ const ExportTypeSelection = (props: ExportTypeSelectionProps) => {
 
     return (
         <Box sx={{ display: 'flex' }}>
-            <FormControl sx={{ mx: 3 }} component="fieldset" variant="standard" required>
+            <FormControl sx={{ mx: 3 }} component="fieldset" variant="standard" required disabled={disabled}>
                 <FormLabel component="legend" id="export-type-label">Export Format</FormLabel>
                 
                 <FormGroup>
@@ -221,7 +238,7 @@ const ExportTypeSelection = (props: ExportTypeSelectionProps) => {
 };
 
 const CheckboxesGroup = (props: CheckboxesGroupProps) => {
-    const { columns, selected, setSelected } = props;
+    const { columns, selected, setSelected, disabled } = props;
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const isSelected = event.target.checked;
@@ -240,7 +257,7 @@ const CheckboxesGroup = (props: CheckboxesGroupProps) => {
 
     return (
         <Box sx={{ display: 'flex' }}>
-            <FormControl sx={{ m: 3 }} component="fieldset" variant="standard" required>
+            <FormControl sx={{ m: 3 }} component="fieldset" variant="standard" required disabled={disabled}>
 
                 <FormLabel component="legend">Select attributes to export</FormLabel>
                 <FormGroup row>
