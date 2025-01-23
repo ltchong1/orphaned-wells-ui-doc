@@ -374,52 +374,65 @@ export const callAPIWithBlobResponse = (
 ): void => {
   apiFunc(...apiParams)
   .then(response => {
-      response.blob()
-      .then((data) => {
-          if (response.status === 200) {
-              onSuccess(data);
-          } else if (response.status === 401) {
-              refreshAuth()
+      if (response.status === 200) {
+        response.blob()
+        .then((data) => {
+          onSuccess(data);
+        }).catch((e) => {
+          onError(e);
+        });
+      }
+      else if (response.status === 401) {
+        refreshAuth()
+        .then(response => {
+          response.json()
+          .then((data) => {
+            if (response.status === 200) {
+              console.log("refreshed tokens:");
+              localStorage.setItem("id_token", data.id_token);
+              localStorage.setItem("access_token", data.access_token);
+              apiFunc(...apiParams)
               .then(response => {
-                response.json()
-                .then((data) => {
                   if (response.status === 200) {
-                    console.log("refreshed tokens:");
-                    localStorage.setItem("id_token", data.id_token);
-                    localStorage.setItem("access_token", data.access_token);
-                    apiFunc(...apiParams)
-                    .then(response => {
-                        response.blob()
-                        .then((data) => {
-                            if (response.status === 200) {
-                                onSuccess(data);
-                            } else {
-                              logout();
-                            }
-                        }).catch((e) => {
-                          onError(e);
-                        });
-                      }).catch((e) => {
-                        onError(e);
-                      });
-                  } else {
-                    console.error('received response status '+response.status+' when attempting to refresh tokens')
-                    logout();
-                  }
+                    response.blob()
+                    .then((data) => {
+                        onSuccess(data);
+                    }).catch((e) => {
+                      onError(e);
+                    });
+                } else {
+                  response.json()
+                  .then((data) => {
+                    onError(data)
+                  }).catch((e) => {
+                    onError(e)
+                  })
+                }
                 }).catch((e) => {
-                  console.error(e)
-                  // logout();
+                  onError(e);
                 });
-              }).catch((e) => {
-                console.error(e)
-                  // logout();
-              });
-          } else {
-              onError(data);
-          }
-      }).catch((e) => {
-        onError(e);
-      });
+            } else {
+              console.error('received response status '+response.status+' when attempting to refresh tokens')
+              logout();
+            }
+          }).catch((e) => {
+            console.error(e)
+            // logout();
+          });
+        }).catch((e) => {
+          console.error(e)
+            // logout();
+        });
+      }
+      else{
+        response.json()
+        .then((data) => {
+          onError(data.detail)
+        }).catch((e) => {
+          onError(e)
+        })
+      }
+      
   }).catch((e) => {
     onError(e);
   });  

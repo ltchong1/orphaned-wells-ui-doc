@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Box, FormLabel, FormControl, IconButton, FormGroup, FormControlLabel, RadioGroup, Grid } from '@mui/material';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, Button, Checkbox, Radio, Stack } from '@mui/material';
+import { Box, FormLabel, FormControl, IconButton, FormGroup, FormControlLabel, Grid } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, Button, Checkbox, Stack } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
 import { callAPIWithBlobResponse, callAPI, convertFiltersToMongoFormat } from '../../assets/util';
 import { downloadRecords, getColumnData } from '../../services/app.service';
 import { ColumnSelectDialogProps, CheckboxesGroupProps, ExportTypeSelectionProps } from '../../types';
 import CircularProgress from '@mui/material/CircularProgress';
+import ErrorBar from '../ErrorBar/ErrorBar';
 
 const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
     const { open, onClose, location, handleUpdate, _id, appliedFilters, sortBy, sortAscending } = props;
@@ -15,6 +16,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
     const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
     const [downloading, setDownloading] = useState(false);
     const [objSettings, setObjSettings] = useState<any>()
+    const [errorMsg, setErrorMsg] = useState<string | null>("")
     const [ exportTypes, setExportTypes ] = useState<{ [key: string]: boolean }>(
         {
             'csv': true,
@@ -120,7 +122,8 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
 
     const handleFailedExport = (e: Error) => {
         setDownloading(false)
-        console.error("unable to download csv: " + e)
+        console.error("unable to export: " + e)
+        setErrorMsg("unable to export: " + e)
     };
 
     const handleChangeExportTypes = (name: string) => {
@@ -199,6 +202,10 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
                         Export Data
                     </Button>
                 </div>
+                <ErrorBar
+                    errorMessage={errorMsg}
+                    setErrorMessage={setErrorMsg}
+                />
                 
         </Dialog>
     );
