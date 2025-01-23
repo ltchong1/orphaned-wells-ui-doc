@@ -12,7 +12,7 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
 
     const [columns, setColumns] = useState<string[]>([]);
     const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
-    const [exportType, setExportType] = useState("csv");
+    const [downloading, setDownloading] = useState(false);
     const [objSettings, setObjSettings] = useState<any>()
     const [ exportTypes, setExportTypes ] = useState<{ [key: string]: boolean }>(
         {
@@ -75,16 +75,19 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
             sort: [sortBy, sortAscending],
             filter: convertFiltersToMongoFormat(appliedFilters),
         };
+        setDownloading(true)
         callAPIWithBlobResponse(
             downloadRecords,
-            [location, _id, exportTypes, body],
+            [location, _id, exportTypes, name, body],
             handleSuccessfulExport,
-            (e: Error) => console.error("unable to download csv: " + e)
+            handleFailedExport,
         );
+
     };
 
     const handleSuccessfulExport = (data: Blob) => {
-        onClose();
+        handleClose();
+        setDownloading(false)
         const href = window.URL.createObjectURL(data);
         const link = document.createElement('a');
         link.href = href;
@@ -102,6 +105,11 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
             settings = {exportColumns: selectedColumns}
         }
         handleUpdate({"settings": settings})
+    };
+
+    const handleFailedExport = (e: Error) => {
+        setDownloading(false)
+        console.error("unable to download csv: " + e)
     };
 
     const handleChangeExportTypes = (name: string) => {

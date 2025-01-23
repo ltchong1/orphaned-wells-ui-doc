@@ -115,8 +115,8 @@ export const getRecordNotes = (record_id: string) => {
     });
 }
 
-export const downloadRecords = (location: string, _id: string, export_types: { [key: string]: boolean }, data: any) => {
-    let endpoint = `${BACKEND_URL}/download_records/${location}/${_id}?export_csv=${export_types['csv']}&export_json=${export_types['json']}&export_images=${export_types['image_files']}`
+export const downloadRecords = (location: string, _id: string, export_types: { [key: string]: boolean }, output_name: string, data: any) => {
+    let endpoint = `${BACKEND_URL}/download_records/${location}/${_id}?export_csv=${export_types['csv']}&export_json=${export_types['json']}&export_images=${export_types['image_files']}&output_name=${output_name}`
     return fetch(endpoint, {
         method: 'POST',
         mode: 'cors',
