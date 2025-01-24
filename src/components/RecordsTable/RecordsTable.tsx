@@ -351,7 +351,6 @@ const RecordsTable = (props: RecordsTableProps) => {
       </Table>
       <RecordNotesDialog
           record_id={notesRecordId}
-          notes={notes || []}
           open={showNotes}
           onClose={handleCloseNotesModal}
       />

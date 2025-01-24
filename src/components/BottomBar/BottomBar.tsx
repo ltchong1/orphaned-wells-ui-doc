@@ -191,7 +191,6 @@ const Bottombar = (props: BottombarProps) => {
         />
         <RecordNotesDialog
             record_id={params.id}
-            notes={recordData.record_notes || []}
             open={openNotesModal}
             onClose={() => setOpenNotesModal(false)}
         />
