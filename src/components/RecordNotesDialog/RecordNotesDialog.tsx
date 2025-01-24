@@ -334,7 +334,7 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
             color: 'black'
         },
         divider: {
-            paddingX: 1
+            paddingLeft: note?.isReply ? '24px' : 0, // 8px = 1 sx space
         }
     }
 
@@ -348,7 +348,9 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
     }
     return (
         <div>
-            <Divider sx={styles.divider}/>
+            <div style={styles.divider}>
+                <Divider />
+            </div>
             <Typography component={'div'} sx={styles.div}>
                 {(note.resolved && !showResolved) ? 
                     <div>
