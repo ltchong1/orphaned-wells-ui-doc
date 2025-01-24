@@ -25,6 +25,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
     const [ newNoteText, setNewNoteText ] = useState('')
     const [ disableButton, setDisableButton ] = useState(true)
     const [ loading, setLoading ] = useState(true)
+    const [ showResolved, setShowResolved ] = useState(false)
     const descriptionElementRef = useRef<HTMLDivElement | null>(null);
     const dialogHeight = '80vh';
     const dialogWidth = '35vw';
@@ -88,7 +89,21 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                     borderColor: 'black'
                 },
             },
-        }
+        },
+        resolvedCommentsDiv: {
+            backgroundColor: '#E7E7E7',
+            borderRadius: '2px'
+        },
+        resolvedCommentsText: {
+            // opacity: 0.6,
+            fontSize: '13px',
+            fontWeight: 'bold',
+            paddingLeft: '8px'
+        },
+        icon: {
+            fontSize: '14px',
+            color: 'black'
+        },
     };
 
     const handleAddNote = () => {
@@ -211,33 +226,71 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                     {
                         !loading && 
                         recordNotes.map((note, idx) => {
-                            if (!note.isReply && !note.deleted)  {
+                            if (!note.isReply && !note.deleted && !note.resolved)  {
                                 return (
                                     <div key={note.timestamp}>
                                         <IndividualNote
+                                            recordNotes={recordNotes}
                                             note={note}
                                             idx={idx}
                                             highlighted={replyToIdx === idx}
                                             editMode={editIdx === idx}
                                             handleClickAction={handleClickAction}
                                             userEmail={userEmail}
+                                            replyToIdx={replyToIdx}
+                                            editIdx={editIdx}
                                         />
-                                        {!note.resolved && note.replies && note.replies.map((replyIdx) => {
-                                            // if (recordNotes[replyIdx])
-                                            return <IndividualNote
-                                                key={replyIdx}
-                                                note={recordNotes[replyIdx]}
-                                                idx={replyIdx}
-                                                highlighted={replyToIdx === replyIdx}
-                                                editMode={editIdx === replyIdx}
-                                                handleClickAction={handleClickAction}
-                                                userEmail={userEmail}
-                                            />
-                                        })}
                                     </div>
                                 )
                             }
                         })
+                    }
+                    {
+                        !loading && 
+                        <div style={styles.resolvedCommentsDiv}>
+                            <div>
+                                <Divider sx={{marginBottom: 1}}/>
+                                <Stack direction={'row'} justifyContent={'space-between'} alignItems='start'>
+                                    <Typography sx={styles.resolvedCommentsText}>
+                                        Resolved comments
+                                    </Typography>
+                                    <Tooltip title='show resolved comment'>
+                                        <IconButton onClick={() => setShowResolved((showResolved) => !showResolved)}>
+                                            {showResolved ? 
+                                                <KeyboardArrowUpIcon sx={styles.icon}/>
+                                                :
+                                                <KeyboardArrowDownIcon sx={styles.icon}/>
+                                            }
+                                        </IconButton> 
+                                    </Tooltip>
+                                    
+                                </Stack>
+                                
+                            </div>
+                        {
+                            showResolved &&
+                                recordNotes.map((note, idx) => {
+                                    if (note.resolved)  {
+                                        return (
+                                            <div key={note.timestamp}>
+                                                <IndividualNote
+                                                    recordNotes={recordNotes}
+                                                    note={note}
+                                                    idx={idx}
+                                                    highlighted={replyToIdx === idx}
+                                                    editMode={editIdx === idx}
+                                                    handleClickAction={handleClickAction}
+                                                    userEmail={userEmail}
+                                                    replyToIdx={replyToIdx}
+                                                    editIdx={editIdx}
+                                                />
+                                            </div>
+                                        )
+                                    }
+                                })
+                        }
+                        </div>
+                        
                     }
 
                     <Divider/>
@@ -301,25 +354,33 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
     );
 }
 
+
 interface IndividualNoteProps {
-    note: RecordNote,
+    recordNotes: RecordNote[];
+    note: RecordNote;
     idx: number,
     highlighted?: boolean;
     editMode?: boolean;
     handleClickAction: (idx: number, action: string, newText?: string, event?: React.MouseEvent<HTMLButtonElement>) => void;
     userEmail: string;
+    replyToIdx?: number;
+    editIdx?: number;
+    childOfResolved?: boolean;
 }
 
-const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, userEmail }: IndividualNoteProps) => {
+const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleClickAction, userEmail, replyToIdx, editIdx, childOfResolved }: IndividualNoteProps) => {
     const [ newText, setNewText ] = useState<string>(note.text)
     const [ disableSaveEdit, setDisableSaveEdit ] = useState(false)
-    const [ showResolved, setShowResolved ] = useState(false)
     if (note.deleted) return null
     const styles = {
-        div: {
+        outerDiv: {
+            backgroundColor: (note.resolved || childOfResolved) ? '#F5F5F6' : undefined,
+        },
+        innerDiv: {
             paddingX: 1,
             paddingY: 1,
-            paddingBottom: (note.resolved && !showResolved) ? 0 : 1,
+            // paddingBottom: (note.resolved && !showResolved) ? 0 : 1,
+            paddingBottom: 1,
             marginLeft: note?.isReply ? 4 : 0,
             backgroundColor: highlighted ? "#F5F5F6" : 'inherit',
             border: highlighted ? '1px solid #D9D9D9' : '0px', // Small black border
@@ -347,113 +408,108 @@ const IndividualNote = ({ note, idx, editMode, highlighted, handleClickAction, u
         else setDisableSaveEdit(false)
     }
     return (
-        <div>
+        <div style={styles.outerDiv}>
             <div style={styles.divider}>
                 <Divider />
             </div>
-            <Typography component={'div'} sx={styles.div}>
-                {(note.resolved && !showResolved) ? 
-                    <div>
-                        
-                        <Stack direction={'row'} justifyContent={'space-between'} alignItems='start'>
-                            <Typography sx={styles.metadata}>
-                                - Resolved, {formatDateTime(note.lastUpdated || -1)}
+            <Typography component={'div'} sx={styles.innerDiv}>
+                <div>
+                    <Stack direction={'row'} justifyContent={'space-between'} alignItems='start'>
+                        <div style={{ maxWidth: '70%'}}>
+                        {editMode ? 
+                            <TextField
+                                fullWidth
+                                variant='standard'
+                                defaultValue={note.text}
+                                multiline
+                                onChange={handleUpdateText}
+                            />
+                        : 
+                            <Typography>
+                                {note.text}
                             </Typography>
-                            <Tooltip title='show resolved comment'>
-                                <IconButton onClick={() => setShowResolved((showResolved) => !showResolved)}>
-                                    <KeyboardArrowUpIcon sx={styles.icon}/>
-                                </IconButton> 
-                            </Tooltip>
-                            
-                        </Stack>
+                        }
+                        </div>
                         
-                    </div>
-                    
-                    : 
-                    <div>
-                        <Stack direction={'row'} justifyContent={'space-between'} alignItems='start'>
-                            <div style={{ maxWidth: '70%'}}>
-                            {editMode ? 
-                                <TextField
-                                    fullWidth
-                                    variant='standard'
-                                    defaultValue={note.text}
-                                    multiline
-                                    onChange={handleUpdateText}
-                                />
-                            : 
-                                <Typography>
-                                    {note.text}
-                                </Typography>
-                            }
-                            </div>
-                            
 
-                            <Stack direction='row'>
-                                {
-                                    note.resolved ? 
-                                        <div>
-                                            <Tooltip title='reopen'>
-                                                <IconButton onClick={(e) => handleClickAction(idx, 'resolve', undefined, e)}>
-                                                    <AutorenewIcon sx={styles.icon}/>
-                                                </IconButton> 
-                                            </Tooltip>
-                                            <Tooltip title='hide'>
-                                                <IconButton onClick={() => setShowResolved((showResolved) => !showResolved)}>
-                                                    <KeyboardArrowDownIcon sx={styles.icon}/>
-                                                </IconButton> 
-                                            </Tooltip>
-                                        </div>
-                                        
-                                    : 
+                        <Stack direction='row'>
+                            {
+                                note.resolved ? 
                                     <div>
-                                        {note.creator === userEmail &&
-                                            <Tooltip title='edit'>
-                                                <IconButton disabled={disableSaveEdit} onClick={() => handleClickAction(idx, 'edit', newText)}>
-                                                    {editMode ? <DoneAllIcon sx={styles.icon}/> : <EditIcon sx={styles.icon}/>}
-                                                </IconButton>
-                                            </Tooltip>
-                                        }
-                                        {!note.isReply && 
-                                            <Tooltip title='resolve'>
-                                                <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'resolve')}>
-                                                    <CheckIcon sx={styles.icon}/>
-                                                </IconButton>
-                                            </Tooltip>
-                                        }
-                                        {!note.isReply && 
-                                            <Tooltip title='reply'>
-                                                <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'reply')}>
-                                                    <ReplyIcon sx={styles.icon}/>
-                                                </IconButton>
-                                            </Tooltip>
-                                        }
-                                        {note.creator === userEmail &&
-                                            <Tooltip title='delete'>
-                                                <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'delete')}>
-                                                    <DeleteIcon sx={styles.icon}/>
-                                                </IconButton>
-                                            </Tooltip>
-                                        }
+                                        <Tooltip title='reopen'>
+                                            <IconButton onClick={(e) => handleClickAction(idx, 'resolve', undefined, e)}>
+                                                <AutorenewIcon sx={styles.icon}/>
+                                            </IconButton> 
+                                        </Tooltip>
                                     </div>
+                                    
+                                : 
+                            <div>
+                                {note.creator === userEmail &&
+                                    <Tooltip title='edit'>
+                                        <IconButton disabled={disableSaveEdit} onClick={() => handleClickAction(idx, 'edit', newText)}>
+                                            {editMode ? <DoneAllIcon sx={styles.icon}/> : <EditIcon sx={styles.icon}/>}
+                                        </IconButton>
+                                    </Tooltip>
                                 }
-                                
-                            </Stack>
+                                {!note.isReply && 
+                                    <Tooltip title='resolve'>
+                                        <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'resolve')}>
+                                            <CheckIcon sx={styles.icon}/>
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                                {!note.isReply && 
+                                    <Tooltip title='reply'>
+                                        <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'reply')}>
+                                            <ReplyIcon sx={styles.icon}/>
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                                {note.creator === userEmail &&
+                                    <Tooltip title='delete'>
+                                        <IconButton disabled={editMode} onClick={() => handleClickAction(idx, 'delete')}>
+                                            <DeleteIcon sx={styles.icon}/>
+                                        </IconButton>
+                                    </Tooltip>
+                                }
+                            </div>
+                            } 
+                            
                         </Stack>
-                        <Tooltip title={`originally created on ${formatDateTime(note.timestamp || -1)}`} enterDelay={1000}>
-                            <Typography sx={styles.metadata}>
-                                - <i>{note.creator || 'unknown'}</i>, {formatDateTime(note.lastUpdated || -1)}
-                            </Typography>
-                        </Tooltip>
-                        
-                    </div>
-                }
+                    </Stack>
+                    <Tooltip title={`originally created on ${formatDateTime(note.timestamp || -1)}`} enterDelay={1000}>
+                        <Typography sx={styles.metadata}>
+                            - <i>{note.creator || 'unknown'}</i>, {formatDateTime(note.lastUpdated || -1)}
+                        </Typography>
+                    </Tooltip>
+                    
+                </div>
                 
-            </Typography>            
-            
+            </Typography>
+
+            {note.replies && note.replies.map((replyIdx) => {
+                return <IndividualNote
+                    recordNotes={recordNotes}
+                    key={replyIdx}
+                    note={recordNotes[replyIdx]}
+                    idx={replyIdx}
+                    highlighted={replyToIdx === replyIdx}
+                    editMode={editIdx === replyIdx}
+                    handleClickAction={handleClickAction}
+                    userEmail={userEmail}
+                    replyToIdx={replyToIdx}
+                    editIdx={editIdx}
+                    childOfResolved={note.resolved}
+                />
+            })}
+
+            {/*
+                TODO: add little component here for 
+                Resolved by <username>, <date>
+            */}
         </div>
         
     );
 }
-
 export default RecordNotesDialog;
