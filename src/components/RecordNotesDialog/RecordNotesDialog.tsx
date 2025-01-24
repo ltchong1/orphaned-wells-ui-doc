@@ -387,15 +387,22 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleC
             borderRadius: 1, // Rounded corners
         },
         metadata: {
-            opacity: 0.6,
+            opacity: 0.9,
             fontSize: '13px'
         },
         icon: {
             fontSize: '14px',
             color: 'black'
         },
-        divider: {
-            paddingLeft: note?.isReply ? '24px' : 0, // 8px = 1 sx space
+        indentedDivider: {
+            paddingLeft: '24px',
+        },
+        resolvedTypography: {
+            paddingX: 1,
+            paddingY: 1,
+            paddingBottom: 1,
+            marginLeft: 4,
+            borderRadius: 1, // Rounded corners
         }
     }
 
@@ -409,7 +416,7 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleC
     }
     return (
         <div style={styles.outerDiv}>
-            <div style={styles.divider}>
+            <div style={note?.isReply ? styles.indentedDivider : undefined}>
                 <Divider />
             </div>
             <Typography component={'div'} sx={styles.innerDiv}>
@@ -444,6 +451,7 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleC
                                     </div>
                                     
                                 : 
+                                !childOfResolved &&
                             <div>
                                 {note.creator === userEmail &&
                                     <Tooltip title='edit'>
@@ -478,9 +486,9 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleC
                             
                         </Stack>
                     </Stack>
-                    <Tooltip title={`originally created on ${formatDateTime(note.timestamp || -1)}`} enterDelay={1000}>
+                    <Tooltip title={`last updated on ${formatDateTime(note.lastUpdated || -1)}`} enterDelay={1000}>
                         <Typography sx={styles.metadata}>
-                            - <i>{note.creator || 'unknown'}</i>, {formatDateTime(note.lastUpdated || -1)}
+                            - <i>{note.creator || 'unknown'}</i>, {formatDateTime(note.timestamp || -1)}
                         </Typography>
                     </Tooltip>
                     
@@ -508,6 +516,18 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleC
                 TODO: add little component here for 
                 Resolved by <username>, <date>
             */}
+            {note.resolved && 
+                <div>
+                    <div style={styles.indentedDivider}>
+                        <Divider />
+                    </div>
+                    <Typography component={'div'} sx={styles.resolvedTypography}>
+                        <i style={styles.metadata}>
+                            Resolved by {note.lastUpdatedUser}, {formatDateTime(note.lastUpdated || -1)}
+                        </i>
+                    </Typography>
+                </div>
+            }
         </div>
         
     );
