@@ -82,6 +82,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                 // On hover
                 '&:hover fieldset': {
                     borderWidth: '1.5px',
+                    borderColor: 'black'
                 },
                 // On focus
                 '&.Mui-focused fieldset': {
