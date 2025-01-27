@@ -146,11 +146,11 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
         else if (action === 'delete') {
             setDeleteIdx(idx)
         } else if (action === 'submit reply') {
-            handleUpdateRecordNotes('add', recordNotes.length, newValue)
+            handleUpdateRecordNotes('add', recordNotes.length, newValue, true)
         }
     }
 
-    const handleUpdateRecordNotes = (updateType: string, index: number, text?: string) => {
+    const handleUpdateRecordNotes = (updateType: string, index: number, text?: string, isReply?: boolean) => {
         const data: {
           [key: string]: string | number | boolean;
         } = {
@@ -158,9 +158,9 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
             index: index
         }
         if (text) data['text'] = text
-        if (replyToIdx !== undefined)  {
+        if (isReply)  {
             data['isReply'] = true
-            data['replyToIndex'] = replyToIdx
+            data['replyToIndex'] = replyToIdx || -1
         }
         callAPI(
             updateRecord,
@@ -326,14 +326,9 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                     />
                     <Box display="flex" justifyContent='space-between' mt={1}>
                         <Typography noWrap paragraph sx={styles.replyToText}>
-                            {replyToIdx !== undefined && 
-                                `Reply to: "${recordNotes[replyToIdx].text.substring(0, 20)}..."` 
-                            }
                         </Typography>
                         <Button variant="contained" onClick={handleAddNote} disabled={newNoteText==='' || disableButton}>
-                            {
-                                replyToIdx === undefined ? "Add new note" : "Reply to note"
-                            }
+                            Add new note
                         </Button>
                     </Box>
                 </Box>
