@@ -99,6 +99,7 @@ export interface RecordNote {
     deleted?: boolean;
     creator?: string;
     lastUpdated?: number;
+    lastUpdatedUser?: number;
     replies?: number[]; // list of indexes of notes that reply to this guy
     repliesTo?: number; // the index that this comment replies to, if this is a reply
 }
@@ -241,7 +242,6 @@ export interface ErrorBarProps {
 
 export interface RecordNotesDialogProps {
     record_id?: string;
-    notes: RecordNote[];
     open: boolean;
     onClose: (record_id?: string, newNotes?: RecordNote[], submitted?: boolean) => void;
 }
