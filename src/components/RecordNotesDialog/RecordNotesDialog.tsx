@@ -538,7 +538,7 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, handleClickAction, u
                     </div>
                     <Typography component={'div'} sx={styles.resolvedTypography}>
                         <i style={styles.metadata}>
-                            Resolved by {note.lastUpdatedUser}, {formatDateTime(note.lastUpdated || -1)}
+                            Resolved by {note.lastUpdatedUser || 'unknown'}, {formatDateTime(note.lastUpdated || -1)}
                         </i>
                     </Typography>
                 </div>
