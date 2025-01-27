@@ -190,15 +190,6 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
         console.error(e)
     }
 
-    const handleClickOutsideReply = (event: React.MouseEvent<HTMLDivElement>) => {
-        if(replyToIdx !== undefined) setReplyToIdx(undefined)
-    }
-
-    const handleClickTextField = (event: React.MouseEvent<HTMLDivElement>) => {
-        event.stopPropagation();
-        event.preventDefault();
-    }
-
     return (
         <Dialog
             open={open}
@@ -209,7 +200,6 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
             PaperProps={{
                 sx: styles.dialogPaper
             }}
-            // onClick={handleClickOutsideReply}
         >
             <DialogTitle id="new-dg-dialog-title">Notes</DialogTitle>
             <IconButton
@@ -244,7 +234,6 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                                             userEmail={userEmail}
                                             replyToIdx={replyToIdx}
                                             editIdx={editIdx}
-                                            handleClickTextField={handleClickTextField}
                                         />
                                     </div>
                                 )
@@ -289,7 +278,6 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                                                     userEmail={userEmail}
                                                     replyToIdx={replyToIdx}
                                                     editIdx={editIdx}
-                                                    handleClickTextField={handleClickTextField}
                                                 />
                                             </div>
                                         )
@@ -330,7 +318,6 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                         minRows={2}
                         disabled={disableButton}
                         sx={styles.textfield}
-                        onClick={handleClickTextField}
                     />
                     <Box display="flex" justifyContent='space-between' mt={1}>
                         <Typography noWrap paragraph sx={styles.replyToText}>
@@ -373,10 +360,9 @@ interface IndividualNoteProps {
     replyToIdx?: number;
     editIdx?: number;
     childOfResolved?: boolean;
-    handleClickTextField: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleClickAction, userEmail, replyToIdx, editIdx, childOfResolved, handleClickTextField }: IndividualNoteProps) => {
+const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleClickAction, userEmail, replyToIdx, editIdx, childOfResolved }: IndividualNoteProps) => {
     const [ newText, setNewText ] = useState<string>(note.text)
     const [ disableSaveEdit, setDisableSaveEdit ] = useState(false)
     const [ replyText, setReplyText ] = useState('')
@@ -548,7 +534,6 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleC
                     replyToIdx={replyToIdx}
                     editIdx={editIdx}
                     childOfResolved={note.resolved}
-                    handleClickTextField={handleClickTextField}
                 />
             })}
             {note.resolved && 
@@ -575,7 +560,6 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleC
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
                         sx={styles.textfield}
-                        onClick={handleClickTextField}
                     />
                     <Stack direction={'row'} justifyContent={'space-between'}>
                         <div></div>
