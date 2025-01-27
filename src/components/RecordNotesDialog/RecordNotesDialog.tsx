@@ -236,7 +236,6 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                                             recordNotes={recordNotes}
                                             note={note}
                                             idx={idx}
-                                            highlighted={replyToIdx === idx}
                                             editMode={editIdx === idx}
                                             handleClickAction={handleClickAction}
                                             userEmail={userEmail}
@@ -280,7 +279,6 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                                                     recordNotes={recordNotes}
                                                     note={note}
                                                     idx={idx}
-                                                    highlighted={replyToIdx === idx}
                                                     editMode={editIdx === idx}
                                                     handleClickAction={handleClickAction}
                                                     userEmail={userEmail}
@@ -319,7 +317,6 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                         required
                         variant='outlined'
                         placeholder='Type in a new note'
-                        // label={}
                         value={newNoteText}
                         onChange={(e) => setNewNoteText(e.target.value)}
                         multiline
@@ -361,7 +358,6 @@ interface IndividualNoteProps {
     recordNotes: RecordNote[];
     note: RecordNote;
     idx: number,
-    highlighted?: boolean;
     editMode?: boolean;
     handleClickAction: (idx: number, action: string, newText?: string, event?: React.MouseEvent<HTMLButtonElement>) => void;
     userEmail: string;
@@ -370,7 +366,7 @@ interface IndividualNoteProps {
     childOfResolved?: boolean;
 }
 
-const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleClickAction, userEmail, replyToIdx, editIdx, childOfResolved }: IndividualNoteProps) => {
+const IndividualNote = ({ recordNotes, note, idx, editMode, handleClickAction, userEmail, replyToIdx, editIdx, childOfResolved }: IndividualNoteProps) => {
     const [ newText, setNewText ] = useState<string>(note.text)
     const [ disableSaveEdit, setDisableSaveEdit ] = useState(false)
     const [ replyText, setReplyText ] = useState('')
@@ -382,11 +378,8 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleC
         innerDiv: {
             paddingX: 1,
             paddingY: 1,
-            // paddingBottom: (note.resolved && !showResolved) ? 0 : 1,
             paddingBottom: 1,
             marginLeft: note?.isReply ? 4 : 0,
-            backgroundColor: highlighted ? "#F5F5F6" : 'inherit',
-            border: highlighted ? '1px solid #D9D9D9' : '0px', // Small black border
             borderRadius: 1, // Rounded corners
         },
         metadata: {
@@ -535,7 +528,6 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleC
                     key={replyIdx}
                     note={recordNotes[replyIdx]}
                     idx={replyIdx}
-                    highlighted={replyToIdx === replyIdx}
                     editMode={editIdx === replyIdx}
                     handleClickAction={handleClickAction}
                     userEmail={userEmail}
