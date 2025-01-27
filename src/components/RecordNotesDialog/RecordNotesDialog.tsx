@@ -552,7 +552,7 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, handleClickAction, u
                         fullWidth
                         required
                         variant='outlined'
-                        placeholder='Reply to comment...'
+                        placeholder='Reply to note...'
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
                         sx={styles.textfield}
