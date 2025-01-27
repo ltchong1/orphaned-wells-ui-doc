@@ -133,7 +133,10 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
         else if (action === 'reply') {
             if (replyToIdx === idx) setReplyToIdx(undefined)
             else { 
-                document.getElementById('new-note-textfield')?.focus();
+                setTimeout(() => {
+                    document.getElementById('reply-textfield')?.focus();
+                }, 0)
+                
                 setReplyToIdx(idx)
             }
         }
@@ -142,6 +145,8 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
         }
         else if (action === 'delete') {
             setDeleteIdx(idx)
+        } else if (action === 'submit reply') {
+            handleUpdateRecordNotes('add', recordNotes.length, newValue)
         }
     }
 
@@ -204,7 +209,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
             PaperProps={{
                 sx: styles.dialogPaper
             }}
-            onClick={handleClickOutsideReply}
+            // onClick={handleClickOutsideReply}
         >
             <DialogTitle id="new-dg-dialog-title">Notes</DialogTitle>
             <IconButton
@@ -239,6 +244,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                                             userEmail={userEmail}
                                             replyToIdx={replyToIdx}
                                             editIdx={editIdx}
+                                            handleClickTextField={handleClickTextField}
                                         />
                                     </div>
                                 )
@@ -283,6 +289,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                                                     userEmail={userEmail}
                                                     replyToIdx={replyToIdx}
                                                     editIdx={editIdx}
+                                                    handleClickTextField={handleClickTextField}
                                                 />
                                             </div>
                                         )
@@ -366,11 +373,13 @@ interface IndividualNoteProps {
     replyToIdx?: number;
     editIdx?: number;
     childOfResolved?: boolean;
+    handleClickTextField: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleClickAction, userEmail, replyToIdx, editIdx, childOfResolved }: IndividualNoteProps) => {
+const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleClickAction, userEmail, replyToIdx, editIdx, childOfResolved, handleClickTextField }: IndividualNoteProps) => {
     const [ newText, setNewText ] = useState<string>(note.text)
     const [ disableSaveEdit, setDisableSaveEdit ] = useState(false)
+    const [ replyText, setReplyText ] = useState('')
     if (note.deleted) return null
     const styles = {
         outerDiv: {
@@ -403,10 +412,40 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleC
             paddingBottom: 1,
             marginLeft: 4,
             borderRadius: 1, // Rounded corners
+        },
+        textfield: {
+            '& .MuiOutlinedInput-root': {
+                // Default border
+                '& fieldset': {
+                    borderWidth: '1px',
+                    borderColor: 'black'
+                },
+                // On hover
+                '&:hover fieldset': {
+                    borderWidth: '1.5px',
+                },
+                // On focus
+                '&.Mui-focused fieldset': {
+                    borderWidth: '2px',
+                    borderColor: 'black'
+                },
+            },
+        },
+        replyDiv: {
+            marginLeft: '32px',
+            marginTop: '8px'
         }
     }
 
-    
+    const clickCancel = () => {
+        setReplyText('')
+        handleClickAction(idx, 'reply')
+    }
+
+    const clickSubmit = () => {
+        handleClickAction(idx, 'submit reply', replyText)
+        setReplyText('')
+    }
 
     const handleUpdateText = (e: any) => {
         let newValue = e.target.value
@@ -509,13 +548,9 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleC
                     replyToIdx={replyToIdx}
                     editIdx={editIdx}
                     childOfResolved={note.resolved}
+                    handleClickTextField={handleClickTextField}
                 />
             })}
-
-            {/*
-                TODO: add little component here for 
-                Resolved by <username>, <date>
-            */}
             {note.resolved && 
                 <div>
                     <div style={styles.indentedDivider}>
@@ -528,6 +563,38 @@ const IndividualNote = ({ recordNotes, note, idx, editMode, highlighted, handleC
                     </Typography>
                 </div>
             }
+            {
+                replyToIdx === idx && 
+                <div style={styles.replyDiv}>
+                    <TextField
+                        id='reply-textfield'
+                        fullWidth
+                        required
+                        variant='outlined'
+                        placeholder='Reply to comment...'
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        sx={styles.textfield}
+                        onClick={handleClickTextField}
+                    />
+                    <Stack direction={'row'} justifyContent={'space-between'}>
+                        <div></div>
+                        <div style={{padding: '8px'}}>
+                            <Button onClick={clickCancel}>Cancel</Button>
+                            <Button 
+                                variant='contained'
+                                onClick={clickSubmit}
+                                disabled={replyText === ''}
+                            >
+                                Reply
+                            </Button>
+                        </div>
+                    </Stack>
+                </div>
+                
+
+            }
+            
         </div>
         
     );
