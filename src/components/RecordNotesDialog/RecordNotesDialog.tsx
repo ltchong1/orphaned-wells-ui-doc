@@ -186,8 +186,16 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
     }
 
     const handleFailed = (e: any) => {
+        // TODO: add error msg here
         console.error('failed: ')
         console.error(e)
+    }
+
+    const checkForResolved = () => {
+        for (let note of recordNotes) {
+            if (note.resolved) return true
+        }
+        return false
     }
 
     return (
@@ -241,7 +249,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
                         })
                     }
                     {
-                        !loading && 
+                        (!loading && checkForResolved()) &&
                         <div style={styles.resolvedCommentsDiv}>
                             <div>
                                 <Divider sx={{marginBottom: 1}}/>
