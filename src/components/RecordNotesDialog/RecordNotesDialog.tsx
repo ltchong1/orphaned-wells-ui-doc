@@ -26,6 +26,7 @@ const RecordNotesDialog = ({ record_id, open, onClose }: RecordNotesDialogProps)
     const [ disableButton, setDisableButton ] = useState(true)
     const [ loading, setLoading ] = useState(true)
     const [ showResolved, setShowResolved ] = useState(false)
+    // TODO: add error msg, errorbar component for displaying any errors that occur
     const descriptionElementRef = useRef<HTMLDivElement | null>(null);
     const dialogHeight = '80vh';
     const dialogWidth = '35vw';
