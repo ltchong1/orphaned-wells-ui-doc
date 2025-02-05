@@ -67,7 +67,7 @@ const NewProjectDialog = ({ open, onClose, setErrorMsg }: NewProjectDialogProps)
     };
 
     const handleError = (e: any) => {
-        setErrorMsg(e.detail)
+        setErrorMsg(e)
         onClose()
     }
 

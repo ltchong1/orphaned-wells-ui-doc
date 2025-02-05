@@ -122,7 +122,7 @@ const RecordGroupPage = () => {
     };
 
     const handleAPIErrorResponse = (e: any) => {
-        setErrorMsg(e.detail)
+        setErrorMsg(e)
     }
 
     return (

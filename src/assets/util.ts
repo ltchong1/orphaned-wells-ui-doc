@@ -348,6 +348,8 @@ export const callAPI = async (
     } 
 
     const errorData = await response.json();
+    console.log('returning onerror (errordata.detail): ')
+    console.log(errorData.detail)
     return onError(errorData.detail, response.status);
     
   } catch (error) {

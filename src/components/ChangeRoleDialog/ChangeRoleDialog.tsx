@@ -91,7 +91,7 @@ const ChangeRoleDialog = ({ open, selectedUser, onClose, team }: ChangeRoleDialo
     }
 
     const failedAuthorization = (e: any) => {
-        setErrorMsg(e.detail)
+        setErrorMsg(e)
     }
 
     return (
