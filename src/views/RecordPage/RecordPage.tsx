@@ -68,14 +68,6 @@ const Record = () => {
         }
     }
 
-    const handleSuccessfulRefreshRecord = (data: any, lock_record?: boolean) => {
-        let newRecordData = data.recordData;
-        let newNotes = newRecordData.record_notes
-        let tempRecordData = {...recordData}
-        tempRecordData.record_notes = newNotes;
-        setRecordData(tempRecordData)
-    }
-
     const handleSuccessfulFetchRecord = (data: any, lock_record?: boolean) => {
         let newRecordData = data.recordData;
         if (lock_record) {
