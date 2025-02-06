@@ -121,7 +121,7 @@ const RecordGroupPage = () => {
         );
     };
 
-    const handleAPIErrorResponse = (e: any) => {
+    const handleAPIErrorResponse = (e: string) => {
         setErrorMsg(e)
     }
 

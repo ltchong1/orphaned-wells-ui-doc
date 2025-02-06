@@ -124,7 +124,7 @@ const Project = () => {
         );
     }
 
-    const handleAPIErrorResponse = (e: any) => {
+    const handleAPIErrorResponse = (e: string) => {
         setErrorMsg(e)
     }
 

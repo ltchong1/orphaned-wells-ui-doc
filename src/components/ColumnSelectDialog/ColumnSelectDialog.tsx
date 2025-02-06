@@ -121,9 +121,8 @@ const ColumnSelectDialog = (props: ColumnSelectDialogProps) => {
         handleUpdate({"settings": settings})
     };
 
-    const handleFailedExport = (e: Error) => {
+    const handleFailedExport = (e: string) => {
         setDownloading(false)
-        console.error("unable to export: " + e)
         setErrorMsg("unable to export: " + e)
     };
 
