@@ -322,7 +322,7 @@ export const callAPI = async (
       return onError(data, response.status);
     }
 
-    if (response.status === 401) {
+    else if (response.status === 401) {
       try {
         const refreshResponse = await refreshAuth();
         const refreshData = await refreshResponse.json();
@@ -352,8 +352,6 @@ export const callAPI = async (
     } 
 
     const errorData = await response.json();
-    console.log('returning onerror (errordata.detail): ')
-    console.log(errorData.detail)
     return onError(errorData.detail, response.status);
     
   } catch (error) {
