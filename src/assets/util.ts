@@ -317,8 +317,12 @@ export const callAPI = async (
       const data = isJson ? await response.json() : await response.blob();
       return onSuccess(data);
     } 
+    else if (response.status < 400) {
+      const data = isJson ? await response.json() : await response.blob();
+      return onError(data, response.status);
+    }
 
-    if (response.status === 401) {
+    else if (response.status === 401) {
       try {
         const refreshResponse = await refreshAuth();
         const refreshData = await refreshResponse.json();
