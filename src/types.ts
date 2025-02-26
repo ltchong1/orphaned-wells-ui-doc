@@ -52,7 +52,7 @@ export interface Attribute {
     name: string;
     key: string;
     value: string;
-    raw_value: string;
+    raw_text: string;
     normalized_value: string;
     uncleaned_value?: string;
     cleaned?: boolean;
@@ -129,6 +129,7 @@ export interface RecordAttributesTableProps {
     displayKeySubattributeIndex: number | null;
     handleUpdateRecord: () => void;
     locked?: boolean;
+    showRawValues?: boolean;
 }
 
 export interface RecordsTableProps {

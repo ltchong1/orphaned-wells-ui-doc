@@ -26,7 +26,8 @@ const AttributesTable = (props: AttributesTableProps) => {
         displayKeyIndex,
         displayKeySubattributeIndex,
         handleUpdateRecord,
-        locked
+        locked,
+        showRawValues=true
     } = props;
 
     const handleClickOutside = () => {
@@ -41,6 +42,9 @@ const AttributesTable = (props: AttributesTableProps) => {
                     <TableRow>
                         <TableCell sx={styles.headerRow}>Field</TableCell>
                         <TableCell sx={styles.headerRow}>Value</TableCell>
+                        {showRawValues &&
+                            <TableCell sx={styles.headerRow}>Raw Value</TableCell>
+                        }
                         <TableCell sx={styles.headerRow}>Confidence</TableCell>
                     </TableRow>
                 </TableHead>
@@ -59,6 +63,7 @@ const AttributesTable = (props: AttributesTableProps) => {
                             displayKeySubattributeIndex={displayKeySubattributeIndex}
                             handleUpdateRecord={handleUpdateRecord}
                             locked={locked}
+                            showRawValues={showRawValues}
                         />
                     ))}
                 </TableBody>
@@ -87,7 +92,8 @@ const AttributeRow = (props: AttributeRowProps) => {
         displayKeyIndex, 
         displayKeySubattributeIndex, 
         handleUpdateRecord,
-        locked
+        locked,
+        showRawValues
     } = props;
     
     const [ editMode, setEditMode ] = useState(false);
@@ -190,7 +196,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                 v.subattributes ? 
                 <TableCell></TableCell> 
                 :
-                <TableCell onKeyDown={handleKeyDown}>
+                <TableCell onKeyDown={handleKeyDown} sx={v.cleaning_error ? {backgroundColor: '#FECDD3'} : {}}>
                     {editMode ? 
                         <TextField 
                             onClick={(e) => e.stopPropagation()}
@@ -212,6 +218,13 @@ const AttributeRow = (props: AttributeRowProps) => {
                             }
                         </span>
                     }
+                </TableCell>
+            }
+            {showRawValues &&
+                <TableCell>
+                    <span >
+                        {v.raw_text}&nbsp;
+                    </span>
                 </TableCell>
             }
             <TableCell align="right" id={v.key+'_confidence'}>
@@ -268,6 +281,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                 displayKeySubattributeIndex={displayKeySubattributeIndex}
                 topLevelIdx={idx}
                 locked={locked}
+                showRawValues={showRawValues}
             />
         }
     </>
@@ -291,7 +305,8 @@ const SubattributesTable = (props: SubattributesTableProps) => {
         displayKeyIndex,
         displayKeySubattributeIndex,
         handleUpdateRecord,
-        locked
+        locked,
+        showRawValues
     } = props;
 
     return (
@@ -307,6 +322,9 @@ const SubattributesTable = (props: SubattributesTableProps) => {
                     <TableRow>
                         <TableCell sx={styles.headerRow}>Field</TableCell>
                         <TableCell sx={styles.headerRow}>Value</TableCell>
+                        {showRawValues &&
+                            <TableCell sx={styles.headerRow}>Raw Value</TableCell>
+                        }
                         <TableCell sx={styles.headerRow}>Confidence</TableCell>
                     </TableRow>
                     </TableHead>
@@ -325,6 +343,7 @@ const SubattributesTable = (props: SubattributesTableProps) => {
                             idx={idx}
                             topLevelIdx={topLevelIdx}
                             locked={locked}
+                            showRawValues={showRawValues}
                         />
                     ))}
                     </TableBody>
@@ -355,7 +374,8 @@ const SubattributeRow = (props: SubattributeRowProps) => {
         displayKeySubattributeIndex,
         handleUpdateRecord,
         idx,
-        locked
+        locked,
+        showRawValues
     } = props;
 
     const [ editMode, setEditMode ] = useState(false);
@@ -450,7 +470,7 @@ const SubattributeRow = (props: SubattributeRowProps) => {
                     {k}
                 </span>
             </TableCell>
-            <TableCell onKeyDown={handleKeyDown}>
+            <TableCell onKeyDown={handleKeyDown} sx={v.cleaning_error ? {backgroundColor: '#FECDD3'} : {}}>
                 {editMode ? 
                     <TextField 
                         onClick={(e) => e.stopPropagation()}
@@ -472,6 +492,13 @@ const SubattributeRow = (props: SubattributeRowProps) => {
                     </span>
                 }
             </TableCell>
+            {showRawValues &&
+                <TableCell>
+                    <span>
+                        {v.raw_text}&nbsp;
+                    </span>
+                </TableCell>
+            }
             <TableCell>{formatConfidence(v.confidence)}</TableCell>
         </TableRow>
     )

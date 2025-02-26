@@ -8,7 +8,7 @@ import { useKeyDown } from '../../assets/util';
 import AttributesTable from '../RecordAttributesTable/RecordAttributesTable';
 import { DocumentContainerProps } from '../../types';
 import { DocumentContainerStyles as styles } from '../../assets/styles';
-
+import Switch from '@mui/material/Switch';
 
 const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, handleUpdateRecord, locked }: DocumentContainerProps) => {
     const [imgIndex, setImgIndex] = useState(0);
@@ -21,6 +21,7 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
     const [height, setHeight] = useState("auto");
     const [forceOpenSubtable, setForceOpenSubtable] = useState<number | null>(null);
     const [imageHeight, setImageHeight] = useState(0);
+    const [ showRawValues, setShowRawValues ] = useState(false)
     const imageDivStyle = {
         width: width,
         height: height,
@@ -287,6 +288,10 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
                     <Grid item xs={gridWidths[2]}>
                         <Box sx={styles.gridContainer}>
                             <Box sx={styles.containerActions}>
+                                <p>
+                                    Raw Values 
+                                    <Switch checked={showRawValues} onChange={() => setShowRawValues(!showRawValues)} size='small'/>
+                                </p>
                                 <IconButton id='fullscreen-table-button' onClick={() => handleSetFullscreen("table")}>
                                     { 
                                         fullscreen === "table" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
@@ -304,6 +309,7 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
                                     displayKeySubattributeIndex={displayKeySubattributeIndex}
                                     handleUpdateRecord={handleUpdateRecord}
                                     locked={locked}
+                                    showRawValues={showRawValues}
                                 />
                             }
                         </Box>
