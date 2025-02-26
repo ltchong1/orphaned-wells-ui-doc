@@ -52,6 +52,11 @@ export interface Attribute {
     name: string;
     key: string;
     value: string;
+    raw_value: string;
+    normalized_value: string;
+    uncleaned_value?: string;
+    cleaned?: boolean;
+    cleaning_error?: boolean;
     confidence: number | null;
     edited?: boolean;
     normalized_vertices: number[][] | null;
