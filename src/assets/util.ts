@@ -165,7 +165,8 @@ export const formatDate = (timestamp: number | null): string | null => {
   } else return String(timestamp);
 }
 
-export function formatDateTime(timestamp: number): string {
+export function formatDateTime(timestamp?: number): string {
+  if (timestamp === undefined) return 'unknown'
   if (timestamp === -1) return 'unknown'
   if (timestamp > 1e12) {
     timestamp = Math.floor(timestamp / 1000); // Convert milliseconds to seconds
