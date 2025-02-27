@@ -22,7 +22,7 @@ const Record = () => {
     const [locked, setLocked] = useState(false)
     const params = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const { userPermissions} = useUserContext();
+    const { userPermissions, userEmail } = useUserContext();
 
     const styles = {
         outerBox: {
@@ -136,6 +136,7 @@ const Record = () => {
         let tempRecordData = { ...recordData };
         let tempAttributesList = [...tempRecordData.attributesList];
         let tempAttribute: any;
+        let rightNow = Date.now();
         if (isSubattribute) {
             let value = event.target.value;
             tempAttribute = tempAttributesList[topLevelIndex];
@@ -143,16 +144,24 @@ const Record = () => {
             let tempSubattribute = tempSubattributesList[subIndex!];
             tempSubattribute.value = value;
             tempAttribute.edited = true;
+            tempAttribute.lastUpdated = rightNow;
+            tempAttribute.lastUpdatedBy = userEmail
             tempSubattribute.edited = true;
+            tempSubattribute.lastUpdated = rightNow;
+            tempSubattribute.lastUpdatedBy = userEmail
             tempAttribute["subattributes"] = tempSubattributesList;
         } else {
             tempAttribute = tempAttributesList[topLevelIndex];
             let value = event.target.value;
             tempAttribute.value = value;
             tempAttribute.edited = true;
+            tempAttribute.lastUpdated = rightNow;
+            tempAttribute.lastUpdatedBy = userEmail
         }
         tempAttributesList[topLevelIndex] = tempAttribute;
         tempRecordData.attributesList = tempAttributesList;
+        tempRecordData.lastUpdated = rightNow;
+        tempRecordData.lastUpdatedBy = userEmail;
         setRecordData(tempRecordData);
     }
 

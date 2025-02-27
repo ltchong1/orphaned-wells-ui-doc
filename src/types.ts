@@ -20,6 +20,8 @@ export interface RecordData {
     review_status?: string;
     notes?: string | null;
     verification_status?: string;
+    lastUpdated?: number;
+    lastUpdatedBy?: string;
 }
 
 export interface ProjectData {
@@ -61,6 +63,8 @@ export interface Attribute {
     edited?: boolean;
     normalized_vertices: number[][] | null;
     subattributes?: Attribute[];
+    lastUpdated?: number;
+    lastUpdatedBy?: string;
 }
 
 export interface Processor {
