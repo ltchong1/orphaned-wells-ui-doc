@@ -51,9 +51,9 @@ export interface RecordGroup {
 export interface Attribute {
     name: string;
     key: string;
-    value: string;
+    value: string | boolean | number | null;
     raw_text: string;
-    normalized_value: string;
+    normalized_value: string | boolean;
     uncleaned_value?: string;
     cleaned?: boolean;
     cleaning_error?: boolean;
