@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
 import { Box, TextField, Collapse, Typography, IconButton, Badge } from '@mui/material';
-import { formatConfidence, useKeyDown, useOutsideClick } from '../../assets/util';
+import { formatConfidence, useKeyDown, useOutsideClick, formatAttributeValue } from '../../assets/util';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
@@ -210,7 +210,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                         />
                         :
                         <span>
-                            {v.value}&nbsp;
+                            {formatAttributeValue(v.value)}&nbsp;
                             {isSelected && !locked &&
                                 <IconButton id='edit-field-icon' sx={styles.rowIconButton} onClick={handleClickEditIcon}>
                                     <EditIcon sx={styles.rowIcon}/>
@@ -483,7 +483,7 @@ const SubattributeRow = (props: SubattributeRowProps) => {
                     />
                     :
                     <span>
-                        {v.value}&nbsp;
+                        {formatAttributeValue(v.value)}&nbsp;
                         {isSelected && !locked &&
                             <IconButton sx={styles.rowIconButton} onClick={handleClickEditIcon}>
                                 <EditIcon sx={styles.rowIcon}/>
