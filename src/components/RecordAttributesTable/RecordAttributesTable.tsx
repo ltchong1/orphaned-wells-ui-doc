@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
-import { Box, TextField, Collapse, Typography, IconButton, Badge } from '@mui/material';
-import { formatConfidence, useKeyDown, useOutsideClick, formatAttributeValue } from '../../assets/util';
+import { Box, TextField, Collapse, Typography, IconButton, Badge, Tooltip } from '@mui/material';
+import { formatConfidence, useKeyDown, useOutsideClick, formatAttributeValue, formatDateTime } from '../../assets/util';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
@@ -209,14 +209,16 @@ const AttributeRow = (props: AttributeRowProps) => {
                             id='edit-field-text-box'
                         />
                         :
-                        <span>
-                            {formatAttributeValue(v.value)}&nbsp;
-                            {isSelected && !locked &&
-                                <IconButton id='edit-field-icon' sx={styles.rowIconButton} onClick={handleClickEditIcon}>
-                                    <EditIcon sx={styles.rowIcon}/>
-                                </IconButton>
-                            }
-                        </span>
+                        <Tooltip title={v.edited ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy || 'unknown'}` : ''}>
+                            <span>
+                                {formatAttributeValue(v.value)}&nbsp;
+                                {isSelected && !locked &&
+                                    <IconButton id='edit-field-icon' sx={styles.rowIconButton} onClick={handleClickEditIcon}>
+                                        <EditIcon sx={styles.rowIcon}/>
+                                    </IconButton>
+                                }
+                            </span>
+                        </Tooltip>
                     }
                 </TableCell>
             }
@@ -482,14 +484,16 @@ const SubattributeRow = (props: SubattributeRowProps) => {
                         onFocus={(event) => event.target.select()}
                     />
                     :
-                    <span>
-                        {formatAttributeValue(v.value)}&nbsp;
-                        {isSelected && !locked &&
-                            <IconButton sx={styles.rowIconButton} onClick={handleClickEditIcon}>
-                                <EditIcon sx={styles.rowIcon}/>
-                            </IconButton>
-                        }
-                    </span>
+                    <Tooltip title={v.edited ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy}` : ''}>
+                        <span>
+                            {formatAttributeValue(v.value)}&nbsp;
+                            {isSelected && !locked &&
+                                <IconButton sx={styles.rowIconButton} onClick={handleClickEditIcon}>
+                                    <EditIcon sx={styles.rowIcon}/>
+                                </IconButton>
+                            }
+                        </span>
+                    </Tooltip>
                 }
             </TableCell>
             {showRawValues &&
