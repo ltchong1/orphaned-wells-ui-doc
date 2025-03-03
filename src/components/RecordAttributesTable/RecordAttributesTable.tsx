@@ -210,7 +210,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                                 onChange={(e) => handleChangeValue(e, idx)} 
                                 onFocus={(event) => event.target.select()}
                                 id='edit-field-text-box'
-                                sx={styles.errorTextField}
+                                sx={v.cleaning_error ? styles.errorTextField: {}}
                                 variant='outlined'
                             />
                             :
