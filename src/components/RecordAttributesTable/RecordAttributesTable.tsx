@@ -209,7 +209,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                             id='edit-field-text-box'
                         />
                         :
-                        <Tooltip title={v.edited ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy || 'unknown'}` : ''}>
+                        <Tooltip title={(v.edited && v.lastUpdated) ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy || 'unknown'}` : ''}>
                             <span>
                                 {formatAttributeValue(v.value)}&nbsp;
                                 {isSelected && !locked &&
@@ -484,7 +484,7 @@ const SubattributeRow = (props: SubattributeRowProps) => {
                         onFocus={(event) => event.target.select()}
                     />
                     :
-                    <Tooltip title={v.edited ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy}` : ''}>
+                    <Tooltip title={(v.edited && v.lastUpdated) ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy}` : ''}>
                         <span>
                             {formatAttributeValue(v.value)}&nbsp;
                             {isSelected && !locked &&
