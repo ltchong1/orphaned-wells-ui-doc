@@ -22,6 +22,7 @@ export interface RecordData {
     verification_status?: string;
     lastUpdated?: number;
     lastUpdatedBy?: string;
+    has_errors?: boolean;
 }
 
 export interface ProjectData {
