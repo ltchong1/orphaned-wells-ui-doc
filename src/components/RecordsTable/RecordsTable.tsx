@@ -182,8 +182,8 @@ const RecordsTable = (props: RecordsTableProps) => {
     if (key === "name") return <TableCell key={key}>{row.name}</TableCell>
     if (key === "dateCreated") return <TableCell key={key} align="right">{formatDate(row.dateCreated)}</TableCell>
     if (key === "api_number") return <TableCell key={key} align="right">{row.api_number}</TableCell>
-    if (key === "confidence_median") return <TableCell key={key} align="right">{(row.status === "digitized" || row.status === "reprocessed") && calculateAverageConfidence(row.attributesList)}</TableCell>
-    if (key === "confidence_lowest") return <TableCell key={key} align="right">{(row.status === "digitized" || row.status === "reprocessed") && calculateLowestConfidence(row.attributesList)}</TableCell>
+    if (key === "confidence_median") return <TableCell key={key} align="right">{(row.status === "digitized" || row.status === "redigitized") && calculateAverageConfidence(row.attributesList)}</TableCell>
+    if (key === "confidence_lowest") return <TableCell key={key} align="right">{(row.status === "digitized" || row.status === "redigitized") && calculateLowestConfidence(row.attributesList)}</TableCell>
     if (key === "notes") return (
       <TableCell key={key} align="right">
           <IconButton sx={(!row.record_notes || row.record_notes?.length === 0) ? {} : { color: "#F2DB6F" }} onClick={(e) => handleClickNotes(e, row)}>
@@ -203,7 +203,7 @@ const RecordsTable = (props: RecordsTableProps) => {
             <IconButton>
               <CheckCircleOutlineIcon sx={{ color: "green" }} />
             </IconButton> :
-            row.status === "reprocessed" ? 
+            row.status === "redigitized" ? 
             <IconButton>
               <PublishedWithChangesOutlinedIcon sx={{ color: "green" }} />
             </IconButton> :
@@ -235,8 +235,13 @@ const RecordsTable = (props: RecordsTableProps) => {
               row.review_status === "defective" ? 
                 <WarningIcon sx={{ color: "#9F0100" }} /> 
               :
-              row.review_status === "reviewed" ? 
+              row.review_status === "reviewed" ? (
+                row.has_errors ? 
+                <CheckCircleIcon sx={{ color: "red" }} /> 
+                :
                 <CheckCircleIcon sx={{ color: "green" }} /> 
+              )
+                
               :
               null
             }
