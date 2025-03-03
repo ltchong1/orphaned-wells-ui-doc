@@ -19,6 +19,7 @@ const Record = () => {
     const [previousPages, setPreviousPages] = useState<PreviousPages>({ "Projects": () => navigate("/projects", { replace: true }) });
     const [errorMsg, setErrorMsg] = useState<string | null>("");
     const [showResetPrompt, setShowResetPrompt] = useState(false);
+    const [ lastUpdatedField, setLastUpdatedField ] = useState<any>()
     const [locked, setLocked] = useState(false)
     const params = useParams<{ id: string }>();
     const navigate = useNavigate();
@@ -109,7 +110,7 @@ const Record = () => {
         if (locked) return
         callAPI(
             updateRecord,
-            [params.id, { data: recordData, type: "attributesList" }],
+            [params.id, { data: recordData, type: "attributesList", fieldToClean: lastUpdatedField }],
             handleSuccessfulAttributeUpdate,
             handleFailedUpdate
         );
@@ -119,7 +120,7 @@ const Record = () => {
         let tempRecordData = { ...recordData } as RecordData;
         tempRecordData["attributesList"] = data["attributesList"]
         if (data["review_status"]) tempRecordData["review_status"] = data["review_status"]
-        
+        setLastUpdatedField(undefined)
         setRecordData(tempRecordData);
     }
 
@@ -162,6 +163,12 @@ const Record = () => {
         tempRecordData.attributesList = tempAttributesList;
         tempRecordData.lastUpdated = rightNow;
         tempRecordData.lastUpdatedBy = userEmail;
+        let tempLastUpdatedField = {
+            topLevelIndex: topLevelIndex,
+            'isSubattribute': isSubattribute,
+            'subIndex': subIndex
+        }
+        setLastUpdatedField(tempLastUpdatedField)
         setRecordData(tempRecordData);
     }
 
