@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
-import { Box, TextField, Collapse, Typography, IconButton, Badge, Tooltip } from '@mui/material';
+import { Box, TextField, Collapse, Typography, IconButton, Badge, Tooltip, Stack } from '@mui/material';
 import { formatConfidence, useKeyDown, useOutsideClick, formatAttributeValue, formatDateTime } from '../../assets/util';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -196,30 +196,42 @@ const AttributeRow = (props: AttributeRowProps) => {
                 v.subattributes ? 
                 <TableCell></TableCell> 
                 :
-                <TableCell onKeyDown={handleKeyDown} sx={v.cleaning_error ? {backgroundColor: '#FECDD3'} : {}}>
-                    {editMode ? 
-                        <TextField 
-                            onClick={(e) => e.stopPropagation()}
-                            autoFocus
-                            name={k}
-                            size="small"
-                            defaultValue={v.value} 
-                            onChange={(e) => handleChangeValue(e, idx)} 
-                            onFocus={(event) => event.target.select()}
-                            id='edit-field-text-box'
-                        />
-                        :
-                        <Tooltip title={(v.edited && v.lastUpdated) ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy || 'unknown'}` : ''}>
-                            <span>
-                                {formatAttributeValue(v.value)}&nbsp;
-                                {isSelected && !locked &&
-                                    <IconButton id='edit-field-icon' sx={styles.rowIconButton} onClick={handleClickEditIcon}>
-                                        <EditIcon sx={styles.rowIcon}/>
-                                    </IconButton>
-                                }
-                            </span>
-                        </Tooltip>
+                <TableCell onKeyDown={handleKeyDown}>
+
+                <Stack direction='column'>
+                    <span style={v.cleaning_error ? styles.errorSpan : {}}>
+                        {editMode ? 
+                            <TextField 
+                                onClick={(e) => e.stopPropagation()}
+                                autoFocus
+                                name={k}
+                                size="small"
+                                defaultValue={v.value} 
+                                onChange={(e) => handleChangeValue(e, idx)} 
+                                onFocus={(event) => event.target.select()}
+                                id='edit-field-text-box'
+                                sx={styles.errorTextField}
+                                variant='outlined'
+                            />
+                            :
+                            <Tooltip title={(v.edited && v.lastUpdated) ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy || 'unknown'}` : ''}>
+                                <p style={v.cleaning_error ? styles.errorParagraph : styles.noErrorParagraph}>
+                                    {formatAttributeValue(v.value)}&nbsp;
+                                    {isSelected && !locked &&
+                                        <IconButton id='edit-field-icon' sx={styles.rowIconButton} onClick={handleClickEditIcon}>
+                                            <EditIcon sx={styles.rowIcon}/>
+                                        </IconButton>
+                                    }
+                                </p>
+                            </Tooltip>
+                        }
+                    </span>
+                    {
+                        v.cleaning_error && (
+                            <Typography noWrap component={'p'} sx={styles.errorText}>Error during cleaning</Typography>
+                        )
                     }
+                </Stack>
                 </TableCell>
             }
             {showRawValues &&

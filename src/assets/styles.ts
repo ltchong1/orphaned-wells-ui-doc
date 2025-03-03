@@ -54,7 +54,41 @@ export const styles = {
   unflaggedConfidence: {
       padding: 0,
       margin: 0,
-  }
+  },
+  errorParagraph: {
+    margin: 8,
+  },
+  errorText: {
+    color: '#B33E3B',
+    fontSize: '14px',
+    fontWeight: 'bold'
+  },
+  errorSpan: {
+    backgroundColor: '#FECDD3',
+    borderRadius: 4,
+    border: '2px solid #B33E3B'
+  },
+  noErrorParagraph: {
+    margin:0
+  },
+  errorTextField: {
+    '& .MuiOutlinedInput-root': {
+        // Default border
+        '& fieldset': {
+            border: '0px'
+        },
+        // On hover
+        '&:hover fieldset': {
+            borderWidth: '1.5px',
+            borderColor: 'black'
+        },
+        // On focus
+        '&.Mui-focused fieldset': {
+            borderWidth: '2px',
+            borderColor: 'black'
+        },
+    },
+},
 }
 
 export const HeaderStyles = {
