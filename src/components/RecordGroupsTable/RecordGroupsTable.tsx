@@ -45,7 +45,7 @@ const RecordGroupsTable = ({ record_groups }: RecordGroupsTableProps) => {
                 {row.reviewed_amt || 0} / {row.total_amt || 0}
                 {row.error_amt ? 
                   <Tooltip title='This record group contains cleaning errors'>
-                    <IconButton sx={{color: ERROR_TEXT_COLOR}}><WarningIcon/></IconButton>
+                    <IconButton sx={{color: ERROR_TEXT_COLOR}} size='small'><WarningIcon/></IconButton>
                   </Tooltip>
                   
                   :
