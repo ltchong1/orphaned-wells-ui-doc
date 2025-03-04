@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
-import { getRecordGroup, uploadDocument, deleteRecordGroup, updateRecordGroup } from '../../services/app.service';
+import { getRecordGroup, uploadDocument, deleteRecordGroup, updateRecordGroup, cleanRecords } from '../../services/app.service';
 import RecordsTable from '../../components/RecordsTable/RecordsTable';
 import Subheader from '../../components/Subheader/Subheader';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
@@ -19,6 +19,7 @@ const RecordGroupPage = () => {
     const [recordGroup, setRecordGroup] = useState<RecordGroup>({ } as RecordGroup);
     const [showDocumentModal, setShowDocumentModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openCleanPrompt, setOpenCleanPrompt] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [recordGroupName, setRecordGroupName] = useState("");
     const [errorMsg, setErrorMsg] = useState<string | null>("");
@@ -125,6 +126,20 @@ const RecordGroupPage = () => {
         setErrorMsg(e)
     }
 
+    const runCleaningFunctions = () => {
+        callAPI(
+            cleanRecords,
+            ['record_group', params.id],
+            handleSuccessfulClean,
+            handleAPIErrorResponse
+        );
+    }
+
+    const handleSuccessfulClean = () => {
+        setOpenCleanPrompt(false)
+        window.location.reload()
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
@@ -133,6 +148,7 @@ const RecordGroupPage = () => {
                 handleClickButton={() => setShowDocumentModal(true)}
                 actions={(userPermissions && userPermissions.includes('manage_project')) ?
                     {
+                        "Clean records": () => setOpenCleanPrompt(true),
                         "Change record group name": handleClickChangeName, 
                         "Delete record group": () => setOpenDeleteModal(true),
                     }
@@ -161,6 +177,16 @@ const RecordGroupPage = () => {
                 handleSave={handleDeleteRecordGroup}
                 buttonText='Delete'
                 buttonColor='error'
+                buttonVariant='contained'
+                width={400}
+            />
+            <PopupModal
+                open={openCleanPrompt}
+                handleClose={() => setOpenCleanPrompt(false)}
+                text="Are you sure you want to clean all the records in this record group?"
+                handleSave={runCleaningFunctions}
+                buttonText='Clean Records'
+                buttonColor='primary'
                 buttonVariant='contained'
                 width={400}
             />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
-import { getRecordData, updateRecord, deleteRecord } from '../../services/app.service';
+import { getRecordData, updateRecord, deleteRecord, cleanRecords } from '../../services/app.service';
 import { callAPI, useKeyDown } from '../../assets/util';
 import Subheader from '../../components/Subheader/Subheader';
 import Bottombar from '../../components/BottomBar/BottomBar';
@@ -14,6 +14,7 @@ import { useUserContext } from '../../usercontext';
 const Record = () => {
     const [recordData, setRecordData] = useState<RecordData>({} as RecordData);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openCleanPrompt, setOpenCleanPrompt] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [recordName, setRecordName] = useState("");
     const [previousPages, setPreviousPages] = useState<PreviousPages>({ "Projects": () => navigate("/projects", { replace: true }) });
@@ -261,14 +262,29 @@ const Record = () => {
         else window.location.reload()
     }
 
+    const runCleaningFunctions = () => {
+        callAPI(
+            cleanRecords,
+            ['record', params.id],
+            handleSuccessfulClean,
+            handleFailedUpdate
+        );
+    }
+    
+    const handleSuccessfulClean = () => {
+        setOpenCleanPrompt(false)
+        window.location.reload()
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={`${recordData.recordIndex !== undefined ? recordData.recordIndex : ""}. ${recordData.name !== undefined ? recordData.name : ""}`}
                 actions={(userPermissions && userPermissions.includes('delete')) ?
                     {
+                        "Clean record": () => setOpenCleanPrompt(true),
                         "Change record name": () => setOpenUpdateNameModal(true),
-                        "Delete record": () => setOpenDeleteModal(true)
+                        "Delete record": () => setOpenDeleteModal(true),
                     }
                     :
                     {
@@ -328,6 +344,16 @@ const Record = () => {
                 text="Setting status to unreviewed will reset any changes made. Are you sure you want to continue?"
                 handleSave={() => handleUpdateReviewStatus("unreviewed")}
                 buttonText='Reset'
+                buttonColor='primary'
+                buttonVariant='contained'
+                width={400}
+            />
+            <PopupModal
+                open={openCleanPrompt}
+                handleClose={() => setOpenCleanPrompt(false)}
+                text="Are you sure you want to clean all the records in this record group?"
+                handleSave={runCleaningFunctions}
+                buttonText='Clean Record'
                 buttonColor='primary'
                 buttonVariant='contained'
                 width={400}
