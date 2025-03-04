@@ -1,3 +1,5 @@
+const ERROR_TEXT_COLOR = '#B33E3b'
+
 export const styles = {
   headerRow: {
     fontWeight: "bold"
@@ -59,17 +61,22 @@ export const styles = {
     margin: 8,
   },
   errorText: {
-    color: '#B33E3B',
+    color: ERROR_TEXT_COLOR,
     fontSize: '14px',
     fontWeight: 'bold'
   },
   errorSpan: {
     backgroundColor: '#FECDD3',
     borderRadius: 4,
-    border: '2px solid #B33E3B'
+    border: '2px solid '+ERROR_TEXT_COLOR
   },
   noErrorParagraph: {
     margin:0
+  },
+  errorInfoIcon: {
+    fontSize: '12px',
+    padding: '2px',
+    color: ERROR_TEXT_COLOR
   },
   errorTextField: {
     '& .MuiOutlinedInput-root': {

@@ -4,6 +4,7 @@ import { Box, TextField, Collapse, Typography, IconButton, Badge, Tooltip, Stack
 import { formatConfidence, useKeyDown, useOutsideClick, formatAttributeValue, formatDateTime } from '../../assets/util';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import InfoIcon from '@mui/icons-material/Info';
 import EditIcon from '@mui/icons-material/Edit';
 import { Attribute, RecordAttributesTableProps } from '../../types';
 import { styles } from '../../assets/styles';
@@ -228,7 +229,15 @@ const AttributeRow = (props: AttributeRowProps) => {
                     </span>
                     {
                         v.cleaning_error && (
-                            <Typography noWrap component={'p'} sx={styles.errorText}>Error during cleaning</Typography>
+                            <Typography noWrap component={'p'} sx={styles.errorText}>
+                                Error during cleaning 
+                                <Tooltip title={v.cleaning_error} onClick={(e) => e.stopPropagation()}>
+                                    <IconButton sx={styles.errorInfoIcon}>
+                                        <InfoIcon fontSize='inherit' color='inherit'/>
+                                    </IconButton>
+                                </Tooltip>
+                                
+                            </Typography>
                         )
                     }
                 </Stack>
