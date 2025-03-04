@@ -1,4 +1,4 @@
-const ERROR_TEXT_COLOR = '#B33E3b'
+export const ERROR_TEXT_COLOR = '#B33E3b'
 
 export const styles = {
   headerRow: {
@@ -95,7 +95,7 @@ export const styles = {
             borderColor: 'black'
         },
     },
-},
+  },
 }
 
 export const HeaderStyles = {

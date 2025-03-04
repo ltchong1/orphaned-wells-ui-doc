@@ -49,6 +49,7 @@ export interface RecordGroup {
     dateCreated?: number;
     reviewed_amt?: number;
     total_amt?: number;
+    error_amt?: number;
 }
 
 export interface Attribute {
