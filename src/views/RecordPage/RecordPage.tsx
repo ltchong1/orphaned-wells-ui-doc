@@ -341,7 +341,7 @@ const Record = () => {
             <PopupModal
                 open={showResetPrompt}
                 handleClose={() => setShowResetPrompt(false)}
-                text="Setting status to unreviewed will reset any changes made. Are you sure you want to continue?"
+                text="Setting status to unreviewed will reset any changes made, and revert all fields to uncleaned values. Are you sure you want to continue?"
                 handleSave={() => handleUpdateReviewStatus("unreviewed")}
                 buttonText='Reset'
                 buttonColor='primary'
