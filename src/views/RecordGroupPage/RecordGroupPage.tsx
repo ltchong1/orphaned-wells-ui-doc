@@ -8,7 +8,7 @@ import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDo
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
 import { callAPI } from '../../assets/util';
-import { RecordGroup, ProjectData, PreviousPages } from '../../types';
+import { RecordGroup, ProjectData, PreviousPages, SubheaderActions } from '../../types';
 import { useUserContext } from '../../usercontext';
 
 const RecordGroupPage = () => {
@@ -23,6 +23,7 @@ const RecordGroupPage = () => {
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [recordGroupName, setRecordGroupName] = useState("");
     const [errorMsg, setErrorMsg] = useState<string | null>("");
+    const [ subheaderActions, setSubheaderActions ] = useState<SubheaderActions>()
     const [navigation, setNavigation] = useState<PreviousPages>({"Projects": () => navigate("/projects", { replace: true })})
 
     useEffect(() => {
@@ -38,6 +39,20 @@ const RecordGroupPage = () => {
         temp_navigation[project.name] = () => navigate("/project/"+project._id, { replace: true })
         setNavigation(temp_navigation)
     }, [project]);
+
+    useEffect(() => {
+        let tempActions = {} as SubheaderActions
+        if (userPermissions && userPermissions.includes('manage_project')) {
+            tempActions['Change record group name'] = handleClickChangeName
+        }
+        if (userPermissions && userPermissions.includes('clean_record')) {
+            tempActions["Clean records"] = () => setOpenCleanPrompt(true)
+        }
+        if (userPermissions && userPermissions.includes('delete')) {
+            tempActions["Delete record group"] = () => setOpenDeleteModal(true)
+        }
+        setSubheaderActions(tempActions)
+    }, [userPermissions]);
 
     const styles = {
         outerBox: {
@@ -146,15 +161,7 @@ const RecordGroupPage = () => {
                 currentPage={recordGroup.name}
                 buttonName={(userPermissions && userPermissions.includes('upload_document')) ? "Upload new record(s)" : undefined}
                 handleClickButton={() => setShowDocumentModal(true)}
-                actions={(userPermissions && userPermissions.includes('manage_project')) ?
-                    {
-                        "Clean records": () => setOpenCleanPrompt(true),
-                        "Change record group name": handleClickChangeName, 
-                        "Delete record group": () => setOpenDeleteModal(true),
-                    }
-                    :
-                    null
-                }
+                actions={subheaderActions}
                 previousPages={navigation}
             />
             <Box sx={styles.innerBox}>
