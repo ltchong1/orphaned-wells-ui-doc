@@ -294,9 +294,22 @@ export const DocumentContainerStyles = {
       backgroundColor: "white",
   },
   containerActions: {
+    left: {
+      display: 'flex',
+      justifyContent: 'flex-start',
+      marginleft: '20px',
+    },
+    right: {
       display: 'flex',
       justifyContent: 'flex-end',
       marginRight: '10px',
+    },
+    both: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      paddingX: 4,
+    }
+      
   },
   outerBox: {
       paddingBottom: "45px"

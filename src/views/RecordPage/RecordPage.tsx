@@ -122,11 +122,13 @@ const Record = () => {
         );
     }
 
-    const handleUpdateRecord = () => {
+    const handleUpdateRecord = (cleanFields: boolean = true) => {
         if (locked) return
+        let body = { data: recordData, type: "attributesList", fieldToClean: null }
+        if (cleanFields) body['fieldToClean'] = lastUpdatedField
         callAPI(
             updateRecord,
-            [params.id, { data: recordData, type: "attributesList", fieldToClean: lastUpdatedField }],
+            [params.id, body],
             handleSuccessfulAttributeUpdate,
             handleFailedUpdate
         );

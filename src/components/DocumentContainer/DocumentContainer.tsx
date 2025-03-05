@@ -22,6 +22,7 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
     const [forceOpenSubtable, setForceOpenSubtable] = useState<number | null>(null);
     const [imageHeight, setImageHeight] = useState(0);
     const [ showRawValues, setShowRawValues ] = useState(false)
+    const [ autoCleanFields, setAutoCleanFields ] = useState(true)
     const imageDivStyle = {
         width: width,
         height: height,
@@ -287,16 +288,21 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
                     fullscreen !== "image" && 
                     <Grid item xs={gridWidths[2]}>
                         <Box sx={styles.gridContainer}>
-                            <Box sx={styles.containerActions}>
+                            <Box sx={styles.containerActions.both}>
+                                <p style={{marginTop: '24px'}}>
+                                    Automatically Clean Fields 
+                                    <Switch checked={autoCleanFields} onChange={() => setAutoCleanFields(!autoCleanFields)} size='small'/>
+                                </p>
                                 <p>
                                     Raw Values 
                                     <Switch checked={showRawValues} onChange={() => setShowRawValues(!showRawValues)} size='small'/>
+                                    <IconButton id='fullscreen-table-button' onClick={() => handleSetFullscreen("table")}>
+                                        { 
+                                            fullscreen === "table" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
+                                        }
+                                    </IconButton>
                                 </p>
-                                <IconButton id='fullscreen-table-button' onClick={() => handleSetFullscreen("table")}>
-                                    { 
-                                        fullscreen === "table" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
-                                    }
-                                </IconButton>
+                                
                             </Box>
                             {attributesList !== undefined && 
                                 <AttributesTable 
@@ -307,7 +313,7 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
                                     forceOpenSubtable={forceOpenSubtable}
                                     displayKeyIndex={displayKeyIndex}
                                     displayKeySubattributeIndex={displayKeySubattributeIndex}
-                                    handleUpdateRecord={handleUpdateRecord}
+                                    handleUpdateRecord={() => handleUpdateRecord(autoCleanFields)}
                                     locked={locked}
                                     showRawValues={showRawValues}
                                 />
@@ -319,7 +325,7 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
                 {fullscreen !== "table" && 
                     <Grid item xs={gridWidths[0]}>
                         <Box sx={styles.gridContainer}>
-                            <Box sx={styles.containerActions}>
+                            <Box sx={styles.containerActions.right}>
                                 <IconButton id='fullscreen-image-button' onClick={() => handleSetFullscreen("image")}>
                                     { 
                                         fullscreen === "image" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
