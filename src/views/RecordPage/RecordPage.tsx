@@ -65,7 +65,7 @@ const Record = () => {
             "Change record name": () => setOpenUpdateNameModal(true)
         } as SubheaderActions
         if (userPermissions && userPermissions.includes('clean_record')) {
-            tempActions["Clean record"] = () => setOpenUpdateNameModal(true)
+            tempActions["Clean record"] = () => setOpenCleanPrompt(true)
             tempActions["Reset record"] = () => setShowResetPrompt(true)
         }
         if (userPermissions && userPermissions.includes('delete')) {
