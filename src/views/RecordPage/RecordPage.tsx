@@ -8,7 +8,7 @@ import Bottombar from '../../components/BottomBar/BottomBar';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
-import { RecordData, handleChangeValueSignature, PreviousPages } from '../../types';
+import { RecordData, handleChangeValueSignature, PreviousPages, SubheaderActions } from '../../types';
 import { useUserContext } from '../../usercontext';
 
 const Record = () => {
@@ -21,6 +21,7 @@ const Record = () => {
     const [errorMsg, setErrorMsg] = useState<string | null>("");
     const [showResetPrompt, setShowResetPrompt] = useState(false);
     const [ lastUpdatedField, setLastUpdatedField ] = useState<any>()
+    const [ subheaderActions, setSubheaderActions ] = useState<SubheaderActions>()
     const [locked, setLocked] = useState(false)
     const params = useParams<{ id: string }>();
     const navigate = useNavigate();
@@ -58,6 +59,20 @@ const Record = () => {
             handleFailedFetchRecord,
         )
     }, [params.id]);
+
+    useEffect(() => {
+        let tempActions = {
+            "Change record name": () => setOpenUpdateNameModal(true)
+        } as SubheaderActions
+        if (userPermissions && userPermissions.includes('clean_record')) {
+            tempActions["Clean record"] = () => setOpenUpdateNameModal(true)
+            tempActions["Reset record"] = () => setShowResetPrompt(true)
+        }
+        if (userPermissions && userPermissions.includes('delete')) {
+            tempActions["Delete record"] = () => setOpenDeleteModal(true)
+        }
+        setSubheaderActions(tempActions)
+    }, [userPermissions])
 
     const handleFailedFetchRecord = (data: any, response_status?: number) => {
         if (response_status === 303) {
@@ -280,17 +295,7 @@ const Record = () => {
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={`${recordData.recordIndex !== undefined ? recordData.recordIndex : ""}. ${recordData.name !== undefined ? recordData.name : ""}`}
-                actions={(userPermissions && userPermissions.includes('delete')) ?
-                    {
-                        "Clean record": () => setOpenCleanPrompt(true),
-                        "Change record name": () => setOpenUpdateNameModal(true),
-                        "Delete record": () => setOpenDeleteModal(true),
-                    }
-                    :
-                    {
-                        "Change record name": () => setOpenUpdateNameModal(true),
-                    }
-                }
+                actions={subheaderActions}
                 previousPages={previousPages}
                 status={recordData.review_status}
                 verification_status={recordData.verification_status}

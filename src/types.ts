@@ -124,6 +124,10 @@ export interface TableColumns {
     keyNames: string[];
 }
 
+export interface SubheaderActions {
+    [key: string]: () => void;
+}
+
 /*
 props interfaces
 */
