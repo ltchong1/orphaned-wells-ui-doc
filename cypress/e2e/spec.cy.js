@@ -1,5 +1,6 @@
 const path = require("path");
 const test_record_group_name = "Illinois Test Project"
+const test_project_name = "ISGS Project"
 describe('End to end testing', () => {
   beforeEach(() => {
     cy.loginByGoogleApi()
@@ -22,12 +23,12 @@ describe('End to end testing', () => {
 
     // navigate to project page
     cy.findByRole('rowheader', {
-      name: /test project/i
+      name: test_project_name
     }).click()
 
     // test that project page loaded correctly
     cy.findByRole('button', {
-      name: /test project/i
+      name: test_project_name
     }).should('be.visible')
     cy.findByRole('columnheader', {
       name: /record group name/i
