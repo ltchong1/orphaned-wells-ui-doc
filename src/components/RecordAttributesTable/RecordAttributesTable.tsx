@@ -494,28 +494,46 @@ const SubattributeRow = (props: SubattributeRowProps) => {
                 </span>
             </TableCell>
             <TableCell onKeyDown={handleKeyDown} sx={v.cleaning_error ? {backgroundColor: '#FECDD3'} : {}}>
-                {editMode ? 
-                    <TextField 
-                        onClick={(e) => e.stopPropagation()}
-                        autoFocus
-                        name={k}
-                        size="small" 
-                        defaultValue={v.value} 
-                        onChange={handleUpdateValue} 
-                        onFocus={(event) => event.target.select()}
-                    />
-                    :
-                    <Tooltip title={(v.edited && v.lastUpdated) ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy}` : ''}>
-                        <span>
-                            {formatAttributeValue(v.value)}&nbsp;
-                            {isSelected && !locked &&
-                                <IconButton sx={styles.rowIconButton} onClick={handleClickEditIcon}>
-                                    <EditIcon sx={styles.rowIcon}/>
-                                </IconButton>
-                            }
-                        </span>
-                    </Tooltip>
-                }
+                <Stack direction='column'>
+                    <span style={v.cleaning_error ? styles.errorSpan : {}}>
+                    {editMode ? 
+                        <TextField 
+                            onClick={(e) => e.stopPropagation()}
+                            autoFocus
+                            name={k}
+                            size="small" 
+                            defaultValue={v.value} 
+                            onChange={handleUpdateValue} 
+                            onFocus={(event) => event.target.select()}
+                            sx={v.cleaning_error ? styles.errorTextField: {}}
+                        />
+                        :
+                        <Tooltip title={(v.edited && v.lastUpdated) ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy}` : ''}>
+                            <p>
+                                {formatAttributeValue(v.value)}&nbsp;
+                                {isSelected && !locked &&
+                                    <IconButton sx={styles.rowIconButton} onClick={handleClickEditIcon}>
+                                        <EditIcon sx={styles.rowIcon}/>
+                                    </IconButton>
+                                }
+                            </p>
+                        </Tooltip>
+                    }
+                    </span>
+                    {
+                        v.cleaning_error && (
+                            <Typography noWrap component={'p'} sx={styles.errorText}>
+                                Error during cleaning 
+                                <Tooltip title={v.cleaning_error} onClick={(e) => e.stopPropagation()}>
+                                    <IconButton sx={styles.errorInfoIcon}>
+                                        <InfoIcon fontSize='inherit' color='inherit'/>
+                                    </IconButton>
+                                </Tooltip>
+                                
+                            </Typography>
+                        )
+                    }
+                </Stack>
             </TableCell>
             {showRawValues &&
                 <TableCell>
