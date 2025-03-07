@@ -20,6 +20,9 @@ export interface RecordData {
     review_status?: string;
     notes?: string | null;
     verification_status?: string;
+    lastUpdated?: number;
+    lastUpdatedBy?: string;
+    has_errors?: boolean;
 }
 
 export interface ProjectData {
@@ -46,16 +49,24 @@ export interface RecordGroup {
     dateCreated?: number;
     reviewed_amt?: number;
     total_amt?: number;
+    error_amt?: number;
 }
 
 export interface Attribute {
     name: string;
     key: string;
-    value: string;
+    value: string | boolean | number | null;
+    raw_text: string;
+    normalized_value: string | boolean;
+    uncleaned_value?: string;
+    cleaned?: boolean;
+    cleaning_error?: boolean;
     confidence: number | null;
     edited?: boolean;
     normalized_vertices: number[][] | null;
     subattributes?: Attribute[];
+    lastUpdated?: number;
+    lastUpdatedBy?: string;
 }
 
 export interface Processor {
@@ -113,6 +124,10 @@ export interface TableColumns {
     keyNames: string[];
 }
 
+export interface SubheaderActions {
+    [key: string]: () => void;
+}
+
 /*
 props interfaces
 */
@@ -122,8 +137,9 @@ export interface RecordAttributesTableProps {
     fullscreen: string | null;
     displayKeyIndex: number;
     displayKeySubattributeIndex: number | null;
-    handleUpdateRecord: () => void;
+    handleUpdateRecord: (...args: any[]) => void;
     locked?: boolean;
+    showRawValues?: boolean;
 }
 
 export interface RecordsTableProps {
@@ -205,7 +221,7 @@ export interface DocumentContainerProps {
     imageFiles: string[];
     attributesList: any[];
     handleChangeValue: handleChangeValueSignature;
-    handleUpdateRecord: () => void;
+    handleUpdateRecord: (...args: any[]) => void;
     locked?: boolean;
 }
 

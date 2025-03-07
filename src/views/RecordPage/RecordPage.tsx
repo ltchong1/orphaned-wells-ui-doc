@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useParams, useNavigate } from "react-router-dom";
-import { getRecordData, updateRecord, deleteRecord } from '../../services/app.service';
+import { getRecordData, updateRecord, deleteRecord, cleanRecords } from '../../services/app.service';
 import { callAPI, useKeyDown } from '../../assets/util';
 import Subheader from '../../components/Subheader/Subheader';
 import Bottombar from '../../components/BottomBar/BottomBar';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
-import { RecordData, handleChangeValueSignature, PreviousPages } from '../../types';
+import { RecordData, handleChangeValueSignature, PreviousPages, SubheaderActions } from '../../types';
 import { useUserContext } from '../../usercontext';
 
 const Record = () => {
     const [recordData, setRecordData] = useState<RecordData>({} as RecordData);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openCleanPrompt, setOpenCleanPrompt] = useState(false);
     const [openUpdateNameModal, setOpenUpdateNameModal] = useState(false);
     const [recordName, setRecordName] = useState("");
     const [previousPages, setPreviousPages] = useState<PreviousPages>({ "Projects": () => navigate("/projects", { replace: true }) });
     const [errorMsg, setErrorMsg] = useState<string | null>("");
     const [showResetPrompt, setShowResetPrompt] = useState(false);
+    const [ lastUpdatedField, setLastUpdatedField ] = useState<any>()
+    const [ subheaderActions, setSubheaderActions ] = useState<SubheaderActions>()
     const [locked, setLocked] = useState(false)
     const params = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const { userPermissions} = useUserContext();
+    const { userPermissions, userEmail } = useUserContext();
 
     const styles = {
         outerBox: {
@@ -56,6 +59,20 @@ const Record = () => {
             handleFailedFetchRecord,
         )
     }, [params.id]);
+
+    useEffect(() => {
+        let tempActions = {
+            "Change record name": () => setOpenUpdateNameModal(true)
+        } as SubheaderActions
+        if (userPermissions && userPermissions.includes('clean_record')) {
+            tempActions["Clean record"] = () => setOpenCleanPrompt(true)
+            tempActions["Reset record"] = () => setShowResetPrompt(true)
+        }
+        if (userPermissions && userPermissions.includes('delete')) {
+            tempActions["Delete record"] = () => setOpenDeleteModal(true)
+        }
+        setSubheaderActions(tempActions)
+    }, [userPermissions])
 
     const handleFailedFetchRecord = (data: any, response_status?: number) => {
         if (response_status === 303) {
@@ -105,11 +122,13 @@ const Record = () => {
         );
     }
 
-    const handleUpdateRecord = () => {
+    const handleUpdateRecord = (cleanFields: boolean = true) => {
         if (locked) return
+        let body = { data: recordData, type: "attributesList", fieldToClean: null }
+        if (cleanFields) body['fieldToClean'] = lastUpdatedField
         callAPI(
             updateRecord,
-            [params.id, { data: recordData, type: "attributesList" }],
+            [params.id, body],
             handleSuccessfulAttributeUpdate,
             handleFailedUpdate
         );
@@ -119,7 +138,7 @@ const Record = () => {
         let tempRecordData = { ...recordData } as RecordData;
         tempRecordData["attributesList"] = data["attributesList"]
         if (data["review_status"]) tempRecordData["review_status"] = data["review_status"]
-        
+        setLastUpdatedField(undefined)
         setRecordData(tempRecordData);
     }
 
@@ -136,6 +155,7 @@ const Record = () => {
         let tempRecordData = { ...recordData };
         let tempAttributesList = [...tempRecordData.attributesList];
         let tempAttribute: any;
+        let rightNow = Date.now();
         if (isSubattribute) {
             let value = event.target.value;
             tempAttribute = tempAttributesList[topLevelIndex];
@@ -143,16 +163,30 @@ const Record = () => {
             let tempSubattribute = tempSubattributesList[subIndex!];
             tempSubattribute.value = value;
             tempAttribute.edited = true;
+            tempAttribute.lastUpdated = rightNow;
+            tempAttribute.lastUpdatedBy = userEmail
             tempSubattribute.edited = true;
+            tempSubattribute.lastUpdated = rightNow;
+            tempSubattribute.lastUpdatedBy = userEmail
             tempAttribute["subattributes"] = tempSubattributesList;
         } else {
             tempAttribute = tempAttributesList[topLevelIndex];
             let value = event.target.value;
             tempAttribute.value = value;
             tempAttribute.edited = true;
+            tempAttribute.lastUpdated = rightNow;
+            tempAttribute.lastUpdatedBy = userEmail
         }
         tempAttributesList[topLevelIndex] = tempAttribute;
         tempRecordData.attributesList = tempAttributesList;
+        tempRecordData.lastUpdated = rightNow;
+        tempRecordData.lastUpdatedBy = userEmail;
+        let tempLastUpdatedField = {
+            topLevelIndex: topLevelIndex,
+            'isSubattribute': isSubattribute,
+            'subIndex': subIndex
+        }
+        setLastUpdatedField(tempLastUpdatedField)
         setRecordData(tempRecordData);
     }
 
@@ -245,20 +279,25 @@ const Record = () => {
         else window.location.reload()
     }
 
+    const runCleaningFunctions = () => {
+        callAPI(
+            cleanRecords,
+            ['record', params.id],
+            handleSuccessfulClean,
+            handleFailedUpdate
+        );
+    }
+    
+    const handleSuccessfulClean = () => {
+        setOpenCleanPrompt(false)
+        window.location.reload()
+    }
+
     return (
         <Box sx={styles.outerBox}>
             <Subheader
                 currentPage={`${recordData.recordIndex !== undefined ? recordData.recordIndex : ""}. ${recordData.name !== undefined ? recordData.name : ""}`}
-                actions={(userPermissions && userPermissions.includes('delete')) ?
-                    {
-                        "Change record name": () => setOpenUpdateNameModal(true),
-                        "Delete record": () => setOpenDeleteModal(true)
-                    }
-                    :
-                    {
-                        "Change record name": () => setOpenUpdateNameModal(true),
-                    }
-                }
+                actions={subheaderActions}
                 previousPages={previousPages}
                 status={recordData.review_status}
                 verification_status={recordData.verification_status}
@@ -309,9 +348,19 @@ const Record = () => {
             <PopupModal
                 open={showResetPrompt}
                 handleClose={() => setShowResetPrompt(false)}
-                text="Setting status to unreviewed will reset any changes made. Are you sure you want to continue?"
+                text="Setting status to unreviewed will reset any changes made, and revert all fields to uncleaned values. Are you sure you want to continue?"
                 handleSave={() => handleUpdateReviewStatus("unreviewed")}
                 buttonText='Reset'
+                buttonColor='primary'
+                buttonVariant='contained'
+                width={400}
+            />
+            <PopupModal
+                open={openCleanPrompt}
+                handleClose={() => setOpenCleanPrompt(false)}
+                text="Are you sure you want to clean all the records in this record group?"
+                handleSave={runCleaningFunctions}
+                buttonText='Clean Record'
                 buttonColor='primary'
                 buttonVariant='contained'
                 width={400}

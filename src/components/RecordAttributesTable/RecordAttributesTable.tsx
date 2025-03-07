@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
-import { Box, TextField, Collapse, Typography, IconButton, Badge } from '@mui/material';
-import { formatConfidence, useKeyDown, useOutsideClick } from '../../assets/util';
+import { Box, TextField, Collapse, Typography, IconButton, Badge, Tooltip, Stack } from '@mui/material';
+import { formatConfidence, useKeyDown, useOutsideClick, formatAttributeValue, formatDateTime } from '../../assets/util';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import InfoIcon from '@mui/icons-material/Info';
 import EditIcon from '@mui/icons-material/Edit';
 import { Attribute, RecordAttributesTableProps } from '../../types';
 import { styles } from '../../assets/styles';
@@ -26,7 +27,8 @@ const AttributesTable = (props: AttributesTableProps) => {
         displayKeyIndex,
         displayKeySubattributeIndex,
         handleUpdateRecord,
-        locked
+        locked,
+        showRawValues=true
     } = props;
 
     const handleClickOutside = () => {
@@ -41,6 +43,9 @@ const AttributesTable = (props: AttributesTableProps) => {
                     <TableRow>
                         <TableCell sx={styles.headerRow}>Field</TableCell>
                         <TableCell sx={styles.headerRow}>Value</TableCell>
+                        {showRawValues &&
+                            <TableCell sx={styles.headerRow}>Raw Value</TableCell>
+                        }
                         <TableCell sx={styles.headerRow}>Confidence</TableCell>
                     </TableRow>
                 </TableHead>
@@ -59,6 +64,7 @@ const AttributesTable = (props: AttributesTableProps) => {
                             displayKeySubattributeIndex={displayKeySubattributeIndex}
                             handleUpdateRecord={handleUpdateRecord}
                             locked={locked}
+                            showRawValues={showRawValues}
                         />
                     ))}
                 </TableBody>
@@ -87,7 +93,8 @@ const AttributeRow = (props: AttributeRowProps) => {
         displayKeyIndex, 
         displayKeySubattributeIndex, 
         handleUpdateRecord,
-        locked
+        locked,
+        showRawValues
     } = props;
     
     const [ editMode, setEditMode ] = useState(false);
@@ -186,32 +193,61 @@ const AttributeRow = (props: AttributeRowProps) => {
                     </IconButton>
                 }
             </TableCell>
-            {
+            { // TODO: add styling to parent attribute if subattributes have errors
                 v.subattributes ? 
                 <TableCell></TableCell> 
                 :
                 <TableCell onKeyDown={handleKeyDown}>
-                    {editMode ? 
-                        <TextField 
-                            onClick={(e) => e.stopPropagation()}
-                            autoFocus
-                            name={k}
-                            size="small"
-                            defaultValue={v.value} 
-                            onChange={(e) => handleChangeValue(e, idx)} 
-                            onFocus={(event) => event.target.select()}
-                            id='edit-field-text-box'
-                        />
-                        :
-                        <span>
-                            {v.value}&nbsp;
-                            {isSelected && !locked &&
-                                <IconButton id='edit-field-icon' sx={styles.rowIconButton} onClick={handleClickEditIcon}>
-                                    <EditIcon sx={styles.rowIcon}/>
-                                </IconButton>
-                            }
-                        </span>
+
+                <Stack direction='column'>
+                    <span style={v.cleaning_error ? styles.errorSpan : {}}>
+                        {editMode ? 
+                            <TextField 
+                                onClick={(e) => e.stopPropagation()}
+                                autoFocus
+                                name={k}
+                                size="small"
+                                defaultValue={v.value} 
+                                onChange={(e) => handleChangeValue(e, idx)} 
+                                onFocus={(event) => event.target.select()}
+                                id='edit-field-text-box'
+                                sx={v.cleaning_error ? styles.errorTextField: {}}
+                                variant='outlined'
+                            />
+                            :
+                            <Tooltip title={(v.edited && v.lastUpdated) ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy || 'unknown'}` : ''}>
+                                <p style={v.cleaning_error ? styles.errorParagraph : styles.noErrorParagraph}>
+                                    {formatAttributeValue(v.value)}&nbsp;
+                                    {isSelected && !locked &&
+                                        <IconButton id='edit-field-icon' sx={styles.rowIconButton} onClick={handleClickEditIcon}>
+                                            <EditIcon sx={styles.rowIcon}/>
+                                        </IconButton>
+                                    }
+                                </p>
+                            </Tooltip>
+                        }
+                    </span>
+                    {
+                        v.cleaning_error && (
+                            <Typography noWrap component={'p'} sx={styles.errorText}>
+                                Error during cleaning 
+                                <Tooltip title={v.cleaning_error} onClick={(e) => e.stopPropagation()}>
+                                    <IconButton sx={styles.errorInfoIcon}>
+                                        <InfoIcon fontSize='inherit' color='inherit'/>
+                                    </IconButton>
+                                </Tooltip>
+                                
+                            </Typography>
+                        )
                     }
+                </Stack>
+                </TableCell>
+            }
+            {showRawValues &&
+                <TableCell>
+                    <span >
+                        {v.raw_text}&nbsp;
+                    </span>
                 </TableCell>
             }
             <TableCell align="right" id={v.key+'_confidence'}>
@@ -268,6 +304,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                 displayKeySubattributeIndex={displayKeySubattributeIndex}
                 topLevelIdx={idx}
                 locked={locked}
+                showRawValues={showRawValues}
             />
         }
     </>
@@ -291,7 +328,8 @@ const SubattributesTable = (props: SubattributesTableProps) => {
         displayKeyIndex,
         displayKeySubattributeIndex,
         handleUpdateRecord,
-        locked
+        locked,
+        showRawValues
     } = props;
 
     return (
@@ -307,6 +345,9 @@ const SubattributesTable = (props: SubattributesTableProps) => {
                     <TableRow>
                         <TableCell sx={styles.headerRow}>Field</TableCell>
                         <TableCell sx={styles.headerRow}>Value</TableCell>
+                        {showRawValues &&
+                            <TableCell sx={styles.headerRow}>Raw Value</TableCell>
+                        }
                         <TableCell sx={styles.headerRow}>Confidence</TableCell>
                     </TableRow>
                     </TableHead>
@@ -325,6 +366,7 @@ const SubattributesTable = (props: SubattributesTableProps) => {
                             idx={idx}
                             topLevelIdx={topLevelIdx}
                             locked={locked}
+                            showRawValues={showRawValues}
                         />
                     ))}
                     </TableBody>
@@ -355,7 +397,8 @@ const SubattributeRow = (props: SubattributeRowProps) => {
         displayKeySubattributeIndex,
         handleUpdateRecord,
         idx,
-        locked
+        locked,
+        showRawValues
     } = props;
 
     const [ editMode, setEditMode ] = useState(false);
@@ -450,28 +493,55 @@ const SubattributeRow = (props: SubattributeRowProps) => {
                     {k}
                 </span>
             </TableCell>
-            <TableCell onKeyDown={handleKeyDown}>
-                {editMode ? 
-                    <TextField 
-                        onClick={(e) => e.stopPropagation()}
-                        autoFocus
-                        name={k}
-                        size="small" 
-                        defaultValue={v.value} 
-                        onChange={handleUpdateValue} 
-                        onFocus={(event) => event.target.select()}
-                    />
-                    :
-                    <span>
-                        {v.value}&nbsp;
-                        {isSelected && !locked &&
-                            <IconButton sx={styles.rowIconButton} onClick={handleClickEditIcon}>
-                                <EditIcon sx={styles.rowIcon}/>
-                            </IconButton>
-                        }
+            <TableCell onKeyDown={handleKeyDown} sx={v.cleaning_error ? {backgroundColor: '#FECDD3'} : {}}>
+                <Stack direction='column'>
+                    <span style={v.cleaning_error ? styles.errorSpan : {}}>
+                    {editMode ? 
+                        <TextField 
+                            onClick={(e) => e.stopPropagation()}
+                            autoFocus
+                            name={k}
+                            size="small" 
+                            defaultValue={v.value} 
+                            onChange={handleUpdateValue} 
+                            onFocus={(event) => event.target.select()}
+                            sx={v.cleaning_error ? styles.errorTextField: {}}
+                        />
+                        :
+                        <Tooltip title={(v.edited && v.lastUpdated) ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy}` : ''}>
+                            <p>
+                                {formatAttributeValue(v.value)}&nbsp;
+                                {isSelected && !locked &&
+                                    <IconButton sx={styles.rowIconButton} onClick={handleClickEditIcon}>
+                                        <EditIcon sx={styles.rowIcon}/>
+                                    </IconButton>
+                                }
+                            </p>
+                        </Tooltip>
+                    }
                     </span>
-                }
+                    {
+                        v.cleaning_error && (
+                            <Typography noWrap component={'p'} sx={styles.errorText}>
+                                Error during cleaning 
+                                <Tooltip title={v.cleaning_error} onClick={(e) => e.stopPropagation()}>
+                                    <IconButton sx={styles.errorInfoIcon}>
+                                        <InfoIcon fontSize='inherit' color='inherit'/>
+                                    </IconButton>
+                                </Tooltip>
+                                
+                            </Typography>
+                        )
+                    }
+                </Stack>
             </TableCell>
+            {showRawValues &&
+                <TableCell>
+                    <span>
+                        {v.raw_text}&nbsp;
+                    </span>
+                </TableCell>
+            }
             <TableCell>{formatConfidence(v.confidence)}</TableCell>
         </TableRow>
     )
