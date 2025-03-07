@@ -290,8 +290,8 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
                         <Box sx={styles.gridContainer}>
                             <Box sx={styles.containerActions.both}>
                                 <p style={{marginTop: '24px'}}>
-                                    Automatically Clean Fields 
-                                    <Switch checked={autoCleanFields} onChange={() => setAutoCleanFields(!autoCleanFields)} size='small'/>
+                                    {/* Automatically Clean Fields 
+                                    <Switch checked={autoCleanFields} onChange={() => setAutoCleanFields(!autoCleanFields)} size='small'/> */}
                                 </p>
                                 <p>
                                     Raw Values 

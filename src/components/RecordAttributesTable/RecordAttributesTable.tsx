@@ -193,7 +193,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                     </IconButton>
                 }
             </TableCell>
-            {
+            { // TODO: add styling to parent attribute if subattributes have errors
                 v.subattributes ? 
                 <TableCell></TableCell> 
                 :
