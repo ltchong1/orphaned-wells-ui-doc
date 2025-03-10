@@ -155,19 +155,16 @@ const Record = () => {
 
     const handleChangeValue: handleChangeValueSignature = (event, topLevelIndex, isSubattribute, subIndex) => {
         if (locked) return true
-
         let tempRecordData = { ...recordData };
         let tempAttributesList = [...tempRecordData.attributesList];
         let tempAttribute: any;
         let rightNow = Date.now();
-        let schemaKey;
         let value;
         if (isSubattribute) {
             value = event.target.value;
             tempAttribute = tempAttributesList[topLevelIndex];
             let tempSubattributesList = [...tempAttribute["subattributes"]];
             let tempSubattribute = tempSubattributesList[subIndex!];
-            schemaKey = `${tempAttribute.key}::${tempSubattribute.key}`
             tempSubattribute.value = value;
             tempAttribute.edited = true;
             tempAttribute.lastUpdated = rightNow;
@@ -178,7 +175,6 @@ const Record = () => {
             tempAttribute["subattributes"] = tempSubattributesList;
         } else {
             tempAttribute = tempAttributesList[topLevelIndex];
-            schemaKey = tempAttribute.key
             value = event.target.value;
             tempAttribute.value = value;
             tempAttribute.edited = true;
@@ -196,9 +192,9 @@ const Record = () => {
         }
         setLastUpdatedField(tempLastUpdatedField)
         setRecordData(tempRecordData);
-        let is_valid = true
-        if (recordSchema) is_valid = checkFieldValidity(recordSchema[schemaKey], value)
-        return is_valid
+        // let is_valid = true
+        // if (recordSchema) is_valid = checkFieldValidity(recordSchema[schemaKey], value)
+        // return is_valid
     }
 
     const handleDeleteRecord = () => {
@@ -321,6 +317,7 @@ const Record = () => {
                     handleChangeValue={handleChangeValue}
                     handleUpdateRecord={handleUpdateRecord}
                     locked={locked}
+                    recordSchema={recordSchema || {}}
                 />
             </Box>
             <Bottombar

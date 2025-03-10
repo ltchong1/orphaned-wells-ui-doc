@@ -20,16 +20,13 @@ interface AttributesTableProps extends RecordAttributesTableProps {
 const AttributesTable = (props: AttributesTableProps) => {
     const { 
         attributesList,
-        handleClickField,
-        handleChangeValue,
-        fullscreen,
-        forceOpenSubtable,
-        displayKeyIndex,
-        displayKeySubattributeIndex,
-        handleUpdateRecord,
-        locked,
-        showRawValues=true
+        ...childProps
     } = props;
+
+    const {
+        handleClickField,
+        showRawValues
+    } = childProps;
 
     const handleClickOutside = () => {
         handleClickField('', null, -1, false, null);
@@ -56,15 +53,7 @@ const AttributesTable = (props: AttributesTableProps) => {
                             k={v.key}
                             v={v}
                             idx={idx}
-                            handleClickField={handleClickField}
-                            handleChangeValue={handleChangeValue}
-                            fullscreen={fullscreen}
-                            forceOpenSubtable={forceOpenSubtable}
-                            displayKeyIndex={displayKeyIndex}
-                            displayKeySubattributeIndex={displayKeySubattributeIndex}
-                            handleUpdateRecord={handleUpdateRecord}
-                            locked={locked}
-                            showRawValues={showRawValues}
+                            {...childProps}
                         />
                     ))}
                 </TableBody>
@@ -86,16 +75,21 @@ const AttributeRow = (props: AttributeRowProps) => {
         k, 
         v, 
         idx, 
-        handleClickField, 
-        handleChangeValue, 
-        fullscreen, 
         forceOpenSubtable,
-        displayKeyIndex, 
-        displayKeySubattributeIndex, 
-        handleUpdateRecord,
-        locked,
-        showRawValues
+        ...childProps
     } = props;
+
+    const { 
+        handleClickField,
+        handleChangeValue,
+        fullscreen,
+        displayKeyIndex,
+        handleUpdateRecord,
+        displayKeySubattributeIndex,
+        locked,
+        showRawValues,
+        recordSchema,
+    } = childProps;
     
     const [ editMode, setEditMode ] = useState(false);
     const [ openSubtable, setOpenSubtable ] = useState(false);
@@ -298,16 +292,9 @@ const AttributeRow = (props: AttributeRowProps) => {
             v.subattributes &&
             <SubattributesTable 
                 attributesList={v.subattributes}
-                handleClickField={handleClickField}
-                handleChangeValue={handleChangeValue}
+                topLevelIdx={idx} 
                 open={openSubtable}
-                fullscreen={fullscreen}
-                displayKeyIndex={displayKeyIndex}
-                handleUpdateRecord={handleUpdateRecord}
-                displayKeySubattributeIndex={displayKeySubattributeIndex}
-                topLevelIdx={idx}
-                locked={locked}
-                showRawValues={showRawValues}
+                {...childProps}
             />
         }
     </>
@@ -323,17 +310,22 @@ interface SubattributesTableProps extends RecordAttributesTableProps {
 const SubattributesTable = (props: SubattributesTableProps) => {
     const { 
         attributesList,
+        open,
+        ...childProps
+    } = props;
+
+    const {
         handleClickField,
         handleChangeValue,
-        open,
         topLevelIdx,
         fullscreen,
         displayKeyIndex,
         displayKeySubattributeIndex,
         handleUpdateRecord,
         locked,
-        showRawValues
-    } = props;
+        showRawValues,
+        recordSchema
+    } = childProps;
 
     return (
         <TableRow>
@@ -360,16 +352,8 @@ const SubattributesTable = (props: SubattributesTableProps) => {
                             key={`${v.key} ${idx}`}
                             k={v.key}
                             v={v}
-                            handleClickField={handleClickField}
-                            handleChangeValue={handleChangeValue}
-                            fullscreen={fullscreen}
-                            displayKeyIndex={displayKeyIndex}
-                            handleUpdateRecord={handleUpdateRecord}
-                            displayKeySubattributeIndex={displayKeySubattributeIndex}
                             idx={idx}
-                            topLevelIdx={topLevelIdx}
-                            locked={locked}
-                            showRawValues={showRawValues}
+                            {...childProps}
                         />
                     ))}
                     </TableBody>
@@ -401,7 +385,8 @@ const SubattributeRow = (props: SubattributeRowProps) => {
         handleUpdateRecord,
         idx,
         locked,
-        showRawValues
+        showRawValues,
+        recordSchema
     } = props;
 
     const [ editMode, setEditMode ] = useState(false);

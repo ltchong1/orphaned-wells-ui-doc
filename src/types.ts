@@ -159,6 +159,7 @@ export interface RecordAttributesTableProps {
     handleUpdateRecord: (...args: any[]) => void;
     locked?: boolean;
     showRawValues?: boolean;
+    recordSchema: RecordSchema;
 }
 
 export interface RecordsTableProps {
@@ -242,6 +243,7 @@ export interface DocumentContainerProps {
     handleChangeValue: handleChangeValueSignature;
     handleUpdateRecord: (...args: any[]) => void;
     locked?: boolean;
+    recordSchema: RecordSchema;
 }
 
 export interface ColumnSelectDialogProps {
