@@ -180,8 +180,8 @@ const RecordsTable = (props: RecordsTableProps) => {
 
   const tableCell = (row: RecordData, key: string) => {
     // determine colors of status icons. this is getting more and more complicated...
-    let digitizationStatusIconColor = row.has_errors ? 'red' : 'green'
-    let reviewStatusIconColor = row.has_errors ? 'red' : 'green'
+    let digitizationStatusIconColor = row.has_errors ? '#B71D1C' : 'green'
+    let reviewStatusIconColor = row.has_errors ? '#B71D1C' : 'green'
     if (row.status === 'processing') digitizationStatusIconColor = '#EF6C0B'
     if (row.verification_status === 'required' || row.review_status === 'incomplete') reviewStatusIconColor = '#E3B62E'
     else if (row.review_status === "defective") reviewStatusIconColor = '#9F0100'
@@ -216,7 +216,10 @@ const RecordsTable = (props: RecordsTableProps) => {
             }
             </IconButton>
           
-          {row.status}
+          {
+            row.has_errors ? `${row.status} with errors`:
+            row.status
+          }
           </Typography>
         </TableCell>
     )
