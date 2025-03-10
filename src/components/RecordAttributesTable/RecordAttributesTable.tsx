@@ -82,13 +82,11 @@ const AttributeRow = (props: AttributeRowProps) => {
     const { 
         handleClickField,
         handleChangeValue,
-        fullscreen,
         displayKeyIndex,
         handleUpdateRecord,
         displayKeySubattributeIndex,
         locked,
         showRawValues,
-        recordSchema,
     } = childProps;
     
     const [ editMode, setEditMode ] = useState(false);
@@ -315,16 +313,7 @@ const SubattributesTable = (props: SubattributesTableProps) => {
     } = props;
 
     const {
-        handleClickField,
-        handleChangeValue,
-        topLevelIdx,
-        fullscreen,
-        displayKeyIndex,
-        displayKeySubattributeIndex,
-        handleUpdateRecord,
-        locked,
         showRawValues,
-        recordSchema
     } = childProps;
 
     return (
@@ -379,7 +368,6 @@ const SubattributeRow = (props: SubattributeRowProps) => {
         handleClickField,
         handleChangeValue,
         topLevelIdx,
-        fullscreen,
         displayKeyIndex,
         displayKeySubattributeIndex,
         handleUpdateRecord,
