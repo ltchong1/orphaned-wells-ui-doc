@@ -237,6 +237,13 @@ const AttributeRow = (props: AttributeRowProps) => {
                             </Typography>
                         )
                     }
+                    {
+                        (isSelected && !showRawValues) &&(
+                            <Typography noWrap component={'p'} sx={styles.ocrRawText}>
+                                OCR Raw Value: {v.raw_text}
+                            </Typography>
+                        )
+                    }
                 </Stack>
                 </TableCell>
             }
