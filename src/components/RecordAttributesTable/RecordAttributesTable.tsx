@@ -8,6 +8,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import EditIcon from '@mui/icons-material/Edit';
 import { Attribute, RecordAttributesTableProps } from '../../types';
 import { styles } from '../../assets/styles';
+import { checkFieldValidity } from '../../assets/util';
 
 
 const LOW_CONFIDENCE: number = 0.01;
@@ -87,12 +88,18 @@ const AttributeRow = (props: AttributeRowProps) => {
         displayKeySubattributeIndex,
         locked,
         showRawValues,
+        recordSchema
     } = childProps;
     
     const [ editMode, setEditMode ] = useState(false);
     const [ openSubtable, setOpenSubtable ] = useState(false);
     const [ isSelected, setIsSelected ] = useState(false);
     const [ lastSavedValue, setLastSavedValue ] = useState(v.value)
+
+    // useEffect(() => {
+    //     let fieldSchema = recordSchema[k]
+    //     checkFieldValidity(fieldSchema, v.value)
+    // }, [v.value])
 
     useEffect(() => {
         if (idx === displayKeyIndex && (displayKeySubattributeIndex === null || displayKeySubattributeIndex === undefined)) setIsSelected(true);

@@ -10,7 +10,6 @@ import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
 import { RecordData, handleChangeValueSignature, PreviousPages, SubheaderActions, RecordSchema } from '../../types';
 import { useUserContext } from '../../usercontext';
-import { checkFieldValidity } from '../../assets/util';
 
 const Record = () => {
     const [recordData, setRecordData] = useState<RecordData>({} as RecordData);

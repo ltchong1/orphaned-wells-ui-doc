@@ -53,7 +53,7 @@ export interface RecordGroup {
 }
 
 
-export interface ScehemaField {
+export interface SchemaField {
     name: string;
     data_type?: string;
     google_data_type?: string;
@@ -68,7 +68,7 @@ export interface ScehemaField {
 }
 
 export interface RecordSchema {
-    [key: string]: ScehemaField;
+    [key: string]: SchemaField;
 }
 
 export interface Attribute {
