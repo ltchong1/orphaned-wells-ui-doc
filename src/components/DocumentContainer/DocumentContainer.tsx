@@ -237,16 +237,22 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
     }
 
     const scrollToAttribute = (boxId: string, heightId: string, top: number) => {
-        const imageContainerId = boxId;
-        const imageContainerElement = document.getElementById(imageContainerId);
-        const imageElement = document.getElementById(heightId);
-        const scrollAmount = top * imageElement!.clientHeight * imageFiles.length - 100;
-        if (imageContainerElement) {
-            imageContainerElement.scrollTo({
-                top: scrollAmount,
-                behavior: "smooth",
-            });
+        try{
+            const imageContainerId = boxId;
+            const imageContainerElement = document.getElementById(imageContainerId);
+            const imageElement = document.getElementById(heightId);
+            const scrollAmount = top * imageElement!.clientHeight * imageFiles.length - 100;
+            if (imageContainerElement) {
+                imageContainerElement.scrollTo({
+                    top: scrollAmount,
+                    behavior: "smooth",
+                });
+            }
+        } catch(e) {
+            // this likely only occurs when table is in fullscreen mode and image is note displayed
+            console.error('failed to scroll')
         }
+        
     }
 
     function scrollIntoView(element: HTMLElement | null, container: HTMLElement | null) {
