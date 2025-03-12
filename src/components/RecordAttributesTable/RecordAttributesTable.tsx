@@ -173,6 +173,15 @@ const AttributeRow = (props: AttributeRowProps) => {
         setEditMode(false);
     }
 
+    const showAutocleanDisclaimer = () => {
+        if (v.cleaned && v.value !== null && v.lastUpdated && v.last_cleaned) {
+            // we can assume it was autocleaned (and not simply cleaned) if last updated and last cleaned times are within a couple seconds of eachother
+            const difference = Math.abs((v.lastUpdated / 1000) - v.last_cleaned);
+            if (difference <= 2000) return true
+        }
+        return false
+    }
+
     return (
     <>
         <TableRow id={`${k}::${idx}`} sx={isSelected ? {backgroundColor: "#EDEDED"} : {}} onClick={handleClickInside}>
@@ -239,9 +248,23 @@ const AttributeRow = (props: AttributeRowProps) => {
                     }
                     {
                         (isSelected && !showRawValues) &&(
-                            <Typography noWrap component={'p'} sx={styles.ocrRawText}>
-                                OCR Raw Value: {v.raw_text}
-                            </Typography>
+                            <span>
+                                {
+                                    showAutocleanDisclaimer() &&
+                                    <Typography noWrap component={'p'} sx={styles.ocrRawText}>
+                                        Edited value was auto-cleaned 
+                                        <Tooltip title={`Only ${recordSchema[k].data_type} types are allowed for this field.`} onClick={(e) => e.stopPropagation()}>
+                                            <IconButton sx={styles.infoIcon}>
+                                                <InfoIcon fontSize='inherit' color='inherit'/>
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Typography>
+                                }
+                                
+                                <Typography noWrap component={'p'} sx={styles.ocrRawText}>
+                                    OCR Raw Value: {v.raw_text}
+                                </Typography>
+                            </span>
                         )
                     }
                 </Stack>

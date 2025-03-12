@@ -78,6 +78,10 @@ export const styles = {
   noErrorParagraph: {
     margin:0
   },
+  infoIcon: {
+    fontSize: '12px',
+    padding: '2px',
+  },
   errorInfoIcon: {
     fontSize: '12px',
     padding: '2px',

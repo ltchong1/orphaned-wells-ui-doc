@@ -76,7 +76,7 @@ export interface Attribute {
     key: string;
     value: string | boolean | number | null;
     raw_text: string;
-    normalized_value: string | boolean;
+    normalized_value: string | boolean | number | Date;
     uncleaned_value?: string;
     cleaned?: boolean;
     cleaning_error?: boolean;
@@ -84,8 +84,9 @@ export interface Attribute {
     edited?: boolean;
     normalized_vertices: number[][] | null;
     subattributes?: Attribute[];
-    lastUpdated?: number;
+    lastUpdated?: number; // timestamp in milliseconds
     lastUpdatedBy?: string;
+    last_cleaned?: number; // timestamp in seconds
 }
 
 export interface Processor {
