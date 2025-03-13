@@ -174,10 +174,21 @@ const AttributeRow = (props: AttributeRowProps) => {
     }
 
     const showAutocleanDisclaimer = () => {
+        // TODO: this isnt working as intended
+        // last updated is in milliseconds, last_cleaned is in seconds
         if (v.cleaned && v.value !== null && v.lastUpdated && v.last_cleaned) {
             // we can assume it was autocleaned (and not simply cleaned) if last updated and last cleaned times are within a couple seconds of eachother
+            // this doesnt work ^. if a user updates it, waits a few seconds, then clicks enter, there is a wider gap :/
             const difference = Math.abs((v.lastUpdated / 1000) - v.last_cleaned);
-            if (difference <= 2000) return true
+            if (difference <= 2) return true
+        }
+        return false
+    }
+
+    const showEditedValue = () => {
+        if (v.cleaned && v.edited && v.lastUpdated && v.last_cleaned) {
+            // only show if it's been cleaned since last update
+            if ((v.lastUpdated/1000) < v.last_cleaned) return true
         }
         return false
     }
@@ -261,7 +272,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                                     </Typography>
                                 }
                                 {
-                                    v.cleaned && v.edited &&
+                                    showEditedValue() &&
                                     <Typography noWrap component={'p'} sx={styles.ocrRawText}>
                                         Edited value: {v.uncleaned_value}
                                     </Typography>
