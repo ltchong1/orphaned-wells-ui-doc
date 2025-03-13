@@ -44,7 +44,7 @@ const AttributesTable = (props: AttributesTableProps) => {
                         {showRawValues &&
                             <TableCell sx={styles.headerRow}>Raw Value</TableCell>
                         }
-                        <TableCell sx={styles.headerRow}>Confidence</TableCell>
+                        <TableCell sx={styles.headerRow} align='right'>Confidence</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody ref={ref}>
