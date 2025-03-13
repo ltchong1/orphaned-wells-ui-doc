@@ -101,6 +101,8 @@ const AttributeRow = (props: AttributeRowProps) => {
     //     checkFieldValidity(fieldSchema, v.value)
     // }, [v.value])
 
+    if (k === 'Conversion') console.log(v.uncleaned_value)
+
     useEffect(() => {
         if (idx === displayKeyIndex && (displayKeySubattributeIndex === null || displayKeySubattributeIndex === undefined)) setIsSelected(true);
         else  {
@@ -264,7 +266,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                                     showAutocleanDisclaimer() &&
                                     <Typography noWrap component={'p'} sx={styles.ocrRawText}>
                                         Edited value was auto-cleaned 
-                                        <Tooltip title={`Only ${recordSchema[k].data_type} types are allowed for this field.`} onClick={(e) => e.stopPropagation()}>
+                                        <Tooltip title={`Only ${recordSchema[k]?.database_data_type} types are allowed for this field.`} onClick={(e) => e.stopPropagation()}>
                                             <IconButton sx={styles.infoIcon}>
                                                 <InfoIcon fontSize='inherit' color='inherit'/>
                                             </IconButton>
@@ -273,13 +275,13 @@ const AttributeRow = (props: AttributeRowProps) => {
                                 }
                                 {
                                     showEditedValue() &&
-                                    <Typography noWrap component={'p'} sx={styles.ocrRawText}>
+                                    <Typography noWrap component={'p'} sx={styles.ocrRawText} onClick={(e) => e.stopPropagation()}>
                                         Edited value: {v.uncleaned_value}
                                     </Typography>
                                 }
                                 {
-                                    v.cleaned && 
-                                    <Typography noWrap component={'p'} sx={styles.ocrRawText}>
+                                    (v.cleaned || v.cleaning_error) &&
+                                    <Typography noWrap component={'p'} sx={styles.ocrRawText} onClick={(e) => e.stopPropagation()}>
                                         OCR Raw Value: {v.raw_text}
                                     </Typography>
                                 }
@@ -347,6 +349,7 @@ const AttributeRow = (props: AttributeRowProps) => {
             <SubattributesTable 
                 attributesList={v.subattributes}
                 topLevelIdx={idx} 
+                topLevelKey={k}
                 open={openSubtable}
                 {...childProps}
             />
@@ -359,6 +362,7 @@ interface SubattributesTableProps extends RecordAttributesTableProps {
     attributesList: Attribute[];
     open: boolean;
     topLevelIdx: number;
+    topLevelKey: string;
 }
 
 const SubattributesTable = (props: SubattributesTableProps) => {
@@ -415,6 +419,7 @@ interface SubattributeRowProps extends RecordAttributesTableProps {
     v: Attribute;
     topLevelIdx: number;
     idx: number;
+    topLevelKey: string;
 }
 
 const SubattributeRow = (props: SubattributeRowProps) => { 
@@ -430,12 +435,14 @@ const SubattributeRow = (props: SubattributeRowProps) => {
         idx,
         locked,
         showRawValues,
-        recordSchema
+        recordSchema,
+        topLevelKey
     } = props;
 
     const [ editMode, setEditMode ] = useState(false);
     const [ isSelected, setIsSelected ] = useState(false);
     const [ lastSavedValue, setLastSavedValue ] = useState(v.value)
+    const schemaKey = `${topLevelKey}::${k}`
 
     useEffect(() => {
         if (displayKeyIndex === topLevelIdx && idx === displayKeySubattributeIndex) {
@@ -511,7 +518,22 @@ const SubattributeRow = (props: SubattributeRowProps) => {
         setEditMode(false);
     }
 
-    
+    const showAutocleanDisclaimer = () => {
+        // last updated is in milliseconds, last_cleaned is in seconds
+        if (v.cleaned && v.value !== null && v.lastUpdated && v.last_cleaned) {
+            const difference = Math.abs((v.lastUpdated / 1000) - v.last_cleaned);
+            if (difference <= 2) return true
+        }
+        return false
+    }
+
+    const showEditedValue = () => {
+        if (v.cleaned && v.edited && v.lastUpdated && v.last_cleaned) {
+            // only show if it's been cleaned since last update
+            if ((v.lastUpdated/1000) < v.last_cleaned) return true
+        }
+        return false
+    }
 
     return (
         <TableRow 
@@ -561,6 +583,35 @@ const SubattributeRow = (props: SubattributeRowProps) => {
                                 </Tooltip>
                                 
                             </Typography>
+                        )
+                    }
+                    {
+                        (isSelected && !showRawValues) &&(
+                            <span>
+                                {
+                                    showAutocleanDisclaimer() &&
+                                    <Typography noWrap component={'p'} sx={styles.ocrRawText}>
+                                        Edited value was auto-cleaned 
+                                        <Tooltip title={`Only ${recordSchema[schemaKey]?.database_data_type} types are allowed for this field.`} onClick={(e) => e.stopPropagation()}>
+                                            <IconButton sx={styles.infoIcon}>
+                                                <InfoIcon fontSize='inherit' color='inherit'/>
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Typography>
+                                }
+                                {
+                                    showEditedValue() &&
+                                    <Typography noWrap component={'p'} sx={styles.ocrRawText} onClick={(e) => e.stopPropagation()}>
+                                        Edited value: {v.uncleaned_value}
+                                    </Typography>
+                                }
+                                {
+                                    (v.cleaned || v.cleaning_error) &&
+                                    <Typography noWrap component={'p'} sx={styles.ocrRawText} onClick={(e) => e.stopPropagation()}>
+                                        OCR Raw Value: {v.raw_text}
+                                    </Typography>
+                                }
+                            </span>
                         )
                     }
                 </Stack>
