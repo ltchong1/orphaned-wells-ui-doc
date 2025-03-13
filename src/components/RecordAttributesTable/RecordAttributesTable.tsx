@@ -263,6 +263,12 @@ const AttributeRow = (props: AttributeRowProps) => {
                                 {
                                     v.cleaned && 
                                     <Typography noWrap component={'p'} sx={styles.ocrRawText}>
+                                        Edited value: {v.uncleaned_value}
+                                    </Typography>
+                                }
+                                {
+                                    v.cleaned && 
+                                    <Typography noWrap component={'p'} sx={styles.ocrRawText}>
                                         OCR Raw Value: {v.raw_text}
                                     </Typography>
                                 }
