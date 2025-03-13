@@ -261,7 +261,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                                     </Typography>
                                 }
                                 {
-                                    v.cleaned && 
+                                    v.cleaned && v.edited &&
                                     <Typography noWrap component={'p'} sx={styles.ocrRawText}>
                                         Edited value: {v.uncleaned_value}
                                     </Typography>
