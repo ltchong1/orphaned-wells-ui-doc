@@ -31,22 +31,35 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
 
     const [ hasErrors, setHasErrors ] = useState(false)
     const checkForErrors = () => {
-        for (let attr of attributesList) {
-            if (attr.cleaning_error) {
-                setHasErrors(true)
-                return
-            }
-            if (attr.subattributes) {
-                for (let subattr of attr.subattributes) {
-                    if (subattr.cleaning_error) {
+        try {
+            if (attributesList) {
+                for (let attr of attributesList) {
+                    if (attr.cleaning_error) {
                         setHasErrors(true)
                         return
                     }
+                    if (attr.subattributes) {
+                        for (let subattr of attr.subattributes) {
+                            if (subattr.cleaning_error) {
+                                setHasErrors(true)
+                                return
+                            }
+                        }
+                    }
                 }
+                setHasErrors(false)
+                return
+            } else {
+                setHasErrors(false)
+                return
             }
+            
+        } catch (e) {
+            console.error(e)
+            setHasErrors(false)
+            return
         }
-        setHasErrors(false)
-        return
+        
     }
 
     useEffect(() => {
