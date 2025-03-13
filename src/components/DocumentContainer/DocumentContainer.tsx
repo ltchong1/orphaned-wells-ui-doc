@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
-import { Grid, Box, IconButton } from '@mui/material';
+import { Grid, Box, IconButton, Alert } from '@mui/material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import { ImageCropper } from '../ImageCropper/ImageCropper';
@@ -28,6 +28,30 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
         height: height,
     }
     const params = useParams(); 
+
+    const [ hasErrors, setHasErrors ] = useState(false)
+    const checkForErrors = () => {
+        for (let attr of attributesList) {
+            if (attr.cleaning_error) {
+                setHasErrors(true)
+                return
+            }
+            if (attr.subattributes) {
+                for (let subattr of attr.subattributes) {
+                    if (subattr.cleaning_error) {
+                        setHasErrors(true)
+                        return
+                    }
+                }
+            }
+        }
+        setHasErrors(false)
+        return
+    }
+
+    useEffect(() => {
+        checkForErrors()
+    },[attributesList])
 
     useEffect(() => {
         if (displayKeyIndex !== -1 && displayKeySubattributeIndex !== null) {
@@ -289,6 +313,13 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
 
     return (
         <Box style={styles.outerBox}>
+            {
+                hasErrors &&
+                <Alert severity='error' sx={styles.errorAlert} variant='outlined'>
+                    <b>Errors present: Record was cleaned with errors for some fields</b>
+                </Alert>
+            }
+            
             <Grid container>
                 {
                     fullscreen !== "image" && 
