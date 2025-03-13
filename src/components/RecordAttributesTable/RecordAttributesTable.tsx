@@ -260,10 +260,12 @@ const AttributeRow = (props: AttributeRowProps) => {
                                         </Tooltip>
                                     </Typography>
                                 }
-                                
-                                <Typography noWrap component={'p'} sx={styles.ocrRawText}>
-                                    OCR Raw Value: {v.raw_text}
-                                </Typography>
+                                {
+                                    v.cleaned && 
+                                    <Typography noWrap component={'p'} sx={styles.ocrRawText}>
+                                        OCR Raw Value: {v.raw_text}
+                                    </Typography>
+                                }
                             </span>
                         )
                     }
