@@ -57,6 +57,11 @@ export const styles = {
       padding: 0,
       margin: 0,
   },
+  ocrRawText: {
+    color: 'grey',
+    fontSize: '12px',
+    fontStyle: 'italic'
+  },
   errorParagraph: {
     margin: 8,
   },
@@ -72,6 +77,10 @@ export const styles = {
   },
   noErrorParagraph: {
     margin:0
+  },
+  infoIcon: {
+    fontSize: '12px',
+    padding: '2px',
   },
   errorInfoIcon: {
     fontSize: '12px',

@@ -8,7 +8,7 @@ import Bottombar from '../../components/BottomBar/BottomBar';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
-import { RecordData, handleChangeValueSignature, PreviousPages, SubheaderActions } from '../../types';
+import { RecordData, handleChangeValueSignature, PreviousPages, SubheaderActions, RecordSchema } from '../../types';
 import { useUserContext } from '../../usercontext';
 
 const Record = () => {
@@ -22,6 +22,7 @@ const Record = () => {
     const [showResetPrompt, setShowResetPrompt] = useState(false);
     const [ lastUpdatedField, setLastUpdatedField ] = useState<any>()
     const [ subheaderActions, setSubheaderActions ] = useState<SubheaderActions>()
+    const [ recordSchema, setRecordSchema ] = useState<RecordSchema>()
     const [locked, setLocked] = useState(false)
     const params = useParams<{ id: string }>();
     const navigate = useNavigate();
@@ -97,6 +98,7 @@ const Record = () => {
         }
         setRecordData(newRecordData);
         setRecordName(newRecordData.name);
+        setRecordSchema(data.recordSchema);
         let tempPreviousPages: PreviousPages = {
             "Projects": () => navigate("/projects", { replace: true }),
         };
@@ -151,13 +153,14 @@ const Record = () => {
     }
 
     const handleChangeValue: handleChangeValueSignature = (event, topLevelIndex, isSubattribute, subIndex) => {
-        if (locked) return
+        if (locked) return true
         let tempRecordData = { ...recordData };
         let tempAttributesList = [...tempRecordData.attributesList];
         let tempAttribute: any;
         let rightNow = Date.now();
+        let value;
         if (isSubattribute) {
-            let value = event.target.value;
+            value = event.target.value;
             tempAttribute = tempAttributesList[topLevelIndex];
             let tempSubattributesList = [...tempAttribute["subattributes"]];
             let tempSubattribute = tempSubattributesList[subIndex!];
@@ -171,7 +174,7 @@ const Record = () => {
             tempAttribute["subattributes"] = tempSubattributesList;
         } else {
             tempAttribute = tempAttributesList[topLevelIndex];
-            let value = event.target.value;
+            value = event.target.value;
             tempAttribute.value = value;
             tempAttribute.edited = true;
             tempAttribute.lastUpdated = rightNow;
@@ -188,6 +191,9 @@ const Record = () => {
         }
         setLastUpdatedField(tempLastUpdatedField)
         setRecordData(tempRecordData);
+        // let is_valid = true
+        // if (recordSchema) is_valid = checkFieldValidity(recordSchema[schemaKey], value)
+        // return is_valid
     }
 
     const handleDeleteRecord = () => {
@@ -310,6 +316,7 @@ const Record = () => {
                     handleChangeValue={handleChangeValue}
                     handleUpdateRecord={handleUpdateRecord}
                     locked={locked}
+                    recordSchema={recordSchema || {}}
                 />
             </Box>
             <Bottombar
