@@ -240,28 +240,4 @@ const NewRecordGroupDialog = ({ open, onClose, project_id }: NewRecordGroupDialo
     );
 }
 
-
-interface ProcessorImageProps {
-    id: string;
-    documentType?: string;
-    // img: string;
-    idx: number;
-    getImageStyle: (id: string) => React.CSSProperties;
-}
-const ProcessorImage = ({ id, documentType, idx, getImageStyle }: ProcessorImageProps) => {
-    const [ img, setImg ] = useState("")
-    useEffect(() => {
-        /*
-            call api function to get image
-            we could 1) return the image, or 2) just return a link to cloud storage image
-        */
-    },[id])
-
-    return (
-        <Tooltip title={documentType}>
-            <img id={`processor_${idx}`} src={img} style={getImageStyle(id)} />
-        </Tooltip>
-    );
-}
-
 export default NewRecordGroupDialog;
