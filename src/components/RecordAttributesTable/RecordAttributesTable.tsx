@@ -92,7 +92,7 @@ const AttributeRow = (props: AttributeRowProps) => {
     } = childProps;
     
     const [ editMode, setEditMode ] = useState(false);
-    const [ openSubtable, setOpenSubtable ] = useState(false);
+    const [ openSubtable, setOpenSubtable ] = useState(true);
     const [ isSelected, setIsSelected ] = useState(false);
     const [ lastSavedValue, setLastSavedValue ] = useState(v.value)
 
