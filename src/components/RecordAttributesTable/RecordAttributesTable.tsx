@@ -110,6 +110,7 @@ const AttributeRow = (props: AttributeRowProps) => {
     }, [displayKeyIndex, displayKeySubattributeIndex]);
 
     const handleClickInside = (e: React.MouseEvent<HTMLTableRowElement>) => {
+        if (v.subattributes) setOpenSubtable(!openSubtable)
         e.stopPropagation();
         handleClickField(k, v.normalized_vertices, idx, false, null);
     }
@@ -195,7 +196,7 @@ const AttributeRow = (props: AttributeRowProps) => {
 
     return (
     <>
-        <TableRow id={`${k}::${idx}`} sx={isSelected ? {backgroundColor: "#EDEDED"} : {}} onClick={handleClickInside}>
+        <TableRow id={`${k}::${idx}`} sx={(isSelected && !v.subattributes) ? {backgroundColor: "#EDEDED"} : {}} onClick={handleClickInside}>
             <TableCell sx={styles.fieldKey}>
                 <span>
                     {k}
@@ -205,7 +206,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                     <IconButton
                         aria-label="expand row"
                         size="small"
-                        onClick={() => setOpenSubtable(!openSubtable)}
+                        // onClick={() => setOpenSubtable(!openSubtable)}
                         sx={styles.rowIconButton}
                     >
                         {openSubtable ? <KeyboardArrowUpIcon sx={styles.rowIcon}/> : <KeyboardArrowDownIcon sx={styles.rowIcon}/>}
