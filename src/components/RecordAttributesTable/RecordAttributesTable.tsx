@@ -367,6 +367,7 @@ const SubattributesTable = (props: SubattributesTableProps) => {
     const { 
         attributesList,
         open,
+        topLevelKey,
         ...childProps
     } = props;
 
@@ -380,7 +381,7 @@ const SubattributesTable = (props: SubattributesTableProps) => {
             <Collapse in={open} timeout="auto" unmountOnExit>
                 <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                    Properties
+                    {topLevelKey} Properties
                 </Typography>
                 <Table size="small" aria-label="purchases" sx={styles.subattributesTable}>
                     <TableHead>
@@ -400,6 +401,7 @@ const SubattributesTable = (props: SubattributesTableProps) => {
                             k={v.key}
                             v={v}
                             idx={idx}
+                            topLevelKey={topLevelKey}
                             {...childProps}
                         />
                     ))}
