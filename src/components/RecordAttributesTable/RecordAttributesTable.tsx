@@ -101,8 +101,6 @@ const AttributeRow = (props: AttributeRowProps) => {
     //     checkFieldValidity(fieldSchema, v.value)
     // }, [v.value])
 
-    if (k === 'Conversion') console.log(v.uncleaned_value)
-
     useEffect(() => {
         if (idx === displayKeyIndex && (displayKeySubattributeIndex === null || displayKeySubattributeIndex === undefined)) setIsSelected(true);
         else  {
