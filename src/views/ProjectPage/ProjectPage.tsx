@@ -13,9 +13,6 @@ import { getRecordGroups, updateProject, deleteProject } from '../../services/ap
 import { callAPI, DEFAULT_FILTER_OPTIONS } from '../../assets/util';
 import { ProjectData } from '../../types';
 
-type SortDirection = 1 | -1;
-
-
 const Project = () => {
     let params = useParams();
     const navigate = useNavigate();

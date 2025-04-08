@@ -12,12 +12,9 @@ interface RecordGroupsTableProps {
   record_groups: RecordGroup[];
   sortRecordGroups: (sortBy: string, sortAscending: number) => void;
 }
-
-type Alignment = 'left' | 'right' | 'center';
-
 type ColumnConfig = {
   displayKey: string;
-  align?: Alignment;
+  align?: 'left' | 'right' | 'center';
 };
 
 const COLUMNS: Record<string, ColumnConfig> = {
