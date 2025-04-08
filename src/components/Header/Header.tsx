@@ -5,7 +5,7 @@ import { HeaderStyles as styles } from '../../assets/styles';
 import { useUserContext } from '../../usercontext';
 import { fetchTeams, updateDefaultTeam } from '../../services/app.service';
 import { Menu, MenuItem, IconButton, Avatar, Tabs, Tab, Divider, ListItemIcon, Button } from '@mui/material';
-import { logout, callAPI } from '../../assets/util';
+import { logout, callAPI } from '../../util';
 import Logout from '@mui/icons-material/Logout';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 

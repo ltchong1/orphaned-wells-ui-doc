@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import { checkAuth, } from './services/app.service';
-import { callAPI } from './assets/util';
+import { callAPI } from './util';
 import { User } from './types';
 import LoginPage from './views/LoginPage/LoginPage';
 

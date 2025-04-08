@@ -7,7 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import Draggable from 'react-draggable';
 import ApprovalIcon from '@mui/icons-material/Approval';
-import { DEFAULT_FILTER_OPTIONS } from '../../assets/util';
+import { DEFAULT_FILTER_OPTIONS } from '../../util';
 import { FilterOption, TableFiltersProps } from '../../types';
 import { TableFiltersStyles as styles } from '../../assets/styles';
 

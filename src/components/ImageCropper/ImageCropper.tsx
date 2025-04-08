@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import ReactCrop, { Crop } from 'react-image-crop';
-import { findCenter } from '../../assets/util';
+import { findCenter } from '../../util';
 
 const DRAG_HANDLES: string[] = [
     "ReactCrop__drag-handle ord-nw",

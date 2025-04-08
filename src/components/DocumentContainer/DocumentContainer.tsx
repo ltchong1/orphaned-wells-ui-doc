@@ -4,7 +4,7 @@ import { Grid, Box, IconButton, Alert } from '@mui/material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import { ImageCropper } from '../ImageCropper/ImageCropper';
-import { useKeyDown } from '../../assets/util';
+import { useKeyDown } from '../../util';
 import AttributesTable from '../RecordAttributesTable/RecordAttributesTable';
 import { DocumentContainerProps } from '../../types';
 import { DocumentContainerStyles as styles } from '../../assets/styles';

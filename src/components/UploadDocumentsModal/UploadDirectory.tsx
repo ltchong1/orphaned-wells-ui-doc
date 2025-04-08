@@ -4,7 +4,7 @@ import { useUserContext } from '../../usercontext';
 import { Grid, Box, Button, Stack, FormControlLabel, Switch, Tooltip, TextField } from '@mui/material';
 import { UploadDirectoryProps } from '../../types';
 import { uploadDocument, checkForDuplicateRecords } from '../../services/app.service';
-import { callAPI } from '../../assets/util';
+import { callAPI } from '../../util';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const UploadDirectory = (props: UploadDirectoryProps) => {

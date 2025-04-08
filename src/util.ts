@@ -1,6 +1,6 @@
-import { refreshAuth, revokeToken } from "../services/app.service"
+import { refreshAuth, revokeToken } from "./services/app.service"
 import { useEffect, useRef } from 'react';
-import { FilterOption, TableColumns, RecordNote, SchemaField } from "../types";
+import { FilterOption, TableColumns, RecordNote, SchemaField } from "./types";
 
 export const DEFAULT_FILTER_OPTIONS: {
   [key: string]: FilterOption;
