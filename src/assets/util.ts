@@ -200,6 +200,15 @@ export function formatDateTime(timestamp?: number): string {
   return new Intl.DateTimeFormat("en-US", options).format(date);
 }
 
+export const findCenter = (points: number[][]) => {
+  let center = []
+  if (points) {
+      center.push((points[0][0] + points[1][0]) / 2)
+      center.push((points[0][1] + points[2][1]) / 2)
+  } else center = [50,50]
+  return center
+}
+
 export const checkFieldValidity = (fieldSchema: SchemaField, value: any) => {
   /*
     TODO: frontend validtion

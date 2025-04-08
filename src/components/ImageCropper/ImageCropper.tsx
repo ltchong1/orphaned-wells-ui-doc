@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import ReactCrop, { Crop } from 'react-image-crop';
+import { findCenter } from '../../assets/util';
 
 const DRAG_HANDLES: string[] = [
     "ReactCrop__drag-handle ord-nw",
@@ -21,6 +22,8 @@ interface ImageCropperProps {
     highlightedImageIdxIndex: number;
 }
 
+const ZOOM_SCALE = 1.5
+
 export const ImageCropper = (props: ImageCropperProps) => {
     const { image, displayPoints, disabled, fullscreen, imageIdx, highlightedImageIdxIndex } = props;
     const [crop, setCrop] = useState<Crop | undefined>(undefined);
@@ -28,11 +31,18 @@ export const ImageCropper = (props: ImageCropperProps) => {
     const [imageDimensions, setImageDimensions] = useState<number[]>([]);
     const [width, setWidth] = useState("100%");
     const [height, setHeight] = useState("100%");
+    const [ transformScale, setTransformScale ] = useState(1) // 1 = normal size
+    const [ transformOrigin, setTransformOrigin ] = useState([50,50]) // [0,0] = top left ; [100,100] = bottom right
 
     const styles = {
         imageDiv: {
             width: width,
             height: height,
+        },
+        image: {
+            transition: 'transform 0.3s',
+            transform: `scale(${transformScale})`,
+            transformOrigin: `${transformOrigin[0]}% ${transformOrigin[1]}%`,
         }
     };
 
@@ -47,25 +57,7 @@ export const ImageCropper = (props: ImageCropperProps) => {
     }, [fullscreen]);
 
     useEffect(() => {
-        if (displayPoints && highlightedImageIdxIndex === imageIdx) {
-            let crop_x = displayPoints[0][0] - 0.5;
-            let crop_y = displayPoints[0][1] - 0.5;
-            let crop_width = displayPoints[1][0] - displayPoints[0][0] + 1;
-            let crop_height = displayPoints[2][1] - displayPoints[1][1] + 1;
-            let newCrop: Crop = {
-                unit: "%",
-                x: crop_x,
-                y: crop_y,
-                width: crop_width,
-                height: crop_height
-            };
-            setCrop(newCrop);
-            setTimeout(() => {
-                removeDragHandles();
-            }, 10);
-        } else {
-            setCrop(undefined);
-        }
+        updateDisplay()
     }, [displayPoints, highlightedImageIdxIndex]);
 
     useEffect(() => {
@@ -79,6 +71,35 @@ export const ImageCropper = (props: ImageCropperProps) => {
 
         img.src = image;
     }, [image]);
+
+    const updateDisplay = () => {
+        if (displayPoints && highlightedImageIdxIndex === imageIdx) {
+            // TODO: set scale and origin based on location of item
+            // adjust cropping to match the zoomed and transformed image
+            let center = findCenter(displayPoints)
+            let width = (displayPoints[1][0] - displayPoints[0][0]) * ZOOM_SCALE
+            let height = (displayPoints[2][1] - displayPoints[1][1]) * ZOOM_SCALE
+            let x = center[0] - (width / 2) - 0.5
+            let y = center[1] - (height / 2) - 0.5
+            let newCrop: Crop = {
+                unit: "%",
+                x: x,
+                y: y,
+                width: width + 1,
+                height: height + 1
+            };
+            setCrop(newCrop);
+            setTimeout(() => {
+                removeDragHandles();
+            }, 10);
+            setTransformScale(ZOOM_SCALE)
+            setTransformOrigin(center);
+        } else {
+            setCrop(undefined);
+            setTransformScale(1);
+            setTransformOrigin([50, 50]);
+        }
+    }
 
     const handleSetCrop = (c: Crop) => {
         setCrop(c);
@@ -95,7 +116,7 @@ export const ImageCropper = (props: ImageCropperProps) => {
 
     return (
         <ReactCrop crop={crop} onChange={c => handleSetCrop(c)} locked={disabled}>
-            <img src={image} alt="Crop" />
+            <img src={image} alt="well document" style={styles.image}/>
         </ReactCrop>
     );
 };
