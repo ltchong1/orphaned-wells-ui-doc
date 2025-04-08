@@ -22,17 +22,16 @@ interface ImageCropperProps {
     highlightedImageIdxIndex: number;
 }
 
-const ZOOM_SCALE = 1.5
+const ZOOM_SCALE = 2
 
 export const ImageCropper = (props: ImageCropperProps) => {
     const { image, displayPoints, disabled, fullscreen, imageIdx, highlightedImageIdxIndex } = props;
     const [crop, setCrop] = useState<Crop | undefined>(undefined);
-    const [zoom, setZoom] = useState(1);
-    const [imageDimensions, setImageDimensions] = useState<number[]>([]);
     const [width, setWidth] = useState("100%");
     const [height, setHeight] = useState("100%");
     const [ transformScale, setTransformScale ] = useState(1) // 1 = normal size
     const [ transformOrigin, setTransformOrigin ] = useState([50,50]) // [0,0] = top left ; [100,100] = bottom right
+    const [ translate, setTranslate ] = useState([0,0])
 
     const styles = {
         imageDiv: {
@@ -43,6 +42,7 @@ export const ImageCropper = (props: ImageCropperProps) => {
             transition: 'transform 0.3s',
             transform: `scale(${transformScale})`,
             transformOrigin: `${transformOrigin[0]}% ${transformOrigin[1]}%`,
+            translate: `${translate[0]}% ${translate[1]}%`,
         }
     };
 
@@ -60,33 +60,19 @@ export const ImageCropper = (props: ImageCropperProps) => {
         updateDisplay()
     }, [displayPoints, highlightedImageIdxIndex]);
 
-    useEffect(() => {
-        const img = new Image();
-
-        img.onload = () => {
-            const height = img.height;
-            const width = img.width;
-            setImageDimensions([width, height]);
-        };
-
-        img.src = image;
-    }, [image]);
-
     const updateDisplay = () => {
         if (displayPoints && highlightedImageIdxIndex === imageIdx) {
-            // TODO: set scale and origin based on location of item
-            // adjust cropping to match the zoomed and transformed image
+            const extendBy = 0.5 * ZOOM_SCALE// use this to extend the corners 
+
             let center = findCenter(displayPoints)
             let width = (displayPoints[1][0] - displayPoints[0][0]) * ZOOM_SCALE
             let height = (displayPoints[2][1] - displayPoints[1][1]) * ZOOM_SCALE
-            let x = center[0] - (width / 2) - 0.5
-            let y = center[1] - (height / 2) - 0.5
             let newCrop: Crop = {
                 unit: "%",
-                x: x,
-                y: y,
-                width: width + 1,
-                height: height + 1
+                x: 50 - (width / 2) - extendBy,
+                y: 50 - (height / 2) - extendBy,
+                width: width + (extendBy * 2),
+                height: height + (extendBy * 2)
             };
             setCrop(newCrop);
             setTimeout(() => {
@@ -94,10 +80,14 @@ export const ImageCropper = (props: ImageCropperProps) => {
             }, 10);
             setTransformScale(ZOOM_SCALE)
             setTransformOrigin(center);
+
+            let newTranslate = [50-center[0], 50-center[1]]
+            setTranslate(newTranslate);
         } else {
             setCrop(undefined);
             setTransformScale(1);
             setTransformOrigin([50, 50]);
+            setTranslate([0,0])
         }
     }
 
