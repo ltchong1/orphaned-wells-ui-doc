@@ -33,7 +33,7 @@ const Header = (props: any) => {
   }, [props, userPermissions, location]);
 
   const handleNavigateHome = () => {
-    navigate("/", { replace: true });
+    navigate("/");
   }
 
   const handleShowProfileActions = (event: React.MouseEvent<HTMLElement>) => {

@@ -55,7 +55,7 @@ export const UserContextProvider = ({ children }: any) => {
     if (user_data.name && user_data.name !== "") setUserName(user_data.name)
     if (user_data.picture) setUserPhoto(user_data.picture)
     if (window.location.hash.includes("login")){
-      navigate('/projects')
+      navigate('/projects', { replace: true })
     }
     setLoading(false)
   }
@@ -63,7 +63,7 @@ export const UserContextProvider = ({ children }: any) => {
   const handleFailedAuthentication = () => {
     setAuthenticated(false)
     setLoading(false)
-    if (!window.location.hash.includes("login")) navigate('/login')//window.location.href = '/#/login'
+    if (!window.location.hash.includes("login")) navigate('/login', {replace: true})
   }
 
   const handleSuccessfulLogin = (access_token: string, refresh_token: string, id_token: string) => {
