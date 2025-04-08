@@ -23,20 +23,19 @@ interface ImageCropperProps {
 }
 
 const ZOOM_SCALE = 2
+const ZOOM_ON_TOKEN = true
 
 export const ImageCropper = (props: ImageCropperProps) => {
     const { image, displayPoints, disabled, fullscreen, imageIdx, highlightedImageIdxIndex } = props;
     const [crop, setCrop] = useState<Crop | undefined>(undefined);
-    const [width, setWidth] = useState("100%");
-    const [height, setHeight] = useState("100%");
     const [ transformScale, setTransformScale ] = useState(1) // 1 = normal size
     const [ transformOrigin, setTransformOrigin ] = useState([50,50]) // [0,0] = top left ; [100,100] = bottom right
     const [ translate, setTranslate ] = useState([0,0])
 
     const styles = {
         imageDiv: {
-            width: width,
-            height: height,
+            width: '100%',
+            height: '100%',
         },
         image: {
             transition: 'transform 0.3s',
@@ -57,10 +56,33 @@ export const ImageCropper = (props: ImageCropperProps) => {
     }, [fullscreen]);
 
     useEffect(() => {
-        updateDisplay()
+        if (ZOOM_ON_TOKEN) updateDisplayWithZoom()
+        else updateDisplay()
     }, [displayPoints, highlightedImageIdxIndex]);
 
     const updateDisplay = () => {
+        if (displayPoints && highlightedImageIdxIndex === imageIdx) {
+            let crop_x = displayPoints[0][0] - 0.5;
+            let crop_y = displayPoints[0][1] - 0.5;
+            let crop_width = displayPoints[1][0] - displayPoints[0][0] + 1;
+            let crop_height = displayPoints[2][1] - displayPoints[1][1] + 1;
+            let newCrop: Crop = {
+                unit: "%",
+                x: crop_x,
+                y: crop_y,
+                width: crop_width,
+                height: crop_height
+            };
+            setCrop(newCrop);
+            setTimeout(() => {
+                removeDragHandles();
+            }, 10);
+        } else {
+            setCrop(undefined);
+        }
+    }
+
+    const updateDisplayWithZoom = () => {
         if (displayPoints && highlightedImageIdxIndex === imageIdx) {
             const extendBy = 0.5 * ZOOM_SCALE// use this to extend the corners 
 
