@@ -328,7 +328,7 @@ export const DocumentContainerStyles = {
     marginBottom: '16px'
   },
   zoomToggleActive: {
-    // color: '#FFD54F',
-    // backgroundColor: 'grey'
+    color: 'black',
+    backgroundColor: '#EBEBEB'
   }
 }

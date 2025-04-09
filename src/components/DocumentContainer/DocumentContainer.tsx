@@ -387,10 +387,8 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
                         <Box sx={styles.gridContainer}>
                             <Box sx={styles.containerActions.right}>
                                 <Tooltip title='Zoom in on highlighted fields'>
-                                    <IconButton id='zoom-toggle-button' onClick={handleToggleZoom} sx={styles.zoomToggleActive}>
-                                        { 
-                                            zoomOnToken ? <ZoomOutIcon/> : <ZoomInIcon/> 
-                                        }
+                                    <IconButton id='zoom-toggle-button' onClick={handleToggleZoom} sx={zoomOnToken ? styles.zoomToggleActive : {}}>
+                                        <ZoomInIcon/> 
                                     </IconButton>
                                 </Tooltip>
                                 
