@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
-import { Grid, Box, IconButton, Alert } from '@mui/material';
+import { Grid, Box, IconButton, Alert, Tooltip } from '@mui/material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
@@ -386,11 +386,14 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
                     <Grid item xs={gridWidths[0]}>
                         <Box sx={styles.gridContainer}>
                             <Box sx={styles.containerActions.right}>
-                                <IconButton id='zoom-toggle-button' onClick={handleToggleZoom} sx={styles.zoomToggleActive}>
-                                    { 
-                                        zoomOnToken ? <ZoomOutIcon/> : <ZoomInIcon/> 
-                                    }
-                                </IconButton>
+                                <Tooltip title='Zoom in on highlighted fields'>
+                                    <IconButton id='zoom-toggle-button' onClick={handleToggleZoom} sx={styles.zoomToggleActive}>
+                                        { 
+                                            zoomOnToken ? <ZoomOutIcon/> : <ZoomInIcon/> 
+                                        }
+                                    </IconButton>
+                                </Tooltip>
+                                
                                 <IconButton id='fullscreen-image-button' onClick={() => handleSetFullscreen("image")}>
                                     { 
                                         fullscreen === "image" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
