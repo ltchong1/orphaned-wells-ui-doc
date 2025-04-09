@@ -1,7 +1,7 @@
 import './Header.css';
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
-import { HeaderStyles as styles } from '../../assets/styles';
+import { HeaderStyles as styles } from '../../styles';
 import { useUserContext } from '../../usercontext';
 import { fetchTeams, updateDefaultTeam } from '../../services/app.service';
 import { Menu, MenuItem, IconButton, Avatar, Tabs, Tab, Divider, ListItemIcon, Button } from '@mui/material';

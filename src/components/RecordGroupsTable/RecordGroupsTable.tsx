@@ -5,7 +5,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { formatDate } from '../../util';
 import { RecordGroup } from "../../types";
-import { styles, ERROR_TEXT_COLOR } from "../../assets/styles";
+import { styles, ERROR_TEXT_COLOR } from "../../styles";
 import WarningIcon from '@mui/icons-material/Warning';
 
 interface RecordGroupsTableProps {

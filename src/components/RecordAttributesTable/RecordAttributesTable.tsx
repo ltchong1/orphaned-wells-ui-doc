@@ -7,7 +7,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import InfoIcon from '@mui/icons-material/Info';
 import EditIcon from '@mui/icons-material/Edit';
 import { Attribute, RecordAttributesTableProps } from '../../types';
-import { styles } from '../../assets/styles';
+import { styles } from '../../styles';
 
 
 const LOW_CONFIDENCE: number = 0.01;

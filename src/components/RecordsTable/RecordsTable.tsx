@@ -18,7 +18,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import PublishedWithChangesOutlinedIcon from '@mui/icons-material/PublishedWithChangesOutlined';
 import { formatDate, average, formatConfidence, callAPI, convertFiltersToMongoFormat, TABLE_ATTRIBUTES } from '../../util';
-import { styles } from '../../assets/styles';
+import { styles } from '../../styles';
 import RecordNotesDialog from '../RecordNotesDialog/RecordNotesDialog';
 import TableFilters from '../TableFilters/TableFilters';
 import { RecordData, RecordsTableProps, RecordNote } from '../../types';

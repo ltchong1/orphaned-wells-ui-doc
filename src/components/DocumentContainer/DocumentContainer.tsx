@@ -9,7 +9,7 @@ import { ImageCropper } from '../ImageCropper/ImageCropper';
 import { useKeyDown } from '../../util';
 import AttributesTable from '../RecordAttributesTable/RecordAttributesTable';
 import { DocumentContainerProps } from '../../types';
-import { DocumentContainerStyles as styles } from '../../assets/styles';
+import { DocumentContainerStyles as styles } from '../../styles';
 import Switch from '@mui/material/Switch';
 
 const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, handleUpdateRecord, locked, recordSchema }: DocumentContainerProps) => {

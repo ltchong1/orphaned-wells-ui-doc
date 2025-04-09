@@ -9,7 +9,7 @@ import Draggable from 'react-draggable';
 import ApprovalIcon from '@mui/icons-material/Approval';
 import { DEFAULT_FILTER_OPTIONS } from '../../util';
 import { FilterOption, TableFiltersProps } from '../../types';
-import { TableFiltersStyles as styles } from '../../assets/styles';
+import { TableFiltersStyles as styles } from '../../styles';
 
 const TableFilters = ({ applyFilters, appliedFilters, filter_options }: TableFiltersProps) => {
     
