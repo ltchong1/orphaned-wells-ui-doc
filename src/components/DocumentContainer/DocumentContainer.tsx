@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { Grid, Box, IconButton, Alert } from '@mui/material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import { ImageCropper } from '../ImageCropper/ImageCropper';
 import { useKeyDown } from '../../util';
 import AttributesTable from '../RecordAttributesTable/RecordAttributesTable';
@@ -23,6 +25,7 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
     const [imageHeight, setImageHeight] = useState(0);
     const [ showRawValues, setShowRawValues ] = useState(false)
     const [ autoCleanFields, setAutoCleanFields ] = useState(true)
+    const [ zoomOnToken, setZoomOnToken ] = useState(false)
     const imageDivStyle = {
         width: width,
         height: height,
@@ -324,6 +327,11 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
         }
     }
 
+    const handleToggleZoom = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
+        setZoomOnToken(!zoomOnToken);
+    }
+
     return (
         <Box style={styles.outerBox}>
             {
@@ -377,6 +385,11 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
                     <Grid item xs={gridWidths[0]}>
                         <Box sx={styles.gridContainer}>
                             <Box sx={styles.containerActions.right}>
+                                <IconButton id='zoom-toggle-button' onClick={handleToggleZoom} sx={styles.zoomToggleActive}>
+                                    { 
+                                        zoomOnToken ? <ZoomOutIcon/> : <ZoomInIcon/> 
+                                    }
+                                </IconButton>
                                 <IconButton id='fullscreen-image-button' onClick={() => handleSetFullscreen("image")}>
                                     { 
                                         fullscreen === "image" ? <FullscreenExitIcon/> : <FullscreenIcon/> 
@@ -395,6 +408,7 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
                                             displayPoints={displayPoints}
                                             disabled
                                             fullscreen={fullscreen}
+                                            zoomOnToken={zoomOnToken}
                                         />
                                     </div>
                                 ))
