@@ -25,14 +25,14 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
     const [imageHeight, setImageHeight] = useState(0);
     const [ showRawValues, setShowRawValues ] = useState(false)
     const [ autoCleanFields, setAutoCleanFields ] = useState(true)
-    const [ zoomOnToken, setZoomOnToken ] = useState(false)
+    const [ hasErrors, setHasErrors ] = useState(false)
+    const [ zoomOnToken, setZoomOnToken ] = useState(JSON.parse(localStorage.getItem('zoomOnToken') || 'false'))
+
     const imageDivStyle = {
         width: width,
         height: height,
     }
     const params = useParams(); 
-
-    const [ hasErrors, setHasErrors ] = useState(false)
     const checkForErrors = () => {
         try {
             if (attributesList) {
@@ -330,6 +330,7 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
     const handleToggleZoom = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.stopPropagation();
         setZoomOnToken(!zoomOnToken);
+        localStorage.setItem('zoomOnToken', JSON.stringify(!zoomOnToken))
     }
 
     return (

@@ -24,7 +24,6 @@ interface ImageCropperProps {
 }
 
 const ZOOM_SCALE = 2
-const ZOOM_ON_TOKEN = true
 
 export const ImageCropper = (props: ImageCropperProps) => {
     const { image, displayPoints, disabled, fullscreen, imageIdx, highlightedImageIdxIndex, zoomOnToken } = props;
