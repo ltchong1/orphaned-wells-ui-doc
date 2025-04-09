@@ -130,6 +130,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                 }
                 setEditMode(false);
             }
+            handleClickField(k, v.normalized_vertices, idx, false, null);
         }
     }, undefined, undefined, undefined);
 
@@ -469,6 +470,7 @@ const SubattributeRow = (props: SubattributeRowProps) => {
                 }
                 setEditMode(false);
             }
+            handleClickField(k, v.normalized_vertices, topLevelIdx, true, idx);
         }
     }, undefined, undefined, undefined);
 
