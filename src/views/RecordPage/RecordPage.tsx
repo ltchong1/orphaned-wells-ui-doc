@@ -191,9 +191,6 @@ const Record = () => {
         }
         setLastUpdatedField(tempLastUpdatedField)
         setRecordData(tempRecordData);
-        // let is_valid = true
-        // if (recordSchema) is_valid = checkFieldValidity(recordSchema[schemaKey], value)
-        // return is_valid
     }
 
     const handleDeleteRecord = () => {

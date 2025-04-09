@@ -33,7 +33,6 @@ const Bottombar = (props: BottombarProps) => {
   const [openNotesModal, setOpenNotesModal] = useState(false);
   const [openDefectiveDialog, setOpenDefectiveDialog] = useState(false);
   const [openVerificationConfirmation, setOpenVerificationConfirmation] = useState(false)
-  const [notesButtonText, setNotesButtonText ] = useState<string>()
   
   const getSplitButtonOptions = (review_status: string, verification_status?: string) => {
     let markAsUnreviewed = {
