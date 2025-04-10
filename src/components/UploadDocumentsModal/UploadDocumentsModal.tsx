@@ -83,7 +83,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                 setShowWarning(false);
             }, 5000);
         } else {
-            handleUploadDocument(file);
+            handleUploadDocument(file, runCleaningFunctions);
             setShowWarning(false);
             setShowModal(false);
         }
