@@ -233,6 +233,8 @@ export interface UploadDirectoryProps {
     directoryName: string;
     runCleaningFunctions: boolean;
     setRunCleaningFunctions: (show: boolean) => void;
+    uploading: boolean;
+    setUploading: (show: boolean) => void;
 }
 
 export interface BottombarProps {

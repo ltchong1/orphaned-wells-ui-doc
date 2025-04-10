@@ -21,6 +21,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     const [uploadDirectoryFiles, setUploadDirectoryFiles ] = useState<any>([])
     const [ runCleaningFunctions, setRunCleaningFunctions ] = useState(false)
     const [ processorState, setProcessorState ] = useState(10)
+    const [ uploadingDirectory, setUploadingDirectory ] = useState(false)
     const maxFileSize = 10;
     const fileTypes: string[] = ["tiff", "tif", "pdf", "png", "jpg", "jpeg", "zip"];
     const validFileTypes = ['image/png', 'application/pdf', 'image/tiff', 'image/jpeg']
@@ -105,7 +106,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                 setShowWarning(false);
             }, 5000);
         } else {
-            handleUploadDocument(file, runCleaningFunctions, false);
+            handleUploadDocument(file, runCleaningFunctions, true);
             setShowWarning(false);
             setShowModal(false);
         }
@@ -303,7 +304,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                             <Button 
                                 variant='outlined' 
                                 endIcon={<RocketLaunchIcon/>} 
-                                disabled={processorState > 3 || processorState === 2}
+                                disabled={processorState > 3 || processorState === 2 || uploadingDirectory}
                                 onClick={handleDeployProcessor}    
                             >
                                 {processorState === 1 ? 'Undeploy' : 'Deploy'} Processor
@@ -320,6 +321,8 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                         directoryFiles={uploadDirectoryFiles}
                         runCleaningFunctions={runCleaningFunctions}
                         setRunCleaningFunctions={setRunCleaningFunctions}
+                        uploading={uploadingDirectory}
+                        setUploading={setUploadingDirectory}
                     />  :
                     <>
                         <Tooltip title={processorState > 1 && 'Processor must be deployed to upload files'}>
