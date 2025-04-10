@@ -20,7 +20,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     const [uploadDirectory, setUploadDirectory] = useState<string>()
     const [uploadDirectoryFiles, setUploadDirectoryFiles ] = useState<any>([])
     const [ runCleaningFunctions, setRunCleaningFunctions ] = useState(false)
-    const [ processorisDeployed, setProcessorIsDeployed ] = useState<boolean>()
+    const [ processorState, setProcessorState ] = useState(10)
     const maxFileSize = 10;
     const fileTypes: string[] = ["tiff", "tif", "pdf", "png", "jpg", "jpeg", "zip"];
     const validFileTypes = ['image/png', 'application/pdf', 'image/tiff', 'image/jpeg']
@@ -89,8 +89,8 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
         }
     };
 
-    const handleCheckedProcessorStatus = (deployed: boolean) => {
-        setProcessorIsDeployed(deployed)
+    const handleCheckedProcessorStatus = (state: number) => {
+        setProcessorState(state)
     }
 
     const handleClose = () => {
@@ -154,33 +154,28 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
 
     const handleDeployProcessor = () => {
         let apiFunc;
-        let nextState: boolean
-        if (processorisDeployed) {
-            nextState = false
+        if (processorState === 1) {
             apiFunc = undeployProcessor
         }
-        else {
-            nextState = true
+        else if (processorState === 3) {
             apiFunc = deployProcessor
         }
-        setProcessorIsDeployed(undefined)
+        else return
         callAPI(
             apiFunc,
             [params.id],
-            (data) => handleSuccessfulDeploy(data, nextState),
+            (data) => handleSuccessfulDeploy(data),
             (data) => handleFailedDeploy(data),
         )
     }
 
-    const handleSuccessfulDeploy = (response: any, deploymentState: boolean) => {
-        console.log('successful deploy')
-        console.log(response)
-        if (response) setProcessorIsDeployed(deploymentState)
+    const handleSuccessfulDeploy = (response: number) => {
+        if (response) setProcessorState(response)
     }
 
     const handleFailedDeploy = (response: any) => {
-        console.log('unsuccessful deploy')
-        console.log(response)
+        console.error('failed to deploy')
+        if (response) setProcessorState(response)
     }
 
     const fileUploaderContainer = () => {
@@ -235,7 +230,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                 onTypeError={fileTypeError}
                 onSizeError={fileSizeError}
                 maxSize={maxFileSize}
-                disabled={!processorisDeployed}
+                disabled={processorState > 1}
             />
         );
     };
@@ -271,18 +266,27 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                         <span style={styles.processorDeploymentText}>
                         Processor status: &nbsp; 
                             {
-                                processorisDeployed === undefined ? (
+                                processorState > 3 ? (
                                     <span>
                                          <CircularProgress color='primary' size='16px'/>
                                     </span>
                                 )
                                 : 
-                                !processorisDeployed ? (
+                                processorState === 3 ? (
                                     <span>
                                          &nbsp;
                                         <Badge color="error" variant="dot"/>
                                         &nbsp;
                                         undeployed
+                                    </span>
+                                )
+                                : 
+                                processorState === 2 ? (
+                                    <span>
+                                         &nbsp;
+                                        <Badge color="warning" variant="dot"/>
+                                        &nbsp;
+                                        deploying
                                     </span>
                                 )
                                 : (
@@ -299,10 +303,10 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                             <Button 
                                 variant='outlined' 
                                 endIcon={<RocketLaunchIcon/>} 
-                                disabled={processorisDeployed === undefined}
+                                disabled={processorState > 3 || processorState === 2}
                                 onClick={handleDeployProcessor}    
                             >
-                                {processorisDeployed ? 'Undeploy' : 'Deploy'} Processor
+                                {processorState === 1 ? 'Undeploy' : 'Deploy'} Processor
                             </Button>
                         </span>
                     </Stack>
@@ -318,7 +322,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                         setRunCleaningFunctions={setRunCleaningFunctions}
                     />  :
                     <>
-                        <Tooltip title={!processorisDeployed && 'Processor must be deployed to upload files'}>
+                        <Tooltip title={processorState > 1 && 'Processor must be deployed to upload files'}>
                             <Grid item xs={12}>
                                 
                                 {DragDrop()}
@@ -351,7 +355,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                                     Upload File
                                 </Button>
                                 <p style={{display: 'flex', margin:0, alignItems: 'center'}}>or</p>
-                                <Button variant="outlined" style={styles.button} onClick={() => inputRef.current?.click()} disabled={!processorisDeployed}>
+                                <Button variant="outlined" style={styles.button} onClick={() => inputRef.current?.click()} disabled={processorState > 1}>
                                     Choose Directory
                                 </Button>
                             </Box>
