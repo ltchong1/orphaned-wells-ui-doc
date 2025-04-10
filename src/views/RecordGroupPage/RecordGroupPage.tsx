@@ -85,7 +85,7 @@ const RecordGroupPage = () => {
         formData.append('file', file, file.name);
         return callAPI(
             uploadDocument,
-            [formData, recordGroup._id, userEmail, false, runCleaningFunctions],
+            [formData, recordGroup._id, userEmail, false, false, runCleaningFunctions],
             () => handleSuccessfulDocumentUpload(refresh),
             handleAPIErrorResponse
         );
