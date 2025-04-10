@@ -14,11 +14,12 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     const [ file, setFile ] = useState<File | null>(null);
     const [uploadDirectory, setUploadDirectory] = useState<string>()
     const [uploadDirectoryFiles, setUploadDirectoryFiles ] = useState<any>([])
+    const [ runCleaningFunctions, setRunCleaningFunctions ] = useState(false)
+    const [ undeployProcessor, setUndeployProcessor ] = useState(true) 
     const maxFileSize = 10;
     const fileTypes: string[] = ["tiff", "tif", "pdf", "png", "jpg", "jpeg", "zip"];
     const validFileTypes = ['image/png', 'application/pdf', 'image/tiff', 'image/jpeg']
     const inputRef = useRef<HTMLInputElement>(null);
-    const [ runCleaningFunctions, setRunCleaningFunctions ] = useState(false)
 
     const styles = {
         modalStyle: {
@@ -83,7 +84,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                 setShowWarning(false);
             }, 5000);
         } else {
-            handleUploadDocument(file, runCleaningFunctions);
+            handleUploadDocument(file, runCleaningFunctions, undeployProcessor, false);
             setShowWarning(false);
             setShowModal(false);
         }
@@ -219,6 +220,8 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                         directoryFiles={uploadDirectoryFiles}
                         runCleaningFunctions={runCleaningFunctions}
                         setRunCleaningFunctions={setRunCleaningFunctions}
+                        undeployProcessor={undeployProcessor}
+                        setUndeployProcessor={setUndeployProcessor}
                     />  :
                     <>
                         <Grid item xs={12}>
@@ -244,6 +247,12 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                                     label="Run cleaning functions" 
                                     onChange={(e: any) => setRunCleaningFunctions(e.target.checked)}
                                     checked={runCleaningFunctions}
+                                />
+                                <FormControlLabel 
+                                    control={<Switch/>} 
+                                    label="Undeploy processor" 
+                                    onChange={(e: any) => setUndeployProcessor(e.target.checked)}
+                                    checked={undeployProcessor}
                                 />
                             </Box>
                             <Box style={{display: "flex", justifyContent: "space-around"}}>

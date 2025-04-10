@@ -80,12 +80,12 @@ const RecordGroupPage = () => {
         setProject(data.project)
     } 
 
-    const handleUploadDocument = (file: File, runCleaningFunctions: boolean = true, refresh: boolean = true) => {
+    const handleUploadDocument = (file: File, runCleaningFunctions: boolean = false, undeployProcessor: boolean = true, refresh: boolean = true) => {
         const formData = new FormData();
         formData.append('file', file, file.name);
         return callAPI(
             uploadDocument,
-            [formData, recordGroup._id, userEmail, false, false, runCleaningFunctions],
+            [formData, recordGroup._id, userEmail, false, false, runCleaningFunctions, undeployProcessor],
             () => handleSuccessfulDocumentUpload(refresh),
             handleAPIErrorResponse
         );

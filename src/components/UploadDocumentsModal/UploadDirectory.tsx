@@ -10,7 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 const UploadDirectory = (props: UploadDirectoryProps) => {
     const params = useParams<{ id: string }>();
     const { userEmail } = useUserContext();
-    const { directoryName, directoryFiles, runCleaningFunctions, setRunCleaningFunctions } = props;
+    const { directoryName, directoryFiles, runCleaningFunctions, setRunCleaningFunctions, undeployProcessor, setUndeployProcessor } = props;
     const [ amountToUpload, setAmountToUpload ] = useState(directoryFiles.length)
     const [ filesToUpload, setFilesToUpload ] = useState<File[]>([]) 
     const [ uploading, setUploading ] = useState(false)
@@ -96,7 +96,7 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
             formData.append('file', file, file.name);
             callAPI(
                 uploadDocument,
-                [formData, params.id, userEmail, false, preventDuplicates, runCleaningFunctions],
+                [formData, params.id, userEmail, false, preventDuplicates, runCleaningFunctions, undeployProcessor],
                 () => handleSuccessfulDocumentUpload(file),
                 (e, status) => handleAPIErrorResponse(file, status)
             );

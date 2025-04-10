@@ -224,7 +224,7 @@ export interface TableFiltersProps {
 
 export interface UploadDocumentsModalProps {
     setShowModal: (show: boolean) => void;
-    handleUploadDocument: (file: File, refresh?: boolean) => void;
+    handleUploadDocument: (file: File, runCleaningFunctions: boolean, undeployProcessor: boolean, refresh?: boolean) => void;
 }
 
 export interface UploadDirectoryProps {
@@ -233,6 +233,8 @@ export interface UploadDirectoryProps {
     directoryName: string;
     runCleaningFunctions: boolean;
     setRunCleaningFunctions: (show: boolean) => void;
+    undeployProcessor: boolean;
+    setUndeployProcessor: (show: boolean) => void;
 }
 
 export interface BottombarProps {
