@@ -7,7 +7,7 @@ import Subheader from '../../components/Subheader/Subheader';
 import UploadDocumentsModal from '../../components/UploadDocumentsModal/UploadDocumentsModal';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
-import { callAPI } from '../../assets/util';
+import { callAPI } from '../../util';
 import { RecordGroup, ProjectData, PreviousPages, SubheaderActions } from '../../types';
 import { useUserContext } from '../../usercontext';
 
