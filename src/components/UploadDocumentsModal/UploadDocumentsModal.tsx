@@ -1,6 +1,7 @@
 import { useState, useRef, ChangeEvent, useEffect } from 'react';
 import { useParams } from "react-router-dom";
-import { Grid, Box, Modal, IconButton, Button, Switch, FormControlLabel } from '@mui/material';
+import { Grid, Box, Modal, IconButton, Button, Switch, FormControlLabel, Badge, CircularProgress, Stack, Tooltip } from '@mui/material';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import CloseIcon from '@mui/icons-material/Close';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -19,7 +20,8 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     const [uploadDirectory, setUploadDirectory] = useState<string>()
     const [uploadDirectoryFiles, setUploadDirectoryFiles ] = useState<any>([])
     const [ runCleaningFunctions, setRunCleaningFunctions ] = useState(false)
-    const [ undeployProcessor, setUndeployProcessor ] = useState(true) 
+    const [ undeployProcessor, setUndeployProcessor ] = useState(true)
+    const [ processorisDeployed, setProcessorIsDeployed ] = useState<boolean>()
     const maxFileSize = 10;
     const fileTypes: string[] = ["tiff", "tif", "pdf", "png", "jpg", "jpeg", "zip"];
     const validFileTypes = ['image/png', 'application/pdf', 'image/tiff', 'image/jpeg']
@@ -83,10 +85,13 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
             display: 'flex', 
             justifyContent: 'center'
         },
+        processorDeploymentText: {
+            margin:'10px'
+        }
     };
 
     const handleCheckedProcessorStatus = (deployed: boolean) => {
-        console.log('processor is deployed: '+deployed)
+        setProcessorIsDeployed(true)
     }
 
     const handleClose = () => {
@@ -200,6 +205,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                 onTypeError={fileTypeError}
                 onSizeError={fileSizeError}
                 maxSize={maxFileSize}
+                disabled={!processorisDeployed}
             />
         );
     };
@@ -230,6 +236,44 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                         <IconButton onClick={handleClose}><CloseIcon/></IconButton>
                     </Box>
                 </Grid>
+                <Grid item xs={12}>
+                    <Stack direction={'row'} justifyContent={'space-between'}>
+                        <span style={styles.processorDeploymentText}>
+                        Processor status: &nbsp; 
+                            {
+                                processorisDeployed === undefined ? (
+                                    <span>
+                                         <CircularProgress color='primary' size='16px'/>
+                                    </span>
+                                )
+                                : 
+                                !processorisDeployed ? (
+                                    <span>
+                                         &nbsp;
+                                        <Badge color="error" variant="dot"/>
+                                        &nbsp;
+                                        undeployed
+                                    </span>
+                                )
+                                : (
+                                    <span>
+                                         &nbsp;
+                                        <Badge color="secondary" variant="dot"/>
+                                        &nbsp;
+                                        deployed
+                                    </span>
+                                )
+                            }
+                        </span>
+                        <span>
+                            <Button variant='outlined' endIcon={<RocketLaunchIcon/>} disabled={processorisDeployed === undefined}>
+                                {processorisDeployed ? 'Undeploy' : 'Deploy'} Processor
+                            </Button>
+                        </span>
+                    </Stack>
+                    
+                        
+                </Grid>
                 {uploadDirectory ? 
                     <UploadDirectory
                         setShowModal={setShowModal}
@@ -241,9 +285,12 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                         setUndeployProcessor={setUndeployProcessor}
                     />  :
                     <>
-                        <Grid item xs={12}>
-                            {DragDrop()}
-                        </Grid>
+                        <Tooltip title={!processorisDeployed && 'Processor must be deployed to upload files'}>
+                            <Grid item xs={12}>
+                                
+                                {DragDrop()}
+                            </Grid>
+                        </Tooltip>
                         <Grid item xs={12}>
                         <input
                             ref={inputRef}
@@ -271,7 +318,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                                     Upload File
                                 </Button>
                                 <p style={{display: 'flex', margin:0, alignItems: 'center'}}>or</p>
-                                <Button variant="outlined" style={styles.button} onClick={() => inputRef.current?.click()}>
+                                <Button variant="outlined" style={styles.button} onClick={() => inputRef.current?.click()} disabled={!processorisDeployed}>
                                     Choose Directory
                                 </Button>
                             </Box>
