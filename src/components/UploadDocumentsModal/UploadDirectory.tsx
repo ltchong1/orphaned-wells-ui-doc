@@ -10,7 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 const UploadDirectory = (props: UploadDirectoryProps) => {
     const params = useParams<{ id: string }>();
     const { userEmail } = useUserContext();
-    const { directoryName, directoryFiles, runCleaningFunctions, setRunCleaningFunctions, undeployProcessor, setUndeployProcessor } = props;
+    const { directoryName, directoryFiles, runCleaningFunctions, setRunCleaningFunctions } = props;
     const [ amountToUpload, setAmountToUpload ] = useState(directoryFiles.length)
     const [ filesToUpload, setFilesToUpload ] = useState<File[]>([]) 
     const [ uploading, setUploading ] = useState(false)

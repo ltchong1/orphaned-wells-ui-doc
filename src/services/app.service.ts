@@ -105,6 +105,7 @@ export const deployProcessor = (rg_id: string)  => {
     return fetch(BACKEND_URL + '/deploy_processor/'+rg_id, {
         method: 'POST',
         mode: 'cors',
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
     });
 };
 
@@ -112,6 +113,7 @@ export const undeployProcessor = (rg_id: string)  => {
     return fetch(BACKEND_URL + '/undeploy_processor/'+rg_id, {
         method: 'POST',
         mode: 'cors',
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
     });
 };
 
@@ -119,6 +121,7 @@ export const checkProcessorStatus = (rg_id: string)  => {
     return fetch(BACKEND_URL + '/check_processor_status/'+rg_id, {
         method: 'GET',
         mode: 'cors',
+        headers: { "Authorization": "Bearer " + localStorage.getItem("id_token") }
     });
 };
 

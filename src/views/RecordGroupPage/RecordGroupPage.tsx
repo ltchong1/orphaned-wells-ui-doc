@@ -80,7 +80,7 @@ const RecordGroupPage = () => {
         setProject(data.project)
     } 
 
-    const handleUploadDocument = (file: File, runCleaningFunctions: boolean = false, undeployProcessor: boolean = true, refresh: boolean = true) => {
+    const handleUploadDocument = (file: File, runCleaningFunctions: boolean = false, refresh: boolean = true) => {
         const formData = new FormData();
         formData.append('file', file, file.name);
         return callAPI(

@@ -8,7 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { FileUploader } from "react-drag-drop-files";
 import { UploadDocumentsModalProps } from '../../types';
 import UploadDirectory from './UploadDirectory';
-import { checkProcessorStatus } from '../../services/app.service';
+import { checkProcessorStatus, deployProcessor, undeployProcessor } from '../../services/app.service';
 import { callAPI } from '../../util';
 
 const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
@@ -20,7 +20,6 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     const [uploadDirectory, setUploadDirectory] = useState<string>()
     const [uploadDirectoryFiles, setUploadDirectoryFiles ] = useState<any>([])
     const [ runCleaningFunctions, setRunCleaningFunctions ] = useState(false)
-    const [ undeployProcessor, setUndeployProcessor ] = useState(true)
     const [ processorisDeployed, setProcessorIsDeployed ] = useState<boolean>()
     const maxFileSize = 10;
     const fileTypes: string[] = ["tiff", "tif", "pdf", "png", "jpg", "jpeg", "zip"];
@@ -91,7 +90,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     };
 
     const handleCheckedProcessorStatus = (deployed: boolean) => {
-        setProcessorIsDeployed(true)
+        setProcessorIsDeployed(deployed)
     }
 
     const handleClose = () => {
@@ -106,7 +105,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                 setShowWarning(false);
             }, 5000);
         } else {
-            handleUploadDocument(file, runCleaningFunctions, undeployProcessor, false);
+            handleUploadDocument(file, runCleaningFunctions, false);
             setShowWarning(false);
             setShowModal(false);
         }
@@ -151,6 +150,37 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
         }
         setUploadDirectory(directoryName)
         setUploadDirectoryFiles(validFiles)
+    }
+
+    const handleDeployProcessor = () => {
+        let apiFunc;
+        let nextState: boolean
+        if (processorisDeployed) {
+            nextState = false
+            apiFunc = undeployProcessor
+        }
+        else {
+            nextState = true
+            apiFunc = deployProcessor
+        }
+        setProcessorIsDeployed(undefined)
+        callAPI(
+            apiFunc,
+            [params.id],
+            (data) => handleSuccessfulDeploy(data, nextState),
+            (data) => handleFailedDeploy(data),
+        )
+    }
+
+    const handleSuccessfulDeploy = (response: any, deploymentState: boolean) => {
+        console.log('successful deploy')
+        console.log(response)
+        if (response) setProcessorIsDeployed(deploymentState)
+    }
+
+    const handleFailedDeploy = (response: any) => {
+        console.log('unsuccessful deploy')
+        console.log(response)
     }
 
     const fileUploaderContainer = () => {
@@ -266,7 +296,12 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                             }
                         </span>
                         <span>
-                            <Button variant='outlined' endIcon={<RocketLaunchIcon/>} disabled={processorisDeployed === undefined}>
+                            <Button 
+                                variant='outlined' 
+                                endIcon={<RocketLaunchIcon/>} 
+                                disabled={processorisDeployed === undefined}
+                                onClick={handleDeployProcessor}    
+                            >
                                 {processorisDeployed ? 'Undeploy' : 'Deploy'} Processor
                             </Button>
                         </span>
@@ -281,8 +316,6 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                         directoryFiles={uploadDirectoryFiles}
                         runCleaningFunctions={runCleaningFunctions}
                         setRunCleaningFunctions={setRunCleaningFunctions}
-                        undeployProcessor={undeployProcessor}
-                        setUndeployProcessor={setUndeployProcessor}
                     />  :
                     <>
                         <Tooltip title={!processorisDeployed && 'Processor must be deployed to upload files'}>
