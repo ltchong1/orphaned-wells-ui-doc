@@ -1,4 +1,5 @@
-import { useState, useRef, ChangeEvent } from 'react';
+import { useState, useRef, ChangeEvent, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import { Grid, Box, Modal, IconButton, Button, Switch, FormControlLabel } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
@@ -6,8 +7,11 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { FileUploader } from "react-drag-drop-files";
 import { UploadDocumentsModalProps } from '../../types';
 import UploadDirectory from './UploadDirectory';
+import { checkProcessorStatus } from '../../services/app.service';
+import { callAPI } from '../../util';
 
 const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
+    const params = useParams<{ id: string }>();
     const { setShowModal, handleUploadDocument } = props;
     const [ showWarning, setShowWarning ] = useState(false);
     const [ warningMessage, setWarningMessage ] = useState("");
@@ -20,6 +24,15 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     const fileTypes: string[] = ["tiff", "tif", "pdf", "png", "jpg", "jpeg", "zip"];
     const validFileTypes = ['image/png', 'application/pdf', 'image/tiff', 'image/jpeg']
     const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        callAPI(
+            checkProcessorStatus,
+            [params.id],
+            (data) => handleCheckedProcessorStatus(data),
+            (e, status) => console.error(e)
+        );
+    }, [params.id])
 
     const styles = {
         modalStyle: {
@@ -71,6 +84,10 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
             justifyContent: 'center'
         },
     };
+
+    const handleCheckedProcessorStatus = (deployed: boolean) => {
+        console.log('processor is deployed: '+deployed)
+    }
 
     const handleClose = () => {
         setShowModal(false);
@@ -241,21 +258,15 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                             
                         </Grid>
                         <Grid item xs={12}>
-                            <Box style={{display: "flex", justifyContent: "space-around"}}>
+                            <Box sx={{display: "flex", justifyContent: "space-around", marginBottom: 1}}>
                                 <FormControlLabel 
                                     control={<Switch/>} 
                                     label="Run cleaning functions" 
                                     onChange={(e: any) => setRunCleaningFunctions(e.target.checked)}
                                     checked={runCleaningFunctions}
                                 />
-                                <FormControlLabel 
-                                    control={<Switch/>} 
-                                    label="Undeploy processor" 
-                                    onChange={(e: any) => setUndeployProcessor(e.target.checked)}
-                                    checked={undeployProcessor}
-                                />
                             </Box>
-                            <Box style={{display: "flex", justifyContent: "space-around"}}>
+                            <Box sx={{display: "flex", justifyContent: "space-around"}}>
                                 <Button variant="contained" style={styles.button} onClick={handleClickUpload} disabled={file === null}>
                                     Upload File
                                 </Button>

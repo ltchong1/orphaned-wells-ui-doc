@@ -91,13 +91,34 @@ export const addRecordGroup = (data: any) => {
     });
 };
 
-export const uploadDocument = (data: FormData, project_id: string, user_email: any, reprocessed?: boolean, preventDuplicates?: boolean, run_cleaning_functions: boolean = false, undeployProcessor: boolean = true)  => {
+export const uploadDocument = (data: FormData, project_id: string, user_email: any, reprocessed?: boolean, preventDuplicates?: boolean, run_cleaning_functions: boolean = false, undeployProcessor: boolean = false)  => {
     if (!reprocessed) reprocessed = false
     if (!preventDuplicates) preventDuplicates = false
     return fetch(BACKEND_URL + '/upload_document/' + project_id + '/' + user_email+'?reprocessed='+reprocessed+'&preventDuplicates='+preventDuplicates+'&run_cleaning_functions='+run_cleaning_functions+'&undeployProcessor='+undeployProcessor, {
         method: 'POST',
         mode: 'cors',
         body: data,
+    });
+};
+
+export const deployProcessor = (rg_id: string)  => {
+    return fetch(BACKEND_URL + '/deploy_processor/'+rg_id, {
+        method: 'POST',
+        mode: 'cors',
+    });
+};
+
+export const undeployProcessor = (rg_id: string)  => {
+    return fetch(BACKEND_URL + '/undeploy_processor/'+rg_id, {
+        method: 'POST',
+        mode: 'cors',
+    });
+};
+
+export const checkProcessorStatus = (rg_id: string)  => {
+    return fetch(BACKEND_URL + '/check_processor_status/'+rg_id, {
+        method: 'GET',
+        mode: 'cors',
     });
 };
 

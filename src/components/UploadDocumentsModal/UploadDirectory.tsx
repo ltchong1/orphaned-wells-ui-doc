@@ -96,7 +96,7 @@ const UploadDirectory = (props: UploadDirectoryProps) => {
             formData.append('file', file, file.name);
             callAPI(
                 uploadDocument,
-                [formData, params.id, userEmail, false, preventDuplicates, runCleaningFunctions, undeployProcessor],
+                [formData, params.id, userEmail, false, preventDuplicates, runCleaningFunctions, false],
                 () => handleSuccessfulDocumentUpload(file),
                 (e, status) => handleAPIErrorResponse(file, status)
             );
