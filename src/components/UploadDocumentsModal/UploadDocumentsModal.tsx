@@ -1,5 +1,5 @@
 import { useState, useRef, ChangeEvent } from 'react';
-import { Grid, Box, Modal, IconButton, Button } from '@mui/material';
+import { Grid, Box, Modal, IconButton, Button, Switch, FormControlLabel } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -18,6 +18,7 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     const fileTypes: string[] = ["tiff", "tif", "pdf", "png", "jpg", "jpeg", "zip"];
     const validFileTypes = ['image/png', 'application/pdf', 'image/tiff', 'image/jpeg']
     const inputRef = useRef<HTMLInputElement>(null);
+    const [ runCleaningFunctions, setRunCleaningFunctions ] = useState(false)
 
     const styles = {
         modalStyle: {
@@ -99,7 +100,6 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
     };
 
     const handleChooseDirectory = (e: ChangeEvent<HTMLInputElement>) => {
-        // console.log(e.target.files)
         handleDirectoryInput(e.target.files)
         setShowWarning(false);
     }
@@ -217,6 +217,8 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                         setShowModal={setShowModal}
                         directoryName={uploadDirectory}
                         directoryFiles={uploadDirectoryFiles}
+                        runCleaningFunctions={runCleaningFunctions}
+                        setRunCleaningFunctions={setRunCleaningFunctions}
                     />  :
                     <>
                         <Grid item xs={12}>
@@ -236,6 +238,14 @@ const UploadDocumentsModal = (props: UploadDocumentsModalProps) => {
                             
                         </Grid>
                         <Grid item xs={12}>
+                            <Box style={{display: "flex", justifyContent: "space-around"}}>
+                                <FormControlLabel 
+                                    control={<Switch/>} 
+                                    label="Run cleaning functions" 
+                                    onChange={(e: any) => setRunCleaningFunctions(e.target.checked)}
+                                    checked={runCleaningFunctions}
+                                />
+                            </Box>
                             <Box style={{display: "flex", justifyContent: "space-around"}}>
                                 <Button variant="contained" style={styles.button} onClick={handleClickUpload} disabled={file === null}>
                                     Upload File

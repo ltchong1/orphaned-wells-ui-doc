@@ -229,8 +229,10 @@ export interface UploadDocumentsModalProps {
 
 export interface UploadDirectoryProps {
     setShowModal: (show: boolean) => void;
-    directoryFiles: File[]
-    directoryName: string
+    directoryFiles: File[];
+    directoryName: string;
+    runCleaningFunctions: boolean;
+    setRunCleaningFunctions: (show: boolean) => void;
 }
 
 export interface BottombarProps {
