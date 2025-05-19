@@ -292,7 +292,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                                     </Typography>
                                 }
                                 {
-                                    (v.cleaned || v.cleaning_error) &&
+                                    (v.cleaned || v.cleaning_error) && (!v.user_added) &&
                                     <Typography noWrap component={'p'} sx={styles.ocrRawText} onClick={(e) => e.stopPropagation()}>
                                         OCR Raw Value: {v.raw_text}
                                     </Typography>
