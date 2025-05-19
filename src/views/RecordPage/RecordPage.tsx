@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
-import { useParams, useNavigate, redirect } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getRecordData, updateRecord, deleteRecord, cleanRecords } from '../../services/app.service';
 import { callAPI, useKeyDown } from '../../util';
 import Subheader from '../../components/Subheader/Subheader';
@@ -151,6 +151,39 @@ const Record = () => {
             console.error('error updating record data: ', data);
         }
     }
+
+    const insertField = (k: string, topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
+        // console.log(`inserting ${k} at index ${topLevelIndex}${isSubattribute ? ":"+subIndex : ''}`);
+        let tempRecordData = { ...recordData };
+        let tempAttributesList = [...tempRecordData.attributesList];
+        // let rightNow = Date.now();
+        let newField = {
+            "key": k,
+            "ai_confidence": null,
+            "confidence": null,
+            "raw_text": null,
+            "text_value": null,
+            "value": "",
+            "normalized_vertices": null,
+            "normalized_value": null,
+            "subattributes": null,
+            "isSubattribute": false,
+            "edited": false,
+            "page": null,
+        }
+        if (isSubattribute) {
+            // TODO: handle subattribute
+            console.log("subattribute, returning");
+            return;
+        } else {
+            tempAttributesList.splice(topLevelIndex+1, 0, newField);
+        }
+        // TODO: make this new field be in edit mode (might have to be done in RecordAttributesTable component)
+        tempRecordData.attributesList = tempAttributesList;
+        setRecordData(tempRecordData);
+    }
+
+
 
     const handleChangeValue: handleChangeValueSignature = (event, topLevelIndex, isSubattribute, subIndex) => {
         if (locked) return true
@@ -314,6 +347,7 @@ const Record = () => {
                     handleUpdateRecord={handleUpdateRecord}
                     locked={locked}
                     recordSchema={recordSchema || {}}
+                    insertField={insertField}
                 />
             </Box>
             <Bottombar

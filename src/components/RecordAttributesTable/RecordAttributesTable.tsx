@@ -89,7 +89,8 @@ const AttributeRow = (props: AttributeRowProps) => {
         displayKeySubattributeIndex,
         locked,
         showRawValues,
-        recordSchema
+        recordSchema,
+        insertField
     } = childProps;
     
     const [ editMode, setEditMode ] = useState(false);
@@ -201,6 +202,12 @@ const AttributeRow = (props: AttributeRowProps) => {
         setMenuAnchor(event.currentTarget);
     }
 
+    const handleInsertField = () => {
+        setShowActions(false);
+        setMenuAnchor(null);
+        insertField(k, idx, false);
+    }
+
     return (
     <>
         <TableRow id={`${k}::${idx}`} sx={(isSelected && !v.subattributes) ? {backgroundColor: "#EDEDED"} : {}} onClick={handleClickInside}>
@@ -213,7 +220,6 @@ const AttributeRow = (props: AttributeRowProps) => {
                     <IconButton
                         aria-label="expand row"
                         size="small"
-                        // onClick={() => setOpenSubtable(!openSubtable)}
                         sx={styles.rowIconButton}
                     >
                         {openSubtable ? <KeyboardArrowUpIcon sx={styles.rowIcon}/> : <KeyboardArrowDownIcon sx={styles.rowIcon}/>}
@@ -361,7 +367,7 @@ const AttributeRow = (props: AttributeRowProps) => {
                 onClose={() => setShowActions(false)}
                 onClick={(e) => e.stopPropagation()}
             >
-                <MenuItem>Add another '{k}'</MenuItem>
+                <MenuItem onClick={handleInsertField}>Add another '{k}'</MenuItem>
                 <MenuItem>Delete this '{k}'</MenuItem>
             </Menu>
         </TableRow>

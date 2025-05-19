@@ -87,6 +87,7 @@ export interface Attribute {
     lastUpdated?: number; // timestamp in milliseconds
     lastUpdatedBy?: string;
     last_cleaned?: number; // timestamp in seconds
+    user_added?: boolean;
 }
 
 export interface Processor {
@@ -167,6 +168,7 @@ export interface RecordAttributesTableProps {
     locked?: boolean;
     showRawValues?: boolean;
     recordSchema: RecordSchema;
+    insertField: (k: string, topLevelIndex: number, isSubattribute: boolean, subIndex?: number) => void;
 }
 
 export interface RecordsTableProps {
@@ -255,6 +257,7 @@ export interface DocumentContainerProps {
     handleUpdateRecord: (...args: any[]) => void;
     locked?: boolean;
     recordSchema: RecordSchema;
+    insertField: (k: string, topLevelIndex: number, isSubattribute: boolean, subIndex?: number) => void;
 }
 
 export interface ColumnSelectDialogProps {
