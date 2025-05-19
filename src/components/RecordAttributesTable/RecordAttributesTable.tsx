@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer } from '@mui/material';
+import React, { useState, useEffect, MouseEvent } from 'react';
+import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer, Menu, MenuItem } from '@mui/material';
 import { Box, TextField, Collapse, Typography, IconButton, Badge, Tooltip, Stack } from '@mui/material';
 import { formatConfidence, useKeyDown, useOutsideClick, formatAttributeValue, formatDateTime } from '../../util';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import InfoIcon from '@mui/icons-material/Info';
 import EditIcon from '@mui/icons-material/Edit';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Attribute, RecordAttributesTableProps } from '../../types';
 import { styles } from '../../styles';
 
@@ -44,6 +45,7 @@ const AttributesTable = (props: AttributesTableProps) => {
                             <TableCell sx={styles.headerRow}>Raw Value</TableCell>
                         }
                         <TableCell sx={styles.headerRow} align='right'>Confidence</TableCell>
+                        <TableCell sx={styles.headerRow} align='right'></TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody ref={ref}>
@@ -93,7 +95,11 @@ const AttributeRow = (props: AttributeRowProps) => {
     const [ editMode, setEditMode ] = useState(false);
     const [ openSubtable, setOpenSubtable ] = useState(true);
     const [ isSelected, setIsSelected ] = useState(false);
-    const [ lastSavedValue, setLastSavedValue ] = useState(v.value)
+    const [ lastSavedValue, setLastSavedValue ] = useState(v.value);
+    const [ menuAnchor, setMenuAnchor ] = useState<null | HTMLElement>(null);
+    const [showActions, setShowActions] = useState(false);
+
+    const allowMultiple = recordSchema[k]?.occurrence?.toLowerCase().includes('multiple');
 
     useEffect(() => {
         if (idx === displayKeyIndex && (displayKeySubattributeIndex === null || displayKeySubattributeIndex === undefined)) setIsSelected(true);
@@ -187,6 +193,12 @@ const AttributeRow = (props: AttributeRowProps) => {
             if ((v.lastUpdated/1000) < v.last_cleaned) return true
         }
         return false
+    }
+
+    const handleShowActions = (event: MouseEvent<HTMLElement>) => {
+        event.stopPropagation();
+        setShowActions(!showActions);
+        setMenuAnchor(event.currentTarget);
     }
 
     return (
@@ -337,6 +349,21 @@ const AttributeRow = (props: AttributeRowProps) => {
                     </p>
                 }
             </TableCell>
+            <TableCell>{allowMultiple ? (
+                <IconButton size='small' onClick={handleShowActions}>
+                    <MoreVertIcon/>
+                </IconButton>
+            ) : null}</TableCell> 
+            <Menu
+                id="actions"
+                anchorEl={menuAnchor}
+                open={showActions}
+                onClose={() => setShowActions(false)}
+                onClick={(e) => e.stopPropagation()}
+            >
+                <MenuItem>Add another '{k}'</MenuItem>
+                <MenuItem>Delete this '{k}'</MenuItem>
+            </Menu>
         </TableRow>
         {
             v.subattributes &&

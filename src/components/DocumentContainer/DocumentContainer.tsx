@@ -4,7 +4,6 @@ import { Grid, Box, IconButton, Alert, Tooltip } from '@mui/material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import { ImageCropper } from '../ImageCropper/ImageCropper';
 import { useKeyDown } from '../../util';
 import AttributesTable from '../RecordAttributesTable/RecordAttributesTable';
