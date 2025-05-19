@@ -170,6 +170,7 @@ const Record = () => {
             "isSubattribute": false,
             "edited": false,
             "page": null,
+            "user_added": true,
         }
         if (isSubattribute) {
             // TODO: handle subattribute

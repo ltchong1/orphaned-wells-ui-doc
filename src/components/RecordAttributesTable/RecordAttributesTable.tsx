@@ -312,6 +312,22 @@ const AttributeRow = (props: AttributeRowProps) => {
             }
             <TableCell align="right" id={v.key+'_confidence'}>
                 {
+                    v.user_added ? (
+                        <Tooltip title={(v.lastUpdated) ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy || 'unknown'}` : ''}>
+                            <p style={{padding:0, margin:0}}>
+                                <Badge
+                                    variant="dot"
+                                    sx={{
+                                    "& .MuiBadge-badge": {
+                                        color: "#2196F3",
+                                        backgroundColor: "#2196F3"
+                                    }
+                                    }}
+                                /> 
+                                &nbsp; Added
+                            </p> 
+                        </Tooltip>
+                    ) :
                     v.edited ? 
                     (
                         <Tooltip title={(v.lastUpdated) ? `Last updated ${formatDateTime(v.lastUpdated)} by ${v.lastUpdatedBy || 'unknown'}` : ''}>
