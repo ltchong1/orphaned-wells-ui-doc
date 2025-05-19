@@ -23,6 +23,7 @@ const Record = () => {
     const [ lastUpdatedField, setLastUpdatedField ] = useState<any>()
     const [ subheaderActions, setSubheaderActions ] = useState<SubheaderActions>()
     const [ recordSchema, setRecordSchema ] = useState<RecordSchema>()
+    const [ forceEditMode, setForceEditMode ] = useState<number>()
     const [locked, setLocked] = useState(false)
     const params = useParams<{ id: string }>();
     const navigate = useNavigate();
@@ -154,10 +155,11 @@ const Record = () => {
 
     const insertField = (k: string, topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
         // console.log(`inserting ${k} at index ${topLevelIndex}${isSubattribute ? ":"+subIndex : ''}`);
-        let tempRecordData = { ...recordData };
-        let tempAttributesList = [...tempRecordData.attributesList];
+        const newIndex = topLevelIndex+1;
+        const tempRecordData = { ...recordData };
+        const tempAttributesList = [...tempRecordData.attributesList];
         // let rightNow = Date.now();
-        let newField = {
+        const newField = {
             "key": k,
             "ai_confidence": null,
             "confidence": null,
@@ -177,11 +179,14 @@ const Record = () => {
             console.log("subattribute, returning");
             return;
         } else {
-            tempAttributesList.splice(topLevelIndex+1, 0, newField);
+            tempAttributesList.splice(newIndex, 0, newField);
         }
         // TODO: make this new field be in edit mode (might have to be done in RecordAttributesTable component)
         tempRecordData.attributesList = tempAttributesList;
         setRecordData(tempRecordData);
+        setTimeout(() => {
+            setForceEditMode(newIndex)
+        }, 0)
     }
 
 
@@ -349,6 +354,7 @@ const Record = () => {
                     locked={locked}
                     recordSchema={recordSchema || {}}
                     insertField={insertField}
+                    forceEditMode={forceEditMode}
                 />
             </Box>
             <Bottombar

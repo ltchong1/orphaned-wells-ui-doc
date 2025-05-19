@@ -11,7 +11,7 @@ import { DocumentContainerProps } from '../../types';
 import { DocumentContainerStyles as styles } from '../../styles';
 import Switch from '@mui/material/Switch';
 
-const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, handleUpdateRecord, locked, recordSchema, insertField }: DocumentContainerProps) => {
+const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, handleUpdateRecord, locked, recordSchema, insertField, forceEditMode }: DocumentContainerProps) => {
     const [imgIndex, setImgIndex] = useState(0);
     const [displayPoints, setDisplayPoints] = useState<number[][] | null>(null);
     const [displayKeyIndex, setDisplayKeyIndex] = useState(-1);
@@ -376,6 +376,7 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
                                     showRawValues={showRawValues}
                                     recordSchema={recordSchema || {}}
                                     insertField={insertField}
+                                    forceEditMode={forceEditMode}
                                 />
                             }
                         </Box>

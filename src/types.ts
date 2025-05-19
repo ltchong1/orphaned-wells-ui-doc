@@ -168,6 +168,7 @@ export interface RecordAttributesTableProps {
     locked?: boolean;
     showRawValues?: boolean;
     recordSchema: RecordSchema;
+    forceEditMode?: number;
     insertField: (k: string, topLevelIndex: number, isSubattribute: boolean, subIndex?: number) => void;
 }
 
@@ -257,6 +258,7 @@ export interface DocumentContainerProps {
     handleUpdateRecord: (...args: any[]) => void;
     locked?: boolean;
     recordSchema: RecordSchema;
+    forceEditMode?: number;
     insertField: (k: string, topLevelIndex: number, isSubattribute: boolean, subIndex?: number) => void;
 }
 

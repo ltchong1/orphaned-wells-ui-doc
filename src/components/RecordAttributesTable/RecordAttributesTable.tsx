@@ -90,7 +90,8 @@ const AttributeRow = (props: AttributeRowProps) => {
         locked,
         showRawValues,
         recordSchema,
-        insertField
+        insertField,
+        forceEditMode,
     } = childProps;
     
     const [ editMode, setEditMode ] = useState(false);
@@ -144,6 +145,10 @@ const AttributeRow = (props: AttributeRowProps) => {
     useEffect(() => {
         if (forceOpenSubtable === idx) setOpenSubtable(true);
     }, [forceOpenSubtable]);
+
+    useEffect(() => {
+        if (forceEditMode === idx) makeEditable();
+    }, [forceEditMode]);
 
     const handleDoubleClick = () => {
         makeEditable()
