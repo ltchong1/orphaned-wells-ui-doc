@@ -147,7 +147,13 @@ const AttributeRow = (props: AttributeRowProps) => {
     }, [forceOpenSubtable]);
 
     useEffect(() => {
-        if (forceEditMode === idx) makeEditable();
+        if (forceEditMode === idx) {
+            makeEditable();
+            setIsSelected(true);
+        } else if (forceEditMode !== undefined) {
+            finishEditing();
+            setIsSelected(false);
+        }
     }, [forceEditMode]);
 
     const handleDoubleClick = () => {

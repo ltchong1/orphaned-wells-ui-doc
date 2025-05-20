@@ -8,7 +8,7 @@ import Bottombar from '../../components/BottomBar/BottomBar';
 import DocumentContainer from '../../components/DocumentContainer/DocumentContainer';
 import PopupModal from '../../components/PopupModal/PopupModal';
 import ErrorBar from '../../components/ErrorBar/ErrorBar';
-import { RecordData, handleChangeValueSignature, PreviousPages, SubheaderActions, RecordSchema } from '../../types';
+import { RecordData, handleChangeValueSignature, PreviousPages, SubheaderActions, RecordSchema, Attribute } from '../../types';
 import { useUserContext } from '../../usercontext';
 
 const Record = () => {
@@ -185,7 +185,10 @@ const Record = () => {
         tempRecordData.attributesList = tempAttributesList;
         setRecordData(tempRecordData);
         setTimeout(() => {
-            setForceEditMode(newIndex)
+            setForceEditMode(newIndex);
+            setTimeout(() => {
+                setForceEditMode(undefined);
+            }, 0)
         }, 0)
     }
 
@@ -193,43 +196,53 @@ const Record = () => {
 
     const handleChangeValue: handleChangeValueSignature = (event, topLevelIndex, isSubattribute, subIndex) => {
         if (locked) return true
-        let tempRecordData = { ...recordData };
-        let tempAttributesList = [...tempRecordData.attributesList];
-        let tempAttribute: any;
+        let value = event.target.value;
         let rightNow = Date.now();
-        let value;
-        if (isSubattribute) {
-            value = event.target.value;
-            tempAttribute = tempAttributesList[topLevelIndex];
-            let tempSubattributesList = [...tempAttribute["subattributes"]];
-            let tempSubattribute = tempSubattributesList[subIndex!];
-            tempSubattribute.value = value;
-            tempAttribute.edited = true;
-            tempAttribute.lastUpdated = rightNow;
-            tempAttribute.lastUpdatedBy = userEmail
-            tempSubattribute.edited = true;
-            tempSubattribute.lastUpdated = rightNow;
-            tempSubattribute.lastUpdatedBy = userEmail
-            tempAttribute["subattributes"] = tempSubattributesList;
+        if (!isSubattribute) {
+            setRecordData(tempRecordData => ({
+                ...tempRecordData,
+                lastUpdated: rightNow,
+                lastUpdatedBy: userEmail,
+                attributesList: tempRecordData.attributesList.map((tempAttribute, idx) =>
+                    topLevelIndex === idx ? { 
+                        ...tempAttribute, 
+                        value: value,
+                        edited: true,
+                        lastUpdated: rightNow,
+                        lastUpdatedBy: userEmail,
+                    } : tempAttribute
+                )
+            }))
         } else {
-            tempAttribute = tempAttributesList[topLevelIndex];
-            value = event.target.value;
-            tempAttribute.value = value;
-            tempAttribute.edited = true;
-            tempAttribute.lastUpdated = rightNow;
-            tempAttribute.lastUpdatedBy = userEmail
+            setRecordData(tempRecordData => ({
+                ...tempRecordData,
+                lastUpdated: rightNow,
+                lastUpdatedBy: userEmail,
+                attributesList: tempRecordData.attributesList.map((tempAttribute, idx) =>
+                    topLevelIndex === idx ? { 
+                        ...tempAttribute, 
+                        edited: true,
+                        lastUpdated: rightNow,
+                        lastUpdatedBy: userEmail,
+                        subAttributes: tempAttribute.subattributes.map((tempSubattribute: Attribute, subidx: number) => 
+                            subIndex === subidx ? {
+                                ...tempSubattribute,
+                                value: value,
+                                edited: true,
+                                lastUpdated: rightNow,
+                                lastUpdatedBy: userEmail,
+                            } : tempSubattribute
+                        )
+                    } : tempAttribute
+                )
+            }))
         }
-        tempAttributesList[topLevelIndex] = tempAttribute;
-        tempRecordData.attributesList = tempAttributesList;
-        tempRecordData.lastUpdated = rightNow;
-        tempRecordData.lastUpdatedBy = userEmail;
-        let tempLastUpdatedField = {
+        const tempLastUpdatedField = {
             topLevelIndex: topLevelIndex,
             'isSubattribute': isSubattribute,
             'subIndex': subIndex
         }
         setLastUpdatedField(tempLastUpdatedField)
-        setRecordData(tempRecordData);
     }
 
     const handleDeleteRecord = () => {
