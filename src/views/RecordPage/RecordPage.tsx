@@ -125,40 +125,28 @@ const Record = () => {
         );
     }
 
-    const handleUpdateRecord = (cleanFields: boolean = true) => {
-        if (locked) return
-        let body = { data: recordData, type: "attributesList", fieldToClean: null }
-        if (cleanFields) body['fieldToClean'] = lastUpdatedField
-        callAPI(
-            updateRecord,
-            [params.id, body],
-            handleSuccessfulAttributeUpdate,
-            handleFailedUpdate
-        );
-    }
-
-    const handleSuccessfulAttributeUpdate = (data: any) => {
-        let tempRecordData = { ...recordData } as RecordData;
-        tempRecordData["attributesList"] = data["attributesList"]
-        if (data["review_status"]) tempRecordData["review_status"] = data["review_status"]
+    const handleSuccessfulAttributeUpdate = React.useCallback((data: any) => {
         setLastUpdatedField(undefined)
-        setRecordData(tempRecordData);
-    }
+        const { isSubattribute, topLevelIndex, subIndex, v } = data;
+        const value = v.value;
+        let fakeEvent = {
+            target: {
+                value: value
+            }
+        } as React.ChangeEvent<HTMLInputElement>
+        handleChangeValue(fakeEvent, topLevelIndex, isSubattribute, subIndex)
+    }, [])
 
-    const handleFailedUpdate = (data: any, response_status?: number) => {
+    const handleFailedUpdate = React.useCallback((data: any, response_status?: number) => {
         if (response_status === 403) {
             setErrorMsg(`${data}.`);
         } else {
             console.error('error updating record data: ', data);
         }
-    }
+    }, [])
 
-    const insertField = (k: string, topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
-        // console.log(`inserting ${k} at index ${topLevelIndex}${isSubattribute ? ":"+subIndex : ''}`);
+    const insertField = React.useCallback((k: string, topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
         const newIndex = topLevelIndex+1;
-        const tempRecordData = { ...recordData };
-        const tempAttributesList = [...tempRecordData.attributesList];
-        // let rightNow = Date.now();
         const newField = {
             "key": k,
             "ai_confidence": null,
@@ -178,23 +166,29 @@ const Record = () => {
             // TODO: handle subattribute
             console.log("subattribute, returning");
             return;
-        } else {
-            tempAttributesList.splice(newIndex, 0, newField);
         }
-        // TODO: make this new field be in edit mode (might have to be done in RecordAttributesTable component)
-        tempRecordData.attributesList = tempAttributesList;
-        setRecordData(tempRecordData);
+
+        setRecordData(tempRecordData => ({
+            ...tempRecordData,
+            attributesList: [
+                ...tempRecordData.attributesList.slice(0, newIndex),
+                newField,
+                ...tempRecordData.attributesList.slice(newIndex),
+            ]
+        }))
+        
+        // force new field to be in edit mode (open text field)
         setTimeout(() => {
             setForceEditMode(newIndex);
             setTimeout(() => {
                 setForceEditMode(undefined);
             }, 0)
         }, 0)
-    }
+    }, [])
 
 
 
-    const handleChangeValue: handleChangeValueSignature = (event, topLevelIndex, isSubattribute, subIndex) => {
+    const handleChangeValue: handleChangeValueSignature = React.useCallback((event, topLevelIndex, isSubattribute, subIndex) => {
         if (locked) return true
         let value = event.target.value;
         let rightNow = Date.now();
@@ -243,7 +237,7 @@ const Record = () => {
             'subIndex': subIndex
         }
         setLastUpdatedField(tempLastUpdatedField)
-    }
+    }, [])
 
     const handleDeleteRecord = () => {
         setOpenDeleteModal(false);
@@ -363,11 +357,13 @@ const Record = () => {
                     imageFiles={recordData.img_urls}
                     attributesList={recordData.attributesList}
                     handleChangeValue={handleChangeValue}
-                    handleUpdateRecord={handleUpdateRecord}
+                    // handleUpdateRecord={handleUpdateRecord}
                     locked={locked}
                     recordSchema={recordSchema || {}}
                     insertField={insertField}
                     forceEditMode={forceEditMode}
+                    handleSuccessfulAttributeUpdate={handleSuccessfulAttributeUpdate}
+                    handleFailedUpdate={handleFailedUpdate}
                 />
             </Box>
             <Bottombar

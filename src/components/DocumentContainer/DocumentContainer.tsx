@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { Grid, Box, IconButton, Alert, Tooltip } from '@mui/material';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
@@ -11,7 +11,7 @@ import { DocumentContainerProps } from '../../types';
 import { DocumentContainerStyles as styles } from '../../styles';
 import Switch from '@mui/material/Switch';
 
-const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, handleUpdateRecord, locked, recordSchema, insertField, forceEditMode }: DocumentContainerProps) => {
+const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, locked, recordSchema, insertField, forceEditMode, handleSuccessfulAttributeUpdate, handleFailedUpdate }: DocumentContainerProps) => {
     const [imgIndex, setImgIndex] = useState(0);
     const [displayPoints, setDisplayPoints] = useState<number[][] | null>(null);
     const [displayKeyIndex, setDisplayKeyIndex] = useState(-1);
@@ -244,7 +244,7 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
     useKeyDown("ArrowUp", shiftTabCallback);
     useKeyDown("ArrowDown", tabCallback);
 
-    const handleClickField = (key: string, normalized_vertices: number[][] | null, primaryIndex: number, isSubattribute: boolean, subattributeIdx: number | null) => {
+    const handleClickField = React.useCallback((key: string, normalized_vertices: number[][] | null, primaryIndex: number, isSubattribute: boolean, subattributeIdx: number | null) => {
         if (!key || (!isSubattribute && primaryIndex === displayKeyIndex) || (isSubattribute && primaryIndex === displayKeyIndex && subattributeIdx === displayKeySubattributeIndex)) {
             setDisplayPoints(null);
             setDisplayKeyIndex(-1);
@@ -273,7 +273,7 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
                 setDisplayPoints(null);
             }
         }
-    }
+    }, [])
 
     const scrollToAttribute = (boxId: string, heightId: string, top: number) => {
         try{
@@ -371,12 +371,14 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, hand
                                     forceOpenSubtable={forceOpenSubtable}
                                     displayKeyIndex={displayKeyIndex}
                                     displayKeySubattributeIndex={displayKeySubattributeIndex}
-                                    handleUpdateRecord={() => handleUpdateRecord(autoCleanFields)}
+                                    // handleUpdateRecord={() => handleUpdateRecord(autoCleanFields)}
                                     locked={locked}
                                     showRawValues={showRawValues}
                                     recordSchema={recordSchema || {}}
                                     insertField={insertField}
                                     forceEditMode={forceEditMode}
+                                    handleSuccessfulAttributeUpdate={handleSuccessfulAttributeUpdate}
+                                    handleFailedUpdate={handleFailedUpdate}
                                 />
                             }
                         </Box>

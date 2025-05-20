@@ -1,7 +1,10 @@
 import React, { useState, useEffect, MouseEvent } from 'react';
+import { useParams } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer, Menu, MenuItem } from '@mui/material';
 import { Box, TextField, Collapse, Typography, IconButton, Badge, Tooltip, Stack } from '@mui/material';
-import { formatConfidence, useKeyDown, useOutsideClick, formatAttributeValue, formatDateTime } from '../../util';
+
+import { updateRecord, cleanRecords } from '../../services/app.service';
+import { formatConfidence, useKeyDown, useOutsideClick, formatAttributeValue, formatDateTime, callAPI } from '../../util';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import InfoIcon from '@mui/icons-material/Info';
@@ -33,6 +36,7 @@ const AttributesTable = (props: AttributesTableProps) => {
         handleClickField('', null, -1, false, null);
     }
     const ref = useOutsideClick(handleClickOutside);
+    const params = useParams<{ id: string }>();
 
     return (
         <TableContainer id="table-container" sx={styles.fieldsTable}>
@@ -55,6 +59,7 @@ const AttributesTable = (props: AttributesTableProps) => {
                             k={v.key}
                             v={v}
                             idx={idx}
+                            record_id={params.id}
                             {...childProps}
                         />
                     ))}
@@ -69,10 +74,11 @@ interface AttributeRowProps extends RecordAttributesTableProps {
     v: Attribute;
     idx: number;
     forceOpenSubtable: number | null;
+    record_id?: string;
 }
 
 
-const AttributeRow = (props: AttributeRowProps) => { 
+const AttributeRow = React.memo((props: AttributeRowProps) => {
     const { 
         k, 
         v, 
@@ -85,14 +91,18 @@ const AttributeRow = (props: AttributeRowProps) => {
         handleClickField,
         handleChangeValue,
         displayKeyIndex,
-        handleUpdateRecord,
         displayKeySubattributeIndex,
         locked,
         showRawValues,
         recordSchema,
         insertField,
         forceEditMode,
+        handleFailedUpdate,
+        handleSuccessfulAttributeUpdate,
+        record_id
     } = childProps;
+
+    // console.log(`rendered ${k}`);
     
     const [ editMode, setEditMode ] = useState(false);
     const [ openSubtable, setOpenSubtable ] = useState(true);
@@ -115,6 +125,40 @@ const AttributeRow = (props: AttributeRowProps) => {
         if (v.subattributes) setOpenSubtable(!openSubtable)
         e.stopPropagation();
         handleClickField(k, v.normalized_vertices, idx, false, null);
+    }
+
+    const handleSuccess = (resp: any) => {
+        const newV = resp?.["attributesList."+idx];
+        const data: any = {
+            isSubattribute: false,
+            topLevelIndex: idx,
+            subIndex: null,
+            v: newV,
+        }
+        handleSuccessfulAttributeUpdate(data)
+    }
+
+    const handleUpdateRecord = (cleanFields: boolean = true) => {
+        if (locked) return
+        const body: {
+            data: { key: string; idx: number; v: any };
+            type: "attribute";
+            fieldToClean: any;
+          } = { data: { key: k, idx: idx, v: v}, type: "attribute", fieldToClean: null }
+        if (cleanFields) {
+            const lastUpdatedField = {
+                topLevelIndex: idx,
+                isSubattribute: false,
+                subIndex: null
+            }
+            body['fieldToClean'] = lastUpdatedField
+        }
+        callAPI(
+            updateRecord,
+            [record_id, body],
+            handleSuccess,
+            handleFailedUpdate
+        );
     }
 
     useKeyDown("Enter", () => {
@@ -149,7 +193,7 @@ const AttributeRow = (props: AttributeRowProps) => {
     useEffect(() => {
         if (forceEditMode === idx) {
             makeEditable();
-            setIsSelected(true);
+            handleClickField(k, v.normalized_vertices, idx, false, null);
         } else if (forceEditMode !== undefined) {
             finishEditing();
             setIsSelected(false);
@@ -405,18 +449,20 @@ const AttributeRow = (props: AttributeRowProps) => {
                 topLevelIdx={idx} 
                 topLevelKey={k}
                 open={openSubtable}
+                record_id={record_id}
                 {...childProps}
             />
         }
     </>
     )
-}
+})
 
 interface SubattributesTableProps extends RecordAttributesTableProps {
     attributesList: Attribute[];
     open: boolean;
     topLevelIdx: number;
     topLevelKey: string;
+    record_id?: string;
 }
 
 const SubattributesTable = (props: SubattributesTableProps) => {
@@ -476,6 +522,7 @@ interface SubattributeRowProps extends RecordAttributesTableProps {
     topLevelIdx: number;
     idx: number;
     topLevelKey: string;
+    record_id?: string;
 }
 
 const SubattributeRow = (props: SubattributeRowProps) => { 
@@ -487,18 +534,47 @@ const SubattributeRow = (props: SubattributeRowProps) => {
         topLevelIdx,
         displayKeyIndex,
         displayKeySubattributeIndex,
-        handleUpdateRecord,
+        // handleUpdateRecord,
         idx,
         locked,
         showRawValues,
         recordSchema,
-        topLevelKey
+        topLevelKey,
+        handleFailedUpdate,
+        handleSuccessfulAttributeUpdate,
+        record_id
     } = props;
 
     const [ editMode, setEditMode ] = useState(false);
     const [ isSelected, setIsSelected ] = useState(false);
     const [ lastSavedValue, setLastSavedValue ] = useState(v.value)
     const schemaKey = `${topLevelKey}::${k}`
+
+    const handleSuccess = () => {
+        const data: any = {
+            isSubattribute: false,
+            topLevelIndex: idx,
+            subIndex: null,
+            v: v
+        }
+        handleSuccessfulAttributeUpdate(data)
+    }
+
+    const handleUpdateRecord = (cleanFields: boolean = true) => {
+        if (locked) return
+        const body: {
+            data: { key: string; idx: number; v: any; isSubattribute: boolean; subindex: number; };
+            type: "attribute";
+            fieldToClean: string | null;
+          } = { data: { key: k, idx: topLevelIdx, v: v, isSubattribute: true, subindex: idx}, type: "attribute", fieldToClean: null }
+        if (cleanFields) body['fieldToClean'] = k;
+        callAPI(
+            updateRecord,
+            [record_id, body],
+            handleSuccess,
+            handleFailedUpdate
+        );
+    }
 
     useEffect(() => {
         if (displayKeyIndex === topLevelIdx && idx === displayKeySubattributeIndex) {
