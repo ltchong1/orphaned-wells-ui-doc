@@ -20,7 +20,6 @@ const Record = () => {
     const [previousPages, setPreviousPages] = useState<PreviousPages>({ "Projects": () => navigate("/projects") });
     const [errorMsg, setErrorMsg] = useState<string | null>("");
     const [showResetPrompt, setShowResetPrompt] = useState(false);
-    const [ lastUpdatedField, setLastUpdatedField ] = useState<any>()
     const [ subheaderActions, setSubheaderActions ] = useState<SubheaderActions>()
     const [ recordSchema, setRecordSchema ] = useState<RecordSchema>()
     const [ forceEditMode, setForceEditMode ] = useState<number>()
@@ -126,7 +125,6 @@ const Record = () => {
     }
 
     const handleSuccessfulAttributeUpdate = React.useCallback((data: any) => {
-        setLastUpdatedField(undefined)
         const { isSubattribute, topLevelIndex, subIndex, v } = data;
         const value = v.value;
         let fakeEvent = {
@@ -164,6 +162,7 @@ const Record = () => {
         }
         if (isSubattribute) {
             // TODO: handle subattribute
+            // we will need to call setRecordData differently
             console.log("subattribute, returning");
             return;
         }
@@ -178,6 +177,7 @@ const Record = () => {
         }))
         
         // force new field to be in edit mode (open text field)
+        // is there a better way to do this?
         setTimeout(() => {
             setForceEditMode(newIndex);
             setTimeout(() => {
@@ -185,8 +185,6 @@ const Record = () => {
             }, 0)
         }, 0)
     }, [])
-
-
 
     const handleChangeValue: handleChangeValueSignature = React.useCallback((event, topLevelIndex, isSubattribute, subIndex) => {
         if (locked) return true
@@ -231,12 +229,6 @@ const Record = () => {
                 )
             }))
         }
-        const tempLastUpdatedField = {
-            topLevelIndex: topLevelIndex,
-            'isSubattribute': isSubattribute,
-            'subIndex': subIndex
-        }
-        setLastUpdatedField(tempLastUpdatedField)
     }, [])
 
     const handleDeleteRecord = () => {

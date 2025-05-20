@@ -371,7 +371,6 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, lock
                                     forceOpenSubtable={forceOpenSubtable}
                                     displayKeyIndex={displayKeyIndex}
                                     displayKeySubattributeIndex={displayKeySubattributeIndex}
-                                    // handleUpdateRecord={() => handleUpdateRecord(autoCleanFields)}
                                     locked={locked}
                                     showRawValues={showRawValues}
                                     recordSchema={recordSchema || {}}

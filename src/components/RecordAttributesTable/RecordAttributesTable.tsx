@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer, Menu, MenuItem } from '@mui/material';
 import { Box, TextField, Collapse, Typography, IconButton, Badge, Tooltip, Stack } from '@mui/material';
 
-import { updateRecord, cleanRecords } from '../../services/app.service';
+import { updateRecord } from '../../services/app.service';
 import { formatConfidence, useKeyDown, useOutsideClick, formatAttributeValue, formatDateTime, callAPI } from '../../util';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -534,7 +534,6 @@ const SubattributeRow = (props: SubattributeRowProps) => {
         topLevelIdx,
         displayKeyIndex,
         displayKeySubattributeIndex,
-        // handleUpdateRecord,
         idx,
         locked,
         showRawValues,
