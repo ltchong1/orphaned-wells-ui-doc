@@ -102,8 +102,6 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
         showError,
         deleteField
     } = childProps;
-
-    // console.log(`rendered ${k}`);
     
     const [ editMode, setEditMode ] = useState(false);
     const [ openSubtable, setOpenSubtable ] = useState(true);
@@ -123,7 +121,7 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
     }, [displayKeyIndex, displayKeySubattributeIndex]);
 
     useEffect(() => {
-        console.log('v changed for '+k)
+        if (k==='Formation') console.log('v changed for '+k)
     }, [v]);
 
     const handleClickInside = (e: React.MouseEvent<HTMLTableRowElement>) => {

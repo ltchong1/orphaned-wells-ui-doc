@@ -162,7 +162,6 @@ const Record = () => {
 
     const insertField = React.useCallback((k: string, topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
         if (isSubattribute && subIndex !== undefined) {
-            console.log("subattribute");
             const newSubIndex = subIndex + 1;
             const newSubField = {
                 "key": k,
@@ -206,6 +205,7 @@ const Record = () => {
                     }
                 });
                 const newRecordData = { ...tempRecordData, attributesList: newAttributesList };
+                handleUpdateRecord(newRecordData);
                 return newRecordData;
             })
             setTimeout(() => {
@@ -231,14 +231,18 @@ const Record = () => {
                 "page": null,
                 "user_added": true,
             }
-            setRecordData(tempRecordData => ({
-                ...tempRecordData,
-                attributesList: [
-                    ...tempRecordData.attributesList.slice(0, newIndex),
-                    newField,
-                    ...tempRecordData.attributesList.slice(newIndex),
-                ]
-            }))
+            setRecordData(tempRecordData => {
+                const newRecordData = {
+                    ...tempRecordData,
+                    attributesList: [
+                        ...tempRecordData.attributesList.slice(0, newIndex),
+                        newField,
+                        ...tempRecordData.attributesList.slice(newIndex),
+                    ]
+                }
+                handleUpdateRecord(newRecordData);
+                return newRecordData;
+            })
             // force new field to be in edit mode (open text field)
             // is there a better way to do this?
             setTimeout(() => {
