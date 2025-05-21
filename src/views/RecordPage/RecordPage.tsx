@@ -140,13 +140,7 @@ const Record = () => {
     const handleSuccessfulAttributeUpdate = React.useCallback((data: any) => {
         // TODO: dont just update value; update entire v
         const { isSubattribute, topLevelIndex, subIndex, v } = data;
-        const value = v.value;
-        let fakeEvent = {
-            target: {
-                value: value
-            }
-        } as React.ChangeEvent<HTMLInputElement>
-        handleChangeValue(fakeEvent, topLevelIndex, isSubattribute, subIndex)
+        handleChangeAttribute(v, topLevelIndex, isSubattribute, subIndex)
     }, [])
 
     const handleFailedUpdate = (data: any, response_status?: number) => {
@@ -272,6 +266,68 @@ const Record = () => {
             return newRecordData;
         })
     }, [])
+
+    const handleChangeAttribute = (newAttribute: Attribute, topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
+        if (locked) return true
+        // const rightNow = Date.now();
+
+        const newValue = newAttribute.value;
+        const newNormalizedValue = newAttribute.normalized_value;
+        const new_uncleaned_value = newAttribute.uncleaned_value;
+        const new_cleaned = newAttribute.cleaned;
+        const new_cleaning_error = newAttribute.cleaning_error;
+        const new_edited = newAttribute.edited;
+        const new_lastUpdated = newAttribute.lastUpdated;
+        const new_lastUpdatedBy = newAttribute.lastUpdatedBy;
+        const new_last_cleaned = newAttribute.last_cleaned;
+
+        if (!isSubattribute) {
+            setRecordData(tempRecordData => ({
+                ...tempRecordData,
+                attributesList: tempRecordData.attributesList.map((tempAttribute, idx) =>
+                    topLevelIndex === idx ? { 
+                        ...tempAttribute, 
+                        value: newValue,
+                        normalized_value: newNormalizedValue,
+                        cleaned: new_cleaned,
+                        cleaning_error: new_cleaning_error,
+                        uncleaned_value: new_uncleaned_value,
+                        edited: new_edited,
+                        lastUpdated: new_lastUpdated,
+                        lastUpdatedBy: new_lastUpdatedBy,
+                        last_cleaned: new_last_cleaned,
+                        // user_added: new_user_added,
+                    } : tempAttribute
+                )
+            }))
+        } else {
+            setRecordData(tempRecordData => ({
+                ...tempRecordData,
+                attributesList: tempRecordData.attributesList.map((tempAttribute, idx) =>
+                    topLevelIndex === idx ? { 
+                        ...tempAttribute,
+                        subattributes: tempAttribute.subattributes.map((tempSubattribute: Attribute, subidx: number) => {
+                            if (subIndex === subidx) {
+                                return {
+                                    ...tempSubattribute,
+                                    value: newValue,
+                                    normalized_value: newNormalizedValue,
+                                    cleaned: new_cleaned,
+                                    cleaning_error: new_cleaning_error,
+                                    uncleaned_value: new_uncleaned_value,
+                                    edited: new_edited,
+                                    lastUpdated: new_lastUpdated,
+                                    lastUpdatedBy: new_lastUpdatedBy,
+                                    last_cleaned: new_last_cleaned,
+                                }
+                            } else return tempSubattribute
+                            }
+                        )
+                    } : tempAttribute
+                )
+            }))
+        }
+    }
 
     const handleChangeValue: handleChangeValueSignature = React.useCallback((event, topLevelIndex, isSubattribute, subIndex) => {
         if (locked) return true
