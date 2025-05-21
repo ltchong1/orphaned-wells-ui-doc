@@ -171,6 +171,7 @@ export interface RecordAttributesTableProps {
     insertField: (k: string, topLevelIndex: number, isSubattribute: boolean, subIndex?: number) => void;
     handleSuccessfulAttributeUpdate: (data: any) => void;
     showError: (errorMessage: string) => void;
+    deleteField: (topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => void;
 }
 
 export interface RecordsTableProps {
@@ -262,6 +263,7 @@ export interface DocumentContainerProps {
     insertField: (k: string, topLevelIndex: number, isSubattribute: boolean, subIndex?: number) => void;
     handleSuccessfulAttributeUpdate: (data: any) => void;
     showError: (errorMessage: string) => void;
+    deleteField: (topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => void;
 }
 
 export interface ColumnSelectDialogProps {

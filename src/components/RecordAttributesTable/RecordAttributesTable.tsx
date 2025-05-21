@@ -99,7 +99,8 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
         forceEditMode,
         handleSuccessfulAttributeUpdate,
         record_id,
-        showError
+        showError,
+        deleteField
     } = childProps;
 
     // console.log(`rendered ${k}`);
@@ -269,6 +270,12 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
         setShowActions(false);
         setMenuAnchor(null);
         insertField(k, idx, false);
+    }
+
+    const handleClickDeleteField = () => {
+        setShowActions(false);
+        setMenuAnchor(null);
+        deleteField(idx, false);
     }
 
     return (
@@ -447,7 +454,9 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
                 onClick={(e) => e.stopPropagation()}
             >
                 <MenuItem onClick={handleClickInsertField}>Add another '{k}'</MenuItem>
-                <MenuItem>Delete this '{k}'</MenuItem>
+                {v.user_added && 
+                    <MenuItem onClick={handleClickDeleteField}>Delete this '{k}'</MenuItem>
+                }
             </Menu>
         </TableRow>
         {

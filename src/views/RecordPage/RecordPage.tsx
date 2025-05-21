@@ -113,6 +113,17 @@ const Record = () => {
         setRecordName(event.target.value);
     }
 
+    const handleUpdateRecord = (newRecordData: RecordData) => {
+        if (locked) return
+        let body = { data: newRecordData, type: "attributesList" }
+        callAPI(
+            updateRecord,
+            [params.id, body],
+            handleSuccessfulDeletion,
+            handleFailedUpdate
+        );
+    }
+
     const handleUpdateRecordName = () => {
         if (locked) return
         setOpenUpdateNameModal(false);
@@ -123,6 +134,8 @@ const Record = () => {
             handleFailedUpdate
         );
     }
+
+    const handleSuccessfulDeletion = (data: any) => {}
 
     const handleSuccessfulAttributeUpdate = React.useCallback((data: any) => {
         const { isSubattribute, topLevelIndex, subIndex, v } = data;
@@ -188,6 +201,23 @@ const Record = () => {
                 setForceEditMode(undefined);
             }, 0)
         }, 0)
+    }, [])
+
+    const deleteField = React.useCallback((topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
+        if (isSubattribute) {
+            // TODO: handle subattribute
+            // we will need to call setRecordData differently
+            console.log("subattribute, returning");
+            return;
+        }
+        setRecordData(tempRecordData => {
+            const newRecordData = {
+                ...tempRecordData,
+                attributesList: tempRecordData.attributesList.filter((_, i) => i !== topLevelIndex),
+            }
+            handleUpdateRecord(newRecordData);
+            return newRecordData;
+        })
     }, [])
 
     const handleChangeValue: handleChangeValueSignature = React.useCallback((event, topLevelIndex, isSubattribute, subIndex) => {
@@ -356,6 +386,7 @@ const Record = () => {
                     locked={locked}
                     recordSchema={recordSchema || {}}
                     insertField={insertField}
+                    deleteField={deleteField}
                     forceEditMode={forceEditMode}
                     handleSuccessfulAttributeUpdate={handleSuccessfulAttributeUpdate}
                     showError={showError}
