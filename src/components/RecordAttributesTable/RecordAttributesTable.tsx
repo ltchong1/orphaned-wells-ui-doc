@@ -211,8 +211,8 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
             makeEditable();
             handleClickField(k, v.normalized_vertices, idx, false, null);
         } else if (forceEditMode[0] !== -1) {
-            finishEditing();
             setIsSelected(false);
+            setEditMode(false);
         }
     }, [forceEditMode]);
 
