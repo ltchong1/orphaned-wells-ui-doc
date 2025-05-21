@@ -154,7 +154,7 @@ const Record = () => {
         setErrorMsg(errorMessage);
     }, [])
 
-    const insertField = React.useCallback((k: string, topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
+    const insertField = React.useCallback((k: string, topLevelIndex: number, isSubattribute?: boolean, subIndex?: number, parentAttribute?: string) => {
         if (isSubattribute && subIndex !== undefined) {
             const newSubIndex = subIndex + 1;
             const newSubField = {
@@ -171,6 +171,7 @@ const Record = () => {
                 "edited": false,
                 "page": null,
                 "user_added": true,
+                "topLevelAttribute": parentAttribute,
             }
             setRecordData(tempRecordData => {
                 const newAttributesList = tempRecordData.attributesList.map((attribute, i) => {
@@ -247,8 +248,6 @@ const Record = () => {
 
     const deleteField = React.useCallback((topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
         if (isSubattribute) {
-            // TODO: handle subattribute
-            console.log("subattribute");
             setRecordData(tempRecordData => {
                 const newAttributesList = tempRecordData.attributesList.map((attribute, idx) => {
                     if (idx !== topLevelIndex) return attribute;
@@ -288,6 +287,7 @@ const Record = () => {
         const new_lastUpdated = newAttribute.lastUpdated;
         const new_lastUpdatedBy = newAttribute.lastUpdatedBy;
         const new_last_cleaned = newAttribute.last_cleaned;
+        const topLevelAttribute = newAttribute.topLevelAttribute;
 
         if (!isSubattribute) {
             setRecordData(tempRecordData => ({
@@ -327,6 +327,7 @@ const Record = () => {
                                     lastUpdated: new_lastUpdated,
                                     lastUpdatedBy: new_lastUpdatedBy,
                                     last_cleaned: new_last_cleaned,
+                                    topLevelAttribute: topLevelAttribute,
                                 }
                             } else return tempSubattribute
                             }

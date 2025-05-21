@@ -120,15 +120,6 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
         }
     }, [displayKeyIndex, displayKeySubattributeIndex]);
 
-    // useEffect(() => {
-    //     // if (k==='Formation') {
-    //     if (k==='Type_of_Logs') {
-    //         console.log('v changed for '+k)
-    //         console.log(v);
-    //     }
-
-    // }, [v]);
-
     const handleClickInside = (e: React.MouseEvent<HTMLTableRowElement>) => {
         if (v.subattributes) setOpenSubtable(!openSubtable)
         e.stopPropagation();
@@ -582,8 +573,6 @@ const SubattributeRow = React.memo((props: SubattributeRowProps) => {
     const allowMultiple = recordSchema[schemaKey]?.occurrence?.toLowerCase().includes('multiple');
 
     const handleSuccess = (resp: any) => {
-        console.log(`looking for: attributesList.${topLevelIdx}.subattributes.${idx}`);
-        console.log(resp)
         const newV = resp?.[`attributesList.${topLevelIdx}.subattributes.${idx}`];
         const data: any = {
             isSubattribute: false,
@@ -736,7 +725,7 @@ const SubattributeRow = React.memo((props: SubattributeRowProps) => {
     const handleClickInsertField = () => {
         setShowActions(false);
         setMenuAnchor(null);
-        insertField(k, topLevelIdx, true, idx);
+        insertField(k, topLevelIdx, true, idx, topLevelKey);
     }
 
     const handleClickDeleteField = () => {
