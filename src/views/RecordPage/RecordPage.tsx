@@ -138,7 +138,6 @@ const Record = () => {
     const handleSuccessfulDeletion = (data: any) => {}
 
     const handleSuccessfulAttributeUpdate = React.useCallback((data: any) => {
-        // TODO: dont just update value; update entire v
         const { isSubattribute, topLevelIndex, subIndex, v } = data;
         handleChangeAttribute(v, topLevelIndex, isSubattribute, subIndex)
     }, [])
@@ -173,14 +172,11 @@ const Record = () => {
                 "page": null,
                 "user_added": true,
             }
-            // TODO: this seems to work, but it is not causing a re-render of the row
             setRecordData(tempRecordData => {
                 const newAttributesList = tempRecordData.attributesList.map((attribute, i) => {
-                    if (i !== topLevelIndex) return attribute;           // ♻️ keep reference for untouched rows
-              
-                    // 2️⃣ build the *new* inner array
+                    if (i !== topLevelIndex) return attribute;
+
                     const currentSubattributes = attribute.subattributes;
-                    console.log(currentSubattributes);
                     if (!attribute.subattributes) {
                         return {
                             ...attribute,
@@ -188,11 +184,10 @@ const Record = () => {
                         };
                     } else {
                         const newSubattributes = [
-                            ...currentSubattributes.slice(0, newSubIndex),   // everything before insertion point
-                            newSubField,                                 // the element we’re inserting
-                            ...currentSubattributes.slice(newSubIndex),      // everything after insertion point
+                            ...currentSubattributes.slice(0, newSubIndex),
+                            newSubField,
+                            ...currentSubattributes.slice(newSubIndex),
                           ];
-                          console.log(newSubattributes);
                           return {
                             ...attribute,
                             subattributes: newSubattributes,
@@ -253,18 +248,31 @@ const Record = () => {
     const deleteField = React.useCallback((topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
         if (isSubattribute) {
             // TODO: handle subattribute
-            // we will need to call setRecordData differently
-            console.log("subattribute, returning");
-            return;
+            console.log("subattribute");
+            setRecordData(tempRecordData => {
+                const newAttributesList = tempRecordData.attributesList.map((attribute, idx) => {
+                    if (idx !== topLevelIndex) return attribute;
+                    else {
+                        return {
+                            ...attribute,
+                            subattributes: attribute.subattributes.filter((_: any, subidx: number) => subidx !== subIndex)
+                        }
+                    }
+                });
+                const newRecordData = { ...tempRecordData, attributesList: newAttributesList };
+                handleUpdateRecord(newRecordData);
+                return newRecordData;
+            })
+        } else {
+            setRecordData(tempRecordData => {
+                const newRecordData = {
+                    ...tempRecordData,
+                    attributesList: tempRecordData.attributesList.filter((_, i) => i !== topLevelIndex),
+                }
+                handleUpdateRecord(newRecordData);
+                return newRecordData;
+            })
         }
-        setRecordData(tempRecordData => {
-            const newRecordData = {
-                ...tempRecordData,
-                attributesList: tempRecordData.attributesList.filter((_, i) => i !== topLevelIndex),
-            }
-            handleUpdateRecord(newRecordData);
-            return newRecordData;
-        })
     }, [])
 
     const handleChangeAttribute = (newAttribute: Attribute, topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {

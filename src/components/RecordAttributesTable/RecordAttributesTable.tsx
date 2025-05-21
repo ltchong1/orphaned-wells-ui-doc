@@ -742,7 +742,7 @@ const SubattributeRow = React.memo((props: SubattributeRowProps) => {
     const handleClickDeleteField = () => {
         setShowActions(false);
         setMenuAnchor(null);
-        // deleteField(topLevelIdx, true, idx);
+        deleteField(topLevelIdx, true, idx);
     }
 
     return (
