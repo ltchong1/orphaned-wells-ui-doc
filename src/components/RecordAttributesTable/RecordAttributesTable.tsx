@@ -122,6 +122,10 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
         }
     }, [displayKeyIndex, displayKeySubattributeIndex]);
 
+    useEffect(() => {
+        console.log('v changed for '+k)
+    }, [v]);
+
     const handleClickInside = (e: React.MouseEvent<HTMLTableRowElement>) => {
         if (v.subattributes) setOpenSubtable(!openSubtable)
         e.stopPropagation();
@@ -200,10 +204,10 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
     }, [forceOpenSubtable]);
 
     useEffect(() => {
-        if (forceEditMode === idx) {
+        if (forceEditMode[0] === idx && forceEditMode[1] === -1) {
             makeEditable();
             handleClickField(k, v.normalized_vertices, idx, false, null);
-        } else if (forceEditMode !== undefined) {
+        } else if (forceEditMode[0] !== -1) {
             finishEditing();
             setIsSelected(false);
         }
@@ -511,6 +515,7 @@ const SubattributesTable = (props: SubattributesTableProps) => {
                             <TableCell sx={styles.headerRow}>Raw Value</TableCell>
                         }
                         <TableCell sx={styles.headerRow}>Confidence</TableCell>
+                        <TableCell sx={styles.headerRow}></TableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
@@ -558,13 +563,20 @@ const SubattributeRow = (props: SubattributeRowProps) => {
         topLevelKey,
         showError,
         handleSuccessfulAttributeUpdate,
-        record_id
+        record_id,
+        insertField,
+        deleteField,
+        forceEditMode
     } = props;
 
     const [ editMode, setEditMode ] = useState(false);
     const [ isSelected, setIsSelected ] = useState(false);
     const [ lastSavedValue, setLastSavedValue ] = useState(v.value)
+    const [ menuAnchor, setMenuAnchor ] = useState<null | HTMLElement>(null);
+    const [showActions, setShowActions] = useState(false);
+
     const schemaKey = `${topLevelKey}::${k}`
+    const allowMultiple = recordSchema[schemaKey]?.occurrence?.toLowerCase().includes('multiple');
 
     const handleSuccess = () => {
         const data: any = {
@@ -584,6 +596,12 @@ const SubattributeRow = (props: SubattributeRowProps) => {
         }
     }
 
+    const handleClickShowActions = (event: MouseEvent<HTMLElement>) => {
+        event.stopPropagation();
+        setShowActions(!showActions);
+        setMenuAnchor(event.currentTarget);
+    }
+
     const handleUpdateRecord = (cleanFields: boolean = true) => {
         if (locked) return
         const body: {
@@ -599,6 +617,16 @@ const SubattributeRow = (props: SubattributeRowProps) => {
             handleFailedUpdate
         );
     }
+
+    useEffect(() => {
+        if (forceEditMode[0] === topLevelIdx && forceEditMode[1] === idx) {
+            makeEditable();
+            handleClickField(k, v.normalized_vertices, topLevelIdx, true, idx);
+        } else if (forceEditMode[0] !== -1) {
+            finishEditing();
+            setIsSelected(false);
+        }
+    }, [forceEditMode]);
 
     useEffect(() => {
         if (displayKeyIndex === topLevelIdx && idx === displayKeySubattributeIndex) {
@@ -692,6 +720,18 @@ const SubattributeRow = (props: SubattributeRowProps) => {
         return false
     }
 
+    const handleClickInsertField = () => {
+        setShowActions(false);
+        setMenuAnchor(null);
+        insertField(k, topLevelIdx, true, idx);
+    }
+
+    const handleClickDeleteField = () => {
+        setShowActions(false);
+        setMenuAnchor(null);
+        // deleteField(topLevelIdx, true, idx);
+    }
+
     return (
         <TableRow 
             key={k} 
@@ -781,6 +821,23 @@ const SubattributeRow = (props: SubattributeRowProps) => {
                 </TableCell>
             }
             <TableCell>{formatConfidence(v.confidence)}</TableCell>
+            <TableCell>{allowMultiple ? (
+                <IconButton size='small' onClick={handleClickShowActions}>
+                    <MoreVertIcon/>
+                </IconButton>
+            ) : null}</TableCell> 
+            <Menu
+                id="actions"
+                anchorEl={menuAnchor}
+                open={showActions}
+                onClose={() => setShowActions(false)}
+                onClick={(e) => e.stopPropagation()}
+            >
+                <MenuItem onClick={handleClickInsertField}>Add another '{k}'</MenuItem>
+                {v.user_added && 
+                    <MenuItem onClick={handleClickDeleteField}>Delete this '{k}'</MenuItem>
+                }
+            </Menu>
         </TableRow>
     )
 }

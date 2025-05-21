@@ -167,7 +167,7 @@ export interface RecordAttributesTableProps {
     locked?: boolean;
     showRawValues?: boolean;
     recordSchema: RecordSchema;
-    forceEditMode?: number;
+    forceEditMode: number[];
     insertField: (k: string, topLevelIndex: number, isSubattribute: boolean, subIndex?: number) => void;
     handleSuccessfulAttributeUpdate: (data: any) => void;
     showError: (errorMessage: string) => void;
@@ -259,7 +259,7 @@ export interface DocumentContainerProps {
     handleChangeValue: handleChangeValueSignature;
     locked?: boolean;
     recordSchema: RecordSchema;
-    forceEditMode?: number;
+    forceEditMode: number[];
     insertField: (k: string, topLevelIndex: number, isSubattribute: boolean, subIndex?: number) => void;
     handleSuccessfulAttributeUpdate: (data: any) => void;
     showError: (errorMessage: string) => void;

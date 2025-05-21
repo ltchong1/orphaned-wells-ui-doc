@@ -22,7 +22,7 @@ const Record = () => {
     const [showResetPrompt, setShowResetPrompt] = useState(false);
     const [ subheaderActions, setSubheaderActions ] = useState<SubheaderActions>()
     const [ recordSchema, setRecordSchema ] = useState<RecordSchema>()
-    const [ forceEditMode, setForceEditMode ] = useState<number>()
+    const [ forceEditMode, setForceEditMode ] = useState<number[]>([-1, -1])
     const [locked, setLocked] = useState(false)
     const params = useParams<{ id: string }>();
     const navigate = useNavigate();
@@ -161,46 +161,94 @@ const Record = () => {
     }, [])
 
     const insertField = React.useCallback((k: string, topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
-        const newIndex = topLevelIndex+1;
-        const newField = {
-            "key": k,
-            "ai_confidence": null,
-            "confidence": null,
-            "raw_text": null,
-            "text_value": null,
-            "value": "",
-            "normalized_vertices": null,
-            "normalized_value": null,
-            "subattributes": null,
-            "isSubattribute": false,
-            "edited": false,
-            "page": null,
-            "user_added": true,
-        }
-        if (isSubattribute) {
-            // TODO: handle subattribute
-            // we will need to call setRecordData differently
-            console.log("subattribute, returning");
-            return;
-        }
-
-        setRecordData(tempRecordData => ({
-            ...tempRecordData,
-            attributesList: [
-                ...tempRecordData.attributesList.slice(0, newIndex),
-                newField,
-                ...tempRecordData.attributesList.slice(newIndex),
-            ]
-        }))
-        
-        // force new field to be in edit mode (open text field)
-        // is there a better way to do this?
-        setTimeout(() => {
-            setForceEditMode(newIndex);
+        if (isSubattribute && subIndex !== undefined) {
+            console.log("subattribute");
+            const newSubIndex = subIndex + 1;
+            const newSubField = {
+                "key": k,
+                "ai_confidence": null,
+                "confidence": null,
+                "raw_text": null,
+                "text_value": null,
+                "value": "",
+                "normalized_vertices": null,
+                "normalized_value": null,
+                "subattributes": null,
+                "isSubattribute": true,
+                "edited": false,
+                "page": null,
+                "user_added": true,
+            }
+            // TODO: this seems to work, but it is not causing a re-render of the row
+            setRecordData(tempRecordData => {
+                const newAttributesList = tempRecordData.attributesList.map((attribute, i) => {
+                    if (i !== topLevelIndex) return attribute;           // ♻️ keep reference for untouched rows
+              
+                    // 2️⃣ build the *new* inner array
+                    const currentSubattributes = attribute.subattributes;
+                    console.log(currentSubattributes);
+                    if (!attribute.subattributes) {
+                        return {
+                            ...attribute,
+                            subattributes: [newSubField],
+                        };
+                    } else {
+                        const newSubattributes = [
+                            ...currentSubattributes.slice(0, newSubIndex),   // everything before insertion point
+                            newSubField,                                 // the element we’re inserting
+                            ...currentSubattributes.slice(newSubIndex),      // everything after insertion point
+                          ];
+                          console.log(newSubattributes);
+                          return {
+                            ...attribute,
+                            subattributes: newSubattributes,
+                          };
+                    }
+                });
+                const newRecordData = { ...tempRecordData, attributesList: newAttributesList };
+                return newRecordData;
+            })
             setTimeout(() => {
-                setForceEditMode(undefined);
+                setForceEditMode([topLevelIndex, newSubIndex]);
+                setTimeout(() => {
+                    setForceEditMode([-1, -1]);
+                }, 0)
             }, 0)
-        }, 0)
+        } else {
+            const newIndex = topLevelIndex+1;
+            const newField = {
+                "key": k,
+                "ai_confidence": null,
+                "confidence": null,
+                "raw_text": null,
+                "text_value": null,
+                "value": "",
+                "normalized_vertices": null,
+                "normalized_value": null,
+                "subattributes": null,
+                "isSubattribute": false,
+                "edited": false,
+                "page": null,
+                "user_added": true,
+            }
+            setRecordData(tempRecordData => ({
+                ...tempRecordData,
+                attributesList: [
+                    ...tempRecordData.attributesList.slice(0, newIndex),
+                    newField,
+                    ...tempRecordData.attributesList.slice(newIndex),
+                ]
+            }))
+            // force new field to be in edit mode (open text field)
+            // is there a better way to do this?
+            setTimeout(() => {
+                setForceEditMode([newIndex, -1]);
+                setTimeout(() => {
+                    setForceEditMode([-1, -1]);
+                }, 0)
+            }, 0)
+        }
+        
     }, [])
 
     const deleteField = React.useCallback((topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
