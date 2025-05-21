@@ -138,6 +138,7 @@ const Record = () => {
     const handleSuccessfulDeletion = (data: any) => {}
 
     const handleSuccessfulAttributeUpdate = React.useCallback((data: any) => {
+        // TODO: dont just update value; update entire v
         const { isSubattribute, topLevelIndex, subIndex, v } = data;
         const value = v.value;
         let fakeEvent = {
@@ -302,14 +303,17 @@ const Record = () => {
                         edited: true,
                         lastUpdated: rightNow,
                         lastUpdatedBy: userEmail,
-                        subAttributes: tempAttribute.subattributes.map((tempSubattribute: Attribute, subidx: number) => 
-                            subIndex === subidx ? {
-                                ...tempSubattribute,
-                                value: value,
-                                edited: true,
-                                lastUpdated: rightNow,
-                                lastUpdatedBy: userEmail,
-                            } : tempSubattribute
+                        subattributes: tempAttribute.subattributes.map((tempSubattribute: Attribute, subidx: number) => {
+                                if (subIndex === subidx) {
+                                    return {
+                                        ...tempSubattribute,
+                                        value: value,
+                                        edited: true,
+                                        lastUpdated: rightNow,
+                                        lastUpdatedBy: userEmail,
+                                    }
+                                } else return tempSubattribute
+                            }
                         )
                     } : tempAttribute
                 )

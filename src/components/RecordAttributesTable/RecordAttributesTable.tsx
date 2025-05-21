@@ -120,9 +120,14 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
         }
     }, [displayKeyIndex, displayKeySubattributeIndex]);
 
-    useEffect(() => {
-        if (k==='Formation') console.log('v changed for '+k)
-    }, [v]);
+    // useEffect(() => {
+    //     // if (k==='Formation') {
+    //     if (k==='Type_of_Logs') {
+    //         console.log('v changed for '+k)
+    //         console.log(v);
+    //     }
+
+    // }, [v]);
 
     const handleClickInside = (e: React.MouseEvent<HTMLTableRowElement>) => {
         if (v.subattributes) setOpenSubtable(!openSubtable)
@@ -157,12 +162,12 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
             fieldToClean: any;
           } = { data: { key: k, idx: idx, v: v}, type: "attribute", fieldToClean: null }
         if (cleanFields) {
-            const lastUpdatedField = {
+            const fieldToClean = {
                 topLevelIndex: idx,
                 isSubattribute: false,
                 subIndex: null
             }
-            body['fieldToClean'] = lastUpdatedField
+            body['fieldToClean'] = fieldToClean;
         }
         callAPI(
             updateRecord,
@@ -545,7 +550,7 @@ interface SubattributeRowProps extends RecordAttributesTableProps {
     record_id?: string;
 }
 
-const SubattributeRow = (props: SubattributeRowProps) => { 
+const SubattributeRow = React.memo((props: SubattributeRowProps) => {
     const { 
         k, 
         v,
@@ -576,12 +581,15 @@ const SubattributeRow = (props: SubattributeRowProps) => {
     const schemaKey = `${topLevelKey}::${k}`
     const allowMultiple = recordSchema[schemaKey]?.occurrence?.toLowerCase().includes('multiple');
 
-    const handleSuccess = () => {
+    const handleSuccess = (resp: any) => {
+        console.log(`looking for: attributesList.${topLevelIdx}.subattributes.${idx}`);
+        console.log(resp)
+        const newV = resp?.[`attributesList.${topLevelIdx}.subattributes.${idx}`];
         const data: any = {
             isSubattribute: false,
             topLevelIndex: idx,
             subIndex: null,
-            v: v
+            v: newV,
         }
         handleSuccessfulAttributeUpdate(data)
     }
@@ -603,11 +611,18 @@ const SubattributeRow = (props: SubattributeRowProps) => {
     const handleUpdateRecord = (cleanFields: boolean = true) => {
         if (locked) return
         const body: {
-            data: { key: string; idx: number; v: any; isSubattribute: boolean; subindex: number; };
+            data: { key: string; idx: number; v: any, isSubattribute?: boolean, subIndex?: number };
             type: "attribute";
-            fieldToClean: string | null;
-          } = { data: { key: k, idx: topLevelIdx, v: v, isSubattribute: true, subindex: idx}, type: "attribute", fieldToClean: null }
-        if (cleanFields) body['fieldToClean'] = k;
+            fieldToClean: any;
+          } = { data: { key: k, idx: topLevelIdx, v: v, isSubattribute: true, subIndex: idx}, type: "attribute", fieldToClean: null }
+        if (cleanFields) {
+            const fieldToClean = {
+                topLevelIndex: topLevelIdx,
+                isSubattribute: true,
+                subIndex: idx
+            }
+            body['fieldToClean'] = fieldToClean
+        }
         callAPI(
             updateRecord,
             [record_id, body],
@@ -838,6 +853,6 @@ const SubattributeRow = (props: SubattributeRowProps) => {
             </Menu>
         </TableRow>
     )
-}
+})
 
 export default AttributesTable;
