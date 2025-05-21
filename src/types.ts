@@ -170,7 +170,7 @@ export interface RecordAttributesTableProps {
     forceEditMode?: number;
     insertField: (k: string, topLevelIndex: number, isSubattribute: boolean, subIndex?: number) => void;
     handleSuccessfulAttributeUpdate: (data: any) => void;
-    handleFailedUpdate: (data: any, response_status?: number) => void;
+    showError: (errorMessage: string) => void;
 }
 
 export interface RecordsTableProps {
@@ -261,7 +261,7 @@ export interface DocumentContainerProps {
     forceEditMode?: number;
     insertField: (k: string, topLevelIndex: number, isSubattribute: boolean, subIndex?: number) => void;
     handleSuccessfulAttributeUpdate: (data: any) => void;
-    handleFailedUpdate: (data: any, response_status?: number) => void;
+    showError: (errorMessage: string) => void;
 }
 
 export interface ColumnSelectDialogProps {

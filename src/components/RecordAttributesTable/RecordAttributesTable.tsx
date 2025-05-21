@@ -97,9 +97,9 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
         recordSchema,
         insertField,
         forceEditMode,
-        handleFailedUpdate,
         handleSuccessfulAttributeUpdate,
-        record_id
+        record_id,
+        showError
     } = childProps;
 
     // console.log(`rendered ${k}`);
@@ -136,6 +136,14 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
             v: newV,
         }
         handleSuccessfulAttributeUpdate(data)
+    }
+
+    const handleFailedUpdate = (data: any, response_status?: number) => {
+        if (response_status === 403) {
+            showError(`${data}.`);
+        } else {
+            console.error(`error updating attribute ${k}: ${data}`);
+        }
     }
 
     const handleUpdateRecord = (cleanFields: boolean = true) => {
@@ -251,13 +259,13 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
         return false
     }
 
-    const handleShowActions = (event: MouseEvent<HTMLElement>) => {
+    const handleClickShowActions = (event: MouseEvent<HTMLElement>) => {
         event.stopPropagation();
         setShowActions(!showActions);
         setMenuAnchor(event.currentTarget);
     }
 
-    const handleInsertField = () => {
+    const handleClickInsertField = () => {
         setShowActions(false);
         setMenuAnchor(null);
         insertField(k, idx, false);
@@ -427,7 +435,7 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
                 }
             </TableCell>
             <TableCell>{allowMultiple ? (
-                <IconButton size='small' onClick={handleShowActions}>
+                <IconButton size='small' onClick={handleClickShowActions}>
                     <MoreVertIcon/>
                 </IconButton>
             ) : null}</TableCell> 
@@ -438,7 +446,7 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
                 onClose={() => setShowActions(false)}
                 onClick={(e) => e.stopPropagation()}
             >
-                <MenuItem onClick={handleInsertField}>Add another '{k}'</MenuItem>
+                <MenuItem onClick={handleClickInsertField}>Add another '{k}'</MenuItem>
                 <MenuItem>Delete this '{k}'</MenuItem>
             </Menu>
         </TableRow>
@@ -539,7 +547,7 @@ const SubattributeRow = (props: SubattributeRowProps) => {
         showRawValues,
         recordSchema,
         topLevelKey,
-        handleFailedUpdate,
+        showError,
         handleSuccessfulAttributeUpdate,
         record_id
     } = props;
@@ -557,6 +565,14 @@ const SubattributeRow = (props: SubattributeRowProps) => {
             v: v
         }
         handleSuccessfulAttributeUpdate(data)
+    }
+
+    const handleFailedUpdate = (data: any, response_status?: number) => {
+        if (response_status === 403) {
+            showError(`${data}.`);
+        } else {
+            console.error(`error updating attribute ${k}: ${data}`);
+        }
     }
 
     const handleUpdateRecord = (cleanFields: boolean = true) => {

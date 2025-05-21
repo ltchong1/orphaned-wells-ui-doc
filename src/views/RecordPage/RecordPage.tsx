@@ -135,12 +135,16 @@ const Record = () => {
         handleChangeValue(fakeEvent, topLevelIndex, isSubattribute, subIndex)
     }, [])
 
-    const handleFailedUpdate = React.useCallback((data: any, response_status?: number) => {
+    const handleFailedUpdate = (data: any, response_status?: number) => {
         if (response_status === 403) {
-            setErrorMsg(`${data}.`);
+            showError(`${data}.`);
         } else {
             console.error('error updating record data: ', data);
         }
+    }
+
+    const showError = React.useCallback((errorMessage: string) => {
+        setErrorMsg(errorMessage);
     }, [])
 
     const insertField = React.useCallback((k: string, topLevelIndex: number, isSubattribute?: boolean, subIndex?: number) => {
@@ -349,13 +353,12 @@ const Record = () => {
                     imageFiles={recordData.img_urls}
                     attributesList={recordData.attributesList}
                     handleChangeValue={handleChangeValue}
-                    // handleUpdateRecord={handleUpdateRecord}
                     locked={locked}
                     recordSchema={recordSchema || {}}
                     insertField={insertField}
                     forceEditMode={forceEditMode}
                     handleSuccessfulAttributeUpdate={handleSuccessfulAttributeUpdate}
-                    handleFailedUpdate={handleFailedUpdate}
+                    showError={showError}
                 />
             </Box>
             <Bottombar

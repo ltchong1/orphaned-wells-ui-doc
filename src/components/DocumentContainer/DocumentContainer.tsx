@@ -11,7 +11,8 @@ import { DocumentContainerProps } from '../../types';
 import { DocumentContainerStyles as styles } from '../../styles';
 import Switch from '@mui/material/Switch';
 
-const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, locked, recordSchema, insertField, forceEditMode, handleSuccessfulAttributeUpdate, handleFailedUpdate }: DocumentContainerProps) => {
+const DocumentContainer = ({ imageFiles, attributesList, ...attributeTableProps }: DocumentContainerProps) => {
+
     const [imgIndex, setImgIndex] = useState(0);
     const [displayPoints, setDisplayPoints] = useState<number[][] | null>(null);
     const [displayKeyIndex, setDisplayKeyIndex] = useState(-1);
@@ -273,7 +274,7 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, lock
                 setDisplayPoints(null);
             }
         }
-    }, [])
+    }, [imageFiles])
 
     const scrollToAttribute = (boxId: string, heightId: string, top: number) => {
         try{
@@ -366,18 +367,12 @@ const DocumentContainer = ({ imageFiles, attributesList, handleChangeValue, lock
                                 <AttributesTable 
                                     attributesList={attributesList}
                                     handleClickField={handleClickField}
-                                    handleChangeValue={handleChangeValue}
                                     fullscreen={fullscreen}
                                     forceOpenSubtable={forceOpenSubtable}
                                     displayKeyIndex={displayKeyIndex}
                                     displayKeySubattributeIndex={displayKeySubattributeIndex}
-                                    locked={locked}
                                     showRawValues={showRawValues}
-                                    recordSchema={recordSchema || {}}
-                                    insertField={insertField}
-                                    forceEditMode={forceEditMode}
-                                    handleSuccessfulAttributeUpdate={handleSuccessfulAttributeUpdate}
-                                    handleFailedUpdate={handleFailedUpdate}
+                                    {...attributeTableProps}
                                 />
                             }
                         </Box>
