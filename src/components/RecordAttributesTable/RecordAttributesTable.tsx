@@ -134,6 +134,7 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
             topLevelIndex: idx,
             subIndex: null,
             v: newV,
+            review_status: resp?.review_status,
         }
         handleSuccessfulAttributeUpdate(data)
     }
