@@ -233,7 +233,7 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
     const finishEditing = () => {
         if (v.value !== lastSavedValue) {
             handleUpdateRecord();
-            setLastSavedValue(v.value)
+            setLastSavedValue(v.value);
         }
         setEditMode(false);
     }
@@ -251,9 +251,8 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
     }
 
     const showEditedValue = () => {
-        if (v.cleaned && v.edited && v.lastUpdated && v.last_cleaned) {
-            // only show if it's been cleaned since last update
-            if ((v.lastUpdated/1000) < v.last_cleaned) return true
+        if (v.edited && v.uncleaned_value) {
+            return true
         }
         return false
     }
