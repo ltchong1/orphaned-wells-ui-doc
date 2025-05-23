@@ -511,6 +511,7 @@ const Record = () => {
                     forceEditMode={forceEditMode}
                     handleSuccessfulAttributeUpdate={handleSuccessfulAttributeUpdate}
                     showError={showError}
+                    reviewStatus={recordData.review_status || ''}
                 />
             </Box>
             <Bottombar
