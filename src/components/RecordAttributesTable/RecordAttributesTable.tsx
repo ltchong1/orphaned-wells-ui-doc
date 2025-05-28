@@ -60,6 +60,7 @@ const AttributesTable = (props: AttributesTableProps) => {
                             v={v}
                             idx={idx}
                             record_id={params.id}
+                            handleClickOutside={handleClickOutside}
                             {...childProps}
                         />
                     ))}
@@ -75,6 +76,7 @@ interface AttributeRowProps extends RecordAttributesTableProps {
     idx: number;
     forceOpenSubtable: number | null;
     record_id?: string;
+    handleClickOutside: () => void;
 }
 
 
@@ -85,6 +87,7 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
         idx, 
         forceOpenSubtable,
         reviewStatus,
+        handleClickOutside,
         ...childProps
     } = props;
 
@@ -109,9 +112,24 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
     const [ isSelected, setIsSelected ] = useState(false);
     const [ lastSavedValue, setLastSavedValue ] = useState(v.value);
     const [ menuAnchor, setMenuAnchor ] = useState<null | HTMLElement>(null);
-    const [showActions, setShowActions] = useState(false);
+    const [ showActions, setShowActions ] = useState(false);
+    const [ childFields, setChildFields ] = useState<string[]>([]);
 
     const allowMultiple = recordSchema[k]?.occurrence?.toLowerCase().includes('multiple');
+    const allowChildren = recordSchema[k]?.google_data_type?.toLowerCase() === 'parent';
+
+    useEffect(() => {
+        const tempChildFields = [];
+        if (allowChildren) {
+            let recordKeys = Object.keys(recordSchema);
+            for (let each of recordKeys) {
+                if (each.includes(`${k}::`)) {
+                    tempChildFields.push(each);
+                }
+            }
+            setChildFields(tempChildFields);
+        }
+    }, [v])
 
     useEffect(() => {
         if (idx === displayKeyIndex && (displayKeySubattributeIndex === null || displayKeySubattributeIndex === undefined)) setIsSelected(true);
@@ -268,13 +286,20 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
     const handleClickInsertField = () => {
         setShowActions(false);
         setMenuAnchor(null);
+        handleClickOutside();
         insertField(k, idx, false);
     }
 
     const handleClickDeleteField = () => {
         setShowActions(false);
         setMenuAnchor(null);
+        handleClickOutside();
         deleteField(idx, false);
+    }
+
+    const handleClickAddChildField = (childField: string) => {
+        console.log(`add child field: ${childField}`)
+        setMenuAnchor(null);
     }
 
     return (
@@ -440,7 +465,7 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
                     </p>
                 }
             </TableCell>
-            <TableCell>{allowMultiple ? (
+            <TableCell>{(allowMultiple || allowChildren) ? (
                 <IconButton size='small' onClick={handleClickShowActions}>
                     <MoreVertIcon/>
                 </IconButton>
@@ -452,7 +477,19 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
                 onClose={() => setShowActions(false)}
                 onClick={(e) => e.stopPropagation()}
             >
-                <MenuItem onClick={handleClickInsertField}>Add another '{k}'</MenuItem>
+                {allowMultiple && 
+                    <MenuItem onClick={handleClickInsertField}>Add another '{k}'</MenuItem>
+                }
+                {
+                    childFields.map((childField) => (
+                        <MenuItem 
+                            key={childField} 
+                            onClick={() => handleClickAddChildField(childField)}
+                        >
+                            Add child field '{childField.replace(`${k}::`, '')}'
+                        </MenuItem>
+                    ))
+                }
                 {v.user_added && 
                     <MenuItem onClick={handleClickDeleteField}>Delete this '{k}'</MenuItem>
                 }
@@ -467,6 +504,7 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
                 open={openSubtable}
                 record_id={record_id}
                 reviewStatus={reviewStatus}
+                handleClickOutside={handleClickOutside}
                 {...childProps}
             />
         }
@@ -480,6 +518,7 @@ interface SubattributesTableProps extends RecordAttributesTableProps {
     topLevelIdx: number;
     topLevelKey: string;
     record_id?: string;
+    handleClickOutside: () => void;
 }
 
 const SubattributesTable = (props: SubattributesTableProps) => {
@@ -541,6 +580,7 @@ interface SubattributeRowProps extends RecordAttributesTableProps {
     idx: number;
     topLevelKey: string;
     record_id?: string;
+    handleClickOutside: () => void;
 }
 
 const SubattributeRow = React.memo((props: SubattributeRowProps) => {
@@ -563,7 +603,8 @@ const SubattributeRow = React.memo((props: SubattributeRowProps) => {
         insertField,
         deleteField,
         forceEditMode,
-        reviewStatus
+        reviewStatus,
+        handleClickOutside
     } = props;
 
     const [ editMode, setEditMode ] = useState(false);
@@ -578,9 +619,9 @@ const SubattributeRow = React.memo((props: SubattributeRowProps) => {
     const handleSuccess = (resp: any) => {
         const newV = resp?.[`attributesList.${topLevelIdx}.subattributes.${idx}`];
         const data: any = {
-            isSubattribute: false,
-            topLevelIndex: idx,
-            subIndex: null,
+            isSubattribute: true,
+            topLevelIndex: topLevelIdx,
+            subIndex: idx,
             v: newV,
         }
         handleSuccessfulAttributeUpdate(data)
@@ -728,12 +769,14 @@ const SubattributeRow = React.memo((props: SubattributeRowProps) => {
     const handleClickInsertField = () => {
         setShowActions(false);
         setMenuAnchor(null);
+        handleClickOutside();
         insertField(k, topLevelIdx, true, idx, topLevelKey);
     }
 
     const handleClickDeleteField = () => {
         setShowActions(false);
         setMenuAnchor(null);
+        handleClickOutside();
         deleteField(topLevelIdx, true, idx);
     }
 
