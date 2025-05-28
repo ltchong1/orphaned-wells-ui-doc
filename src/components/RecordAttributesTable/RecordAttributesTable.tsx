@@ -116,11 +116,11 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
     const [ childFields, setChildFields ] = useState<string[]>([]);
 
     const allowMultiple = recordSchema[k]?.occurrence?.toLowerCase().includes('multiple');
-    const allowChildren = recordSchema[k]?.google_data_type?.toLowerCase() === 'parent';
+    const isParent = recordSchema[k]?.google_data_type?.toLowerCase() === 'parent';
 
     useEffect(() => {
         const tempChildFields = [];
-        if (allowChildren) {
+        if (isParent) {
             let recordKeys = Object.keys(recordSchema);
             for (let each of recordKeys) {
                 if (each.includes(`${k}::`)) {
@@ -298,13 +298,19 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
     }
 
     const handleClickAddChildField = (childField: string) => {
-        console.log(`add child field: ${childField}`)
+        // console.log(`add child field: ${childField}`)
+        const childKey = childField.replace(`${k}::`, '');
+        let subIdx = v.subattributes?.length || 0;
+        subIdx -= 1;
         setMenuAnchor(null);
+        setShowActions(false);
+        handleClickOutside();
+        insertField(childKey, idx, true, subIdx, k);
     }
 
     return (
     <>
-        <TableRow id={`${k}::${idx}`} sx={(isSelected && !v.subattributes) ? {backgroundColor: "#EDEDED"} : {}} onClick={handleClickInside}>
+        <TableRow id={`${k}::${idx}`} sx={(isSelected && !isParent) ? {backgroundColor: "#EDEDED"} : {}} onClick={handleClickInside}>
             <TableCell sx={styles.fieldKey}>
                 <span>
                     {k}
@@ -321,7 +327,7 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
                 }
             </TableCell>
             { // TODO: add styling to parent attribute if subattributes have errors
-                v.subattributes ? 
+                isParent ? 
                 <TableCell></TableCell> 
                 :
                 <TableCell onKeyDown={handleKeyDown}>
@@ -465,7 +471,7 @@ const AttributeRow = React.memo((props: AttributeRowProps) => {
                     </p>
                 }
             </TableCell>
-            <TableCell>{(allowMultiple || allowChildren) ? (
+            <TableCell>{(allowMultiple || isParent) ? (
                 <IconButton size='small' onClick={handleClickShowActions}>
                     <MoreVertIcon/>
                 </IconButton>
