@@ -195,7 +195,12 @@ const Record = () => {
                           };
                     }
                 });
-                const newRecordData = { ...tempRecordData, attributesList: newAttributesList };
+                let newRecordData: RecordData;
+                if (tempRecordData.review_status === 'unreviewed')
+                    newRecordData = { ...tempRecordData, review_status: 'incomplete', attributesList: newAttributesList };
+                 else
+                    newRecordData = { ...tempRecordData, attributesList: newAttributesList };
+
                 handleUpdateRecord(newRecordData);
                 return newRecordData;
             })
