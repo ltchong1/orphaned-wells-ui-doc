@@ -28,11 +28,15 @@ export function HowToSetupMongo() {
 export function InitializeDatabase() {
   return (
     <div>
-      OGRRE stores teams, authorized users, and assigned roles/permissions in the MongoDB database. So in order for OGRRE to run with a new database, some initial collections and documents must be created. The collections <code>teams</code>, <code>users</code>, and <code>roles</code> must be created before running OGRRE. There must be at least one team and one user associated with that team, as well as a list of roles that are specific to OGRRE. You can create these manually, or use the python script we have provided to create these documents for you. The script is called <code>initializeMongoDB.py</code>, and can be downloaded <a target="_blank">here TODO: add link</a>. The script takes the following arguments:
+      <i>It is necessary to add some initial collections to your database before running OGRRE</i>. OGRRE stores teams, authorized users, and assigned roles/permissions in the MongoDB database, which must be availabe as collections called <code>teams</code>, <code>users</code>, and <code>roles</code>. Furthermore, there must be at least one team and one user associated with that team, as well as a list of roles that are specific to OGRRE. You can create these manually, or use the python script we have provided to create these documents for you. The script can be downloaded <a href="/orphaned-wells-ui/downloads/InitializeMongoDB.py" download>here</a>. The script takes the following arguments:
       <ul>
         <li><b>team_name</b> (<b>-t</b>): the initial team name [<i>required</i>]</li>
         <li><b>email</b> (<b>-e</b>): email of the initial user [<i>required</i>]</li>
         <li><b>assigned_role</b> (<b>-a</b>): The role for the user you are creating. If not provided, the user will be assigned the role of <code>sys_admin</code> which contains all system and team permissions [<i>optional</i>]</li>
+        <li><b>database_username</b> (<b>-t</b>): Database username [<i>required</i>]</li>
+        <li><b>database_password</b> (<b>-e</b>): Database user assword [<i>required</i>]</li>
+        <li><b>database_connection</b> (<b>-e</b>): Database connection string [<i>required</i>]</li>
+        <li><b>database_name</b> (<b>-e</b>): Database name [<i>required</i>]</li>
       </ul>
     </div>
   );
@@ -50,7 +54,7 @@ export function MongoEnvironmentVariables() {
           DB_PASSWORD: the password for the database user you created.
         </li>
         <li>
-          DB_CONNECTION: The cluster connection string.
+          DB_CONNECTION: The cluster host name.
         </li>
         <li>
           DB_NAME: The name of the database inside your cluster that you would like to connect to.
