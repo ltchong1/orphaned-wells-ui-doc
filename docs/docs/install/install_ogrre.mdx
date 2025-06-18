@@ -26,7 +26,6 @@ npm clean-install
 The frontend relies on a set of environment variables to determine which backend to connect to, which google client to use, and more. The following variables should be defined in a file called `.env` at the root of the frontend project.
 
 - <b>REACT_APP_BACKEND_URL</b>: The backend URL to connect to. If running the backend locally, this is likely going to be "http://localhost:8001". If running from a server with a dedicated IP/URL, use the proper address here.
-- <b>REACT_APP_STATE</b>: The collaborator that this instance is designed for. Each collaborator has their own set of trained processors, and OGRRE uses this variable to determine which processors to look for. For more information, see the section on processors [#TODO: add link here].
 - <b>REACT_APP_GOOGLE_CLIENTID</b>: The Google Client ID that is provided when using Google's OAuth service. This is necessary for frontend authentication. For more information, see the [GCP section on OAuth](gcp_setup#setting-up-a-gcp-project).
 
 ### 4. Run UI in browser
