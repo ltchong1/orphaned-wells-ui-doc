@@ -63,8 +63,7 @@ pip install .
 
 The backend relies on a set of environment variables to determine which database to connect to, which google cloud project to use, and more. The following variables should be defined in a file called `.env` inside `app/internal`.
 
-- <b>ENVIRONMENT</b>: The collaborator that this instance is designed for. Each collaborator has their own set of trained processors, and OGRRE uses this variable to determine which processors to look for. For example, "isgs".
-- <b>BACKEND_URL</b>: The backend URL. If running the backend locally, this is likely going to be "http://localhost:8001". If running from a server with a dedicated IP/URL, use the proper address here.
+- <b>ENVIRONMENT</b>: The project or collaborator that this instance is designed for. Each collaborator has their own set of trained processors, and OGRRE uses this variable to determine which processors to look for. For example, "isgs".
 - <b>LOCATION</b>: The Google Cloud location. For example: "us".
 - <b>DB_USERNAME</b>: MongoDB database username. For more information, see the [section on creating a MongoDB database user](database_setup#create-a-mongodb-database).
 - <b>DB_PASSWORD</b>: MongoDB database user password. For more information, [section on creating a MongoDB database user](database_setup#create-a-mongodb-database).
