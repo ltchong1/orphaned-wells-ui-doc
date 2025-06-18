@@ -48,16 +48,16 @@ export function MongoEnvironmentVariables() {
       The OGRRE backend requires 4 environment variables from your MongoDB setup. As explained in the <a href="getting_started">backend installation section</a>, the following variables must go inside your <code>.env</code> file.
       <ul>
         <li>
-          DB_USERNAME: the username for the database user you created.
+          <b>DB_USERNAME</b>: The username for the database user you created.
         </li>
         <li>
-          DB_PASSWORD: the password for the database user you created.
+          <b>DB_PASSWORD</b>: The password for the database user you created.
         </li>
         <li>
-          DB_CONNECTION: The cluster host name.
+          <b>DB_CONNECTION</b>: The cluster host name.
         </li>
         <li>
-          DB_NAME: The name of the database inside your cluster that you would like to connect to.
+          <b>DB_NAME</b>: The name of the database inside your cluster that you would like to connect to.
         </li>
       </ul>
       Your MongoDB database connection uri should look like this, substituting the bracketed variables with your credentials:

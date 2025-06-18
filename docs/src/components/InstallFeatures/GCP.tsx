@@ -28,25 +28,25 @@ export function GCPEnvironmentVariables() {
         The OGRRE backend requires 7 environment variables from your GCP project. As explained in the <a href="getting_started">backend installation section</a>, the following variables must go inside your <code>.env</code> file.
         <ul>
             <li>
-                PROJECT_ID: The project ID of your GCP project.
+                <b>PROJECT_ID</b>: The project ID of your GCP project.
             </li>
             <li>
-                LOCATION: The location you chose for document AI processors, likely to be "us".
+                <b>LOCATION</b>: The location you chose for document AI processors, likely to be "us".
             </li>
             <li>
-                STORAGE_BUCKET_NAME: The name you chose for your storage bucket.
+                <b>STORAGE_BUCKET_NAME</b>: The name you chose for your storage bucket.
             </li>
             <li>
-                STORAGE_SERVICE_KEY: The name of the file storing your GCP access credentials. <b>This file should be stored in the same directory as the <code>.env</code> file.</b>
+                <b>STORAGE_SERVICE_KEY</b>: The name of the file storing your GCP access credentials. <b>This file should be stored in the same directory as the <code>.env</code> file.</b>
             </li>
             <li>
-                token_uri: The endpoint URL where an application requests and receives access tokens. This is necessary for user authentication. For more information, see the <a target='_blank' href="https://developers.google.com/identity/protocols/oauth2">Google's documentation on OAuth2</a>.
+                <b>token_uri</b>: The endpoint URL where an application requests and receives access tokens. This is necessary for user authentication. For more information, see the <a target='_blank' href="https://developers.google.com/identity/protocols/oauth2">Google's documentation on OAuth2</a>.
             </li>
             <li>
-                client_id: The client ID of your OAuth client.
+                <b>client_id</b>: The client ID of your OAuth client.
             </li>
             <li>
-                client_secret: The client secret of your OAuth client.
+                <b>client_secret</b>: The client secret of your OAuth client.
             </li>
         </ul>
         </div>
